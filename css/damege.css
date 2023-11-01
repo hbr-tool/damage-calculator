@@ -1,0 +1,211 @@
+header {
+    background-color: #149f14;
+    height: 50px;
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+:disabled {
+    border-color: #FFF;
+}
+
+input[type="number"] {
+    text-align: center;
+    width: 60px;
+    border: solid 1px #000;
+}
+
+input[type="text"]:not(:read-only) {
+    border: solid 1px #000;
+}
+
+select {
+    border: solid 1px #000;
+}
+
+table td {
+    border: 1px solid #000;
+}
+
+table td.kind {
+    background-color: #CCC;
+    width: 80px;
+}
+table td.type {
+    width: 180px;
+}
+
+select.buff,
+select.mindeye,
+select.funnel,
+select.debuff,
+select.dp_debuff,
+select.fragile,
+select.critical_rate,
+select.critical_buff,
+select.filed {
+    width: 300px;
+}
+
+.status,
+.limit,
+.jewel {
+    text-align: center;
+    width: 60px;
+    margin-left: 3px;
+}
+
+#dp_range {
+    width: 130px;
+}
+
+div.lv {
+    display: none;
+}
+div.lv::before {
+    content: "Lv";
+    margin-right: -4px;
+}
+div.lv select{
+    text-align: center;
+}
+
+input.calc_btn {
+    width: 100px;
+    font-size: 20px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+
+.damage_label {
+    font-weight: bold;
+    font-size: 18px;
+}
+.damage {
+    font-weight: bold;
+    font-size: 30px;
+    width: 180px;
+}
+.min_damage {
+    font-weight: bold;
+    font-size: 20px;
+    width: 120px;
+}
+.enemy_weak {
+    font-weight: bold;
+    color: red;
+}
+.enemy_resist {
+    font-weight: bold;
+    color: blue;
+}
+.enemy_type_icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-bottom: -8px;
+}
+.enemy_type_value {
+    text-align: center;
+    width: 32px;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: 5px;
+}
+.selected {
+    border-radius: 10px;
+    background-color: #ffff00;
+}
+/* ステータスの色　*/
+.status_attack_skill,
+.status_power_up1,
+.status_power_up2,
+.status_element_up1,
+.status_element_up2,
+.status_mindeye1,
+.status_mindeye2,
+.status_funnel1,
+.status_funnel2,
+.status_defense_down1,
+.status_defense_down2,
+.status_dp_defense_down1,
+.status_dp_defense_down2,
+.status_element_down1,
+.status_element_down2,
+.status_fragile1,
+.status_fragile2,
+.status_critical_up1,
+.status_critical_up2,
+.status_critical_damege1,
+.status_critical_damege2,
+.status_critical_element1,
+.status_critical_element2,
+.status_critical_damege_element1,
+.status_critical_damege_element2,
+.status_charge {
+    background-color: rgba(255, 0, 0, 0.3)
+}
+
+/* 初期値 */
+.row_element,
+.row_weak {
+    display: none;
+}
+
+/* チェックボックス01 */
+input[type=checkbox] {
+    display: none;
+}
+.checkbox01 {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 25px;
+    padding-right: 0px;
+    position: relative;
+    width: auto;
+}
+.checkbox01::before {
+    background: #fff;
+    border: 1px solid #231815;
+    content: '';
+    display: block;
+    height: 16px;
+    left: 5px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+.checkbox01::after {
+    border-right: 3px solid #149f14;
+    border-bottom: 3px solid #149f14;
+    content: '';
+    display: block;
+    height: 13px;
+    left: 10px;
+    margin-top: -8px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: rotate(45deg);
+    width: 6px;
+}
+input[type=checkbox]:checked + .checkbox01::after {
+    opacity: 1;
+}
+input[type=checkbox]:disabled + .checkbox01::before {
+    opacity: 0.2;
+}
+input[type=checkbox]:checked:disabled + .checkbox01:after {
+    border-right: 3px solid #aaa;
+    border-bottom: 3px solid #aaa;
+}
+input[type=checkbox]:disabled + .checkbox01 {
+	cursor: default;
+}

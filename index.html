@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ヘブバン ダメージ計算ツール</title>
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/damege.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="js/chara_name.js"></script>
+  <script src="js/chara_style.js"></script>
+  <script src="js/damege.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/skill_attack.js"></script>
+  <script src="js/skill_buff.js"></script>
+  <script src="js/ability.js"></script>
+  <script src="js/enemy.js"></script>
+  <script>
+    var chara_no;
+    var select_style_list = [0, 0, 0, 0, 0, 0];
+    var status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
+    var type_physical = ["", "slash", "stab", "strike"];
+    var type_element = ["none", "fire", "ice", "thunder", "light", "dark"];
+    var select_attack_skill;
+
+    $(function(){ 
+      // スタイルリスト作成
+      createStyleList();
+      // モーダル系イベント追加
+      addModalEvent();
+
+      $("input[type='number']").prop("step", 1);
+      $(".status").prop("max", 999);
+      $(".status").prop("min", 1);
+
+      $(".limit").each(function(index, value) {
+        for (let i = 0; i <= 4; i++) $(value).append($('<option>').text(i).val(i))
+        $(value).prop("selectedIndex", 2);
+      });
+      $(".jewel").each(function(index, value) {
+        for (let i = 0; i <= 5; i++) $(value).append($('<option>').text(i).val(i))
+        $(value).prop("selectedIndex", 5);
+      });
+
+      // 敵情報設定
+      createEnemyList("1");
+      // イベント設定
+      setEventTrigger();
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <h1>ヘブバン ダメージ計算ツール</h1>
+  </header>
+  <br>
+  <div>
+    <div class="w-[1080px] mx-auto flex">
+        <div>
+        <div id="char_list" class="w-[482px] grid grid-cols-7 text-center gap-y-px gap-x-0">
+          <div class="mt-5">
+            <label>スタイル</label>
+            <input type="hidden" id="jewel_type_0" value="">
+            <input type="hidden" id="jewel_type_1" value="">
+            <input type="hidden" id="jewel_type_2" value="">
+            <input type="hidden" id="jewel_type_3" value="">
+            <input type="hidden" id="jewel_type_4" value="">
+            <input type="hidden" id="jewel_type_5" value="">
+          </div>
+          <img class="showmodal w-16 h-16" id="chara0" src="img/plus.png" data-chara_no="0">
+          <img class="showmodal w-16 h-16" id="chara1" src="img/plus.png" data-chara_no="1">
+          <img class="showmodal w-16 h-16" id="chara2" src="img/plus.png" data-chara_no="2">
+          <img class="showmodal w-16 h-16" id="chara3" src="img/plus.png" data-chara_no="3">
+          <img class="showmodal w-16 h-16" id="chara4" src="img/plus.png" data-chara_no="4">
+          <img class="showmodal w-16 h-16" id="chara5" src="img/plus.png" data-chara_no="5">
+          <label>限界突破</label>
+          <select id="limit_0" class="limit save"></select>
+          <select id="limit_1" class="limit save"></select>
+          <select id="limit_2" class="limit save"></select>
+          <select id="limit_3" class="limit save"></select>
+          <select id="limit_4" class="limit save"></select>
+          <select id="limit_5" class="limit save"></select>
+          <label>力</label>
+          <input type="number" id="str_0" class="status save" value="400">
+          <input type="number" id="str_1" class="status save" value="400">
+          <input type="number" id="str_2" class="status save" value="400">
+          <input type="number" id="str_3" class="status save" value="400">
+          <input type="number" id="str_4" class="status save" value="400">
+          <input type="number" id="str_5" class="status save" value="400">
+          <label>器用さ</label>
+          <input type="number" id="dex_0" class="status save" value="400">
+          <input type="number" id="dex_1" class="status save" value="400">
+          <input type="number" id="dex_2" class="status save" value="400">
+          <input type="number" id="dex_3" class="status save" value="400">
+          <input type="number" id="dex_4" class="status save" value="400">
+          <input type="number" id="dex_5" class="status save" value="400">
+          <label>体力</label>
+          <input type="number" id="con_0" class="status save" value="400">
+          <input type="number" id="con_1" class="status save" value="400">
+          <input type="number" id="con_2" class="status save" value="400">
+          <input type="number" id="con_3" class="status save" value="400">
+          <input type="number" id="con_4" class="status save" value="400">
+          <input type="number" id="con_5" class="status save" value="400">
+          <label>精神</label>
+          <input type="number" id="mnd_0" class="status save" value="400">
+          <input type="number" id="mnd_1" class="status save" value="400">
+          <input type="number" id="mnd_2" class="status save" value="400">
+          <input type="number" id="mnd_3" class="status save" value="400">
+          <input type="number" id="mnd_4" class="status save" value="400">
+          <input type="number" id="mnd_5" class="status save" value="400">
+          <label>知力</label>
+          <input type="number" id="int_0" class="status effect_size save" value="400">
+          <input type="number" id="int_1" class="status effect_size save" value="400">
+          <input type="number" id="int_2" class="status effect_size save" value="400">
+          <input type="number" id="int_3" class="status effect_size save" value="400">
+          <input type="number" id="int_4" class="status effect_size save" value="400">
+          <input type="number" id="int_5" class="status effect_size save" value="400">
+          <label>運</label>
+          <input type="number" id="luk_0" class="status effect_size save" value="400">
+          <input type="number" id="luk_1" class="status effect_size save" value="400">
+          <input type="number" id="luk_2" class="status effect_size save" value="400">
+          <input type="number" id="luk_3" class="status effect_size save" value="400">
+          <input type="number" id="luk_4" class="status effect_size save" value="400">
+          <input type="number" id="luk_5" class="status effect_size save" value="400">
+          <label>宝珠Lv</label>
+          <select id="jewel_lv_0" class="jewel save"></select>
+          <select id="jewel_lv_1" class="jewel save"></select>
+          <select id="jewel_lv_2" class="jewel save"></select>
+          <select id="jewel_lv_3" class="jewel save"></select>
+          <select id="jewel_lv_4" class="jewel save"></select>
+          <select id="jewel_lv_5" class="jewel save"></select>
+          <label>消費SP</label>
+          <label id="sp_cost_0">0</label>
+          <label id="sp_cost_1">0</label>
+          <label id="sp_cost_2">0</label>
+          <label id="sp_cost_3">0</label>
+          <label id="sp_cost_4">0</label>
+          <label id="sp_cost_5">0</label>
+        </div>
+        <br>
+        <div class="w-[400px] mx-auto flex">
+          攻 撃
+          <select id="attack_list" class="w-64">
+          </select>
+          <div class="lv"><select id="skill_lv"></select></div>
+          <img id="attack_physical" class="w-6 h-6" src="img/blank.png">
+          <img id="attack_element" class="w-6 h-6" src="img/blank.png">
+        </div>
+        <br>
+        <div class="w-[410px] mx-auto">
+          <div>
+            <label>敵選択</label>
+            <select id="enemy_class">
+              <option value="1">異時層</option>
+              <option value="2">オーブボス</option>
+              <option value="3">時計塔(N)</option>
+              <option value="4">時計塔(H)</option>
+              <option value="5">宝珠の迷宮</option>
+              <option value="6">スコアアタック</option>
+            </select>
+            <select id="enemy_list">
+            </select>
+          </div>
+        </div>
+        <br>
+        <div class="w-96 mx-auto">
+          <div class="grid grid-cols-4 gap-1">
+            <div class="text-right">能力値</div><input type="text" id="enemy_stat" value="" readonly class="w-16 text-right">
+            <div class="col-span-2 flex">
+              <div class="text-right w-12">DP</div><input type="text" id="enemy_dp" value="" readonly class="w-24 text-right">
+            </div>
+            <div class="text-right">破壊率上限</div><input type="text" id="enemy_destruction_limit" value="" readonly class="w-16 text-right">
+            <div class="col-span-2 flex">
+              <div class="text-right w-12">HP</div><input type="text" id="enemy_hp" value="" readonly class="w-24 text-right">
+            </div>
+            <div class="text-right">破壊率</div>
+            <div class="col-span-3 flex">
+              <input type="number" id="enemy_destruction" min="100" class="w-28 text-center">
+              <div class="w-4"></div>
+                残DP<input type="range" id="dp_range" min="0" max="100" step="5" value="0"><output id="dp_rate">0%</output>
+            </div>
+          </div>
+          <br>
+          <div class="grid grid-cols-9">
+            <div class="slash"><input type="image" class="enemy_type_icon" src="img/slash.webp"><input type="text" id="enemy_physical_1" class="enemy_type_value" readonly></div>
+            <div class="stab"><input type="image" class="enemy_type_icon" src="img/stab.webp"><input type="text" id="enemy_physical_2" class="enemy_type_value" readonly></div>
+            <div class="strike"><input type="image" class="enemy_type_icon" src="img/strike.webp"><input type="text" id="enemy_physical_3" class="enemy_type_value" readonly></div>
+            <div class="none"><input type="image" class="enemy_type_icon" src="img/none.webp"><input type="text" id="enemy_element_0" class="enemy_type_value" readonly></div>
+            <div class="fire"><input type="image" class="enemy_type_icon" src="img/fire.webp"><input type="text" id="enemy_element_1" class="enemy_type_value" readonly></div>
+            <div class="ice"><input type="image" class="enemy_type_icon" src="img/ice.webp"><input type="text" id="enemy_element_2" class="enemy_type_value" readonly></div>
+            <div class="thunder"><input type="image" class="enemy_type_icon" src="img/thunder.webp"><input type="text" id="enemy_element_3" class="enemy_type_value" readonly></div>
+            <div class="light"><input type="image" class="enemy_type_icon" src="img/light.webp"><input type="text" id="enemy_element_4" class="enemy_type_value" readonly></div>
+            <div class="dark"><input type="image" class="enemy_type_icon" src="img/dark.webp"><input type="text" id="enemy_element_5" class="enemy_type_value" readonly></div>
+          </div>
+        </div>
+        <br>
+        <div id="damage_result" class="text-center hidden w-[480px] mx-auto">
+          <label class="damage_label">クリティカルダメージ</label><label id="critical_rate" class="damage_label"></label>
+          <label class="damage_label">/最終破壊率</label><label id="critical_destruction_last_rate" class="damage_label"></label>
+          <div class="text-center w-[332px] mx-auto">
+            <div class="flex">
+              <div>
+                <input type="text" id="critical_damage" class="text-center damage" readonly>
+              </div>
+              <div>
+                <div>最大<input type="text" id="critical_damage_max"class="text-center min_damage" readonly></div>
+                <div>最小<input type="text" id="critical_damage_min"class="text-center min_damage" readonly></div>
+              </div>
+            </div>
+            <label class="damage_label">通常ダメージ</label>
+            <label class="damage_label">/最終破壊率</label><label id="destruction_last_rate" class="damage_label"></label>
+            <div class="flex">
+              <div>
+                <input type="text" id="damage" class="text-center damage" readonly>
+              </div>
+              <div>
+                <div>最大<input type="text" id="damage_max" class="text-center min_damage" readonly></div>
+                <div>最小<input type="text" id="damage_min"class="text-center min_damage" readonly></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="w-[610px] text-center">
+          <table>
+            <colgroup>
+              <col width="90px">
+              <col width="80px">
+              <col width="80px">
+              <col width="300px">
+              <col width="60px">
+            </colgroup>
+            <tr>
+              <td rowspan="8" class="kind">バフ</td>
+              <td class="type" colspan="2">攻撃力UP1</td>
+              <td><select id="power_up1" class="buff power_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="power_up1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">攻撃力UP2</td>
+              <td><select id="power_up2" class="buff power_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="power_up2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性攻撃力UP1</td>
+              <td class="row_element"><select id="element_up1" class="buff element_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_up1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性攻撃力UP2</td>
+              <td class="row_element"><select id="element_up2" class="buff element_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_up2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_weak" colspan="2">心眼1</td>
+              <td class="row_weak"><select id="mindeye1" class="mindeye redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_weak"><div class="lv"><select id="mindeye1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_weak" colspan="2">心眼2</td>
+              <td class="row_weak"><select id="mindeye2" class="mindeye redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_weak"><div class="lv"><select id="mindeye2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">連撃1</td>
+              <td><select id="funnel1" class="funnel redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="funnel1_lv"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">連撃2</td>
+              <td><select id="funnel2" class="funnel redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="funnel2_lv"></select></div></td>
+            </tr>            <tr>
+              <td rowspan="8" class="kind">デバフ</td>
+              <td class="type" colspan="2">防御力DOWN1</td>
+              <td><select id="defense_down1" class="debuff redisplay defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">防御力DOWN2</td>
+              <td><select id="defense_down2" class="debuff redisplay defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="defense_down2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">DP防御力DOWN1</td>
+              <td><select id="dp_defense_down1" class="dp_debuff redisplay dp_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="dp_defense_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">DP防御力DOWN2</td>
+              <td><select id="dp_defense_down2" class="dp_debuff redisplay dp_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="dp_defense_down2_lv" class="lv_effect"></select></div></td>
+            </tr>            
+            <tr>
+              <td class="type row_element" colspan="2">属性防御力DOWN1</td>
+              <td class="row_element"><select id="element_down1" class="debuff redisplay element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性防御力DOWN2</td>
+              <td class="row_element"><select id="element_down2" class="debuff redisplay element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_weak" colspan="2">脆弱1</td>
+              <td class="row_weak"><select id="fragile1" class="fragile redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_weak"><div class="lv"><select id="fragile1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_weak" colspan="2">脆弱2</td>
+              <td class="row_weak"><select id="fragile2" class="fragile redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_weak"><div class="lv"><select id="fragile2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td rowspan="8" class="kind">クリティカル</td>
+              <td colspan="2">クリティカル率UP1</td>
+              <td><select id="critical_up1" class="critical_rate critical_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="critical_up1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">クリティカル率UP2</td>
+              <td><select id="critical_up2" class="critical_rate critical_up redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="critical_up2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">クリダメUP1</td>
+              <td><select id="critical_damege1" class="critical_buff critical_damege redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="critical_damege1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">クリダメUP2</td>
+              <td><select id="critical_damege2" class="critical_buff critical_damege redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="critical_damege2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性クリ率UP1</td>
+              <td class="row_element"><select id="critical_element1" class="critical_rate critical_element redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="critical_element1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性クリ率UP2</td>
+              <td class="row_element"><select id="critical_element2" class="critical_rate critical_element redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="critical_element2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性クリダメUP1</td>
+              <td class="row_element"><select id="critical_damege_element1" class="critical_buff critical_damege_element redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="critical_damege_element1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">属性クリダメUP</td>
+              <td class="row_element"><select id="critical_damege_element2" class="critical_buff critical_damege_element redisplay include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="critical_damege_element2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="kind row_element">フィールド</td>
+              <td class="type row_element" colspan="2">属性フィールド</td>
+              <td class="row_element"><select id="element_field" class="filed element_field element redisplay"><option selected value="">無し</option></select></td>
+              <td class="row_element" id="filed_lv"></td>
+            </tr>
+            <tr>
+              <td class="kind">チャージ</td>
+              <td class="type" colspan="2">チャージ</td>
+              <td class=""><select id="charge" class="buff charge redisplay"><option selected value="">無し</option></select></td>
+              <td class="" id="filed_lv"></td>
+            </tr>
+            <tr>
+              <td rowspan="3" class="kind">アビリティ</td>
+              <td>攻撃者</td>
+              <td colspan="3" id="ability_self" class="text-left"></td>
+            </tr>
+            <tr>
+              <td>前衛</td>
+              <td colspan="3" id="ability_front" class="text-left"></td>
+            </tr>
+            <tr>
+              <td>全体</td>
+              <td colspan="3" id="ability_all" class="text-left"></td>
+            </tr>
+            <tr>
+              <td class="kind">その他</td>
+              <td colspan="4" >
+                <div class="flex pt-1">
+                  <div class="w-6"></div>
+                  <div>属性リング</div>
+                   <select id="elememt_ring" disabled>
+                    <option value="0">無し</option>
+                    <option value="2">+0(2%)</option>
+                    <option value="4">+1(4%)</option>
+                    <option value="6">+2(6%)</option>
+                    <option value="8">+3(8%)</option>
+                    <option value="10">+4(10%)</option>
+                  </select>
+                  <div class="w-6"></div>
+                  <div>ピアス</div>
+                  <select id="earring">
+                    <option value="0">選択無し</option>
+                    <option value="1" data-effect_size="10" data-type="attack">アタック10%</option>
+                    <option value="2" data-effect_size="12" data-type="attack">アタック12%</option>
+                    <option value="3" data-effect_size="15" data-type="attack">アタック15%</option>
+                    <option value="4" data-effect_size="10" data-type="break">ブレイク10%</option>
+                    <option value="5" data-effect_size="12" data-type="break">ブレイク12%</option>
+                    <option value="6" data-effect_size="15" data-type="break">ブレイク15%</option>
+                    <option value="7" data-effect_size="10" data-type="blast">ブラスト10%</option>
+                    <option value="8" data-effect_size="12" data-type="blast">ブラスト12%</option>
+                    <option value="9" data-effect_size="15" data-type="blast">ブラスト15%</option>
+                  </select>
+                  <div class="w-6"></div>
+                  <div>トークン数</div>
+                  <select id="token_count" class="token">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                  </select>
+                </div>
+                <div class="flex pt-1 pb-1">
+                  <div class="w-8"></div>
+                  <input type="checkbox" id="overdrive" class=""><label class="checkbox01" for="overdrive">オーバードライブ</label>
+                  <div class="w-8"></div>
+                  <input type="checkbox" id="fightingspirit" class=""><label class="checkbox01" for="fightingspirit">闘志</label>
+                  <div class="w-8"></div>
+                  <input type="checkbox" id="misfortune" class=""><label class="checkbox01" for="misfortune">厄</label>
+                  <div class="w-8"></div>
+                  <input type="checkbox" id="strong_break" class=""><label class="checkbox01" for="strong_break">強ブレイク</label>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="w-[1080px] mx-auto text-right">
+      参考サイト：<a href="https://note.com/gazou774/n/n82b99b359f2b" class="text-blue-500 underline">ヘブバン攻略情報まとめ</a>
+    </div>
+  </div>
+  <div class="modal_layer">
+    <div class="modal_layer_mask"></div>
+    <div class="modal_layer_inner">
+      <div class="modal_section">
+        <div class="modal">
+          <div class="modal_inner">
+            <div class="modal_inner_headline">
+              <div class="flex justify-center leading-10">
+                <div>スタイル選択</div>
+                <input type="button" id="calc" href="javascript:void(0)" class="remove_btn text-center absolute right-1" value="外す">
+              </div>
+            </div>
+            <hr class="line"/>
+            <div class="flex">
+              <div class="w-8"></div>
+              <input type="image" class="narrow physical" id="physical_1" src="img/slash.webp" data-select="1">
+              <input type="image" class="narrow physical" id="physical_2" src="img/stab.webp" data-select="1">
+              <input type="image" class="narrow physical" id="physical_3" src="img/strike.webp" data-select="1">
+              <div class="w-16"></div>
+              <input type="image" class="narrow element" id="element_0" src="img/none.webp" data-select="1">
+              <input type="image" class="narrow element" id="element_1" src="img/fire.webp" data-select="1">
+              <input type="image" class="narrow element" id="element_2" src="img/ice.webp" data-select="1">
+              <input type="image" class="narrow element" id="element_3" src="img/thunder.webp" data-select="1">
+              <input type="image" class="narrow element" id="element_4" src="img/light.webp" data-select="1">
+              <input type="image" class="narrow element" id="element_5" src="img/dark.webp" data-select="1">
+            </div>
+            <div class="flex">
+              <input type="button" class="narrow role" id="role_1" value="ATTACKER" data-select="1">
+              <input type="button" class="narrow role" id="role_2" value="BREAKER" data-select="1">
+              <input type="button" class="narrow role" id="role_3" value="BLASTER" data-select="1">
+              <input type="button" class="narrow role" id="role_4" value="HEALER" data-select="1">
+              <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
+              <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
+              <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31a.webp">
+              <div id="sytle_list_31A" class="grid grid-cols-8 troops_31A"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31b.webp">
+              <div id="sytle_list_31B" class="grid grid-cols-8 troops_31B"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31c.webp">
+              <div id="sytle_list_31C" class="grid grid-cols-8 troops_31C"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31d.webp">
+              <div id="sytle_list_31D" class="grid grid-cols-8 troops_31D"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31e.webp">
+              <div id="sytle_list_31E" class="grid grid-cols-8 troops_31E"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31f.webp">
+              <div id="sytle_list_31F" class="grid grid-cols-8 troops_31F"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/31x.webp">
+              <div id="sytle_list_31X" class="grid grid-cols-8 troops_31X"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/30g.webp">
+              <div id="sytle_list_30G" class="grid grid-cols-8 troops_30G"></div>
+            </div>
+            <div class="troops">
+              <input type="image" class="emblem" src="img/angelbeats.webp">
+              <div id="sytle_list_AB" class="grid grid-cols-8  troops_AB"></div>
+            </div>
+          </div>
+          <br>
+        </div>
+      </div>
+    </div>
+   </div>
+</body>
+</html>
