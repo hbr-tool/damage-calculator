@@ -89,6 +89,8 @@ var style_list = [
     {"style_id":88,"chara_id":2,"style_name":"踊るリンカネーション","image_url":"YIzumiBeauty_R3.webp","troops":"31A","role":2,"physical":2,"element":4,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":1202},
     {"style_id":89,"chara_id":26,"style_name":"心緒、昂る温泉郷","image_url":"NiOhshimaYukata2023_R3.webp","troops":"31E","role":1,"physical":1,"element":4,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":218},
     {"style_id":90,"chara_id":29,"style_name":"湯上がり夢現郷","image_url":"IrOhshimaYukata2023_R3.webp","troops":"31E","role":6,"physical":1,"element":0,"jewel_type":4,"ability0":0,"ability1":1101,"ability3":502},
-    {"style_id":91,"chara_id":17,"style_name":"少女の休息","image_url":"AKanzakiDirndl_R3.webp","troops":"31C","role":3,"physical":1,"element":4,"jewel_type":1,"ability0":405,"ability1":1101,"ability3":205},
+    {"style_id":91,"chara_id":17,"style_name":"少女の休息","image_url":"AKanzakiDirndl_R3.webp","troops":"31C","role":3,"physical":1,"element":5,"jewel_type":1,"ability0":405,"ability1":1101,"ability3":205},
     {"style_id":92,"chara_id":38,"style_name":"いざなうつゆくさ","image_url":"LShanhuaNoble_R3.webp","troops":"31X","role":5,"physical":1,"element":3,"jewel_type":3,"ability0":0,"ability1":1101,"ability3":217},
+    {"style_id":93,"chara_id":44,"style_name":"掩蔽された暇","image_url":"MTsukishiroRugged_R3.webp","troops":"30G","role":1,"physical":3,"element":4,"jewel_type":1,"ability0":1503,"ability1":1101,"ability3":204},
+    {"style_id":94,"chara_id":47,"style_name":"希求と渇仰","image_url":"HOgasawaraNightdress_R3.webp","troops":"30G","role":2,"physical":2,"element":3,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":1004},
     ]

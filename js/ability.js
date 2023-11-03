@@ -35,6 +35,7 @@ let ability_list = [
     {"ability_id":1001,"ability_name":"威嚇の叫び","ability_explan":"バトル開始時 前衛にいると高確率で敵をスタン","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1002,"ability_name":"洗練","ability_explan":"バトル開始時 前衛にいると自身のトークン+5","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1003,"ability_name":"厄災","ability_explan":"バトル開始時 前衛にいると敵を厄状態(2ターン)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1004,"ability_name":"俊敏","ability_explan":"バトル開始時 前衛にいると自身のSP+5","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1101,"ability_name":"閃光","ability_explan":"ターン開始時に前衛にいると自身のSP+1","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1102,"ability_name":"くじけぬ心","ability_explan":"ターン開始時 前衛 & ブレイク状態のとき自身のDPを復活(1回)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1103,"ability_name":"向上心","ability_explan":"ターン開始時 前衛にいるとオーバードライブゲージ+5%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
@@ -45,4 +46,5 @@ let ability_list = [
     {"ability_id":1202,"ability_name":"強烈","ability_explan":"行動開始時に前衛にいると前衛のスキル攻撃時の破壊率上昇量+20%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1501,"ability_name":"恵風","ability_explan":"自身がかけた回復スキルの効果量+20%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1502,"ability_name":"堅忍","ability_explan":"敵行動開始時に前衛 & DP破損状態で自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
-]
+    {"ability_id":1503,"ability_name":"戦勲","ability_explan":"ダメージを与えた敵1体につきトークンを1上昇(追撃を除く)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    ]

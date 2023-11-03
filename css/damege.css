@@ -11,6 +11,14 @@ header {
     border-color: #FFF;
 }
 
+#style_reset_btn {
+    width: 50px;
+    font-size: 12px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+
 input[type="number"] {
     text-align: center;
     width: 60px;

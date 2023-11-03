@@ -1,4 +1,13 @@
 function setEventTrigger() {
+    // リセットボタン
+    $("#style_reset_btn").on("click", function(event) {
+        for (let i = 0; i < select_style_list.length; i++) {
+            if (select_style_list[i] !== 0) {
+                chara_no = i;
+                removeMember();
+            }
+        }
+    });
     // 敵リストイベント
     $("#enemy_class").on("change", function(event) {
         let enemy_class = $("#enemy_class option:selected").val();
@@ -91,7 +100,6 @@ function setEventTrigger() {
             resetSkillLv(id);
         } else {
             let option = $(this).children().eq(selected_index);
-            let chara_no = option.data("chara_no");
             if (isOnlyBuff(option)) {
                 $(this).prop("selectedIndex", 0);
                 alert(option.text() + "は複数設定出来ません");
@@ -100,6 +108,16 @@ function setEventTrigger() {
             let select_lv = option.data("select_lv");
             let skill_info = getBuffIdToBuff(Number(option.val()));
             createSkillLvList(id + "_lv", skill_info.max_lv, select_lv);
+            setStatusToBuff(option, id);
+        }
+    });
+    // バフスキル変更
+    $("#charge").on("change", function(event) {
+        let selected_index = $(this).prop("selectedIndex");
+        let id = $(this).prop("id");
+        $(".status_" + id).removeClass("status_" + id);
+        if (selected_index !== 0) {
+            let option = $(this).children().eq(selected_index);
             setStatusToBuff(option, id);
         }
     });
@@ -933,9 +951,6 @@ function getBasePower(correction) {
     let status = molecule / denominator;
 
     let skill_lv = Number($("#skill_lv option:selected").val());
-    if (skill_lv > 13) {
-        skill_lv = 13;
-    }
     let min_power = skill_info.min_power * (1 + 0.05 * (skill_lv - 1));
     let max_power = skill_info.max_power * (1 + 0.02 * (skill_lv - 1)); 
     let skill_stat = skill_info.param_limit;
@@ -982,9 +997,6 @@ function getBuffEffectSize(buff_id, chara_no, skill_lv) {
     let skill_info = getBuffIdToBuff(buff_id);
     if (skill_lv > skill_info.max_lv) {
         skill_lv = skill_info.max_lv;
-    }
-    if (skill_lv > 13) {
-        skill_lv = 13;
     }
     // 固定量のバフ
     if (status_kbn[skill_info.ref_status_1] == 0) {
@@ -1033,9 +1045,6 @@ function getDebuffEffectSize(buff_id, chara_no, skill_lv) {
     let skill_info = getBuffIdToBuff(buff_id);
     if (skill_lv > skill_info.max_lv) {
         skill_lv = skill_info.max_lv;
-    }
-    if (skill_lv > 13) {
-        skill_lv = 13;
     }
     let status1 = Number($("#" + status_kbn[skill_info.ref_status_1] + "_" + chara_no).val());
     let status2 = Number($("#" + status_kbn[skill_info.ref_status_2] + "_" + chara_no).val());
