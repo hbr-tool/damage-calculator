@@ -153,8 +153,10 @@ function setEventTrigger() {
             let ability_id = $(value).data("ability_id");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
-            let attack_chara_id = "chara_id-" + select_attack_skill.chara_id;
-            setAbilityCheck(value, ability_info, limit_border, limit_count, attack_chara_id);
+            if (select_attack_skill !== undefined) {
+                let attack_chara_id = "chara_id-" + select_attack_skill.chara_id;
+                setAbilityCheck(value, ability_info, limit_border, limit_count, attack_chara_id);
+            }
         });
         // バフ効果量を更新
         $(".variable_effect_size." + chara_id).each(function(index, value) {
