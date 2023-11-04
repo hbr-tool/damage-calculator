@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E24414GK3M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E24414GK3M');
+  </script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ヘブバン ダメージ計算ツール</title>
@@ -16,14 +23,6 @@
   <script src="js/skill_buff.js"></script>
   <script src="js/ability.js"></script>
   <script src="js/enemy.js"></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E24414GK3M"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-E24414GK3M');
-  </script>
   <script>
     var chara_no;
     var select_style_list = [0, 0, 0, 0, 0, 0];
@@ -459,37 +458,37 @@
     <div class="modal_layer_mask"></div>
     <div class="modal_layer_inner">
       <div class="modal_section">
-        <div class="modal">
-          <div class="modal_inner">
-            <div class="modal_inner_headline">
-              <div class="flex justify-center leading-10">
-                <div>スタイル選択</div>
-                <input type="button" id="calc" href="javascript:void(0)" class="remove_btn text-center absolute right-1" value="外す">
-              </div>
+        <div class="modal_inner">
+          <div class="modal_inner_headline">
+            <div class="flex justify-center leading-10">
+              <div>スタイル選択</div>
+              <input type="button" id="calc" href="javascript:void(0)" class="remove_btn text-center absolute right-1" value="外す">
             </div>
-            <hr class="line"/>
-            <div class="flex">
-              <div class="w-8"></div>
-              <input type="image" class="narrow physical" id="physical_1" src="img/slash.webp" data-select="1">
-              <input type="image" class="narrow physical" id="physical_2" src="img/stab.webp" data-select="1">
-              <input type="image" class="narrow physical" id="physical_3" src="img/strike.webp" data-select="1">
-              <div class="w-16"></div>
-              <input type="image" class="narrow element" id="element_0" src="img/none.webp" data-select="1">
-              <input type="image" class="narrow element" id="element_1" src="img/fire.webp" data-select="1">
-              <input type="image" class="narrow element" id="element_2" src="img/ice.webp" data-select="1">
-              <input type="image" class="narrow element" id="element_3" src="img/thunder.webp" data-select="1">
-              <input type="image" class="narrow element" id="element_4" src="img/light.webp" data-select="1">
-              <input type="image" class="narrow element" id="element_5" src="img/dark.webp" data-select="1">
-            </div>
-            <div class="flex">
-              <input type="button" class="narrow role" id="role_1" value="ATTACKER" data-select="1">
-              <input type="button" class="narrow role" id="role_2" value="BREAKER" data-select="1">
-              <input type="button" class="narrow role" id="role_3" value="BLASTER" data-select="1">
-              <input type="button" class="narrow role" id="role_4" value="HEALER" data-select="1">
-              <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
-              <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
-              <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
-            </div>
+          </div>
+          <hr class="line"/>
+          <div class="flex">
+            <div class="w-8"></div>
+            <input type="image" class="narrow physical" id="physical_1" src="img/slash.webp" data-select="1">
+            <input type="image" class="narrow physical" id="physical_2" src="img/stab.webp" data-select="1">
+            <input type="image" class="narrow physical" id="physical_3" src="img/strike.webp" data-select="1">
+            <div class="w-16"></div>
+            <input type="image" class="narrow element" id="element_0" src="img/none.webp" data-select="1">
+            <input type="image" class="narrow element" id="element_1" src="img/fire.webp" data-select="1">
+            <input type="image" class="narrow element" id="element_2" src="img/ice.webp" data-select="1">
+            <input type="image" class="narrow element" id="element_3" src="img/thunder.webp" data-select="1">
+            <input type="image" class="narrow element" id="element_4" src="img/light.webp" data-select="1">
+            <input type="image" class="narrow element" id="element_5" src="img/dark.webp" data-select="1">
+          </div>
+          <div class="flex">
+            <input type="button" class="narrow role" id="role_1" value="ATTACKER" data-select="1">
+            <input type="button" class="narrow role" id="role_2" value="BREAKER" data-select="1">
+            <input type="button" class="narrow role" id="role_3" value="BLASTER" data-select="1">
+            <input type="button" class="narrow role" id="role_4" value="HEALER" data-select="1">
+            <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
+            <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
+            <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
+          </div>
+          <div class="search_result_area">
             <div class="troops">
               <input type="image" class="emblem" src="img/31a.webp">
               <div id="sytle_list_31A" class="grid grid-cols-8 troops_31A"></div>
@@ -527,7 +526,6 @@
               <div id="sytle_list_AB" class="grid grid-cols-8  troops_AB"></div>
             </div>
           </div>
-          <br>
         </div>
       </div>
     </div>

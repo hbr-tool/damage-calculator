@@ -60,18 +60,21 @@ function setEventTrigger() {
         for (let i = 1; i <= 3; i++) {
             $("#" + status_kbn[skill_info["ref_status_" + i]] + "_" + chara_no).addClass("status_attack_skill");
         }
+        let limit_count = Number($("#limit_" + chara_no).val());
         $("input[type=checkbox].ability").each(function(index, value) {
             let ability_id = $(value).data("ability_id");
             let chara_no = $(value).data("chara_no");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
-            let limit_count = Number($("#limit_" + chara_no).val());
             setAbilityCheck(value, ability_info, limit_border, limit_count, chara_id);
         });
         $(".redisplay").each(function(index, value) {
             sortEffectSize($(value));
             select2ndSkill($(value));
         });
+        // アビリティ項目の表示設定
+        setAbilityDisplay(limit_count, chara_id);
+
         let attack_physical = type_physical[skill_info.attack_physical];
         let attack_element = type_element[skill_info.attack_element];
         $("#attack_physical").attr("src", "img/" + attack_physical + ".webp");
@@ -162,6 +165,8 @@ function setEventTrigger() {
         $(".variable_effect_size." + chara_id).each(function(index, value) {
             updateBuffEffectSize($(value));
         });
+        // アビリティ項目の表示設定
+        setAbilityDisplay(limit_count, chara_id);
     });
     // 宝珠レベル変更
     $(".jewel").on("change", function(event) {
@@ -473,7 +478,7 @@ function addBuffList(style, chara_no) {
         
         switch (value.buff_kind) {
             case 11: // 属性フィールド
-                addElementField(style, value.buff_name, value.min_power, value.buff_element, value.buff_id);
+                addElementField(style, value.buff_name, value.min_power, value.buff_element, value.buff_id, true);
                 return;
             case 0:
                 only_one = "only_one";
@@ -521,11 +526,12 @@ function addBuffList(style, chara_no) {
 }
 
 // フィールド追加
-function addElementField(style, field_name, effect_size, field_element, buff_id) {
+function addElementField(style, field_name, effect_size, field_element, buff_id, limit_border) {
     let option_text = `${chara_name[style.chara_id]}: ${field_name} ${effect_size}%`;
     let option = $('<option>')
         .text(option_text)
         .data("effect_size", effect_size)
+        .data("limit_border", limit_border)
         .val(buff_id)
         .css("display", "none")
         .addClass("public")
@@ -573,7 +579,7 @@ function addAbility(style_info, chara_no) {
         let element_type;
         switch (ability_info.ability_target) {
 	        case 0: // フィールド
-	            addElementField(style_info, ability_info.ability_name, ability_info.ability_power, ability_info.ability_element);
+	            addElementField(style_info, ability_info.ability_name, ability_info.ability_power, ability_info.ability_element, 0, false);
 	            break;
 	        case 1: // 自分
 	            if (select_attack_skill && select_attack_skill.chara_id !== style_info.chara_id) {
@@ -627,7 +633,7 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
     let checked = true;
     switch (ability_info.ability_target) {
         case 1: // 自分
-            disabled = (limit_count < limit_border || $(input).hasClass(chara_id)) && ability_info.ability_type == 1;
+            disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && ability_info.ability_type == 1);
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break;
         case 2: // 前衛
@@ -744,6 +750,41 @@ function setStatusToBuff(option, id) {
 function resetSkillLv(id) {
     $("#" + id + "_lv").empty();
     $("#" + id + "_lv").parent().css("display", "none");
+}
+
+// アビリティ項目の設定
+function setAbilityDisplay(limit_count, chara_id) {
+    // フィールドを更新
+    $("#element_field option").each(function(index, value) {
+        if (index === 0) return true;
+        if ($(value).val() == 0) {
+            if ($(value).hasClass(chara_id)) {
+                if (limit_count >= 3) {
+                    $(value).data("limit_border", true);
+                    $(value).css("display", "block");
+                }  else {
+                    $(value).data("limit_border", false);
+                    $(value).css("display", "none");
+                }
+            } else {
+                if (!$(value).data("limit_border")) {
+                    $(value).css("display", "none");
+                }
+            }
+            select2ndSkill($(value).parent());
+        }
+    });
+    // 連撃を更新
+    $(".funnel ." + chara_id).each(function(index, value) {
+        if ($(value).val() == 0) {
+            if (limit_count >= 3) {
+                $(value).css("display", "block");
+            }  else {
+                $(value).css("display", "none");
+            }
+            select2ndSkill($(value).parent());
+        }
+    });
 }
 
 // 効果量合計
