@@ -44,12 +44,14 @@ function setEventTrigger() {
         let chara_id = "chara_id-" + skill_info.chara_id;
         $(".public.buff_element-" + skill_info.attack_element).show();
         $(".public.buff_element-0").show();
-        $(".only_" + chara_id + ".buff_element-0").show();
+        $(".only_" + chara_id + ".buff_element-0.skill_attack-0").show();
+        $(".only_" + chara_id + ".buff_element-0.skill_attack-" + skill_info.attack_id).show();
         $(".ability_self").hide();
         if (skill_info.attack_element !== 0) {
             $("#elememt_ring").prop("disabled", false);
             $(".self_element-" + skill_info.attack_element + "." + chara_id).show();
-            $(".only_" + chara_id + ".buff_element-" + skill_info.attack_element).show();
+            $(".only_" + chara_id + ".buff_element-" + skill_info.attack_element + ".skill_attack-0").show();
+            $(".only_" + chara_id + ".buff_element-" + skill_info.attack_element + ".skill_attack-" + skill_info.attack_id).show();
         } else {
             $("#elememt_ring").prop("disabled", true);
             $("#elememt_ring").prop("selectedIndex", 0);
@@ -289,7 +291,8 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     let enemy_destruction = getEnemyInfo().destruction;
 
     let hit_count = skill_info.hit_count;
-    let destruction_size = enemy_destruction * skill_info.destruction * (1 + getEarringEffectSize("blast", 10 - hit_count));
+    let buff_destruction = getDestructionEffectSize() / 100; 
+    let destruction_size = enemy_destruction * skill_info.destruction * (1 + getEarringEffectSize("blast", 10 - hit_count)) * buff_destruction;
     let hit_destruction = destruction_size / hit_count;
     let hit_power = basePower / hit_count;
     let damage = 0;
@@ -878,6 +881,17 @@ function getSumAbilityEffectSize(ability_kind) {
         }
     });
     return ability_effect_size;
+}
+
+// 破壊率アップ効果量取得
+function getDestructionEffectSize() {
+    let destruction_effect_size = 100;
+    let attack_info = getAttackInfo();
+    // 暫定：純愛アンビシャス(+)のみ+50%
+    if (attack_info.attack_id == 42 || attack_info.attack_id == 94) {
+        destruction_effect_size += 50;
+    }
+    return destruction_effect_size;
 }
 
 // アビリティ情報取得
