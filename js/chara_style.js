@@ -93,4 +93,6 @@ var style_list = [
     {"style_id":92,"chara_id":38,"style_name":"いざなうつゆくさ","image_url":"LShanhuaNoble_R3.webp","troops":"31X","role":5,"physical":1,"element":3,"jewel_type":3,"ability0":0,"ability1":1101,"ability3":217},
     {"style_id":93,"chara_id":44,"style_name":"掩蔽された暇","image_url":"MTsukishiroRugged_R3.webp","troops":"30G","role":1,"physical":3,"element":4,"jewel_type":1,"ability0":1503,"ability1":1101,"ability3":204},
     {"style_id":94,"chara_id":47,"style_name":"希求と渇仰","image_url":"HOgasawaraNightdress_R3.webp","troops":"30G","role":2,"physical":2,"element":3,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":1004},
+    {"style_id":95,"chara_id":41,"style_name":"刹那の邂逅","image_url":"MdAngelisKnights_R3.webp","troops":"31X","role":4,"physical":3,"element":3,"jewel_type":1,"ability0":1504,"ability1":1101,"ability3":203},
+    {"style_id":96,"chara_id":42,"style_name":"とこしえの想い","image_url":"CSkopovskayaVampire_R3.webp","troops":"31X","role":6,"physical":2,"element":3,"jewel_type":4,"ability0":403,"ability1":1101,"ability3":225},
     ]

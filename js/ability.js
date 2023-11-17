@@ -24,6 +24,7 @@ let ability_list = [
     {"ability_id":220,"ability_name":"決心","ability_explan":"行動開始時に前衛 & SP15以上のとき自身のスキル攻撃力+30%","ability_short_explan":"SP15以上のときスキル攻撃力+30%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":30},
     {"ability_id":221,"ability_name":"鋭気","ability_explan":"行動開始時に前衛 & 敵が挑発または注目状態のとき自身のスキル攻撃力+30%","ability_short_explan":"敵が挑発または注目状態のときスキル攻撃力+30%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":30},
     {"ability_id":222,"ability_name":"弱化","ability_explan":"行動開始時に前衛にいると敵の防御力-10%","ability_short_explan":"敵の防御力-10%","ability_target":2,"ability_kind":7,"ability_element":0,"ability_type":1,"ability_power":10},
+    {"ability_id":225,"ability_name":"雷の制圧","ability_explan":"行動開始時に前衛 & DP80%以上のとき敵の雷属性の防御力-18%","ability_short_explan":"DP80%以上のとき敵の雷属性の防御力-18%","ability_target":2,"ability_kind":7,"ability_element":3,"ability_type":1,"ability_power":18},
     {"ability_id":301,"ability_name":"専心","ability_explan":"オーバードライブ開始時 前衛にいると自身のスキル攻撃力+20%","ability_short_explan":"OD開始時 前衛にいるとスキル攻撃力+20%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":20},
     {"ability_id":401,"ability_name":"火の波動","ability_explan":"味方全体の火属性スキル攻撃力を常時+10%","ability_short_explan":"火属性スキル攻撃力を常時+10%","ability_target":3,"ability_kind":1,"ability_element":1,"ability_type":1,"ability_power":10},
     {"ability_id":402,"ability_name":"氷の波動","ability_explan":"味方全体の氷属性スキル攻撃力を常時+10%","ability_short_explan":"氷属性スキル攻撃力を常時+10%","ability_target":3,"ability_kind":1,"ability_element":2,"ability_type":1,"ability_power":10},
@@ -47,4 +48,5 @@ let ability_list = [
     {"ability_id":1501,"ability_name":"恵風","ability_explan":"自身がかけた回復スキルの効果量+20%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1502,"ability_name":"堅忍","ability_explan":"敵行動開始時に前衛 & DP破損状態で自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1503,"ability_name":"戦勲","ability_explan":"ダメージを与えた敵1体につきトークンを1上昇(追撃を除く)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1504,"ability_name":"戦士の祝福","ability_explan":"スキルでDP回復効果を受けるとトークンを1上昇","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     ]
