@@ -15,11 +15,6 @@ function setEventTrigger() {
     });
     $("#enemy_list").on("change", function(event) {
         setEnemyStatus();
-        if (isWeak(undefined, undefined)) {
-            $(".row_weak").css("display", "table-cell");
-        } else {
-            $(".row_weak").css("display", "none");
-        }
     });
     // 攻撃スキル変更
     $("#attack_list").on("change", function(event) {
@@ -31,6 +26,8 @@ function setEventTrigger() {
             $("." + type_element[select_attack_skill.attack_element]).removeClass("selected");
             $(".only_chara_id-" + select_attack_skill.chara_id).hide();
             $(".status_attack_skill").removeClass("status_attack_skill");
+            // 敵情報初期化
+            setEnemyStatus();
         }
         if ($("#attack_list option").length == 0) {
             $("#attack_physical, #attack_element").attr("src", "img/blank.png");
@@ -89,11 +86,7 @@ function setEventTrigger() {
         } else {
             $(".row_element").css("display", "table-cell");
         }
-        if (isWeak(skill_info, undefined)) {
-            $(".row_weak").css("display", "table-cell");
-        } else {
-            $(".row_weak").css("display", "none");
-        }
+        displayWeakRow();
         createSkillLvList("skill_lv", max_lv, max_lv);
     });
     // バフスキル変更
@@ -116,7 +109,11 @@ function setEventTrigger() {
             setStatusToBuff(option, id);
         }
     });
-    // バフスキル変更
+    // 耐性ダウン変更
+    $(".resist_down").on("change", function(event) {
+        displayWeakRow();
+    });
+    // チャージ変更
     $("#charge").on("change", function(event) {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
@@ -126,6 +123,7 @@ function setEventTrigger() {
             setStatusToBuff(option, id);
         }
     });
+
     // スキルレベル変更
     $(".lv_effect").on("change", function(event) {
         let buff_type_id = $(this).attr("id").replace("_lv", "");
@@ -427,11 +425,41 @@ function updateBuffEffectSize(option, skill_lv) {
 }
 
 // 弱点判定
-function isWeak(skill_info, enemy_info) {
-    skill_info = skill_info || getAttackInfo();
-    enemy_info = enemy_info || getEnemyInfo();
+function isWeak() {
+    skill_info = getAttackInfo();
+    if (skill_info === undefined) {
+        return false
+    }
+    let physical_resist = Number($("#enemy_physical_" + skill_info.attack_physical).val());
+    let element_resist = Number($("#enemy_element_" + skill_info.attack_element).val());
+    return physical_resist * element_resist > 10000;
+}
 
-    return enemy_info["physical_" + skill_info.attack_physical] > 100 || enemy_info["element_" + skill_info.attack_element] > 100;
+// 敵耐性変更
+function updateEnemyResist(element) {
+    if (element === undefined) {
+        skill_info = getAttackInfo();
+        if (skill_info === undefined) {
+            return false
+        }
+        element = skill_info.attack_element;
+    }
+    enemy_info = getEnemyInfo();
+    let resist_down = getSumEffectSize("resist_down");
+    let element_resist = enemy_info["element_" + element] + resist_down;
+    // 表示変更
+    $("#enemy_element_" + element).val(Math.floor(element_resist));
+    setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+}
+
+// 心眼・脆弱設定
+function displayWeakRow() {
+    updateEnemyResist();
+    if (isWeak()) {
+        $(".row_weak").css("display", "table-cell");
+    } else {
+        $(".row_weak").css("display", "none");
+    }
 }
 
 // 攻撃リストに追加
@@ -486,13 +514,14 @@ function addBuffList(style, chara_no) {
             case 0:
                 only_one = "only_one";
             break;
-            case 1: 
+            case 1: // 属性攻撃アップ
                 only_one = "only_one";
-            case 4:// 属性 
+            case 4: // 属性防御ダウン
+            case 20: // 耐性ダウン
                 buff_element = value.buff_element;
             break;
-            case 8:
-            case 9:// 属性
+            case 8: // 属性クリティカル率アップ
+            case 9: // 属性クリティカルダメージアップ
                 buff_element = value.buff_element;
             case 6:
             case 7:
@@ -674,6 +703,7 @@ function getEffectSize(buff_kind, buff_id, chara_no, skill_lv) {
         case 4: // 属性防御力ダウン
         case 5: // 脆弱
         case 19: // DP防御力ダウン
+        case 20: // 耐性ダウン
             effect_size = getDebuffEffectSize(buff_id, chara_no, skill_lv);
         break;
         case 16: // 連撃(小)
@@ -945,6 +975,7 @@ function setEnemyStatus() {
     }
     $("#dp_range").val(0);
     $("#dp_rate").val('0%');
+    displayWeakRow();
 }
 
 // 敵耐性設定
