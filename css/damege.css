@@ -11,6 +11,31 @@ header {
     border-color: #FFF;
 }
 
+input.troops_btn {
+    width: 40px;
+    height: 40px;
+    font-size: 25px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    box-shadow:0 6px 0 0 #005400;
+    transform: translateY(-6px);
+}
+
+input.troops_btn:hover {
+    box-shadow:0 2px 0 0 #005400;
+    transform: translateY(-2px);
+}
+
+input.troops_btn.selected_troops {
+    box-shadow:0 2px 0 0 #005400;
+    transform: translateY(-2px);
+}
+
 #style_reset_btn {
     width: 50px;
     font-size: 12px;

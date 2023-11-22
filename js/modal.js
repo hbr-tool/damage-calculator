@@ -57,46 +57,13 @@ function addModalEvent() {
 
     // スタイルを選択
     $('.select_style').on('click', function(){
-        let style_id = $(this).data("style_id");
-        let style = style_list.find((obj) => obj.style_id === style_id);
-
-        // 同一のキャラIDは不許可
-        for(let idx in select_style_list) {
-            if (select_style_list[idx].chara_id === style.chara_id && chara_no != idx) {
-                alert("同一キャラクターは複数選択できません");
-                return false;
-            }
-        }
-        // メンバーの情報を削除
-        removeMember();
-        
-        // 画像切り替え
-        select_style_list[chara_no] = style;
-        $('[data-chara_no="' + chara_no + '"]').attr("src", "icon/" + style.image_url);
-
-        // 宝珠スキルタイプを設定
-        $("#jewel_type_" + chara_no).val(style.jewel_type);
-        // ステータスを設定
-        for (let j = 1; j < status_kbn.length; j++) {
-            const status = localStorage.getItem(status_kbn[j] + "_" + style.chara_id);
-            if (status) $("#" + status_kbn[j] + "_" + chara_no).val(status);
-        }
-        const jewel_status = localStorage.getItem("jewel_" + style.chara_id);
-        if (jewel_status) $("#jewel_" + chara_no).prop("selectedIndex", jewel_status);
-        const limit_status = localStorage.getItem("limit_" + style.chara_id);
-        if (limit_status) $("#limit_" + chara_no).prop("selectedIndex", limit_status);
-
-        // スキル・バフ・アビリティを追加
-        addAttackList(style, chara_no);
-        addBuffList(style, chara_no);
-        addAbility(style, chara_no);
-        $("#attack_list").trigger("change");
-
+        setMember($(this).data("style_id"))
         closeModel();
     });
 
     // メンバーを外す
     $('.remove_btn').on('click', function() {
+        localStorage.removeItem(`troops_${select_troops}_${chara_no}`);
         removeMember();
         closeModel();
     });
@@ -113,6 +80,45 @@ function closeModel() {
     $('.modal_layer').removeClass('isShow');
 }
 
+// メンバーを設定する。
+function setMember(style_id) {
+    let style_ifo = style_list.find((obj) => obj.style_id === style_id);
+
+    // 同一のキャラIDは不許可
+    for(let idx in select_style_list) {
+        if (select_style_list[idx].chara_id === style_ifo.chara_id && chara_no != idx) {
+            alert("同一キャラクターは複数選択できません");
+            return false;
+        }
+    }
+    // メンバーの情報を削除
+    removeMember();
+    
+    // 画像切り替え
+    select_style_list[chara_no] = style_ifo;
+    localStorage.setItem(`troops_${select_troops}_${chara_no}`, style_id);
+
+    $('[data-chara_no="' + chara_no + '"]').attr("src", "icon/" + style_ifo.image_url);
+
+    // 宝珠スキルタイプを設定
+    $("#jewel_type_" + chara_no).val(style_ifo.jewel_type);
+    // ステータスを設定
+    for (let j = 1; j < status_kbn.length; j++) {
+        const status = localStorage.getItem(status_kbn[j] + "_" + style_ifo.chara_id);
+        if (status) $("#" + status_kbn[j] + "_" + chara_no).val(status);
+    }
+    const jewel_status = localStorage.getItem("jewel_" + style_ifo.chara_id);
+    if (jewel_status) $("#jewel_" + chara_no).prop("selectedIndex", jewel_status);
+    const limit_status = localStorage.getItem("limit_" + style_ifo.chara_id);
+    if (limit_status) $("#limit_" + chara_no).prop("selectedIndex", limit_status);
+
+    // スキル・バフ・アビリティを追加
+    addAttackList(style_ifo, chara_no);
+    addBuffList(style_ifo, chara_no);
+    addAbility(style_ifo, chara_no);
+    $("#attack_list").trigger("change");
+}
+
 // メンバーを外す
 function removeMember() {
     // 入れ替えスタイルのスキルを削除
@@ -126,8 +132,33 @@ function removeMember() {
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
     select_style_list[chara_no] = 0;
+
     // 画像初期化
     $('[data-chara_no="' + chara_no + '"]').attr("src", "img/plus.png");
     // スキル情報編集
     $("#attack_list").trigger("change");
+}
+
+// 部隊リストの呼び出し
+function loadTroopsList(troops_no) {
+    for (let j = 0; j < 6; j++) {
+        const style_id = localStorage.getItem(`troops_${troops_no}_${j}`);
+        if (style_id !== null) {
+            chara_no = j;
+            setMember(Number(style_id));
+        }
+    }
+}
+
+// スタイルリセット
+function styleReset(isLocalStorageReset) {
+    for (let i = 0; i < select_style_list.length; i++) {
+        if (select_style_list[i] !== 0) {
+            chara_no = i;
+            removeMember();
+            if (isLocalStorageReset) {
+                localStorage.removeItem(`troops_${select_troops}_${chara_no}`);
+            }
+        }
+    }
 }

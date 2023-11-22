@@ -30,6 +30,7 @@
   <script src="js/enemy.js"></script>
   <script>
     var chara_no;
+    var select_troops = 0;
     var select_style_list = [0, 0, 0, 0, 0, 0];
     var status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
     var type_physical = ["", "slash", "stab", "strike"];
@@ -59,6 +60,8 @@
       createEnemyList("1");
       // イベント設定
       setEventTrigger();
+      // スタイルリスト読み込み
+      loadTroopsList(select_troops);
     });
   </script>
 </head>
@@ -69,8 +72,20 @@
   <br>
   <div>
     <div class="w-[1080px] mx-auto flex">
-        <div>
+      <div>
         <div id="char_list" class="w-[482px] grid grid-cols-7 text-center gap-y-px gap-x-0">
+          <label class="mt-3 mb-3">部隊選択</label>
+          <div class="col-span-6 flex">
+            <input type="button" class="troops_btn selected_troops" value="0">
+            <input type="button" class="troops_btn" value="1">
+            <input type="button" class="troops_btn" value="2">
+            <input type="button" class="troops_btn" value="3">
+            <input type="button" class="troops_btn" value="4">
+            <input type="button" class="troops_btn" value="5">
+            <input type="button" class="troops_btn" value="6">
+            <input type="button" class="troops_btn" value="7">
+            <input type="button" class="troops_btn" value="8">
+          </div>
           <div class="mt-2">
             <div>
               <label>スタイル</label>
