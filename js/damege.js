@@ -5,10 +5,13 @@ function setEventTrigger() {
     });
     // 敵リストイベント
     $("#enemy_class").on("change", function(event) {
-        let enemy_class = $("#enemy_class option:selected").val();
+        let enemy_class = $(this).val();
+        localStorage.setItem("enemy_class", enemy_class);
+        localStorage.setItem("enemy_list", "1");
         createEnemyList(enemy_class);
     });
     $("#enemy_list").on("change", function(event) {
+        localStorage.setItem("enemy_list", $(this).val());
         setEnemyStatus();
     });
     // 攻撃スキル変更
@@ -54,12 +57,12 @@ function setEventTrigger() {
         for (let i = 1; i <= 3; i++) {
             $("#" + status_kbn[skill_info["ref_status_" + i]] + "_" + chara_no).addClass("status_attack_skill");
         }
-        let limit_count = Number($("#limit_" + chara_no).val());
         $("input[type=checkbox].ability").each(function(index, value) {
             let ability_id = $(value).data("ability_id");
             let chara_no = $(value).data("chara_no");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
+            let limit_count = Number($("#limit_" + chara_no).val());
             setAbilityCheck(value, ability_info, limit_border, limit_count, chara_id);
         });
         $(".redisplay").each(function(index, value) {
@@ -67,6 +70,7 @@ function setEventTrigger() {
             select2ndSkill($(value));
         });
         // アビリティ項目の表示設定
+        let limit_count = Number($("#limit_" + chara_no).val());
         setAbilityDisplay(limit_count, chara_id);
 
         let attack_physical = type_physical[skill_info.attack_physical];
@@ -238,6 +242,7 @@ function setEventTrigger() {
         $(this).addClass("selected_troops");
         styleReset(false);
         select_troops = $(this).val();
+        localStorage.setItem('select_troops', select_troops);
         loadTroopsList(select_troops);
     });
     // ダメージ再計算
@@ -982,6 +987,15 @@ function setEnemyStatus() {
     $("#dp_range").val(0);
     $("#dp_rate").val('0%');
     displayWeakRow();
+    // バフ効果量を更新
+    $(".variable_effect_size").each(function(index, value) {
+        updateBuffEffectSize($(value));
+    });
+    // 再ソート
+    $(".redisplay").each(function(index, value) {
+        sortEffectSize($(value));
+        select2ndSkill($(value));
+    });
 }
 
 // 敵耐性設定

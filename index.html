@@ -30,7 +30,7 @@
   <script src="js/enemy.js"></script>
   <script>
     var chara_no;
-    var select_troops = 0;
+    var select_troops = localStorage.getItem('select_troops');
     var select_style_list = [0, 0, 0, 0, 0, 0];
     var status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
     var type_physical = ["", "slash", "stab", "strike"];
@@ -57,10 +57,21 @@
       });
 
       // 敵情報設定
-      createEnemyList("1");
+      let enemy_class = localStorage.getItem("enemy_class");
+      enemy_class = enemy_class ? enemy_class : "1";
+      $("#enemy_class").val(enemy_class);
+      createEnemyList(enemy_class);
+      let enemy_list = localStorage.getItem("enemy_list");
+      enemy_list = enemy_list ? enemy_list : "1";
+      $("#enemy_list").val(enemy_list);
+      setEnemyStatus();
+
       // イベント設定
       setEventTrigger();
+
       // スタイルリスト読み込み
+      select_troops = select_troops ? select_troops : 0;
+      $("#troops_btn_" + select_troops).addClass("selected_troops");
       loadTroopsList(select_troops);
     });
   </script>
@@ -76,15 +87,15 @@
         <div id="char_list" class="w-[482px] grid grid-cols-7 text-center gap-y-px gap-x-0">
           <label class="mt-3 mb-3">部隊選択</label>
           <div class="col-span-6 flex">
-            <input type="button" class="troops_btn selected_troops" value="0">
-            <input type="button" class="troops_btn" value="1">
-            <input type="button" class="troops_btn" value="2">
-            <input type="button" class="troops_btn" value="3">
-            <input type="button" class="troops_btn" value="4">
-            <input type="button" class="troops_btn" value="5">
-            <input type="button" class="troops_btn" value="6">
-            <input type="button" class="troops_btn" value="7">
-            <input type="button" class="troops_btn" value="8">
+            <input type="button" id="troops_btn_0" class="troops_btn" value="0">
+            <input type="button" id="troops_btn_1" class="troops_btn" value="1">
+            <input type="button" id="troops_btn_2" class="troops_btn" value="2">
+            <input type="button" id="troops_btn_3" class="troops_btn" value="3">
+            <input type="button" id="troops_btn_4" class="troops_btn" value="4">
+            <input type="button" id="troops_btn_5" class="troops_btn" value="5">
+            <input type="button" id="troops_btn_6" class="troops_btn" value="6">
+            <input type="button" id="troops_btn_7" class="troops_btn" value="7">
+            <input type="button" id="troops_btn_8" class="troops_btn" value="8">
           </div>
           <div class="mt-2">
             <div>
