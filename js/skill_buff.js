@@ -1,28 +1,4 @@
-var buff_kbn = [
-    "power_up", 
-    "element_up", 
-    "mindeye", 
-    "defense_down", 
-    "element_down", 
-    "fragile", 
-    "critical_up", 
-    "critical_damege", 
-    "critical_element", 
-    "critical_damege_element", 
-    "charge",
-    "element_field",
-    "destruction_rete_up",
-    "",
-    "fightingspirit",
-    "misfortune",
-    "funnel",
-    "funnel",
-    "strong_break",
-    "dp_defense_down",
-    "resist_down",
-    ];
-
-var skill_buff = [
+﻿let skill_buff = [
     {"buff_id":1,"buff_kind":11,"buff_element":1,"chara_id":4,"style_id":0,"buff_name":"メメント・モリ","ref_status_1":0,"ref_status_2":0,"min_power":50.00,"max_power":50.00,"sp_cost":12,"param_limit":0,"max_lv":1,"skill_attack":7,"only_me":0,"only_first":0},
     {"buff_id":2,"buff_kind":3,"buff_element":0,"chara_id":10,"style_id":0,"buff_name":"トリック・カノン","ref_status_1":5,"ref_status_2":6,"min_power":30.00,"max_power":45.00,"sp_cost":13,"param_limit":138,"max_lv":1,"skill_attack":9,"only_me":0,"only_first":0},
     {"buff_id":3,"buff_kind":11,"buff_element":3,"chara_id":10,"style_id":0,"buff_name":"トリック・カノン","ref_status_1":0,"ref_status_2":0,"min_power":50.00,"max_power":50.00,"sp_cost":13,"param_limit":0,"max_lv":1,"skill_attack":9,"only_me":0,"only_first":0},
@@ -94,6 +70,7 @@ var skill_buff = [
     {"buff_id":69,"buff_kind":1,"buff_element":5,"chara_id":19,"style_id":0,"buff_name":"石塔の手筋+","ref_status_1":5,"ref_status_2":0,"min_power":65.00,"max_power":80.00,"sp_cost":11,"param_limit":147,"max_lv":1,"skill_attack":97,"only_me":1,"only_first":0},
     {"buff_id":70,"buff_kind":5,"buff_element":0,"chara_id":42,"style_id":96,"buff_name":"純潔のパツィルーイ","ref_status_1":6,"ref_status_2":5,"min_power":35.00,"max_power":50.00,"sp_cost":15,"param_limit":141,"max_lv":1,"skill_attack":100,"only_me":0,"only_first":0},
     {"buff_id":71,"buff_kind":20,"buff_element":3,"chara_id":42,"style_id":96,"buff_name":"純潔のパツィルーイ","ref_status_1":5,"ref_status_2":6,"min_power":45.00,"max_power":60.00,"sp_cost":15,"param_limit":141,"max_lv":1,"skill_attack":100,"only_me":0,"only_first":0},
+    {"buff_id":72,"buff_kind":17,"buff_element":0,"chara_id":19,"style_id":97,"buff_name":"フローズン・ワルツ","ref_status_1":0,"ref_status_2":0,"min_power":3.00,"max_power":3.00,"sp_cost":14,"param_limit":0,"max_lv":1,"skill_attack":101,"only_me":1,"only_first":0},
     {"buff_id":1000,"buff_kind":0,"buff_element":0,"chara_id":0,"style_id":0,"buff_name":"アタッカライズ","ref_status_1":5,"ref_status_2":0,"min_power":50.00,"max_power":65.00,"sp_cost":4,"param_limit":450,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":1001,"buff_kind":0,"buff_element":0,"chara_id":4,"style_id":0,"buff_name":"エンハンス","ref_status_1":5,"ref_status_2":0,"min_power":50.00,"max_power":65.00,"sp_cost":6,"param_limit":208,"max_lv":10,"skill_attack":0,"only_me":0,"only_first":0},
     {"buff_id":1002,"buff_kind":0,"buff_element":0,"chara_id":10,"style_id":0,"buff_name":"エンハンス","ref_status_1":5,"ref_status_2":0,"min_power":50.00,"max_power":65.00,"sp_cost":6,"param_limit":208,"max_lv":10,"skill_attack":0,"only_me":0,"only_first":0},
@@ -127,6 +104,7 @@ var skill_buff = [
     {"buff_id":1106,"buff_kind":1,"buff_element":4,"chara_id":48,"style_id":0,"buff_name":"夢十夜","ref_status_1":5,"ref_status_2":0,"min_power":40.00,"max_power":55.00,"sp_cost":9,"param_limit":132,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":1107,"buff_kind":1,"buff_element":5,"chara_id":48,"style_id":0,"buff_name":"大切り盛り","ref_status_1":5,"ref_status_2":0,"min_power":40.00,"max_power":55.00,"sp_cost":6,"param_limit":123,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":1108,"buff_kind":1,"buff_element":3,"chara_id":47,"style_id":0,"buff_name":"とある衝撃","ref_status_1":5,"ref_status_2":0,"min_power":65.00,"max_power":80.00,"sp_cost":5,"param_limit":200,"max_lv":10,"skill_attack":0,"only_me":1,"only_first":0},
+    {"buff_id":1109,"buff_kind":1,"buff_element":2,"chara_id":19,"style_id":0,"buff_name":"北風のスバル","ref_status_1":5,"ref_status_2":0,"min_power":65.00,"max_power":80.00,"sp_cost":4,"param_limit":192,"max_lv":10,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":1201,"buff_kind":2,"buff_element":0,"chara_id":50,"style_id":0,"buff_name":"インサイト","ref_status_1":5,"ref_status_2":0,"min_power":35.00,"max_power":50.00,"sp_cost":5,"param_limit":200,"max_lv":10,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":1301,"buff_kind":3,"buff_element":0,"chara_id":38,"style_id":0,"buff_name":"臥龍演舞斬","ref_status_1":5,"ref_status_2":6,"min_power":30.00,"max_power":45.00,"sp_cost":6,"param_limit":123,"max_lv":1,"skill_attack":0,"only_me":0,"only_first":0},
     {"buff_id":1302,"buff_kind":3,"buff_element":0,"chara_id":3,"style_id":0,"buff_name":"ハードブレード","ref_status_1":5,"ref_status_2":6,"min_power":30.00,"max_power":45.00,"sp_cost":8,"param_limit":129,"max_lv":1,"skill_attack":0,"only_me":0,"only_first":0},
@@ -166,4 +144,4 @@ var skill_buff = [
     {"buff_id":2701,"buff_kind":17,"buff_element":0,"chara_id":17,"style_id":0,"buff_name":"心意活性","ref_status_1":5,"ref_status_2":0,"min_power":2.00,"max_power":3.00,"sp_cost":5,"param_limit":129,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":2702,"buff_kind":17,"buff_element":0,"chara_id":39,"style_id":0,"buff_name":"ホールドアップマインド","ref_status_1":0,"ref_status_2":0,"min_power":2.00,"max_power":2.00,"sp_cost":8,"param_limit":0,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
     {"buff_id":2703,"buff_kind":17,"buff_element":0,"chara_id":46,"style_id":0,"buff_name":"ブリリアント・グローリー","ref_status_1":5,"ref_status_2":0,"min_power":2.00,"max_power":3.00,"sp_cost":7,"param_limit":208,"max_lv":1,"skill_attack":0,"only_me":1,"only_first":0},
-    ]
+];

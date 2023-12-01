@@ -1,4 +1,4 @@
-let ability_list = [
+﻿let ability_list = [
     {"ability_id":1,"ability_name":"灼熱の陣","ability_explan":"バトル開始時 前衛にいると火属性強化フィールド(弱)を展開","ability_short_explan":"火属性強化フィールド(弱)を展開","ability_target":0,"ability_kind":4,"ability_element":1,"ability_type":1,"ability_power":20},
     {"ability_id":2,"ability_name":"凍れる陣","ability_explan":"バトル開始時 前衛にいると氷属性強化フィールド(弱)を展開","ability_short_explan":"氷属性強化フィールド(弱)を展開","ability_target":0,"ability_kind":4,"ability_element":2,"ability_type":1,"ability_power":20},
     {"ability_id":3,"ability_name":"雷鳴の陣","ability_explan":"バトル開始時 前衛にいると雷属性強化フィールド(弱)を展開","ability_short_explan":"雷属性強化フィールド(弱)を展開","ability_target":0,"ability_kind":4,"ability_element":3,"ability_type":1,"ability_power":20},
@@ -49,4 +49,4 @@ let ability_list = [
     {"ability_id":1502,"ability_name":"堅忍","ability_explan":"敵行動開始時に前衛 & DP破損状態で自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1503,"ability_name":"戦勲","ability_explan":"ダメージを与えた敵1体につきトークンを1上昇(追撃を除く)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1504,"ability_name":"戦士の祝福","ability_explan":"スキルでDP回復効果を受けるとトークンを1上昇","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
-    ]
+];
