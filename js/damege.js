@@ -992,6 +992,7 @@ function setEnemyStatus() {
     }
     $("#dp_range").val(0);
     $("#dp_rate").val('0%');
+    $(".row_dp").css("display", "none");
     displayWeakRow();
     // バフ効果量を更新
     $(".variable_effect_size").each(function(index, value) {
