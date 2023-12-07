@@ -202,6 +202,7 @@ function setEventTrigger() {
         } else {
             $("#dp_range").val(0);
             $("#dp_rate").val('0%');
+            $(".row_dp").css("display", "none");
             let maxDestruction = Number($("#enemy_destruction_limit").val());
             if (maxDestruction < destructionValue) {
                 $(this).val(maxDestruction);
@@ -212,6 +213,11 @@ function setEventTrigger() {
     $("#dp_range").on("input", function(event) {
         $('#dp_rate').val($(this).val() + '%');
         $("#enemy_destruction").val(100);
+        if ($(this).val() == 0) {
+            $(".row_dp").css("display", "none");
+        } else {
+            $(".row_dp").css("display", "table-cell");
+        }
     });
     // 強ブレイクチェック
     $("#strong_break").on("change", function(event) {
@@ -735,8 +741,8 @@ function select2ndSkill(select) {
         let option = select.find("option")[i];
         if ($(option).css("display") !== "none") {
             let buff_id = Number($(option).val());
-            if (buff_id == 1000 || buff_id == 1600 || buff_id == 1700) {
-                // アタッカライズ、クリシン、コンセ
+            if (buff_id == 1000 || buff_id == 1300 || buff_id == 1600 || buff_id == 1700) {
+                // アタッカライズ、クリシン、コンセ、ソフニング
                 continue;
             }
             $(option).prop("selected", true);
