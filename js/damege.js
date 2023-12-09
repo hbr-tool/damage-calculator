@@ -16,23 +16,27 @@ function setEventTrigger() {
     });
     // 攻撃スキル変更
     $("#attack_list").on("change", function(event) {
+        let skill_info = getAttackInfo();
         if (select_attack_skill !== undefined) {
-            if (select_attack_skill.attack_element !== 0) {
-                $(".buff_element-" + select_attack_skill.attack_element).hide();
-            }
             $("." + type_physical[select_attack_skill.attack_physical]).removeClass("selected");
             $("." + type_element[select_attack_skill.attack_element]).removeClass("selected");
-            $(".only_chara_id-" + select_attack_skill.chara_id).hide();
+
+            if (skill_info === undefined || select_attack_skill.chara_id !== skill_info.chara_id) {
+                $(".only_chara_id-" + select_attack_skill.chara_id).hide();
+            }
+            if (select_attack_skill.attack_element !== 0 && (skill_info === undefined || select_attack_skill.attack_element !== skill_info.attack_element)) {
+                $(".buff_element-" + select_attack_skill.attack_element).hide();
+            }
+
             $(".status_attack_skill").removeClass("status_attack_skill");
             // 敵情報初期化
             setEnemyStatus();
         }
-        if ($("#attack_list option").length == 0) {
+        if (skill_info === undefined) {
             $("#attack_physical, #attack_element").attr("src", "img/blank.png");
             // 選択無しの場合は、削除のみ
             return;
         }
-        let skill_info = getAttackInfo();
         select_attack_skill = skill_info;
         let max_lv = skill_info.max_lv;
         let chara_no = $(this).find("option:selected").data("chara_no");
@@ -379,6 +383,10 @@ function getSpCost() {
 	                addSkillCount(sp_list, attack.attack_name, $(value).parent().attr("id"), attack.sp_cost)
 	                break;
                 default:
+                    // 非表示項目を除く
+                    if ($(value).parent().parent().css('display')  == 'none') {
+                        break;
+                    }
 	                let buff_id = Number($(value).val());
 	                if (buff_id !== undefined && buff_id !== 0 ) {
 	                    let buff = getBuffIdToBuff(buff_id)
@@ -410,8 +418,8 @@ function getSpCost() {
 
 // スキル使用回数取得
 function addSkillCount(sp_list, name, id, sp_cost) {
-    name = name.replace("(初回)", "")
-    const array = sp_list.filter((obj) => obj.name === name);
+    name = renameSkill(name);
+    const array = sp_list.filter((obj) => renameSkill(obj.name) === name);
 
     let single = {};
     if (array.length) {
@@ -427,6 +435,15 @@ function addSkillCount(sp_list, name, id, sp_cost) {
     } else {
         single[kind] = 1;
     }
+}
+
+// スキル名の特定文字列削除
+function renameSkill(skill_name) {
+    let str_replace = ["(初回)", "(弱点)", '(破壊率200%以上)', '(オーバードライブ)', '(チャージ)', '(追加ターン)'];
+    str_replace.forEach(value => {
+        skill_name = skill_name.replace(value, "");
+    });
+    return skill_name;
 }
 
 // バフ効果量更新
@@ -735,8 +752,19 @@ function getEffectSize(buff_kind, buff_id, chara_no, skill_lv) {
 
 // スキル設定
 function select2ndSkill(select) {
+    let id = select.attr("id");
+    // 自動選択無しの場合は更新しない
+    if (!$("#auto_skill").prop("checked")) {
+        // 外されていた場合は、「無し」にする。
+        if (select.find(":selected").css("display") == "none") {
+            select.prop("selectedIndex", 0);
+            resetSkillLv(id);
+            $(".status_" + id).removeClass("status_" + id);
+        }
+        return;
+    }
     select.prop("selectedIndex", 0);
-    $(".status_" + select.attr("id")).removeClass("status_" + select.attr("id"));
+    $(".status_" + id).removeClass("status_" + id);
     for (let i = 1; i < select.find("option").length; i++) {
         let option = select.find("option")[i];
         if ($(option).css("display") !== "none") {
@@ -788,6 +816,10 @@ function isOnlyBuff(option) {
 
 // 選択バフのステータスを着色
 function setStatusToBuff(option, id) {
+    // 非表示項目は設定しない
+    if ($(option).parent().parent().css('display') == 'none') {
+        return;
+    }
     let buff = getBuffIdToBuff(Number($(option).val())); 
     if (buff !== undefined) {
         let chara_no = $(option).data("chara_no");
@@ -1019,6 +1051,8 @@ function setEnemyElement(id, val) {
 
 // 効果量ソート
 function sortEffectSize(selecter) {
+    // 初期選択を保存
+    var selected = selecter.val();
     var item = selecter.children().sort(function(a, b){
         var effectA= Number($(a).data("effect_size"));
         var effectB = Number($(b).data("effect_size"));
@@ -1031,6 +1065,8 @@ function sortEffectSize(selecter) {
         }
     });
     selecter.append(item);
+    // 初期選択を再選択
+    selecter.val(selected);
 }
 
 // 攻撃情報取得

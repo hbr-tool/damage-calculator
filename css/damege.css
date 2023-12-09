@@ -80,7 +80,7 @@ select.resist,
 select.critical_rate,
 select.critical_buff,
 select.filed {
-    width: 300px;
+    width: 100%;
 }
 
 .status,
