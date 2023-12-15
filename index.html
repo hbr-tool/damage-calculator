@@ -58,6 +58,8 @@
       "strong_break",
       "dp_defense_down",
       "resist_down",
+      "permanent_defense_down", 
+      "permanent_element_down", 
     ];
     $(function(){ 
       // スタイルリスト作成
@@ -337,8 +339,9 @@
               <td class="type" colspan="2">連撃2</td>
               <td><select id="funnel2" class="funnel redisplay include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="funnel2_lv"></select></div></td>
-            </tr>            <tr>
-              <td rowspan="10" class="kind">デバフ</td>
+            </tr>
+            <tr>
+              <td rowspan="14" class="kind">デバフ</td>
               <td class="type" colspan="2">防御力DOWN1</td>
               <td><select id="defense_down1" class="debuff redisplay defense_down include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
@@ -366,6 +369,26 @@
             <tr>
               <td class="type row_element" colspan="2">属性防御力DOWN2</td>
               <td class="row_element"><select id="element_down2" class="debuff redisplay element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">永続防御力DOWN1</td>
+              <td><select id="permanent_defense_down1" class="debuff redisplay permanent_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type" colspan="2">永続防御力DOWN2</td>
+              <td><select id="permanent_defense_down2" class="debuff redisplay permanent_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td><div class="lv"><select id="defense_down2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">永続属性防御力DOWN1</td>
+              <td class="row_element"><select id="permanent_element_down1" class="debuff redisplay permanent_element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element"><div class="lv"><select id="element_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element" colspan="2">永続属性防御力DOWN2</td>
+              <td class="row_element"><select id="permanent_element_down2" class="debuff redisplay permanent_element_down include_lv"><option selected value="">無し</option></select></td>
               <td class="row_element"><div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div></td>
             </tr>
             <tr>

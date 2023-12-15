@@ -97,4 +97,6 @@
     {"style_id":96,"chara_id":42,"style_name":"とこしえの想い","image_url":"CSkopovskayaVampire_R3.webp","troops":"31X","role":6,"physical":2,"element":3,"jewel_type":4,"ability0":403,"ability1":1101,"ability3":225},
     {"style_id":97,"chara_id":19,"style_name":"Holiday Ring a Bell","image_url":"MNikaidoXmas2023_R3.webp","troops":"31D","role":1,"physical":3,"element":2,"jewel_type":1,"ability0":402,"ability1":1101,"ability3":202},
     {"style_id":98,"chara_id":23,"style_name":"Holiday Star Night","image_url":"ADateXmas2023_R3.webp","troops":"31D","role":2,"physical":3,"element":2,"jewel_type":1,"ability0":402,"ability1":1101,"ability3":202},
+    {"style_id":99,"chara_id":3,"style_name":"トワイライト・グロース","image_url":"MAikawaSuite_R3.webp","troops":"31A","role":6,"physical":3,"element":5,"jewel_type":4,"ability0":405,"ability1":1101,"ability3":601},
+    {"style_id":100,"chara_id":6,"style_name":"トワイライト・メモリーズ","image_url":"TKunimiSuite_R3.webp","troops":"31A","role":5,"physical":1,"element":0,"jewel_type":3,"ability0":406,"ability1":1101,"ability3":1004},
 ];

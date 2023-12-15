@@ -552,6 +552,7 @@ function addBuffList(style, chara_no) {
                 only_one = "only_one";
             case 4: // 属性防御ダウン
             case 20: // 耐性ダウン
+            case 22: // 永続属性防御ダウン
                 buff_element = value.buff_element;
             break;
             case 8: // 属性クリティカル率アップ
@@ -738,6 +739,8 @@ function getEffectSize(buff_kind, buff_id, chara_no, skill_lv) {
         case 5: // 脆弱
         case 19: // DP防御力ダウン
         case 20: // 耐性ダウン
+        case 21: // 永続防御ダウン
+        case 22: // 永続属性防御ダウン
             effect_size = getDebuffEffectSize(buff_id, chara_no, skill_lv);
         break;
         case 16: // 連撃(小)
