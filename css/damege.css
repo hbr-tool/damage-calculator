@@ -69,6 +69,13 @@ table td.kind {
 table td.type {
     width: 180px;
 }
+table td.row_element-1,
+table td.row_element-2,
+table td.row_element-3,
+table td.row_element-4,
+table td.row_element-5 {
+    display: none;
+}
 
 select.buff,
 select.mindeye,

@@ -24,8 +24,12 @@ function setEventTrigger() {
             if (skill_info === undefined || select_attack_skill.chara_id !== skill_info.chara_id) {
                 $(".only_chara_id-" + select_attack_skill.chara_id).hide();
             }
+            if (skill_info === undefined || select_attack_skill.attack_id !== skill_info.attack_id) {
+                $(".skill_attack-" + select_attack_skill.attack_id).hide();
+            }
             if (select_attack_skill.attack_element !== 0 && (skill_info === undefined || select_attack_skill.attack_element !== skill_info.attack_element)) {
                 $(".buff_element-" + select_attack_skill.attack_element).hide();
+                $(".row_element-" + select_attack_skill.attack_element).css("display", "none");
             }
 
             $(".status_attack_skill").removeClass("status_attack_skill");
@@ -88,6 +92,7 @@ function setEventTrigger() {
             $(".row_element").css("display", "none");
         } else {
             $(".row_element").css("display", "table-cell");
+            $(".row_element-" + skill_info.attack_element).css("display", "table-cell");
         }
         displayWeakRow();
         createSkillLvList("skill_lv", max_lv, max_lv);
