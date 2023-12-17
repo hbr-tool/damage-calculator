@@ -119,6 +119,11 @@ function setEventTrigger() {
     });
     // 耐性ダウン変更
     $(".resist_down").on("change", function(event) {
+        updateEnemyResist();
+        displayWeakRow();
+    });
+    // 耐性変更
+    $(".enemy_type_value").on("change", function(event) {
         displayWeakRow();
     });
     // チャージ変更
@@ -493,7 +498,6 @@ function updateEnemyResist(element) {
 
 // 心眼・脆弱設定
 function displayWeakRow() {
-    updateEnemyResist();
     if (isWeak()) {
         $(".row_weak").css("display", "table-cell");
     } else {
@@ -1033,6 +1037,7 @@ function setEnemyStatus() {
     $("#dp_range").val(0);
     $("#dp_rate").val('0%');
     $(".row_dp").css("display", "none");
+    updateEnemyResist();
     displayWeakRow();
     // バフ効果量を更新
     $(".variable_effect_size").each(function(index, value) {
