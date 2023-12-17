@@ -186,6 +186,8 @@ input.calc_btn {
 .status_critical_element2,
 .status_critical_damege_element1,
 .status_critical_damege_element2,
+.status_permanent_defense_down,
+.tatus_permanent_element_down,
 .status_charge {
     background-color: rgba(255, 0, 0, 0.3)
 }
