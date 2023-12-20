@@ -56,7 +56,7 @@ function addModalEvent() {
     });
 
     // スタイルを選択
-    $('.select_style').on('click', function(){
+    $('input.select_style').on('click', function(){
         setMember($(this).data("style_id"))
         closeModel();
     });
@@ -82,11 +82,11 @@ function closeModel() {
 
 // メンバーを設定する。
 function setMember(style_id) {
-    let style_ifo = style_list.find((obj) => obj.style_id === style_id);
+    let style_info = style_list.find((obj) => obj.style_id === style_id);
 
     // 同一のキャラIDは不許可
     for(let idx in select_style_list) {
-        if (select_style_list[idx].chara_id === style_ifo.chara_id && chara_no != idx) {
+        if (select_style_list[idx].chara_id === style_info.chara_id && chara_no != idx) {
             alert("同一キャラクターは複数選択できません");
             return false;
         }
@@ -95,27 +95,27 @@ function setMember(style_id) {
     removeMember();
     
     // 画像切り替え
-    select_style_list[chara_no] = style_ifo;
+    select_style_list[chara_no] = style_info;
     localStorage.setItem(`troops_${select_troops}_${chara_no}`, style_id);
 
-    $('[data-chara_no="' + chara_no + '"]').attr("src", "icon/" + style_ifo.image_url);
+    $('[data-chara_no="' + chara_no + '"]').attr("src", "icon/" + style_info.image_url);
 
     // 宝珠スキルタイプを設定
-    $("#jewel_type_" + chara_no).val(style_ifo.jewel_type);
+    $("#jewel_type_" + chara_no).val(style_info.jewel_type);
     // ステータスを設定
     for (let j = 1; j < status_kbn.length; j++) {
-        const status = localStorage.getItem(status_kbn[j] + "_" + style_ifo.chara_id);
+        const status = localStorage.getItem(status_kbn[j] + "_" + style_info.chara_id);
         if (status) $("#" + status_kbn[j] + "_" + chara_no).val(status);
     }
-    const jewel_status = localStorage.getItem("jewel_" + style_ifo.chara_id);
+    const jewel_status = localStorage.getItem("jewel_" + style_info.chara_id);
     if (jewel_status) $("#jewel_" + chara_no).prop("selectedIndex", jewel_status);
-    const limit_status = localStorage.getItem("limit_" + style_ifo.chara_id);
+    const limit_status = localStorage.getItem("limit_" + style_info.chara_id);
     if (limit_status) $("#limit_" + chara_no).prop("selectedIndex", limit_status);
 
     // スキル・バフ・アビリティを追加
-    addAttackList(style_ifo, chara_no);
-    addBuffList(style_ifo, chara_no);
-    addAbility(style_ifo, chara_no);
+    addAttackList(style_info, chara_no);
+    addBuffList(style_info, chara_no);
+    addAbility(style_info, chara_no);
     $("#attack_list").trigger("change");
 }
 
