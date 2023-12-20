@@ -22,7 +22,7 @@
     {"style_id":21,"chara_id":19,"style_name":"無上の終局","image_url":"MNikaidoDefault_R3.webp","troops":"31D","role":1,"physical":3,"element":5,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":301},
     {"style_id":22,"chara_id":43,"style_name":"AwakeningIris","image_url":"YShirakawaDefault_R3.webp","troops":"30G","role":1,"physical":1,"element":4,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":207},
     {"style_id":23,"chara_id":1,"style_name":"残響のカルディナル","image_url":"RKayamoriGothic_R3.webp","troops":"31A","role":1,"physical":1,"element":4,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":206},
-    {"style_id":24,"chara_id":48,"style_name":"此に期するは豊穣の御霊","image_url":"SKuraDefault_R3.webp","troops":"30G","role":3,"physical":1,"element":5,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":4},
+    {"style_id":24,"chara_id":48,"style_name":"此に期するは豊穣の御霊","image_url":"SKuraDefault_R3.webp","troops":"30G","role":3,"physical":1,"element":4,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":4},
     {"style_id":25,"chara_id":47,"style_name":"朧月夜のバレット","image_url":"HOgasawaraDefault_R3.webp","troops":"30G","role":2,"physical":2,"element":0,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":212},
     {"style_id":26,"chara_id":31,"style_name":"WildRose","image_url":"MYanagiDefault_R3.webp","troops":"31F","role":4,"physical":2,"element":0,"jewel_type":2,"ability0":0,"ability1":1101,"ability3":1105},
     {"style_id":27,"chara_id":32,"style_name":"エボリューションな感受性","image_url":"KMaruyamaDefault_R3.webp","troops":"31F","role":2,"physical":2,"element":5,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":214},

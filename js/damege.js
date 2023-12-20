@@ -34,7 +34,7 @@ function setEventTrigger() {
 
             $(".status_attack_skill").removeClass("status_attack_skill");
             // 敵情報初期化
-            setEnemyStatus();
+            resetEnemyResist();
         }
         if (skill_info === undefined) {
             $("#attack_physical, #attack_element").attr("src", "img/blank.png");
@@ -73,10 +73,7 @@ function setEventTrigger() {
             let limit_count = Number($("#limit_" + chara_no).val());
             setAbilityCheck(value, ability_info, limit_border, limit_count, chara_id);
         });
-        $(".redisplay").each(function(index, value) {
-            sortEffectSize($(value));
-            select2ndSkill($(value));
-        });
+
         // アビリティ項目の表示設定
         let limit_count = Number($("#limit_" + chara_no).val());
         setAbilityDisplay(limit_count, chara_id);
@@ -88,13 +85,16 @@ function setEventTrigger() {
         $("." + attack_physical).addClass("selected");
         $("." + attack_element).addClass("selected");
 
-        if (skill_info.attack_element == 0) {
-            $(".row_element").css("display", "none");
-        } else {
-            $(".row_element").css("display", "table-cell");
-            $(".row_element-" + skill_info.attack_element).css("display", "table-cell");
-        }
+        displayElementRow();
         displayWeakRow();
+
+        $(".redisplay").each(function(index, value) {
+            sortEffectSize($(value));
+            select2ndSkill($(value));
+        });
+
+        // 敵情報再設定
+        updateEnemyResist();
         createSkillLvList("skill_lv", max_lv, max_lv);
     });
     // バフスキル変更
@@ -107,13 +107,16 @@ function setEventTrigger() {
         } else {
             let option = $(this).children().eq(selected_index);
             if (isOnlyBuff(option)) {
-                $(this).prop("selectedIndex", 0);
-                alert(option.text() + "は複数設定出来ません");
-                return;
+                if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが\r\nよろしいですか？")) {
+                    $(this).prop("selectedIndex", 0);
+                    return;
+                }
             }
             let select_lv = option.data("select_lv");
-            let skill_info = getBuffIdToBuff(Number(option.val()));
-            createSkillLvList(id + "_lv", skill_info.max_lv, select_lv);
+            if (select_lv !== undefined) {
+                let skill_info = getBuffIdToBuff(Number(option.val()));
+                createSkillLvList(id + "_lv", skill_info.max_lv, select_lv);
+            }
             setStatusToBuff(option, id);
         }
     });
@@ -479,6 +482,16 @@ function isWeak() {
     return physical_resist * element_resist > 10000;
 }
 
+// 敵耐性初期化
+function resetEnemyResist() {
+    let element = select_attack_skill.attack_element;
+    let enemy_info = getEnemyInfo();
+    let element_resist = enemy_info["element_" + element];
+    // 表示変更
+    $("#enemy_element_" + element).val(Math.floor(element_resist));
+    setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+}
+
 // 敵耐性変更
 function updateEnemyResist(element) {
     if (element === undefined) {
@@ -488,7 +501,7 @@ function updateEnemyResist(element) {
         }
         element = skill_info.attack_element;
     }
-    enemy_info = getEnemyInfo();
+    let enemy_info = getEnemyInfo();
     let resist_down = getSumEffectSize("resist_down");
     let element_resist = enemy_info["element_" + element] + resist_down;
     // 表示変更
@@ -496,7 +509,17 @@ function updateEnemyResist(element) {
     setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
 }
 
-// 心眼・脆弱設定
+// 属性行設定
+function displayElementRow() {
+    if (select_attack_skill.attack_element == 0) {
+        $(".row_element").css("display", "none");
+    } else {
+        $(".row_element").css("display", "table-cell");
+        $(".row_element-" + select_attack_skill.attack_element).css("display", "table-cell");
+    }
+}
+
+// 心眼・脆弱行設定
 function displayWeakRow() {
     if (isWeak()) {
         $(".row_weak").css("display", "table-cell");
@@ -713,7 +736,7 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break;
         case 2: // 前衛
-            disabled = limit_count < limit_border || $(input).hasClass(chara_id);
+            disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && ability_info.ability_type == 1);
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break;
         case 3:	// 常時

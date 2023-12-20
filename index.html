@@ -101,13 +101,13 @@
     });
   </script>
 </head>
-<body>
+<body class="overflow-y-scroll">
   <header>
     <h1>ヘブバン ダメージ計算ツール</h1>
   </header>
   <br>
   <div>
-    <div class="w-[1100px] mx-auto flex">
+    <div class="w-[1085px] mx-auto flex text-sm">
       <div>
         <div id="char_list" class="w-[482px] grid grid-cols-7 text-center gap-y-px gap-x-0">
           <label class="mt-3 mb-3">部隊選択</label>
@@ -134,75 +134,89 @@
             <input type="hidden" id="jewel_type_4" value="">
             <input type="hidden" id="jewel_type_5" value="">
           </div>
-          <img class="showmodal w-16 h-16" id="chara0" src="img/plus.png" data-chara_no="0">
-          <img class="showmodal w-16 h-16" id="chara1" src="img/plus.png" data-chara_no="1">
-          <img class="showmodal w-16 h-16" id="chara2" src="img/plus.png" data-chara_no="2">
-          <img class="showmodal w-16 h-16" id="chara3" src="img/plus.png" data-chara_no="3">
-          <img class="showmodal w-16 h-16" id="chara4" src="img/plus.png" data-chara_no="4">
-          <img class="showmodal w-16 h-16" id="chara5" src="img/plus.png" data-chara_no="5">
-          <label>限界突破</label>
+          <img class="showmodal select_style" id="chara0" src="img/plus.png" data-chara_no="0">
+          <img class="showmodal select_style" id="chara1" src="img/plus.png" data-chara_no="1">
+          <img class="showmodal select_style" id="chara2" src="img/plus.png" data-chara_no="2">
+          <img class="showmodal select_style" id="chara3" src="img/plus.png" data-chara_no="3">
+          <img class="showmodal select_style" id="chara4" src="img/plus.png" data-chara_no="4">
+          <img class="showmodal select_style" id="chara5" src="img/plus.png" data-chara_no="5">
+          <div>
+	          <label class="label_status">限界突破</label>
+	          <label class="label_status">力</label>
+	          <label class="label_status">器用さ</label>
+	          <label class="label_status">体力</label>
+	          <label class="label_status">精神</label>
+	          <label class="label_status">知性</label>
+	          <label class="label_status">運</label>
+	          <label class="label_status">宝珠Lv</label>
+	          <label class="label_status">消費SP</label>
+          </div>
+          <div>
           <select id="limit_0" class="limit save"></select>
-          <select id="limit_1" class="limit save"></select>
-          <select id="limit_2" class="limit save"></select>
-          <select id="limit_3" class="limit save"></select>
-          <select id="limit_4" class="limit save"></select>
-          <select id="limit_5" class="limit save"></select>
-          <label>力</label>
-          <input type="number" id="str_0" class="status save" value="400">
-          <input type="number" id="str_1" class="status save" value="400">
-          <input type="number" id="str_2" class="status save" value="400">
-          <input type="number" id="str_3" class="status save" value="400">
-          <input type="number" id="str_4" class="status save" value="400">
-          <input type="number" id="str_5" class="status save" value="400">
-          <label>器用さ</label>
-          <input type="number" id="dex_0" class="status save" value="400">
-          <input type="number" id="dex_1" class="status save" value="400">
-          <input type="number" id="dex_2" class="status save" value="400">
-          <input type="number" id="dex_3" class="status save" value="400">
-          <input type="number" id="dex_4" class="status save" value="400">
-          <input type="number" id="dex_5" class="status save" value="400">
-          <label>体力</label>
-          <input type="number" id="con_0" class="status save" value="400">
-          <input type="number" id="con_1" class="status save" value="400">
-          <input type="number" id="con_2" class="status save" value="400">
-          <input type="number" id="con_3" class="status save" value="400">
-          <input type="number" id="con_4" class="status save" value="400">
-          <input type="number" id="con_5" class="status save" value="400">
-          <label>精神</label>
-          <input type="number" id="mnd_0" class="status save" value="400">
-          <input type="number" id="mnd_1" class="status save" value="400">
-          <input type="number" id="mnd_2" class="status save" value="400">
-          <input type="number" id="mnd_3" class="status save" value="400">
-          <input type="number" id="mnd_4" class="status save" value="400">
-          <input type="number" id="mnd_5" class="status save" value="400">
-          <label>知力</label>
-          <input type="number" id="int_0" class="status effect_size save" value="400">
-          <input type="number" id="int_1" class="status effect_size save" value="400">
-          <input type="number" id="int_2" class="status effect_size save" value="400">
-          <input type="number" id="int_3" class="status effect_size save" value="400">
-          <input type="number" id="int_4" class="status effect_size save" value="400">
-          <input type="number" id="int_5" class="status effect_size save" value="400">
-          <label>運</label>
-          <input type="number" id="luk_0" class="status effect_size save" value="400">
-          <input type="number" id="luk_1" class="status effect_size save" value="400">
-          <input type="number" id="luk_2" class="status effect_size save" value="400">
-          <input type="number" id="luk_3" class="status effect_size save" value="400">
-          <input type="number" id="luk_4" class="status effect_size save" value="400">
-          <input type="number" id="luk_5" class="status effect_size save" value="400">
-          <label>宝珠Lv</label>
-          <select id="jewel_lv_0" class="jewel save"></select>
-          <select id="jewel_lv_1" class="jewel save"></select>
-          <select id="jewel_lv_2" class="jewel save"></select>
-          <select id="jewel_lv_3" class="jewel save"></select>
-          <select id="jewel_lv_4" class="jewel save"></select>
-          <select id="jewel_lv_5" class="jewel save"></select>
-          <label>消費SP</label>
-          <label id="sp_cost_0">0</label>
-          <label id="sp_cost_1">0</label>
-          <label id="sp_cost_2">0</label>
-          <label id="sp_cost_3">0</label>
-          <label id="sp_cost_4">0</label>
-          <label id="sp_cost_5">0</label>
+            <input type="number" id="str_0" class="status save" value="400">
+            <input type="number" id="dex_0" class="status save" value="400">
+            <input type="number" id="con_0" class="status save" value="400">
+            <input type="number" id="mnd_0" class="status save" value="400">
+            <input type="number" id="int_0" class="status effect_size save" value="400">
+            <input type="number" id="luk_0" class="status effect_size save" value="400">
+            <select id="jewel_lv_0" class="jewel save"></select>
+            <label id="sp_cost_0">0</label>
+          </div>
+          <div>
+            <select id="limit_1" class="limit save"></select>
+            <input type="number" id="str_1" class="status save" value="400">
+            <input type="number" id="dex_1" class="status save" value="400">
+            <input type="number" id="con_1" class="status save" value="400">
+            <input type="number" id="mnd_1" class="status save" value="400">
+            <input type="number" id="int_1" class="status effect_size save" value="400">
+            <input type="number" id="luk_1" class="status effect_size save" value="400">
+            <select id="jewel_lv_1" class="jewel save"></select>
+            <label id="sp_cost_1">0</label>
+          </div>
+          <div>
+            <select id="limit_2" class="limit save"></select>
+            <input type="number" id="str_2" class="status save" value="400">
+            <input type="number" id="dex_2" class="status save" value="400">
+            <input type="number" id="con_2" class="status save" value="400">
+            <input type="number" id="mnd_2" class="status save" value="400">
+            <input type="number" id="int_2" class="status effect_size save" value="400">
+            <input type="number" id="luk_2" class="status effect_size save" value="400">
+            <select id="jewel_lv_2" class="jewel save"></select>
+            <label id="sp_cost_2">0</label>
+          </div>
+          <div>
+            <select id="limit_3" class="limit save"></select>
+            <input type="number" id="str_3" class="status save" value="400">
+            <input type="number" id="dex_3" class="status save" value="400">
+            <input type="number" id="con_3" class="status save" value="400">
+            <input type="number" id="mnd_3" class="status save" value="400">
+            <input type="number" id="int_3" class="status effect_size save" value="400">
+            <input type="number" id="luk_3" class="status effect_size save" value="400">
+            <select id="jewel_lv_3" class="jewel save"></select>
+            <label id="sp_cost_3">0</label>
+          </div>
+          <div>
+            <select id="limit_4" class="limit save"></select>
+            <input type="number" id="str_4" class="status save" value="400">
+            <input type="number" id="dex_4" class="status save" value="400">
+            <input type="number" id="con_4" class="status save" value="400">
+            <input type="number" id="mnd_4" class="status save" value="400">
+            <input type="number" id="int_4" class="status effect_size save" value="400">
+            <input type="number" id="luk_4" class="status effect_size save" value="400">
+            <select id="jewel_lv_4" class="jewel save"></select>
+            <label id="sp_cost_4">0</label>
+          </div>
+          <div>
+            <select id="limit_5" class="limit save"></select>
+            <input type="number" id="str_5" class="status save" value="400">
+            <input type="number" id="dex_5" class="status save" value="400">
+            <input type="number" id="con_5" class="status save" value="400">
+            <input type="number" id="mnd_5" class="status save" value="400">
+            <input type="number" id="int_5" class="status effect_size save" value="400">
+            <input type="number" id="luk_5" class="status effect_size save" value="400">
+            <select id="jewel_lv_5" class="jewel save"></select>
+            <label id="sp_cost_5">0</label>
+          </div>
         </div>
         <br>
         <div class="w-[400px] mx-auto flex">
@@ -291,14 +305,14 @@
       </div>
       <div class="text-right">
         <input type="checkbox" id="auto_skill" checked><label class="checkbox01" for="auto_skill">スタイル/攻撃スキル/敵選択時に最適スキルを自動選択する</label>
-        <div class="w-[630px] text-center">
+        <div class="w-[615px] text-center">
           <table>
             <colgroup>
               <col width="90px">
-              <col width="80px">
+              <col width="70px">
               <col width="90px">
               <col width="310px">
-              <col width="60px">
+              <col width="55px">
             </colgroup>
             <tr>
               <td rowspan="8" class="kind">バフ</td>
@@ -342,7 +356,7 @@
               <td><div class="lv"><select id="funnel2_lv"></select></div></td>
             </tr>
             <tr>
-              <td rowspan="12" class="kind">デバフ</td>
+              <td rowspan="14" class="kind">デバフ</td>
               <td class="type" colspan="2">防御力DOWN1</td>
               <td><select id="defense_down1" class="debuff redisplay defense_down include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
@@ -373,14 +387,24 @@
               <td class="row_element"><div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div></td>
             </tr>
             <tr>
-              <td class="type" colspan="2">永続防御力DOWN</td>
-              <td class=""><select id="permanent_defense_down" class="debuff redisplay permanent_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="type" colspan="2">永続防御力DOWN1</td>
+              <td class=""><select id="permanent_defense_down1" class="debuff redisplay permanent_defense_down include_lv"><option selected value="">無し</option></select></td>
               <td class=""><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
             </tr>
             <tr>
-              <td class="type row_element-5" colspan="2">永続属性防御力DOWN</td>
-              <td class="row_element-5"><select id="permanent_element_down" class="debuff redisplay permanent_element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="type" colspan="2">永続防御力DOWN2</td>
+              <td class=""><select id="permanent_defense_down2" class="debuff redisplay permanent_defense_down include_lv"><option selected value="">無し</option></select></td>
+              <td class=""><div class="lv"><select id="defense_down2_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element-5" colspan="2">永続属性防御力DOWN1</td>
+              <td class="row_element-5"><select id="permanent_element_down1" class="debuff redisplay permanent_element_down include_lv"><option selected value="">無し</option></select></td>
               <td class="row_element-5"><div class="lv"><select id="element_down1_lv" class="lv_effect"></select></div></td>
+            </tr>
+            <tr>
+              <td class="type row_element-5" colspan="2">永続属性防御力DOWN2</td>
+              <td class="row_element-5"><select id="permanent_element_down2" class="debuff redisplay permanent_element_down include_lv"><option selected value="">無し</option></select></td>
+              <td class="row_element-5"><div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div></td>
             </tr>
             <tr>
               <td class="type row_weak" colspan="2">脆弱1</td>
@@ -473,7 +497,7 @@
               <td colspan="4" >
                 <div class="flex pt-1">
                   <div class="w-6"></div>
-                  <div>属性リング</div>
+                  <div class="pt-0.5">属性リング</div>
                    <select id="elememt_ring" disabled>
                     <option value="0">無し</option>
                     <option value="2">+0(2%)</option>
@@ -483,7 +507,7 @@
                     <option value="10">+4(10%)</option>
                   </select>
                   <div class="w-6"></div>
-                  <div>ピアス</div>
+                  <div class="pt-0.5">ピアス</div>
                   <select id="earring">
                     <option value="0">選択無し</option>
                     <option value="1" data-effect_size="10" data-type="attack">アタック10%</option>
@@ -497,7 +521,7 @@
                     <option value="9" data-effect_size="15" data-type="blast">ブラスト15%</option>
                   </select>
                   <div class="w-6"></div>
-                  <div>トークン数</div>
+                  <div class="pt-0.5">トークン数</div>
                   <select id="token_count" class="token">
                     <option value="0">0</option>
                     <option value="1">1</option>
