@@ -56,10 +56,16 @@ input[type="text"]:not(:read-only) {
 
 select {
     border: solid 1px #000;
+    height: 21px;
+}
+
+table tr {
+    line-height: 16px;
 }
 
 table td {
     border: 1px solid #000;
+    padding: 1px;
 }
 
 table td.kind {
@@ -88,6 +94,18 @@ select.critical_rate,
 select.critical_buff,
 select.filed {
     width: 100%;
+    height: 21px;
+}
+
+img.select_style {
+    width: 64px;
+    height: 64px;
+    margin-left: 4px;
+}
+
+.label_status {
+    line-height: 22px;
+    display: block;
 }
 
 .status,
@@ -96,6 +114,11 @@ select.filed {
     text-align: center;
     width: 60px;
     margin-left: 3px;
+}
+
+#attack_physical,
+#attack_element  {
+    margin-top: -1px;
 }
 
 #dp_range {
@@ -111,6 +134,7 @@ div.lv::before {
 }
 div.lv select{
     text-align: center;
+    height: 21px;
 }
 
 input.calc_btn {
@@ -186,8 +210,12 @@ input.calc_btn {
 .status_critical_element2,
 .status_critical_damege_element1,
 .status_critical_damege_element2,
-.status_permanent_defense_down,
-.tatus_permanent_element_down,
+.status_permanent_defense_down1,
+.status_permanent_defense_down2,
+.status_permanent_element_down1,
+.status_permanent_element_down2,
+.status_resist_down1,
+.status_resist_down2,
 .status_charge {
     background-color: rgba(255, 0, 0, 0.3)
 }

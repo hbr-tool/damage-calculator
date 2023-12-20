@@ -1,0 +1,22 @@
+header {
+  background-color: #149f14;
+  height: 50px;
+  text-align: center;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.select_style {
+  width: 92px;
+  height: 92px;
+}
+
+.troops {
+  margin-top: 10px;
+  display: flex;
+}
+.emblem {
+  width: 92px;
+  height: 92px;
+}
