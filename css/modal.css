@@ -1,0 +1,119 @@
+/* ---------------------------- */
+/* --- ModalSection --- */
+/* ---------------------------- */
+.modal_layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  transition: opacity 0.65s;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 10000;
+}
+.modal_layer.isShow {
+  transition: opacity 0.65s;
+  pointer-events: auto;
+  opacity: 1;
+}
+.modal_layer_mask {
+  position: absolute;
+  background: rgba(123,123,123,0.5);
+  width: 100%;
+  height: 1000vh;
+}
+.modal_layer_inner {
+  border-top: 5px solid #5bc8ac;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 90%;
+  overflow-y: hidden;
+  transform: translate(-50%, -50%);
+}
+@media screen and (max-width: 768px) {
+  header {
+    width: 1200px;
+  }
+  .modal_layer_mask {
+    height: 150vh;
+  }
+  .modal_layer_inner {
+    left: 30px;
+    top: 30px;
+    height: 140vh;
+    overflow-y: scroll;
+    transform: translate(0%, 0%);
+  }
+}
+.modal_section {
+  background: #fff;
+  height: 100%;
+}
+.modal_inner {
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+  width: 550px;
+  height: 100%;
+}
+.modal_inner_headline {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search_result_area {
+  height: calc(100% - 145px);
+  overflow-y: scroll;
+  margin-top: 5px;
+  margin-right: -20px;
+  padding-right: 20px;
+}
+
+input.remove_btn {
+  width: 100px;
+  font-size: 20px;
+  color: #fff;
+  background: #149f14;
+  border-radius: 100vh;
+}
+
+input.role {
+  width: 80px;
+  font-size: 14px;
+  color: #fff;
+  background: #7f7fff;
+  border-radius: 10vh;
+  margin: 2px;
+}
+
+hr.line {
+  height: 5px;
+  background-color: #888;
+  width: 100%;
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}  
+
+.troops {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.select_style {
+  width: 64px;
+  height: 64px;
+}
+.troops {
+  margin-top: 10px;
+  display: flex;
+}
+.emblem {
+  width: 64px;
+  height: 64px;
+}
