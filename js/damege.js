@@ -107,7 +107,7 @@ function setEventTrigger() {
         } else {
             let option = $(this).children().eq(selected_index);
             if (isOnlyBuff(option)) {
-                if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが\r\nよろしいですか？")) {
+                if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが、設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
                     return;
                 }
