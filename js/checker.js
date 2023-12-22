@@ -40,13 +40,19 @@ function setEventTrigger() {
         shareOnTwitter(message);
     });
 }
+
+// Twitter起動
 function shareOnTwitter(message) {
     // エンコードされたメッセージを生成
     var encodedMessage = encodeURIComponent(message);
     var hashtags = "ヘブバン,ヘブバンスタイル所持率チェッカー";
     var url = location.href;
     // TwitterのシェアURLを生成
-    var twitterURL = 'https://twitter.com/share?text=' + encodedMessage + "&hashtags=" + hashtags + "&url=" + url;
+    var twitterURL = 'https://twitter.com/share?text=';
+    if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+        twitterURL = 'https://twitter.com/intent/tweet?text=';
+    }
+    twitterURL += encodedMessage + "&hashtags=" + hashtags + "&url=" + url;
     // aタグを生成
     var link = $('<a>')
         .attr('href', twitterURL)
