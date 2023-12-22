@@ -7,7 +7,7 @@ function createStyleList() {
             .attr("src", source)
             .attr("title", "[" + value.style_name + "]" + chara_full_name[value.chara_id])
             .data("style_id", value.style_id)
-            .addClass("select_style")
+            .addClass("select_style_list")
             .addClass("physical_" + value.physical)
             .addClass("element_" + value.element)
             .addClass("role_" + value.role);
@@ -50,13 +50,13 @@ function addModalEvent() {
             narrow[classification] = "";
         }
 
-        $(".select_style").hide();
-        let show_class = ".select_style" + narrow.physical + narrow.element + narrow.role;
+        $(".select_style_list").hide();
+        let show_class = ".select_style_list" + narrow.physical + narrow.element + narrow.role;
         $(show_class).show();
     });
 
     // スタイルを選択
-    $('input.select_style').on('click', function(){
+    $('input.select_style_list').on('click', function(){
         setMember($(this).data("style_id"))
         closeModel();
     });
