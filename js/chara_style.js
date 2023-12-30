@@ -99,4 +99,6 @@
     {"style_id":98,"chara_id":23,"style_name":"Holiday Star Night","image_url":"ADateXmas2023_R3_Thumbnail.webp","troops":"31D","role":2,"physical":3,"element":2,"jewel_type":1,"ability0":402,"ability1":1101,"ability3":202},
     {"style_id":99,"chara_id":3,"style_name":"トワイライト・グロース","image_url":"MAikawaSuite_R3_Thumbnail.webp","troops":"31A","role":6,"physical":3,"element":5,"jewel_type":4,"ability0":405,"ability1":1101,"ability3":601},
     {"style_id":100,"chara_id":6,"style_name":"トワイライト・メモリーズ","image_url":"TKunimiSuite_R3_Thumbnail.webp","troops":"31A","role":5,"physical":1,"element":0,"jewel_type":3,"ability0":406,"ability1":1101,"ability3":1004},
+    {"style_id":101,"chara_id":7,"style_name":"キララ・究極のアイドル","image_url":"EAoiNewYear2024_R3_Thumbnail.webp","troops":"31B","role":6,"physical":3,"element":1,"jewel_type":7,"ability0":1011,"ability1":1101,"ability3":1103},
+    {"style_id":102,"chara_id":8,"style_name":"君の瞳にコロしてる","image_url":"IMinaseNewYear2024_R3_Thumbnail.webp","troops":"31B","role":1,"physical":2,"element":1,"jewel_type":1,"ability0":11,"ability1":1101,"ability3":201},
 ];

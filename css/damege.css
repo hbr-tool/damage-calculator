@@ -1,10 +1,23 @@
 header {
-    background-color: #149f14;
+    position: fixed;
+    top: 0px;
+    right: 0px;
     height: 50px;
-    text-align: center;
+    width: 100%;
+    background-color: #149f14;
     color: #fff;
+    text-align: center;
     font-size: 30px;
     font-weight: bold;
+}
+main {
+    position: fixed;
+    top: 50px;
+    bottom: 0px;
+}
+
+div.frame {
+    height: calc(100svh - 50px);
 }
 
 :disabled {
@@ -280,3 +293,29 @@ input[type=checkbox]:checked:disabled + .checkbox01:after {
 input[type=checkbox]:disabled + .checkbox01 {
 	cursor: default;
 }
+
+.score_attack {
+    width: 400px;
+}
+#score_turn {
+    margin-left: 20px;
+}
+#half_tab > input[type="radio"] { display: none; }
+#half_tab > label {
+    margin-top: 10px;
+    display: inline-block;
+    background-color: #eee;
+    padding: 0.1rem 2rem;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+#half_tab > input[type="radio"]:checked + label {
+    color: #fff;
+    background-color: #333;
+}
+#half_tab > div {
+    display: none;
+    border: 1px solid #333;
+    padding: 0.5rem;
+}
+#half_tab_1:checked ~ #half_content_1 { display: block; }
+#half_tab_2:checked ~ #half_content_2 { display: block; }

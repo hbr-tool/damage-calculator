@@ -29,6 +29,7 @@
   <script src="js/skill_buff.js"></script>
   <script src="js/ability.js"></script>
   <script src="js/enemy.js"></script>
+  <script src="js/grade.js"></script>
   <script>
     var chara_no;
     var select_troops = localStorage.getItem('select_troops');
@@ -101,12 +102,12 @@
     });
   </script>
 </head>
-<body class="overflow-y-scroll">
+<body>
   <header>
     <h1>ヘブバン ダメージ計算ツール</h1>
   </header>
-  <br>
-  <div>
+  <main>
+  <div class="frame w-screen pt-3 overflow-y-scroll">
     <div class="w-[1085px] mx-auto flex text-sm">
       <div>
         <div id="char_list" class="w-[482px] grid grid-cols-7 text-center gap-y-px gap-x-0">
@@ -228,7 +229,7 @@
           <img id="attack_element" class="w-6 h-6" src="img/blank.png">
         </div>
         <br>
-        <div class="w-[410px] mx-auto">
+        <div class="w-[400px] mx-auto">
           <div>
             <label>敵選択</label>
             <select id="enemy_class">
@@ -243,6 +244,31 @@
             </select>
             <select id="enemy_list">
             </select>
+          </div>
+        </div>
+        <div class="score_attack mx-auto">
+          <div id="half_tab">
+            <input type="radio" name="rule_tab" id="half_tab_1" checked>
+            <label for="half_tab_1">前半</label>
+            <input type="radio" name="rule_tab" id="half_tab_2">
+            <label for="half_tab_2">後半</label>
+            <span id="score_turn">
+              ターン数
+              <select id="turn_count" class="text-right w-12">
+                <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                <option value="4">4</option><option value="5">5</option><option value="6">6</option>
+                <option value="7">7</option><option value="8">8</option><option value="9">9</option>
+                <option value="10">10</option><option value="11">11</option><option value="12">12</option>
+                <option value="13">13</option><option value="14">14</option><option value="15">15</option>
+                <option value="16">16</option><option value="17">17</option><option value="18">18</option>
+                <option value="19">19</option><option value="20">20</option><option value="21">21</option>
+                <option value="22">22</option><option value="23">23</option><option value="24">24</option>
+                <option value="25">25</option><option value="26">26</option><option value="27">27</option>
+                <option value="28">28</option><option value="29">29</option><option value="30">30</option>
+              </select>
+            </span>
+            <div id="half_content_1"></div>
+            <div id="half_content_2"></div>
           </div>
         </div>
         <br>
@@ -553,8 +579,7 @@
         </div>
       </div>
     </div>
-    <br>
-    <div class="w-[1080px] mx-auto text-right">
+    <div class="w-[1080px] mt-1 mx-auto text-right">
       参考サイト：<a href="https://note.com/gazou774/n/n82b99b359f2b" class="text-blue-500 underline">ヘブバン攻略情報まとめ</a>
     </div>
   </div>
@@ -634,5 +659,6 @@
       </div>
     </div>
    </div>
+  </main>
 </body>
 </html>

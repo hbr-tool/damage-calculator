@@ -123,12 +123,11 @@ function setEventTrigger() {
     // 耐性ダウン変更
     $(".resist_down").on("change", function(event) {
         updateEnemyResist();
-        displayWeakRow();
     });
     // 耐性変更
-    $(".enemy_type_value").on("change", function(event) {
-        displayWeakRow();
-    });
+    // $(".enemy_type_value").on("change", function(event) {
+    //     displayWeakRow();
+    // });
     // チャージ変更
     $("#charge").on("change", function(event) {
         let selected_index = $(this).prop("selectedIndex");
@@ -238,7 +237,21 @@ function setEventTrigger() {
     });
     // 強ブレイクチェック
     $("#strong_break").on("change", function(event) {
-        setEnemyStatus();
+        let enemy_info = getEnemyInfo();
+        let strong_break = $("#strong_break").prop("checked") ? 300 : 0;
+        $("#enemy_destruction_limit").val(enemy_info.destruction_limit + strong_break);
+        $("#enemy_destruction").val(enemy_info.destruction_limit+ strong_break);
+        $("#dp_range").val(0);
+        $("#dp_rate").val('0%');
+        $(".row_dp").css("display", "none");
+    });
+    // スコアアタックチェック変更
+    $(document).on("change", "input.half_check", function(event) {
+        updateGrade();
+    });
+    // 前半/後半タブ変更
+    $("input[name=rule_tab]").on("change", function(event) {
+        updateGrade();
     });
     // ステータス保存
     $(".save").on("change", function(event) {
@@ -282,6 +295,9 @@ function calcDamage() {
     }
     // SP消費計算
     getSpCost();
+    // グレード
+    let grade_sum = getGradeSum();
+
     // 闘志
     let fightingspirit = $("#fightingspirit").prop("checked") ? -20 : 0;
     // 厄
@@ -296,12 +312,13 @@ function calcDamage() {
     let element_field = getSumEffectSize("element_field") / 100 + 1;
     let weak_physical = $("#enemy_physical_" + skill_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + skill_info.attack_element).val() / 100;
+    let enemy_defence_rate = 1 - grade_sum.defense_rate / 100;
 
     let critical_power = getBasePower(fightingspirit - 50);
     let critical_rate = getCriticalRate();
     let critical_buff = getCriticalBuff();
 
-    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element
+    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate;
     calculateDamage(basePower, skill_info, buff, debuff, fixed, "#damage", "#destruction_last_rate");
     calculateDamage(basePower * 0.9, skill_info, buff, debuff, fixed, "#damage_min", undefined);
     calculateDamage(basePower * 1.1, skill_info, buff, debuff, fixed, "#damage_max", undefined);
@@ -316,7 +333,6 @@ function calcDamage() {
 
 // ダメージの詳細計算
 function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruction_id) {
-    let funnel = getSumFunnelEffectSize();
     let destruction_rate = Number($("#enemy_destruction").val());
     let max_destruction_rate = Number($("#enemy_destruction_limit").val());
     let rest_dp = Number($("#enemy_dp").val().replace(/,/g, "")) * Number($("#dp_range").val()) / 100;
@@ -331,7 +347,9 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     let special;
     let add_buff;
     let add_debuff;
-    for (let i = 0; i < hit_count; i++) {
+
+    // ダメージ処理
+    function procDamage (power) {
         if (rest_dp <= 0) {
             special = 1 + skill_info.hp_damege / 100;
             add_buff = getEarringEffectSize("attack", hit_count);
@@ -341,32 +359,25 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
             add_buff = getEarringEffectSize("break", hit_count);
             add_debuff = getSumEffectSize("dp_debuff") / 100;
         }
-        let hit_damage = hit_power * (buff + add_buff) * (debuff + add_debuff) * fixed * special * destruction_rate / 100;
+        let hit_damage = power * (buff + add_buff) * (debuff + add_debuff) * fixed * special * destruction_rate / 100;
 
         rest_dp -= hit_damage;
         if (rest_dp <= 0) {
-           destruction_rate += hit_destruction;
+        destruction_rate += hit_destruction;
             if (destruction_rate > max_destruction_rate) destruction_rate = max_destruction_rate;
         }
         damage += hit_damage
     }
-    // 連撃は最終ダメージ後に追加
-    if (rest_dp <= 0) {
-        special = 1 + skill_info.hp_damege / 100;
-        add_buff = getEarringEffectSize("attack", hit_count);
-        add_debuff = 0;
-    } else {
-        special = 1 + skill_info.dp_damege / 100;
-        add_buff = getEarringEffectSize("break", hit_count);
-        add_debuff = getSumEffectSize("dp_debuff") / 100;
+    // 通常分ダメージ処理
+    for (let i = 0; i < hit_count; i++) {
+        procDamage(hit_power);
     }
-    let hit_damage = basePower * (buff + add_buff) * (debuff + add_debuff) * fixed * funnel * special * destruction_rate / 100;
-    damage += hit_damage;
-    rest_dp -= hit_damage;
-    if (rest_dp <= 0) {
-        destruction_rate += destruction_size * funnel; 
-        if (destruction_rate > max_destruction_rate) destruction_rate = max_destruction_rate;
-    }
+    let funnel_list = getSumFunnelEffectList();
+    // 連撃分ダメージ処理
+    funnel_list.forEach(value => {
+        procDamage(basePower * value / 100);
+    });
+ 
     $(id).val(Math.floor(damage).toLocaleString());
     if (destruction_id)  $(destruction_id).text(`${Math.round(destruction_rate * 10) / 10}%`);
 }
@@ -501,12 +512,14 @@ function updateEnemyResist(element) {
         }
         element = skill_info.attack_element;
     }
+    let grade_sum = getGradeSum();
     let enemy_info = getEnemyInfo();
     let resist_down = getSumEffectSize("resist_down");
-    let element_resist = enemy_info["element_" + element] + resist_down;
+    let element_resist = enemy_info["element_" + element] + resist_down - grade_sum["element_" + element];
     // 表示変更
     $("#enemy_element_" + element).val(Math.floor(element_resist));
     setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+    displayWeakRow();
 }
 
 // 属性行設定
@@ -759,13 +772,15 @@ function getEffectSize(buff_kind, buff_id, chara_no, skill_lv) {
         case 0: // 攻撃力アップ
         case 1: // 属性攻撃力アップ
         case 2: // 心眼
-        case 6:	// クリティカル率アップ
         case 7:	// クリティカルダメージアップ
-        case 8:	// 属性クリティカル率アップ
         case 9:	// 属性クリティカルダメージアップ
         case 10: // チャージ
-            effect_size = getBuffEffectSize(buff_id, chara_no, skill_lv);
-        break;
+            effect_size = getBuffEffectSize(buff_id, chara_no, skill_lv, "3");
+            break;
+        case 6:	// クリティカル率アップ
+        case 8:	// 属性クリティカル率アップ
+            effect_size = getBuffEffectSize(buff_id, chara_no, skill_lv, "5");
+            break;
         case 3: // 防御力ダウン
         case 4: // 属性防御力ダウン
         case 5: // 脆弱
@@ -774,11 +789,11 @@ function getEffectSize(buff_kind, buff_id, chara_no, skill_lv) {
         case 21: // 永続防御ダウン
         case 22: // 永続属性防御ダウン
             effect_size = getDebuffEffectSize(buff_id, chara_no, skill_lv);
-        break;
+            break;
         case 16: // 連撃(小)
         case 17: // 連撃(大)
             effect_size = getFunnelEffectSize(buff_id, chara_no, skill_lv);
-        break;
+            break;
         default:
         break;
     }
@@ -910,7 +925,7 @@ function getSumEffectSize(class_name) {
     $("." + class_name).each(function(index, value) {
         let selected = $(value).find("option:selected");
         if (selected.val() == "") {
-        return true;
+            return true;
         }
         effect_size += Number($(selected).data("effect_size"));
     });
@@ -946,11 +961,36 @@ function getSumDebuffEffectSize() {
 }
 
 // 合計連撃効果量取得
-function getSumFunnelEffectSize() {
+function getSumFunnelEffectList() {
     // スキルデバフ合計
-    let sum_funnel = getSumEffectSize("funnel");
-    sum_funnel += getSumAbilityEffectSize(5);
-    return sum_funnel / 100;
+    let funnel_list = [];
+    $(".funnel").each(function(index, value) {
+        let selected = $(value).find("option:selected");
+        if (selected.val() == "") {
+            return true;
+        }
+        let effect_size = Number($(selected).data("effect_size"));
+        let loop = 0;
+        let size = 0
+        if (effect_size == 50) {
+            loop = 5;
+            size = 10;
+        } else if (effect_size == 120) {
+            loop = 3;
+            size = 40;
+        } else if (effect_size == 80) {
+            loop = 2;
+            size = 40;
+        }
+        for (let i = 0; i < loop; i++) {
+            funnel_list.push(size);
+        }
+    });
+    // 降順でソート
+    funnel_list.sort(function(a, b) {
+        return b - a;
+    });
+    return funnel_list;
 }
 
 // トークン効果量
@@ -1026,10 +1066,10 @@ function createEnemyList(enemy_class) {
         }
     });
     if (enemy_class == 6) {
-        // スコアタの場合、いったん自由入力を許可する。
-        $(".enemy_type_value").prop("readonly", false);
+        // スコアタの場合、グレードを表示する。
+        $(".score_attack").css("display", "block");
     } else {
-        $(".enemy_type_value").prop("readonly", true);
+        $(".score_attack").css("display", "none");
     }
     setEnemyStatus();
 }
@@ -1042,9 +1082,58 @@ function getEnemyInfo() {
     return filtered_enemy.length > 0 ? filtered_enemy[0] : undefined;
 }
 
+// グレード情報更新
+function updateGrade() {
+    let enemy_info = getEnemyInfo();
+    let grade_sum = getGradeSum();
+    $("#enemy_hp").val((enemy_info.max_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
+    $("#enemy_dp").val((enemy_info.max_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
+    for (let i = 1; i <= 3; i++) {
+        setEnemyElement("#enemy_physical_" + i, enemy_info["physical_" + i] - grade_sum["physical_" + i]);
+    }
+    for (let i = 0; i <= 5; i++) {
+        setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i] - grade_sum["element_" + i]);
+    }
+    updateEnemyResist();
+}
+
+// グレード情報取得
+function getGradeSum() {
+    let grade_sum = $.extend(true, {}, grade_list.filter((obj) => obj.score_attack_no == 0)[0]);
+    let enemy_info = getEnemyInfo();
+    if (enemy_info.enemy_class != 6) {
+        // スコアタ以外の場合は、基本値
+        return grade_sum;
+    }
+    let sum_list = ["defense_rate", "dp_rate", "hp_rate", "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5", "destruction"];
+    let checked_id = $('input[name="rule_tab"]:checked').attr('id');
+    $("." + checked_id + ":checked").each(function(index, value) {
+        let grade_no = Number($(value).data("grade_no"));
+        let half = Number(checked_id.match(/\d+/g));
+        grade_list.filter((obj) => obj.score_attack_no == enemy_info.score_attack_no && obj.half == half && obj.grade_no == grade_no).forEach(value => {
+            grade_sum["grade_rate"] += value["grade_rate"];
+            if (value.grade_none == 1) {
+                return true;
+            }
+            let step_turn = Number(value["step_turn"]);
+            let turn_count = 1;
+            if (step_turn != 0) {
+                turn_count = Math.floor(Number($("#turn_count").val()) / step_turn);
+            }
+            sum_list.forEach(element => {
+                grade_sum[element] += Number(value[element]) * turn_count;
+            });
+        });
+    });
+    return grade_sum;
+}
+
 // 敵ステータス設定
 function setEnemyStatus() {
     let enemy_info = getEnemyInfo();
+    if (enemy_info.score_attack_no) {
+        displayScoreAttack(enemy_info);
+    }
     $("#enemy_stat").val(enemy_info.enemy_stat);
     $("#enemy_hp").val(enemy_info.max_hp.toLocaleString());
     $("#enemy_dp").val(enemy_info.max_dp.toLocaleString());
@@ -1061,7 +1150,6 @@ function setEnemyStatus() {
     $("#dp_rate").val('0%');
     $(".row_dp").css("display", "none");
     updateEnemyResist();
-    displayWeakRow();
     // バフ効果量を更新
     $(".variable_effect_size").each(function(index, value) {
         updateBuffEffectSize($(value));
@@ -1071,6 +1159,29 @@ function setEnemyStatus() {
         sortEffectSize($(value));
         select2ndSkill($(value));
     });
+}
+
+// スコアアタック表示
+function displayScoreAttack(enemy_info) {
+    for (let i = 1; i <= 2; i++) {
+        let grade_info = grade_list.filter((obj) => obj.score_attack_no == enemy_info.score_attack_no && obj.half == i);
+        $("#half_content_" + i).html("");
+        grade_info.forEach(value => {
+            let id = "half_" + i + "_grade" + value.grade_no;
+            let div = $("<div>");
+            let input = $("<input>").attr("type", "checkbox")
+                                    .attr("id", id)
+                                    .data("grade_no", value.grade_no)
+                                    .addClass("half_check")
+                                    .addClass("half_tab_" + i);
+            let label = $("<label>").attr("for", id)
+                                    .addClass("checkbox01")
+                                    .text(value.grade_name + "(グレード:" + value.grade_rate + ")");
+            div.append(input);
+            div.append(label);
+            $("#half_content_" + i).append(div);
+        });
+    }
 }
 
 // 敵耐性設定
@@ -1176,9 +1287,9 @@ function getBuffIdToBuff(buff_id) {
 }
 
 // バフ効果量
-function getBuffEffectSize(buff_id, chara_no, skill_lv) {
+function getBuffEffectSize(buff_id, chara_no, skill_lv, jewel_type) {
     let jewel_lv = 0;
-    if ($("#jewel_type_" + chara_no).val() == "3") {
+    if ($("#jewel_type_" + chara_no).val() == jewel_type) {
         jewel_lv = Number($("#jewel_lv_" + chara_no ).prop("selectedIndex"));
     }
     let skill_info = getBuffIdToBuff(buff_id);
