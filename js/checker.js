@@ -39,7 +39,25 @@ function setEventTrigger() {
         let message = `私のSSスタイル所持率は\r\n${select_count}/${style_list.length}(コンプリート率${rate_complate}%)です。\r\n`;
         shareOnTwitter(message);
     });
+
+    //生成ボタン
+    $('#openModalBtn').click(function () {
+        $('#modalOverlay, #modalContent').fadeIn();
+        let target = $('input[name="target"]:checked').val();
+
+        var filtered_style_list = style_list.filter(function(style) {
+            let select = localStorage.getItem("style_has_" + style.style_id);
+            return target == "all" || select == "1";
+        });
+        combineImagesWithHatching(filtered_style_list);
+    });
+
+    // モーダル解除
+    $('#modalOverlay').click(function () {
+        $('#modalOverlay, #modalContent').fadeOut();
+    });
 }
+
 
 // Twitter起動
 function shareOnTwitter(message) {
@@ -49,7 +67,8 @@ function shareOnTwitter(message) {
     var url = location.href;
     // TwitterのシェアURLを生成
     var twitterURL = 'https://twitter.com/share?text=';
-    if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+    if (window.matchMedia('(max-width: 767px)').matches) {
+        // ウィンドウの幅が767px以下（モバイルデバイス）の場合
         twitterURL = 'https://twitter.com/intent/tweet?text=';
     }
     twitterURL += encodedMessage + "&hashtags=" + hashtags + "&url=" + url;
@@ -124,4 +143,65 @@ function compare( a, b ){
     if( a.chara_id < b.chara_id ){ r = -1; }
     else if( a.chara_id > b.chara_id ){ r = 1; }
     return r;
+}
+
+ // 画像を生成して Canvas に描画する関数
+ function combineImagesWithHatching(create_style) {
+    var canvasContainer = $('#canvas-container');
+    canvasContainer.empty(); // コンテナをクリア
+    var canvas = $('<canvas>');
+    var context = canvas[0].getContext('2d');
+
+    // Canvas サイズを設定
+    var columns = 4;
+    var rows = Math.ceil(create_style.length / columns);
+    // 画像の横幅と高さを半分に縮小
+    var scaledWidth = 376 / 2;
+    var scaledHeight = 144 / 2;
+    canvas[0].width = scaledWidth * columns;
+    canvas[0].height = scaledHeight * rows;
+
+    // Canvas をコンテナに追加
+    canvasContainer.append(canvas);
+
+    // 画像をロードして描画
+    var loadedImages = 0;
+
+    function loadImageAndDraw(index, style_info) {
+        var img = $('<img>');
+        let select = localStorage.getItem("style_has_" + style_info.style_id);
+        img[0].onload = function () {
+            var row = Math.floor(index / columns);
+            var col = index % columns;
+            context.drawImage(img[0], col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
+
+            // 未所持の場合網掛けを描画
+            if (select != "1") {
+                drawHatching(context, col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
+            }
+            loadedImages++;
+        };
+        let path = "select/" + style_info.image_url.replace("Thumbnail", "Select");
+        img[0].src = path;
+    }
+
+    // 画像をロードして描画
+    for (var i = 0; i < create_style.length; i++) {
+      loadImageAndDraw(i, create_style[i]);
+    }
+}
+
+// 網掛けを描画する関数
+function drawHatching(context, pos_x, pos_y ,width, height) {
+    context.beginPath();
+    for (var x = 0; x < width; x += 2) {
+        context.moveTo(x + pos_x, pos_y);
+        context.lineTo(x + pos_x, height + pos_y);
+    }
+    for (var y = 0; y < height; y += 2) {
+        context.moveTo(pos_x, y + pos_y);
+        context.lineTo(width + pos_x, y + pos_y);
+    }
+    context.strokeStyle = 'rgba(0, 0, 0, 1)';
+    context.stroke();
 }

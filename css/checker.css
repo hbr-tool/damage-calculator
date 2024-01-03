@@ -2,15 +2,35 @@ header {
   position: fixed;
   top: 0px;
   right: 0px;
-  height: 50px;
+  height: 70px;
   width: 100%;
+  overflow-x: visible;
   background-color: #149f14;
   color: #fff;
   text-align: center;
-  font-size: 30px;
-  font-weight: bold;
+  .hearder_link {
+    width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+  }
+  input[type="button"] {
+    font-size: 16px;
+    color: #149f14;
+    background-color: #fff;
+    border-radius: 100vh;
+    height: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold;
+  }
 }
+
 @media screen and (max-width: 768px) {
+  h1.title {
+    font-size: 25px;
+    font-weight: bold;
+  }
   .main_area {
     width: 414px;
   }
@@ -22,8 +42,15 @@ header {
     width: 46px;
     height: 46px;
   }
+  .ad-container-pc {
+    display: none;
+  }
 }
 @media screen and (min-width:768px) {
+  h1.title {
+    font-size: 30px;
+    font-weight: bold;
+  }
   .main_area {
     width: 828px;
   }
@@ -35,16 +62,19 @@ header {
     width: 92px;
     height: 92px;
   } 
+  .ad-container-sp {
+    display: none;
+  }
 }
 
 main {
   position: fixed;
-  top: 50px;
+  top: 70px;
   bottom: 100px;
 }
 
 div.frame {
-  height: calc(100svh - 175px);
+  height: calc(100svh - 195px);
 }
 
 .troops {
@@ -52,16 +82,18 @@ div.frame {
   display: flex;
 }
 
-input[type="button"] {
-  font-size: 20px;
+input[type="button"].default {
+  font-size: 16px;
   color: #fff;
   background: #149f14;
   border-radius: 100vh;
-  height: 40px;
+  height: 26px;
 }
 
 input[type="button"].btn_post {
+  font-size: 20px;
   width: 200px;
+  height: 40px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -73,3 +105,28 @@ footer {
   width: 100%;
   height: calc(120px + env(safe-area-inset-bottom));
 }
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  display: none;
+  position: fixed;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  max-width: 80%;
+  max-height: calc(100svh - 235px);
+  overflow: auto;
+}
+

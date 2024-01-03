@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-E24414GK3M"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-E24414GK3M');
+  </script>
+  <meta charset="unicode">
+  <meta content="ヘブンバーンズレッドのSSスタイル所持率チェッカーです。" name="description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@RELI_hevburn" />
+  <meta name="twitter:title" content="ヘブバン スタイル所持率チェッカー" />
+  <meta name="twitter:description" content="ヘブンバーンズレッドのSSスタイル所持率チェッカーです。" />
+  <meta name="twitter:image" content="https://hbr-tool.github.io/damage-calculator/img/summary_checker.png" />
+  <title>ヘブバン スタイル所持率チェッカー</title>
+  <link rel="stylesheet" href="css/checker.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="js/header.js"></script>
+  <script src="js/chara_style.js"></script>
+  <script src="js/chara_name.js"></script>
+  <script src="js/checker.js"></script>
+  <script>
+    let select_count = 0;
+    $(function(){ 
+      style_list = style_list.filter(function(style) {
+        return style.chara_id != 51;
+      });
+      // キャラID/実装順
+      style_list.sort(compare);
+      setHeaderLink();
+      createStyleList();
+      setEventTrigger();
+    });
+  </script>
+</head>
+<body>
+  <header>
+    <h1 class="title">ヘブバン スタイル所持率チェッカー</h1>
+    <div class="header_link">
+      <input id="damage-calculator" type="button" value="ダメージ計算ツール">
+      <input id="style-checker" type="button" value="スタイル所持率チェッカー">
+    </div>
+  </header>
+  <main>
+    <div class="frame static w-screen h-screen overflow-y-scroll">
+      <div class="main_area mx-auto">
+        <div class="ad-container">
+          <a href="https://px.a8.net/svt/ejp?a8mat=3B9Q8E+64VUZE+3250+6HMHT" rel="nofollow">
+          <img border="0" width="468" height="60" alt="" src="https://www27.a8.net/svt/bgt?aid=200328206371&wid=002&eno=01&mid=s00000014274001090000&mc=1"></a>
+          <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=3B9Q8E+64VUZE+3250+6HMHT" alt="">
+        </div>
+        <div class="text-left float-left flex">
+          <div>
+            <div><input type="radio" id="check_style_all" name="target" value="all" checked><label for="check_style_all" class="text-base">全てのスタイル</label></div>
+            <div><input type="radio" id="check_style_has" name="target" value="has"><label for="check_style_has" class="text-base">所持スタイルのみ</label></div>
+          </div>
+          <input type="button" id="openModalBtn" class="w-32 mt-2 mb-2 default" value="一覧画像を作成">
+        </div>
+        <div class="text-right">
+          <input type="button" id="btn_select" class="w-16 mt-2 mb-2 default" value="全選択">
+          <input type="button" id="btn_release" class="w-16 mt-2 mb-2 default" value="全解除">  
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31a.webp">
+          <div id="sytle_list_31A" class="grid grid-cols-8 troops_31A"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31b.webp">
+          <div id="sytle_list_31B" class="grid grid-cols-8 troops_31B"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31c.webp">
+          <div id="sytle_list_31C" class="grid grid-cols-8 troops_31C"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31d.webp">
+          <div id="sytle_list_31D" class="grid grid-cols-8 troops_31D"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31e.webp">
+          <div id="sytle_list_31E" class="grid grid-cols-8 troops_31E"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31f.webp">
+          <div id="sytle_list_31F" class="grid grid-cols-8 troops_31F"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/31x.webp">
+          <div id="sytle_list_31X" class="grid grid-cols-8 troops_31X"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/30g.webp">
+          <div id="sytle_list_30G" class="grid grid-cols-8 troops_30G"></div>
+        </div>
+        <div class="troops">
+          <input type="image" class="emblem" src="img/angelbeats.webp">
+          <div id="sytle_list_AB" class="grid grid-cols-8  troops_AB"></div>
+        </div>
+      </div>
+    </div>
+    <div id="modalOverlay" class="modal-overlay"></div>
+    <div id="modalContent" class="modal-content">
+      <div id="canvas-container"></div>
+    </div>
+  </main>
+  <footer>
+    <div class="w-[300px] mx-auto text-center">
+      <div class="flex text-2xl font-bold">
+        <div class="w-48">所持数</div>
+        <div class="flex">
+          <label id="style_select" class="text-red-700 text-3xl"></label><div calss="text-3xl">/</div><label id="style_all" class="mt-1"></label>
+        </div>
+      </div>
+      <div class="flex text-2xl font-bold">
+        <div class="w-48">コンプリート率</div>
+        <label id="rate_complate" class="text-center w-24"></label>
+      </div>
+      <input type="button" class="btn_post mt-2 mb-2 default" value="結果を𝕏にPOST">
+    </div>
+  </footer>
+</body>
+</html>
