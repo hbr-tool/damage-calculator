@@ -101,4 +101,6 @@
     {"style_id":100,"chara_id":6,"style_name":"トワイライト・メモリーズ","image_url":"TKunimiSuite_R3_Thumbnail.webp","troops":"31A","role":5,"physical":1,"element":0,"jewel_type":3,"ability0":406,"ability1":1101,"ability3":1004},
     {"style_id":101,"chara_id":7,"style_name":"キララ・究極のアイドル","image_url":"EAoiNewYear2024_R3_Thumbnail.webp","troops":"31B","role":6,"physical":3,"element":1,"jewel_type":7,"ability0":1011,"ability1":1101,"ability3":1103},
     {"style_id":102,"chara_id":8,"style_name":"君の瞳にコロしてる","image_url":"IMinaseNewYear2024_R3_Thumbnail.webp","troops":"31B","role":1,"physical":2,"element":1,"jewel_type":1,"ability0":11,"ability1":1101,"ability3":201},
+    {"style_id":103,"chara_id":28,"style_name":"ぐうたらパジャマナイト","image_url":"YoOhshimaSheep_R3_Thumbnail.webp","troops":"31E","role":5,"physical":2,"element":4,"jewel_type":3,"ability0":0,"ability1":1107,"ability3":234},
+    {"style_id":104,"chara_id":30,"style_name":"早春向かい風","image_url":"MuOhshimaFurisode2024_R3_Thumbnail.webp","troops":"31E","role":4,"physical":2,"element":0,"jewel_type":2,"ability0":0,"ability1":1107,"ability3":1108},
 ];

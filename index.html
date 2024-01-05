@@ -17,10 +17,12 @@
   <meta name="twitter:description" content="ヘブンバーンズレッドのダメージ計算ツールです。" />
   <meta name="twitter:image" content="https://hbr-tool.github.io/damage-calculator/img/summary_card.png" />
   <title>ヘブバン ダメージ計算ツール</title>
+  <link rel="stylesheet" href="css/header.css">
   <link rel="stylesheet" href="css/modal.css">
   <link rel="stylesheet" href="css/damege.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="js/header.js"></script>
   <script src="js/chara_name.js"></script>
   <script src="js/chara_style.js"></script>
   <script src="js/damege.js"></script>
@@ -93,6 +95,7 @@
       setEnemyStatus();
 
       // イベント設定
+      setHeaderLink();
       setEventTrigger();
 
       // スタイルリスト読み込み
@@ -104,7 +107,11 @@
 </head>
 <body>
   <header>
-    <h1>ヘブバン ダメージ計算ツール</h1>
+    <h1 class="title">ヘブバン ダメージ計算ツール</h1>
+    <div class="header_link">
+      <input id="damage-calculator" type="button" value="ダメージ計算ツール">
+      <input id="style-checker" type="button" value="スタイル所持率チェッカー">
+    </div>
   </header>
   <main>
   <div class="frame w-screen pt-3 overflow-y-scroll">
@@ -490,7 +497,7 @@
               <td class="row_element"><div class="lv"><select id="critical_damege_element1_lv" class="lv_effect"></select></div></td>
             </tr>
             <tr>
-              <td class="type row_element" colspan="2">属性クリダメUP</td>
+              <td class="type row_element" colspan="2">属性クリダメUP2</td>
               <td class="row_element"><select id="critical_damege_element2" class="critical_buff critical_damege_element redisplay include_lv"><option selected value="">無し</option></select></td>
               <td class="row_element"><div class="lv"><select id="critical_damege_element2_lv" class="lv_effect"></select></div></td>
             </tr>
@@ -507,13 +514,17 @@
               <td class=""></td>
             </tr>
             <tr>
-              <td rowspan="3" class="kind">アビリティ</td>
+              <td rowspan="4" class="kind">アビリティ</td>
               <td>攻撃者</td>
               <td colspan="3" id="ability_self" class="text-left"></td>
             </tr>
             <tr>
               <td>前衛</td>
               <td colspan="3" id="ability_front" class="text-left"></td>
+            </tr>
+            <tr>
+              <td>後衛</td>
+              <td colspan="3" id="ability_back" class="text-left"></td>
             </tr>
             <tr>
               <td>全体</td>

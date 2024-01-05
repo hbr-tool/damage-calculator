@@ -1,0 +1,53 @@
+header {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 70px;
+    width: 100%;
+    overflow-x: visible;
+    background-color: #149f14;
+    color: #fff;
+    text-align: center;
+    .hearder_link {
+      width: 450px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+    }
+    input[type="button"] {
+      font-size: 16px;
+      color: #149f14;
+      background-color: #fff;
+      border-radius: 100vh;
+      height: 22px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-weight: bold;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    h1.title {
+        font-size: 25px;
+        font-weight: bold;
+    }
+    .ad-container-pc {
+        display: none;
+    }
+}
+@media screen and (min-width:768px) {
+    h1.title {
+      font-size: 30px;
+      font-weight: bold;
+    }
+    .ad-container-sp {
+      display: none;
+    }
+}
+  
+main {
+    position: fixed;
+    top: 70px;
+    bottom: 100px;
+}
+  

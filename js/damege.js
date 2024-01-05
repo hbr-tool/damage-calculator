@@ -210,6 +210,14 @@ function setEventTrigger() {
             return;
         }
     });
+    // 後衛が3人以上の場合
+    $(document).on("change", "#ability_back input", function(event) {
+        if ($("#ability_back input:checked").length > 2) {
+            alert("後衛は3人まで設定できます。");
+            $(this).prop("checked", false);
+            return;
+        }
+    });
     // 破壊率変更
     $("#enemy_destruction").on("change", function(event) {
         let destructionValue = Number($(this).val());
@@ -704,7 +712,11 @@ function addAbility(style_info, chara_no) {
 	            target = "ability_front";
 	            element_type = "public buff_element"
 	            break;
-	        case 3:	// 常時
+            case 6: // 前衛
+	            target = "ability_back";
+	            element_type = "public buff_element"
+	            break;
+            case 3:	// 常時
 	        case 4: // その他
 	            target = "ability_all";
 	            element_type = "public buff_element"
@@ -751,6 +763,10 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
         case 2: // 前衛
             disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && ability_info.ability_type == 1);
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
+            break;
+        case 6: // 後衛
+            disabled = limit_count < limit_border || (!$(input).hasClass(chara_id) && ability_info.ability_type == 1);
+            checked = limit_count >= limit_border && !$(input).hasClass(chara_id);
             break;
         case 3:	// 常時
         case 4:	// 常時
@@ -974,6 +990,9 @@ function getSumFunnelEffectList() {
         let size = 0
         if (effect_size == 50) {
             loop = 5;
+            size = 10;
+        } else if (effect_size == 30) {
+            loop = 3;
             size = 10;
         } else if (effect_size == 120) {
             loop = 3;
