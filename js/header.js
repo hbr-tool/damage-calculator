@@ -2,7 +2,7 @@
 function setHeaderLink() {
     // ダメージ計算ツール
     $('#damage-calculator').on('click', function() {
-        window.location.href = '/hevburn/';
+        window.location.href = '.';
     });
 
     // スタイルチェッカー
