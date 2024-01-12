@@ -116,8 +116,26 @@ img.select_style {
     margin-top: -1px;
 }
 
-#dp_range {
-    width: 130px;
+.dp_gauge {
+    height: 22px;
+    display: flex;
+}
+.dp_range,
+.hp_range {
+    -webkit-appearance: none;
+    width: 120px;
+    height: 8px;
+    border-radius: 2rem;
+    border: 1px solid black;
+    margin-left: 5px;
+    margin-top: 6px;
+}
+
+.gauge_rate {
+    display: inline-block;
+    width: 40px;
+    text-align: right;
+    border: 0px;
 }
 
 div.lv {

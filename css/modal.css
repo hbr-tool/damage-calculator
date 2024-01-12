@@ -34,9 +34,6 @@
   transform: translate(-50%, -50%);
 }
 @media screen and (max-width: 768px) {
-  header {
-    width: 1200px;
-  }
   .modal_layer_mask {
     height: 150vh;
   }
