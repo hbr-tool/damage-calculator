@@ -59,7 +59,7 @@
     {"style_id":58,"chara_id":2,"style_name":"ナイトクルーズ・アテンダント","image_url":"YIzumiAnniv2023_R3_Thumbnail.webp","troops":"31A","role":2,"physical":2,"element":3,"jewel_type":1,"ability0":403,"ability1":1101,"ability3":220},
     {"style_id":59,"chara_id":50,"style_name":"EarthAngel","image_url":"AliceADefault_R3_Thumbnail.webp","troops":"AB","role":1,"physical":1,"element":4,"jewel_type":1,"ability0":404,"ability1":1101,"ability3":204},
     {"style_id":60,"chara_id":49,"style_name":"RainFire","image_url":"AliceBDefault_R3_Thumbnail.webp","troops":"AB","role":3,"physical":2,"element":1,"jewel_type":1,"ability0":401,"ability1":1101,"ability3":201},
-    {"style_id":61,"chara_id":51,"style_name":"Pure Cosmos","image_url":"AliceCDefault_R2_Thumbnail.webp","troops":"AB","role":7,"physical":3,"element":0,"jewel_type":2,"ability0":0,"ability1":213,"ability3":0},
+    {"style_id":61,"chara_id":51,"style_name":"Faraway Eden","image_url":"AliceCDefault_R3_Thumbnail.webp","troops":"AB","role":7,"physical":3,"element":2,"jewel_type":2,"ability0":1005,"ability1":1101,"ability3":1203},
     {"style_id":62,"chara_id":28,"style_name":"破られたアンニュイ","image_url":"YoOhshimaDefault_R3_Thumbnail.webp","troops":"31E","role":5,"physical":2,"element":1,"jewel_type":3,"ability0":0,"ability1":1101,"ability3":501},
     {"style_id":63,"chara_id":30,"style_name":"ピンチで最高","image_url":"MuOhshimaDefault_R3_Thumbnail.webp","troops":"31E","role":4,"physical":2,"element":0,"jewel_type":2,"ability0":0,"ability1":1101,"ability3":1106},
     {"style_id":64,"chara_id":46,"style_name":"亡国の純心","image_url":"CSugaharaPurity_R3_Thumbnail.webp","troops":"30G","role":7,"physical":3,"element":5,"jewel_type":6,"ability0":0,"ability1":1101,"ability3":221},

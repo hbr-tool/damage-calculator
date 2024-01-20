@@ -123,6 +123,7 @@ img.select_style {
 .dp_range,
 .hp_range {
     -webkit-appearance: none;
+    appearance: none;
     width: 120px;
     height: 8px;
     border-radius: 2rem;

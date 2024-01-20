@@ -28,9 +28,6 @@
   <script>
     let select_count = 0;
     $(function(){ 
-      style_list = style_list.filter(function(style) {
-        return style.chara_id != 51;
-      });
       // キャラID/実装順
       style_list.sort(compare);
       setHeaderLink();
@@ -50,11 +47,6 @@
   <main>
     <div class="frame static w-screen h-screen overflow-y-scroll">
       <div class="main_area mx-auto">
-        <div class="ad-container">
-          <a href="https://px.a8.net/svt/ejp?a8mat=3B9Q8E+64VUZE+3250+6HMHT" rel="nofollow">
-          <img border="0" width="468" height="60" alt="" src="https://www27.a8.net/svt/bgt?aid=200328206371&wid=002&eno=01&mid=s00000014274001090000&mc=1"></a>
-          <img border="0" width="1" height="1" src="https://www13.a8.net/0.gif?a8mat=3B9Q8E+64VUZE+3250+6HMHT" alt="">
-        </div>
         <div class="text-left float-left flex">
           <div>
             <div><input type="radio" id="check_style_all" name="target" value="all" checked><label for="check_style_all" class="text-base">全てのスタイル</label></div>
