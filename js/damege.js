@@ -491,7 +491,7 @@ function addSkillCount(sp_list, name, id, sp_cost) {
 
 // スキル名の特定文字列削除
 function renameSkill(skill_name) {
-    let str_replace = ["(初回)", "(弱点)", '(破壊率200%以上)', '(オーバードライブ)', '(チャージ)', '(追加ターン)'];
+    let str_replace = ["(初回)", "(弱点)", '(破壊率200%以上)', '(オーバードライブ)', '(チャージ)', '(追加ターン)', '(挑発)'];
     str_replace.forEach(value => {
         skill_name = skill_name.replace(value, "");
     });
