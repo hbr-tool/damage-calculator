@@ -50,4 +50,120 @@ main {
     top: 70px;
     bottom: 100px;
 }
-  
+
+/*タイトル*/
+div.title {
+  padding: 5px 30px;
+  text-align: center;
+}
+  div.title h1 {
+      margin: 0;
+      font-size: 200%;
+  }
+
+/*pc用スタイル*/
+@media only screen and (min-width: 1024px) {
+  div.wrap {
+      display: -webkit-flex;
+      display: flex;
+  }
+  div.side {
+      -webkit-flex-basis: 300px;
+      flex-basis: 300px;
+  }
+  div.contents {
+      -webkit-flex: 1;
+      flex: 1;
+  }
+}
+
+/*三本線メニューのアイコン*/
+span.menu3bar {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: inline-block;
+  width: 35px;
+  height: 35px;
+  outline: 1px solid #999;
+  background-color: #999;
+  border: 5px solid #fff;
+  vertical-align: middle;
+  z-index: 100;
+}
+  span.menu3bar:before, span.menu3bar:after {
+      position: absolute;
+      content:"";
+      display: block;
+      top: 20%;
+      right: 0;
+      height: 20%;
+      left: 0;
+      background-color: #fff;
+  }
+  span.menu3bar:before {
+      top: 20%;
+  }
+  span.menu3bar:after {
+      top: 60%;
+  }
+
+/*pc用スタイル*/
+@media only screen and (min-width: 1024px) {
+  span.menu3bar {
+      display: none;
+  }
+}
+
+/*メニュー*/
+div.menu3bar ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+div.menu3bar > ul {
+  position: fixed;
+  top: 0;
+  right: -100%;
+
+  max-width: 70%;
+  max-height: 100%;
+
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.8);
+
+  text-align: left;
+  overflow: auto;
+  font-size: 80%;
+  line-height: 160%;
+
+  -webkit-overflow-scrolling: touch;
+
+  -webkit-transition: right .3s ease-in-out;
+  transition: right .3s ease-in-out;
+}
+  div.menu3bar > ul > li {
+      margin: 0;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+  }
+
+  div.menu3bar > ul ul {
+      margin-left: 10px;
+  }
+  div.menu3bar > ul ul li {
+      padding: 5px;
+  }
+
+  div.menu3bar_on > ul {
+      right: 0;
+  }
+
+/*pc用スタイル（例）*/
+@media only screen and (min-width: 1024px) {
+  div.menu3bar > ul {
+      position: static;
+      max-width: none;
+      overflow: visible;
+  }
+}
