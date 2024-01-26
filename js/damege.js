@@ -1052,6 +1052,9 @@ function getCriticalRate() {
     critical_rate += getSumEffectSize("critical_rate");
     critical_rate += getSumAbilityEffectSize(2);
     critical_rate += $("#charge").prop("selectedIndex") > 0 ? 20 : 0;
+    let grade_sum = getGradeSum();
+    critical_rate -= grade_sum.critical;
+    critical_rate = critical_rate < 0 ? 0 : critical_rate;
     return critical_rate > 100 ? 100 : critical_rate;
 }
 
@@ -1084,6 +1087,8 @@ function getDestructionEffectSize() {
     if (attack_info.attack_id == 42 || attack_info.attack_id == 94) {
         destruction_effect_size += 50;
     }
+    let grade_sum = getGradeSum();
+    destruction_effect_size -= grade_sum.destruction;
     return destruction_effect_size;
 }
 
@@ -1145,7 +1150,7 @@ function getGradeSum() {
         // スコアタ以外の場合は、基本値
         return grade_sum;
     }
-    let sum_list = ["defense_rate", "dp_rate", "hp_rate", "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5", "destruction"];
+    let sum_list = ["defense_rate", "dp_rate", "hp_rate", "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5", "destruction", "critical"];
     let checked_id = $('input[name="rule_tab"]:checked').attr('id');
     $("." + checked_id + ":checked").each(function(index, value) {
         let grade_no = Number($(value).data("grade_no"));
