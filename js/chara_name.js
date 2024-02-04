@@ -51,6 +51,7 @@ let chara_name = [
     "ゆり",
     "かなで",
     "みゆき",
+    "ひさ子",
     ];
 
 let chara_full_name = [
@@ -106,4 +107,5 @@ let chara_full_name = [
     "仲村ゆり",
     "立華かなで",
     "入江みゆき",
+    "渕田ひさ子",
 ]

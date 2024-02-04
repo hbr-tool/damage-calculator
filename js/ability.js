@@ -20,6 +20,7 @@
     {"ability_id":212,"ability_name":"勇猛","ability_explan":"行動開始時に前衛 & DP100%以上のとき自身のスキル攻撃力+30%","ability_short_explan":"DP100%以上のときスキル攻撃力+30%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":30},
     {"ability_id":213,"ability_name":"陽動作戦","ability_explan":"行動開始時に前衛 & DP30%以下のとき前衛のスキル攻撃力+30%","ability_short_explan":"DP30%以下のときスキル攻撃力+30%","ability_target":2,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":30},
     {"ability_id":214,"ability_name":"壮烈","ability_explan":"行動開始時に前衛 & DP80%以上のとき自身のスキル攻撃力+20%","ability_short_explan":"DP80%以上のときスキル攻撃力+20%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":20},
+    {"ability_id":216,"ability_name":"氷の采配","ability_explan":"行動開始時に前衛 & DP80%以上のとき前衛の氷属性のスキル攻撃力+18%","ability_short_explan":"DP80%以上のとき氷属性のスキル攻撃力+18%","ability_target":2,"ability_kind":1,"ability_element":2,"ability_type":2,"ability_power":18},
     {"ability_id":217,"ability_name":"雷の采配","ability_explan":"行動開始時に前衛 & DP80%以上のとき前衛の雷属性のスキル攻撃力+18%","ability_short_explan":"DP80%以上のとき雷属性のスキル攻撃力+18%","ability_target":2,"ability_kind":1,"ability_element":3,"ability_type":2,"ability_power":18},
     {"ability_id":218,"ability_name":"光の采配","ability_explan":"行動開始時に前衛 & DP80%以上のとき前衛の光属性のスキル攻撃力+18%","ability_short_explan":"DP80%以上のとき光属性のスキル攻撃力+18%","ability_target":2,"ability_kind":1,"ability_element":4,"ability_type":2,"ability_power":18},
     {"ability_id":220,"ability_name":"決心","ability_explan":"行動開始時に前衛 & SP15以上のとき自身のスキル攻撃力+30%","ability_short_explan":"SP15以上のときスキル攻撃力+30%","ability_target":1,"ability_kind":1,"ability_element":0,"ability_type":2,"ability_power":30},
@@ -55,6 +56,8 @@
     {"ability_id":1106,"ability_name":"慈愛の心","ability_explan":"ターン開始時 前衛にいると味方全体のDP+7%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1107,"ability_name":"後閃","ability_explan":"ターン開始時に後衛にいると自身のSP+1","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1108,"ability_name":"後方救護","ability_explan":"ターン開始時 後衛にいると味方全体のDP+7%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1109,"ability_name":"吉報","ability_explan":"ターン開始時に前衛にいると確率で自身のSP+3","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1110,"ability_name":"羽休め","ability_explan":"ターン開始時 自身のDP+7%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1201,"ability_name":"鮮烈","ability_explan":"行動開始時に前衛にいると自身のスキル攻撃時の破壊率上昇量+30%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1202,"ability_name":"強烈","ability_explan":"行動開始時に前衛にいると前衛のスキル攻撃時の破壊率上昇量+20%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1203,"ability_name":"防御態勢","ability_explan":"行動開始時に前衛 & DP100%以上のとき 自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
@@ -62,4 +65,5 @@
     {"ability_id":1502,"ability_name":"堅忍","ability_explan":"敵行動開始時に前衛 & DP破損状態で自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1503,"ability_name":"戦勲","ability_explan":"ダメージを与えた敵1体につきトークンを1上昇(追撃を除く)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1504,"ability_name":"戦士の祝福","ability_explan":"スキルでDP回復効果を受けるとトークンを1上昇","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1505,"ability_name":"激動","ability_explan":"自身の攻撃で敵をブレイクしたとき 初回のみ自身のSPが8上昇する","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
 ];

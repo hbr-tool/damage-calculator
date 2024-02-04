@@ -103,4 +103,7 @@
     {"style_id":102,"chara_id":8,"style_name":"君の瞳にコロしてる","image_url":"IMinaseNewYear2024_R3_Thumbnail.webp","troops":"31B","role":1,"physical":2,"element":1,"jewel_type":1,"ability0":11,"ability1":1101,"ability3":201},
     {"style_id":103,"chara_id":28,"style_name":"ぐうたらパジャマナイト","image_url":"YoOhshimaSheep_R3_Thumbnail.webp","troops":"31E","role":5,"physical":2,"element":4,"jewel_type":3,"ability0":0,"ability1":1107,"ability3":234},
     {"style_id":104,"chara_id":30,"style_name":"早春向かい風","image_url":"MuOhshimaFurisode2024_R3_Thumbnail.webp","troops":"31E","role":4,"physical":2,"element":0,"jewel_type":2,"ability0":0,"ability1":1107,"ability3":1108},
+    {"style_id":105,"chara_id":50,"style_name":"天翔ける剣","image_url":"AliceAOnePiece_R3_Thumbnail.webp","troops":"AB","role":1,"physical":1,"element":2,"jewel_type":1,"ability0":402,"ability1":1101,"ability3":1110},
+    {"style_id":106,"chara_id":49,"style_name":"ありふれた非日常","image_url":"AliceBBlazerUniform_R3_Thumbnail.webp","troops":"AB","role":2,"physical":2,"element":2,"jewel_type":1,"ability0":1505,"ability1":1101,"ability3":202},
+    {"style_id":107,"chara_id":52,"style_name":"Finally found our silver lining","image_url":"BiancaADefault_R2_Thumbnail.webp","troops":"AB","role":6,"physical":3,"element":2,"jewel_type":4,"ability0":0,"ability1":1109,"ability3":216},
 ];
