@@ -342,12 +342,18 @@ function calcDamage() {
     let weak_physical = $("#enemy_physical_" + skill_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + skill_info.attack_element).val() / 100;
     let enemy_defence_rate = 1 - grade_sum.defense_rate / 100;
-
+    // 残DP補正(暫定)
+    let dp_correction_rate = 1;
+    if (skill_info.attack_id == 113) {
+        dp_correction_rate = 1.25;
+    } else if (skill_info.attack_id == 114) {
+        dp_correction_rate = 1.1;
+    }
     let critical_power = getBasePower(fightingspirit - 50);
     let critical_rate = getCriticalRate();
     let critical_buff = getCriticalBuff();
 
-    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate;
+    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate * dp_correction_rate;
     calculateDamage(basePower, skill_info, buff, debuff, fixed, "#damage", "#destruction_last_rate");
     calculateDamage(basePower * 0.9, skill_info, buff, debuff, fixed, "#damage_min", undefined);
     calculateDamage(basePower * 1.1, skill_info, buff, debuff, fixed, "#damage_max", undefined);
