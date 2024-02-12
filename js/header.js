@@ -1,45 +1,27 @@
-// ヘッダーリンク設定
-function setHeaderLink() {
-    // ダメージ計算ツール
-    $('#damage-calculator').on('click', function() {
-        window.location.href = '.';
+// リンクリスト
+const link_list = [
+    {url: ".", title: "ダメージ計算ツール"},
+    {url: "style_checker.html", title: "スタイル所持率チェッカー"},
+]
+
+$(function(){ 
+    let ui = $("<ul>").addClass('gNav-menu');
+    link_list.forEach(element => {
+        ui.append($('<li>').append($('<a>', {class: 'header_link', href: element.url, text: element.title})));
     });
+    let headerHTML = $('<div>', {class: 'hamburger'})
+        .append($('<img>', {class: 'logo', src: 'img/title_log.png'}))
+        .append($('<p>', {class: 'btn-gNav'})
+            .append($('<span>'))
+            .append($('<span>'))
+            .append($('<span>'))
+        )
+        .append($('<nav>', {class: 'gNav'})
+            .append(ui)
+        );
 
-    // スタイルチェッカー
-    $('#style-checker').on('click', function() {
-        window.location.href = 'style_checker.html';
-    });
-}
-
-var menu3bar_off = function(e) {
-    var elm = e.target ? (e.target.nodeType == 3 ? e.target.parentNode : e.target) : (window.event.srcElement ? window.event.srcElement : "");
-    if(!elm || $(elm).parents(".menu3bar")[0]) {
-        return "";
-    }
-
-    $(document.body).unbind("touchend", menu3bar_off);
-    $(document.body).unbind("click", menu3bar_off);
-
-    $(".menu3bar_on").removeClass("menu3bar_on");
-};
-var menu3bar = function(self) {
-    if($(self).hasClass("menu3bar_on") ) {
-        return "";
-    }
-
-    $(self).addClass("menu3bar_on");
-
-    $(document.body).unbind("touchend", menu3bar_off).bind("touchend", menu3bar_off);
-    $(document.body).unbind("click", menu3bar_off).bind("click", menu3bar_off);
-};
-
-/*
-$(document).ready(function() {
-    if(navigator.userAgent.indexOf("Android 2.") === -1) {
-        return "";
-    }
-    $("div.menu3bar > ul").css( {
-        "position": "absolute",
-        "max-height": "none",
-    } );
-} );*/
+    $(".header").append(headerHTML);
+    $('.btn-gNav').on("click", function () {
+		$('.gNav').toggleClass('open');
+	});
+});

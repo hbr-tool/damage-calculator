@@ -1,17 +1,17 @@
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 848px) {
   .main_area {
-    width: 414px;
+    width: 100%;
   }
   .select_style {
-    width: 46px;
-    height: 46px;
+    width: 69px;
+    height: 69px;
   }
   .emblem {
-    width: 46px;
-    height: 46px;
+    width: 69px;
+    height: 69px;
   }
 }
-@media screen and (min-width:768px) {
+@media screen and (min-width: 848px) {
   .main_area {
     width: 828px;
   }

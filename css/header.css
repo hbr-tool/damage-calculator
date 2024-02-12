@@ -1,169 +1,134 @@
-header {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    height: 70px;
+.header {
+  background-color: #149f14;
+  height: 60px;
+}
+
+a.header_link {
+    text-decoration: none;
+    color: #000000;
+    background-color: #ffffff;
+    font-weight: bold;
+    font-size: 18px;
+    border-radius: 100vh;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+.hamburger {
+    margin: 0px auto 0;
     width: 100%;
-    overflow-x: visible;
-    background-color: #149f14;
-    color: #fff;
-    text-align: center;
-    .hearder_link {
-      width: 450px;
-      margin-left: auto;
-      margin-right: auto;
-      display: flex;
-    }
-    input[type="button"] {
-      font-size: 16px;
-      color: #149f14;
-      background-color: #fff;
-      border-radius: 100vh;
-      height: 22px;
-      padding-left: 10px;
-      padding-right: 10px;
-      font-weight: bold;
-    }
+    max-width: 900px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+    height: 50px;
+}
+
+.hamburger .btn-gNav {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 30px;
+    height: 24px;
+    z-index: 12;
+    box-sizing: border-box;
+    cursor: pointer;
+    -webkit-transition: all 400ms;
+    transition: all 400ms;
+}
+
+.hamburger .btn-gNav span {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    background: #ffffff;
+    border-radius: 10px;
+    -webkit-transition: all 400ms;
+    transition: all 400ms;
+}
+
+.hamburger .btn-gNav span:nth-child(1) {
+    top: 0;
+}
+
+.hamburger .btn-gNav span:nth-child(2) {
+    top: 10px;
+}
+
+.hamburger .btn-gNav span:nth-child(3) {
+    top: 20px;
+}
+
+.hamburger .btn-gNav.open span:nth-child(1) {
+    background: #ffffff;
+    top: 6px;
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.hamburger .btn-gNav.open span:nth-child(2),
+.hamburger .btn-gNav.open span:nth-child(3) {
+    top: 6px;
+    background: #ffffff;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.btn-gNav {
+    display: none;
+}
+
+.gNav .gNav-menu {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.gNav .gNav-menu li {
+    margin: 0 auto;
+    padding: 0 5px;
 }
 
 @media screen and (max-width: 768px) {
-    h1.title {
-        font-size: 25px;
-        font-weight: bold;
+    .btn-gNav {
+        display: block;
     }
-    .ad-container-pc {
-        display: none;
+
+    .gNav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        box-sizing: border-box;
+        z-index: 1;
+        padding-top: 50px;
+        transition: .3s;
     }
-}
-@media screen and (min-width:768px) {
-    h1.title {
-      font-size: 30px;
-      font-weight: bold;
+
+    .gNav.open {
+        right: 0;
     }
-    .ad-container-sp {
-      display: none;
+
+    .gNav .gNav-menu {
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: block;
+        flex-direction: column;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        margin-top: 10px;
     }
-}
-  
-main {
-    position: fixed;
-    top: 70px;
-    bottom: 100px;
-}
 
-/*タイトル*/
-div.title {
-  padding: 5px 30px;
-  text-align: center;
-}
-  div.title h1 {
-      margin: 0;
-      font-size: 200%;
-  }
-
-/*pc用スタイル*/
-@media only screen and (min-width: 1024px) {
-  div.wrap {
-      display: -webkit-flex;
-      display: flex;
-  }
-  div.side {
-      -webkit-flex-basis: 300px;
-      flex-basis: 300px;
-  }
-  div.contents {
-      -webkit-flex: 1;
-      flex: 1;
-  }
-}
-
-/*三本線メニューのアイコン*/
-span.menu3bar {
-  position: absolute;
-  left: 10px;
-  top: 10px;
-  display: inline-block;
-  width: 35px;
-  height: 35px;
-  outline: 1px solid #999;
-  background-color: #999;
-  border: 5px solid #fff;
-  vertical-align: middle;
-  z-index: 100;
-}
-  span.menu3bar:before, span.menu3bar:after {
-      position: absolute;
-      content:"";
-      display: block;
-      top: 20%;
-      right: 0;
-      height: 20%;
-      left: 0;
-      background-color: #fff;
-  }
-  span.menu3bar:before {
-      top: 20%;
-  }
-  span.menu3bar:after {
-      top: 60%;
-  }
-
-/*pc用スタイル*/
-@media only screen and (min-width: 1024px) {
-  span.menu3bar {
-      display: none;
-  }
-}
-
-/*メニュー*/
-div.menu3bar ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-div.menu3bar > ul {
-  position: fixed;
-  top: 0;
-  right: -100%;
-
-  max-width: 70%;
-  max-height: 100%;
-
-  background-color: #fff;
-  background-color: rgba(255, 255, 255, 0.8);
-
-  text-align: left;
-  overflow: auto;
-  font-size: 80%;
-  line-height: 160%;
-
-  -webkit-overflow-scrolling: touch;
-
-  -webkit-transition: right .3s ease-in-out;
-  transition: right .3s ease-in-out;
-}
-  div.menu3bar > ul > li {
-      margin: 0;
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-  }
-
-  div.menu3bar > ul ul {
-      margin-left: 10px;
-  }
-  div.menu3bar > ul ul li {
-      padding: 5px;
-  }
-
-  div.menu3bar_on > ul {
-      right: 0;
-  }
-
-/*pc用スタイル（例）*/
-@media only screen and (min-width: 1024px) {
-  div.menu3bar > ul {
-      position: static;
-      max-width: none;
-      overflow: visible;
-  }
+    .gNav .gNav-menu li {
+        width: 86%;
+        padding: 15px;
+        border-bottom: #525252 1px solid;
+    }
 }
