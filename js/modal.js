@@ -96,12 +96,12 @@ function setMember(select_chara_no, style_id, isTrigger) {
     let style_info = style_list.find((obj) => obj.style_id === style_id);
 
     // 同一のキャラIDは不許可
-    $.each(select_style_list, function(index, value) {
-        if (index !== select_chara_no && value?.chara_id === style_info.chara_id) {
+    for (let i = 0; i < select_style_list.length; i++) {
+        if (i !== select_chara_no && select_style_list[i]?.style_info.chara_id === style_info.chara_id) {
             alert("同一キャラクターは複数選択できません");
             return false;
         }
-    });
+    }
     // メンバーの情報を削除
     removeMember(select_chara_no, isTrigger);
     
