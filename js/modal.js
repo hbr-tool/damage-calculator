@@ -118,10 +118,13 @@ function setMember(select_chara_no, style_id, isTrigger) {
 
     // ステータスを設定
     $.each(status_kbn, function(index, value) {
+        if (index == 0) return true;
         const status = localStorage.getItem(value + "_" + style_info.chara_id);
         if (status) {
             $("#" + value + "_" + select_chara_no).val(status);
             member_info[value] = Number(status);
+        } else {
+            member_info[value] = Number($("#" + value + "_" + select_chara_no).prop("selectedIndex"));
         }
     });
     const jewel = localStorage.getItem("jewel_" + style_info.chara_id);
@@ -232,6 +235,7 @@ function setSubMember(sub_chara_no, style_id) {
 
     // ステータスを設定
     $.each(status_kbn, function(index, value) {
+        if (index == 0) return true;
         const status = localStorage.getItem(value + "_" + style_info.chara_id);
         if (status) member_info[value] = Number(status);
     });
