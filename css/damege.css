@@ -112,9 +112,10 @@ img.sub_style {
 .status,
 .limit,
 .jewel {
-    text-align: center;
+    height: 22px;
     width: 60px;
     margin-left: 3px;
+    text-align: center;
 }
 @media screen and (max-width: 482px) {
     .status_area {
@@ -133,9 +134,7 @@ img.sub_style {
     .status,
     .limit,
     .jewel {
-        text-align: center;
         width: 50px;
-        margin-left: 3px;
     }
 }
 /* 攻撃技 */
@@ -162,6 +161,9 @@ img.sub_style {
 @media screen and (max-width: 430px) {
     .enemy_label {
         width: 70px;
+    }
+    #enemy_list {
+        max-width: 220px;
     }
 }
 
@@ -452,6 +454,9 @@ input[type="button"].durability_reflection {
     }
     .damage-flex {
         width: 180px;
+    }
+    #critical_rate.damage_label {
+        font-size: 12px;
     }
 }
 

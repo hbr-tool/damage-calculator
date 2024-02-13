@@ -119,28 +119,29 @@ function setMember(select_chara_no, style_id, isTrigger) {
     // ステータスを設定
     $.each(status_kbn, function(index, value) {
         if (index == 0) return true;
-        const status = localStorage.getItem(value + "_" + style_info.chara_id);
-        if (status) {
-            $("#" + value + "_" + select_chara_no).val(status);
-            member_info[value] = Number(status);
-        } else {
-            member_info[value] = Number($("#" + value + "_" + select_chara_no).prop("selectedIndex"));
+        let status = localStorage.getItem(value + "_" + style_info.chara_id);
+        if (status === null || status === undefined) {
+            status = 400;
+            localStorage.setItem(value + "_" + style_info.chara_id, status);
         }
+        $("#" + value + "_" + select_chara_no).val(status);
+        member_info[value] = Number(status);
     });
-    const jewel = localStorage.getItem("jewel_" + style_info.chara_id);
-    if (jewel) {
-        $("#jewel_" + select_chara_no).prop("selectedIndex", jewel);
-        member_info.jewel_lv = Number(jewel);
-    } else {
-        member_info.jewel_lv = Number($("#jewel_" + select_chara_no).prop("selectedIndex"));
+    let jewel = localStorage.getItem("jewel_" + style_info.chara_id);
+    if (jewel === null || jewel === undefined) {
+        jewel = 5;
+        localStorage.setItem("jewel_" + style_info.chara_id, jewel);
     }
-    const limit_count = localStorage.getItem("limit_" + style_info.chara_id);
-    if (limit_count) {
-        $("#limit_" + select_chara_no).prop("selectedIndex", limit_count);
-        member_info.limit_count = Number(limit_count);
-    } else {
-        member_info.jewel_lv = Number($("#limit" + select_chara_no).prop("selectedIndex"));
+    $("#jewel_" + select_chara_no).val(jewel);
+    member_info.jewel_lv = Number(jewel);
+
+    let limit_count = localStorage.getItem("limit_" + style_info.chara_id);
+    if (limit_count === null || limit_count === undefined) {
+        limit_count = 2;
+        localStorage.setItem("limit_" + style_info.chara_id, limit_count);
     }
+    $("#limit_" + select_chara_no).val(limit_count);
+    member_info.limit_count = Number(limit_count);
 
     // スキル・バフ・アビリティを追加
     addAttackList(member_info);
