@@ -152,6 +152,16 @@ img.sub_style {
 .enemy_label {
     width: 80px;
 }
+#enemy_select_label {
+    width: 50px;;
+}
+#enemy_class {
+    width: 120px;;
+}
+#enemy_list {
+    min-width: 200px;
+    max-width: 260px;
+}
 .surround_area {
     border: solid gray 2px;
     border-radius: 20px;
@@ -162,8 +172,11 @@ img.sub_style {
     .enemy_label {
         width: 70px;
     }
+    #enemy_class {
+        width: 110px;;
+    }
     #enemy_list {
-        max-width: 220px;
+        max-width: 240px;
     }
 }
 
@@ -298,10 +311,13 @@ select.filed {
     width: 55px;
     max-width: 55px;
 }
+.sp_only {
+    display: none;
+}
 @media screen and (max-width: 615px) {
     .buff_area {
-        min-width: 375px;
-        width: 100%;
+        min-width: 365px;
+        width: 95%;
         font-size: small;
     }
     .title_column {
@@ -315,6 +331,12 @@ select.filed {
     }
     .skill_name_column {
         width: calc(63.5% - 55px);
+    }
+    .pc_only {
+        display: none!important;
+    }
+    tr.sp_only {
+        display: table-row;
     }
 }
 

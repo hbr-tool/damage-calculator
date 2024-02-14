@@ -237,7 +237,7 @@
         </div>
         <div class="enemy_select adjust_width mx-auto mt-2">
           <div>
-            <label>敵選択</label>
+            <label id="enemy_select_label">敵選択</label>
             <select id="enemy_class">
               <option value="1">異時層</option>
               <option value="2">オーブボス</option>
@@ -247,6 +247,7 @@
               <option value="6">スコアアタック</option>
               <option value="7">プリズムバトル</option>
               <option value="8">恒星掃戦線</option>
+              <option value="9">イベント隠しボス</option>
             </select>
             <select id="enemy_list">
             </select>
@@ -417,14 +418,17 @@
         <div class="text-center">
           <table>
             <colgroup>
-              <col class="title_column">
+              <col class="title_column pc_only">
               <col class="type1_column">
               <col class="type2_column">
               <col class="skill_name_column">
               <col class="skill_lv_column">
             </colgroup>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">バフ</td>
+            </tr>
             <tr>
-              <td rowspan="10" class="kind">バフ</td>
+              <td rowspan="10" class="kind pc_only">バフ</td>
               <td class="type" colspan="2">攻撃力UP1</td>
               <td><select id="power_up1" class="buff power_up redisplay include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="power_up1_lv" class="lv_effect"></select></div></td>
@@ -474,8 +478,11 @@
               <td><select id="destruction_rete_up2" class="destruction_rete_up redisplay include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="funnel2_lv"></select></div></td>
             </tr>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">デバフ</td>
+            </tr>
             <tr>
-              <td rowspan="14" class="kind">デバフ</td>
+              <td rowspan="14" class="kind pc_only">デバフ</td>
               <td class="type" colspan="2">防御力DOWN1</td>
               <td><select id="defense_down1" class="debuff redisplay defense_down include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="defense_down1_lv" class="lv_effect"></select></div></td>
@@ -545,8 +552,11 @@
               <td class="row_element-3"><select id="resist_down2" class="resist resist_down redisplay element include_lv"><option selected value="">無し</option></select></td>
               <td class="row_element-3"></td>
             </tr>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">クリティカル</td>
+            </tr>
             <tr>
-              <td rowspan="8" class="kind">クリティカル</td>
+              <td rowspan="8" class="kind pc_only">クリティカル</td>
               <td colspan="2">クリティカル率UP1</td>
               <td><select id="critical_up1" class="critical_rate critical_up redisplay include_lv"><option selected value="">無し</option></select></td>
               <td><div class="lv"><select id="critical_up1_lv" class="lv_effect"></select></div></td>
@@ -586,20 +596,29 @@
               <td class="row_element"><select id="critical_damege_element2" class="critical_buff critical_damege_element redisplay include_lv"><option selected value="">無し</option></select></td>
               <td class="row_element"><div class="lv"><select id="critical_damege_element2_lv" class="lv_effect"></select></div></td>
             </tr>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">フィールド</td>
+            </tr>
             <tr>
-              <td class="kind row_element">フィールド</td>
+              <td class="kind row_element pc_only">フィールド</td>
               <td class="type row_element" colspan="2">属性フィールド</td>
               <td class="row_element"><select id="element_field" class="filed element_field element redisplay"><option selected value="">無し</option></select></td>
               <td class="row_element" id="filed_lv"></td>
             </tr>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">チャージ</td>
+            </tr>
             <tr>
-              <td class="kind">チャージ</td>
+              <td class="kind pc_only">チャージ</td>
               <td class="type" colspan="2">チャージ</td>
               <td class=""><select id="charge" class="buff charge redisplay"><option selected value="">無し</option></select></td>
               <td class=""></td>
             </tr>
+            <tr class="sp_only">
+              <td colspan="5" class="kind">アビリティ</td>
+            </tr>
             <tr>
-              <td rowspan="4" class="kind">アビリティ</td>
+              <td rowspan="4" class="kind pc_only">アビリティ</td>
               <td>攻撃者</td>
               <td colspan="3" id="ability_self" class="text-left"></td>
             </tr>
