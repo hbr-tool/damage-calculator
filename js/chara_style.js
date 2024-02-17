@@ -106,4 +106,6 @@
     {"style_id":105,"chara_id":50,"style_name":"天翔ける剣","image_url":"AliceAOnePiece_R3_Thumbnail.webp","troops":"AB","role":1,"physical":1,"element":2,"jewel_type":1,"ability0":402,"ability1":1101,"ability3":1110},
     {"style_id":106,"chara_id":49,"style_name":"ありふれた非日常","image_url":"AliceBBlazerUniform_R3_Thumbnail.webp","troops":"AB","role":2,"physical":2,"element":2,"jewel_type":1,"ability0":1505,"ability1":1101,"ability3":202},
     {"style_id":107,"chara_id":52,"style_name":"Finally found our silver lining","image_url":"BiancaADefault_R2_Thumbnail.webp","troops":"AB","role":6,"physical":3,"element":2,"jewel_type":4,"ability0":0,"ability1":1109,"ability3":216},
+    {"style_id":108,"chara_id":2,"style_name":"君を待つ紅玉","image_url":"YIzumiSnowWhite_R3_Thumbnail.webp","troops":"31A","role":2,"physical":2,"element":5,"jewel_type":1,"ability0":407,"ability1":1101,"ability3":408},
+    {"style_id":109,"chara_id":13,"style_name":"Daydream Believer","image_url":"BIYamawakiDaydream_R3_Thumbnail.webp","troops":"31C","role":1,"physical":1,"element":3,"jewel_type":1,"ability0":7,"ability1":1101,"ability3":1004},
 ];

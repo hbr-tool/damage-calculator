@@ -898,12 +898,13 @@ function addElementField(member_info, field_name, effect_size, field_element, bu
 }
 
 // 連撃追加
-function addBuffFunnel(buff_name, buff_id, chara_id, effect_size) {
+function addBuffFunnel(buff_name, buff_id, chara_id, effect_size, limit_border) {
     let option_text = `${chara_name[chara_id]}: ${buff_name} ${effect_size}%`;
     var option = $('<option>')
         .text(option_text)
         .data("chara_no", chara_no)
         .data("effect_size", effect_size)
+        .data("limit_border", limit_border)
         .val(buff_id)
         .css("display", "none")
         .addClass("buff_element-0")
@@ -944,7 +945,7 @@ function addAbility(member_info) {
         switch (ability_info.ability_target) {
 	        case 0: // フィールド
 	            addElementField(member_info, ability_info.ability_name, ability_info.ability_power, ability_info.ability_element, 0, true);
-	            break;
+                continue;
 	        case 1: // 自分
 	            if (select_attack_skill && select_attack_skill.chara_id !== chara_id) {
 	            	display = "none"
@@ -965,15 +966,15 @@ function addAbility(member_info) {
 	            target = "ability_all";
 	            element_type = "public buff_element"
 	            break;
-            case 5: // 狂乱の型
-                addBuffFunnel(ability_info.ability_name, "0", chara_id, ability_info.ability_power);
-	            break;
+            case 5: // 狂乱の型/五月雨
+                addBuffFunnel(ability_info.ability_name, "0", chara_id, ability_info.ability_power, limit_border);
+                continue;
 	        default:
 	            break;
         }
         let name = chara_name[chara_id];
         let effect_size = ability_info.ability_power; 
-        let id = target + chara_id;
+        let id = target + chara_id + index;
         let chara_id_class = "chara_id-" + chara_id;
         let input = $('<input>').attr("type", "checkbox").attr("id", id)
             .data("effect_size", effect_size)
@@ -1140,7 +1141,7 @@ function isOnlyUse(option) {
                 var class_name = class_list[i];
                 if (class_name.startsWith("skill_attack-")) {
                     var partial_class = class_name.replace("skill_attack-", "");
-                    if (attack_id != Number(partial_class)) {
+                    if (Number(partial_class) != 0 && attack_id != Number(partial_class)) {
                         return true;
                     }
                 }
@@ -1195,7 +1196,7 @@ function setAbilityDisplay(limit_count, chara_id) {
     // 連撃を更新
     $(".funnel ." + chara_id).each(function(index, value) {
         if ($(value).val() == 0) {
-            if (limit_count >= 3) {
+            if (limit_count >= Number($(value).data("limit_border"))) {
                 $(value).css("display", "block");
             }  else {
                 $(value).css("display", "none");
@@ -1475,8 +1476,14 @@ function setEnemyStatus() {
 
 // スコアアタック表示
 function displayScoreAttack(enemy_info) {
-    for (let i = 1; i <= 2; i++) {
+    for (let i = 1; i <= 3; i++) {
         let grade_info = grade_list.filter((obj) => obj.score_attack_no == enemy_info.score_attack_no && obj.half == i);
+        if (grade_info.length == 0) {
+            $("#label_half_tab_" + i).hide();
+            break;
+        } else {
+            $("#label_half_tab_" + i).show();
+        }
         $("#half_content_" + i).html("");
         grade_info.forEach(value => {
             let id = "half_" + i + "_grade" + value.grade_no;
@@ -1520,6 +1527,13 @@ function sortEffectSize(selecter) {
         } else if (effectA > effectB) {
             return -1;
         } else {
+            var valueA = Number($(a).val());
+            var valueB = Number($(b).val());
+            if (valueA > valueB) {
+                return 1;
+            } else if (valueA < valueB) {
+                return -1;
+            }
             return 0;
         }
     });

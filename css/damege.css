@@ -569,6 +569,7 @@ input[type=checkbox]:disabled + .checkbox01 {
 }
 #half_tab_1:checked ~ #half_content_1 { display: block; }
 #half_tab_2:checked ~ #half_content_2 { display: block; }
+#half_tab_3:checked ~ #half_content_3 { display: block; }
 
 /* 異時層 */
 .ban_style {
