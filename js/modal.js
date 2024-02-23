@@ -26,6 +26,7 @@ function createStyleList() {
             .addClass("select_style_list")
             .addClass("physical_" + value.physical)
             .addClass("element_" + value.element)
+            .addClass("element_" + value.element2)
             .addClass("role_" + value.role);
     	$("#sytle_list_" + value.troops).append(input);
     });
