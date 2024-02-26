@@ -50,12 +50,14 @@ function setEventTrigger() {
         $(".public.buff_element-" + skill_info.attack_element).show();
         $(".public.buff_element-0").show();
         $(".only_" + chara_id_class + ".buff_element-0.skill_attack-0").show();
+        $(".only_" + chara_id_class + ".buff_element-0.skill_attack-999").show();
         $(".only_" + chara_id_class + ".buff_element-0.skill_attack-" + skill_info.attack_id).show();
         $(".ability_self").hide();
         if (skill_info.attack_element !== 0) {
             $("#elememt_ring").prop("disabled", false);
             $(".self_element-" + skill_info.attack_element + "." + chara_id_class).show();
             $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-0").show();
+            $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-999").show();
             $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-" + skill_info.attack_id).show();
         } else {
             $("#elememt_ring").prop("disabled", true);
@@ -1141,7 +1143,7 @@ function isOnlyUse(option) {
                 var class_name = class_list[i];
                 if (class_name.startsWith("skill_attack-")) {
                     var partial_class = class_name.replace("skill_attack-", "");
-                    if (Number(partial_class) != 0 && attack_id != Number(partial_class)) {
+                    if (Number(partial_class) != 0 && Number(partial_class) != 999 && attack_id != Number(partial_class)) {
                         return true;
                     }
                 }
