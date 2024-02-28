@@ -9,6 +9,7 @@ $(function(){
     link_list.forEach(element => {
         ui.append($('<li>').append($('<a>', {class: 'header_link', href: element.url, text: element.title})));
     });
+    ui.append($('<li>').append($('<a>', {class: 'header_link', href: "siteinfo.html", text: "このサイトについて"})));
     let headerHTML = $('<div>', {class: 'hamburger'})
         .append($('<img>', {class: 'logo', src: 'img/title_log.png'}))
         .append($('<p>', {class: 'btn-gNav'})
