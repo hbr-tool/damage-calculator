@@ -44,6 +44,9 @@ input[type="number"] {
     text-align: center;
     border: solid 1px #000;
 }
+input[type="number"]:read-only {
+    border: none;
+}
 input[type="text"]:not(:read-only) {
     border: solid 1px #000;
 }
@@ -159,8 +162,12 @@ img.sub_style {
     width: 120px;;
 }
 #enemy_list {
-    min-width: 200px;
+    min-width: 100px;
     max-width: 260px;
+}
+#enemy_list.short {
+    min-width: 150px;
+    width: 150px;
 }
 .surround_area {
     border: solid gray 2px;
@@ -206,6 +213,18 @@ img.sub_style {
     background-color: #ffff00;
 }
 
+
+input[type="button"]#enemy_save {
+    width: 40px;
+    font-size: 12px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+
+#enemy_stat,
+#enemy_destruction_limit,
+#enemy_destruction_rate,
 #enemy_destruction {
     width: 48px;
 }
@@ -308,8 +327,8 @@ select.filed {
     width: 310px;
 }
 .skill_lv_column {
-    width: 55px;
-    max-width: 55px;
+    width: 60px;
+    max-width: 60px;
 }
 .sp_only {
     display: none;
@@ -330,7 +349,7 @@ select.filed {
         width: 16.25%;
     }
     .skill_name_column {
-        width: calc(63.5% - 55px);
+        width: calc(63.5% - 60px);
     }
     .pc_only {
         display: none!important;
@@ -345,7 +364,6 @@ div.lv {
 }
 div.lv::before {
     content: "Lv";
-    margin-right: -4px;
 }
 div.lv select{
     text-align: center;
