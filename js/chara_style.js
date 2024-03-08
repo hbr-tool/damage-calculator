@@ -109,4 +109,6 @@
     {"style_id":108,"chara_id":2,"style_name":"君を待つ紅玉","image_url":"YIzumiSnowWhite_R3_Thumbnail.webp","troops":"31A","role":2,"physical":2,"element":5,"element2":null,"jewel_type":1,"ability0":407,"ability1":1101,"ability3":408},
     {"style_id":109,"chara_id":13,"style_name":"Daydream Believer","image_url":"BIYamawakiDaydream_R3_Thumbnail.webp","troops":"31C","role":1,"physical":1,"element":3,"element2":null,"jewel_type":1,"ability0":7,"ability1":1101,"ability3":1004},
     {"style_id":110,"chara_id":1,"style_name":"The feel of the Throne","image_url":"RKayamoriCombat2023_R3_Thumbnail.webp","troops":"31A","role":1,"physical":1,"element":1,"element2":5,"jewel_type":1,"ability0":237,"ability1":1101,"ability3":200},
+    {"style_id":111,"chara_id":15,"style_name":"至高のひととき","image_url":"MTenneWizard_R3_Thumbnail.webp","troops":"31C","role":6,"physical":2,"element":4,"element2":null,"jewel_type":4,"ability0":0,"ability1":1101,"ability3":1004},
+    {"style_id":112,"chara_id":16,"style_name":"お花見怪人クシダンゴ","image_url":"YBungoDango_R3_Thumbnail.webp","troops":"31C","role":2,"physical":2,"element":3,"element2":null,"jewel_type":1,"ability0":0,"ability1":1101,"ability3":1506},
 ];

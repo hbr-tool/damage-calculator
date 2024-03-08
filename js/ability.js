@@ -71,4 +71,5 @@
     {"ability_id":1503,"ability_name":"戦勲","ability_explan":"ダメージを与えた敵1体につきトークンを1上昇(追撃を除く)","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1504,"ability_name":"戦士の祝福","ability_explan":"スキルでDP回復効果を受けるとトークンを1上昇","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1505,"ability_name":"激動","ability_explan":"自身の攻撃で敵をブレイクしたとき 初回のみ自身のSPが8上昇する","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1506,"ability_name":"クイックリキャスト","ability_explan":"追加ターン中のとき 自身の消費SP-2","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
 ];
