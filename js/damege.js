@@ -951,26 +951,6 @@ function addElementField(member_info, field_name, effect_size, field_element, bu
     $("#element_field").append(option);
 }
 
-// 連撃追加
-function addBuffFunnel(buff_name, buff_id, chara_id, effect_size, limit_border) {
-    let option_text = `${chara_name[chara_id]}: ${buff_name} ${effect_size}%`;
-    var option = $('<option>')
-        .text(option_text)
-        .data("chara_no", chara_no)
-        .data("effect_size", effect_size)
-        .data("limit_border", limit_border)
-        .val(buff_id)
-        .css("display", "none")
-        .addClass("buff_element-0")
-        .addClass("skill_attack-0")
-        .addClass("only_chara_id-" + chara_id)
-        .addClass("buff_id-" + buff_id)
-        .addClass("only_one")
-        .addClass("chara_id-" + chara_id);
-    
-    $(".funnel").append(option);
-}
-
 // アビリティ追加
 function addAbility(member_info) {
     let chara_id = member_info.style_info.chara_id;
@@ -996,6 +976,7 @@ function addAbility(member_info) {
         }
         let target;
         let element_type;
+        let append = undefined;
         switch (ability_info.ability_target) {
 	        case 0: // フィールド
 	            addElementField(member_info, ability_info.ability_name, ability_info.ability_power, ability_info.ability_element, 0, true);
@@ -1021,8 +1002,16 @@ function addAbility(member_info) {
 	            element_type = "public buff_element"
 	            break;
             case 5: // 狂乱の型/五月雨
-                addBuffFunnel(ability_info.ability_name, "0", chara_id, ability_info.ability_power, limit_border);
-                continue;
+            if (select_attack_skill && select_attack_skill.chara_id !== chara_id) {
+                    display = "none"
+                }
+                target = "ability_self";
+                element_type = "self_element"
+                // 追加
+                var option1 = $('<option>').text("×1").val(1);
+                var option2 = $('<option>').text("×2").val(2);
+                append = $('<select>').append(option1).append(option2).addClass("ability_select");
+                break;
 	        default:
 	            break;
         }
@@ -1041,12 +1030,17 @@ function addAbility(member_info) {
         let label = $('<label>')
             .attr("for", id)
             .text(`${name}: ${ability_info.ability_name} (${ability_info.ability_short_explan})`)
-            .css("display", display)
-            .addClass("checkbox01")
+            .addClass("checkbox01");
+        let divC = $('<div>').addClass("flex");
+        let divP = $('<div>').append(input).append(label)
             .addClass(element_type + "-" + ability_info.ability_element)
             .addClass(target)
-            .addClass(chara_id_class);
-        $("#" + target).append(input).append(label);
+            .addClass(chara_id_class)
+            .css("display", display)
+        $("#" + target).append(divP);
+        if (append !== undefined) {
+            $(divP).append(append);
+        }
     }
 }
 
@@ -1056,6 +1050,7 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
     let checked = true;
     switch (ability_info.ability_target) {
         case 1: // 自分
+        case 5: // 狂乱の型、五月雨
             disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && ability_info.ability_type == 1);
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break;
@@ -1247,17 +1242,6 @@ function setAbilityDisplay(limit_count, chara_id) {
             select2ndSkill($(value).parent());
         }
     });
-    // 連撃を更新
-    $(".funnel ." + chara_id).each(function(index, value) {
-        if ($(value).val() == 0) {
-            if (limit_count >= Number($(value).data("limit_border"))) {
-                $(value).css("display", "block");
-            }  else {
-                $(value).css("display", "none");
-            }
-            select2ndSkill($(value).parent());
-        }
-    });
 }
 
 // 効果量合計
@@ -1330,6 +1314,25 @@ function getSumFunnelEffectList() {
             funnel_list.push(size);
         }
     });
+    let effect_size = getSumAbilityEffectSize(5);
+    let loop = 0;
+    let size = 0
+    if (effect_size == 50) {
+        loop = 5;
+        size = 10;
+    } else if (effect_size == 100) {
+        loop = 10;
+        size = 10;
+    } else if (effect_size == 120) {
+        loop = 3;
+        size = 40;
+    } else if (effect_size == 240) {
+        loop = 6;
+        size = 40;
+    }
+    for (let i = 0; i < loop; i++) {
+        funnel_list.push(size);
+    }
     // 降順でソート
     funnel_list.sort(function(a, b) {
         return b - a;
@@ -1376,9 +1379,14 @@ function getSumAbilityEffectSize(ability_kind) {
     $("input[type=checkbox].ability:checked").each(function(index, value) {
         let ability_id = Number($(value).data("ability_id"));
         let ability_info = getAbilityInfo(ability_id);
+        let effect_size = 0;
         if (ability_info.ability_kind == ability_kind) {
-            ability_effect_size += Number($(value).data("effect_size"));
+            effect_size = Number($(value).data("effect_size"));
         }
+        if ($(value).parent().find("select").length > 0) {
+            effect_size *= Number($(value).parent().find("select").val());
+        }
+        ability_effect_size += effect_size;
     });
     return ability_effect_size;
 }

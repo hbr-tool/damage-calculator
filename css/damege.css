@@ -560,6 +560,11 @@ input[type=checkbox]:checked:disabled + .checkbox01:after {
 input[type=checkbox]:disabled + .checkbox01 {
 	cursor: default;
 }
+.ability_select {
+    margin-top: -1px;
+    height: 21px;
+    font-size: 15px;
+}
 
 /* スコアアタック */
 .score_attack {
