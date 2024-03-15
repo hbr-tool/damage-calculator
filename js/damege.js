@@ -796,7 +796,11 @@ function updateEnemyResist() {
     let grade_sum = getGradeSum();
     let enemy_info = getEnemyInfo();
     let resist_down = getSumEffectSize("resist_down");
-    let element_resist = Number(enemy_info["element_" + element]) + resist_down - grade_sum["element_" + element];
+    let element_resist = Number(enemy_info["element_" + element]) - grade_sum["element_" + element];
+    // 耐性打ち消し
+    if (resist_down > 0) {
+        element_resist = 100 + resist_down;
+    }
     // 表示変更
     $("#enemy_element_" + element).val(Math.floor(element_resist));
     setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
@@ -1031,15 +1035,14 @@ function addAbility(member_info) {
             .attr("for", id)
             .text(`${name}: ${ability_info.ability_name} (${ability_info.ability_short_explan})`)
             .addClass("checkbox01");
-        let divC = $('<div>').addClass("flex");
-        let divP = $('<div>').append(input).append(label)
+        let div = $('<div>').append(input).append(label)
             .addClass(element_type + "-" + ability_info.ability_element)
             .addClass(target)
             .addClass(chara_id_class)
             .css("display", display)
-        $("#" + target).append(divP);
+        $("#" + target).append(div);
         if (append !== undefined) {
-            $(divP).append(append);
+            $(div).append(append);
         }
     }
 }
