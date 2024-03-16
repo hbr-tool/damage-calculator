@@ -799,7 +799,11 @@ function updateEnemyResist() {
     let element_resist = Number(enemy_info["element_" + element]) - grade_sum["element_" + element];
     // 耐性打ち消し
     if (resist_down > 0) {
-        element_resist = 100 + resist_down;
+        if (element_resist <= 100) {
+            element_resist = 100 + resist_down;
+        } else {
+            element_resist += resist_down;
+        }
     }
     // 表示変更
     $("#enemy_element_" + element).val(Math.floor(element_resist));
@@ -1548,6 +1552,8 @@ function setEnemyStatus() {
         sortEffectSize($(value));
         select2ndSkill($(value));
     });
+    // 耐性変更時用に再実行
+    updateEnemyResist();
 }
 
 // 敵ステータス更新
