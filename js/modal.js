@@ -18,17 +18,18 @@ class Member {
 function createStyleList() {
     $.each(style_list, function(index, value) {
     	let source = "icon/" + value.image_url;
+        let chara_data = getCharaData(value.chara_id);
     	let input = $('<input>')
             .attr("type", "image")
             .attr("src", source)
-            .attr("title", "[" + value.style_name + "]" + chara_full_name[value.chara_id])
+            .attr("title", "[" + value.style_name + "]" + chara_data.chara_name)
             .data("style_id", value.style_id)
             .addClass("select_style_list")
-            .addClass("physical_" + value.physical)
+            .addClass("physical_" + chara_data.physical)
             .addClass("element_" + value.element)
             .addClass("element_" + value.element2)
             .addClass("role_" + value.role);
-    	$("#sytle_list_" + value.troops).append(input);
+    	$("#sytle_list_" + chara_data.troops.replace("!", "")).append(input);
     });
 }
 

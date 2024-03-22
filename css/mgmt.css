@@ -1,0 +1,63 @@
+@media screen and (min-width: 1164px) {
+  .main_area {
+    width: 1164px;
+  }
+}
+@media screen and (max-width: 1164px) {
+  .main_area {
+    width: 100%;
+  }
+}
+
+
+div.frame {
+  height: calc(100svh - 75px);
+}
+
+td, th {
+  font-size: 13px;
+}
+
+.handsontable th {
+  background-color: #D9E1F2!important;
+}
+
+td.limit_0 {
+  background-color: #fff;
+}
+td.limit_1 {
+  background-color: #C6E0B4;
+}
+td.limit_2 {
+  background-color: #B4C6E7;
+}
+td.limit_3 {
+  background-color: #FFE699;
+}
+td.limit_4 {
+  background-color: #F4B084;
+}
+
+tr:has(.underLine) > td {
+  border-bottom: double #000;
+}
+td.rightLine {
+  border-right: double #000;
+}
+.handsontable td:first-of-type {
+  border-left: double #000!important;
+}
+.handsontable .htDimmed {
+  color: #000!important;
+}
+td {
+  white-space: nowrap!important;
+}
+
+input[type="button"].default {
+  font-size: 16px;
+  color: #fff;
+  background: #149f14;
+  border-radius: 100vh;
+  height: 26px;
+}

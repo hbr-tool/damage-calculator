@@ -65,6 +65,7 @@
     {"ability_id":1108,"ability_name":"後方救護","ability_explan":"ターン開始時 後衛にいると味方全体のDP+7%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1109,"ability_name":"吉報","ability_explan":"ターン開始時に前衛にいると確率で自身のSP+3","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1110,"ability_name":"羽休め","ability_explan":"ターン開始時 自身のDP+7%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
+    {"ability_id":1111,"ability_name":"みなぎる士気","ability_explan":"ターン開始時に前衛＆士気Lvが6以上のとき 自身のSP+1","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1203,"ability_name":"防御態勢","ability_explan":"行動開始時に前衛 & DP100%以上のとき 自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1501,"ability_name":"恵風","ability_explan":"自身がかけた回復スキルの効果量+20%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},
     {"ability_id":1502,"ability_name":"堅忍","ability_explan":"敵行動開始時に前衛 & DP破損状態で自身の防御力+50%","ability_short_explan":"","ability_target":0,"ability_kind":0,"ability_element":0,"ability_type":0,"ability_power":0},

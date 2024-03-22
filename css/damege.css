@@ -16,7 +16,7 @@ div.footer {
     font-size: 0.875rem;
 }
 .adjust_width {
-    width: 430px;
+    width: 450px;
 }
 @media screen and (max-width: 768px) {
     div.frame {

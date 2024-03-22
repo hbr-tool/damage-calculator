@@ -115,15 +115,16 @@ function createStyleList() {
             opacity = 1;
         }
 
+        let chara_data = getCharaData(value.chara_id);
         let input = $('<input>')
             .attr("type", "image")
             .attr("src", source)
-            .attr("title", "[" + value.style_name + "]" + chara_full_name[value.chara_id])
+            .attr("title", "[" + value.style_name + "]" + chara_data.chara_name)
             .data("style_id", value.style_id)
             .data("select", select)
             .addClass("select_style")
             .css("opacity", opacity);
-        $("#sytle_list_" + value.troops).append(input);
+        $("#sytle_list_" + chara_data.troops.replace("!", "")).append(input);
     });
     $("#style_all").text(style_list.length);
     $("#style_select").text(select_count);
