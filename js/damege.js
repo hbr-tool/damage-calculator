@@ -227,6 +227,13 @@ function setEventTrigger() {
             });
         }
     });
+    // 士気レベル変更
+    $("#morale_count").on("change", function(event) {
+        // バフ効果量を更新
+        $(".variable_effect_size").each(function(index, value) {
+            updateBuffEffectSize($(value));
+        });
+    });
     // 前衛が3人以上の場合
     $(document).on("change", "#ability_front input", function(event) {
         let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
@@ -513,11 +520,13 @@ function calcDamage() {
     let fightingspirit = $("#fightingspirit").prop("checked") ? -20 : 0;
     // 厄
     let misfortune = $("#misfortune").prop("checked") ? -20 : 0;
+    // 士気
+    let morale = Number($("#morale_count").val()) * -5;
     // メンバー
     let chara_no = $("#attack_list option:selected").data("chara_no");
     let member_info = select_style_list[chara_no];
 
-    let basePower = getBasePower(member_info, fightingspirit + misfortune);
+    let basePower = getBasePower(member_info, fightingspirit + misfortune + morale);
     let buff = getSumBuffEffectSize();
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1: 1;
     let debuff = getSumDebuffEffectSize();
@@ -538,7 +547,7 @@ function calcDamage() {
         dp_correction_rate = 1.1;
     }
 
-    let critical_power = getBasePower(member_info, fightingspirit - 50);
+    let critical_power = getBasePower(member_info, fightingspirit - 50 + morale);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
 
@@ -1284,7 +1293,8 @@ function getSumEffectSize(class_name) {
         if (selected.val() == "") {
             return true;
         }
-        effect_size += Number($(selected).data("effect_size"));
+        let strengthen = $(value).parent().parent().find("input[type=checkbox]").prop("checked") ? 1.2 : 1;
+        effect_size += Number($(selected).data("effect_size")) * strengthen;
     });
     return effect_size;
 }
@@ -1306,6 +1316,8 @@ function getSumBuffEffectSize() {
     // トークン
     let token_count = Number($("#token_count").val());
     sum_buff += token_count * getSumAbilityEffectSize(6);
+    // 士気
+    sum_buff += Number($("#morale_count").val()) * 5;
     return 1 + sum_buff / 100;
 }
 
@@ -1409,6 +1421,9 @@ function getCriticalBuff() {
 function getSumAbilityEffectSize(ability_kind) {
     let ability_effect_size = 0;
     $("input[type=checkbox].ability:checked").each(function(index, value) {
+        if ($(value).parent().css("display") === "none") {
+            return true;
+        }
         let ability_id = Number($(value).data("ability_id"));
         let ability_info = getAbilityInfo(ability_id);
         let effect_size = 0;
@@ -1744,7 +1759,9 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
     if (status_kbn[skill_info.ref_status_1] == 0) {
         return skill_info.min_power;
     }
-    let status = member_info[status_kbn[skill_info.ref_status_1]];
+    // 士気
+    let morale = Number($("#morale_count").val()) * 5;
+    let status = member_info[status_kbn[skill_info.ref_status_1]] + morale;
     let min_power = skill_info.min_power * (1 + 0.03 * (skill_lv - 1));
     let max_power = skill_info.max_power * (1 + 0.02 * (skill_lv - 1));
     let skill_stat = skill_info.param_limit;
@@ -1787,8 +1804,10 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
     if (skill_lv > skill_info.max_lv) {
         skill_lv = skill_info.max_lv;
     }
-    let status1 = member_info[status_kbn[skill_info.ref_status_1]];
-    let status2 = member_info[status_kbn[skill_info.ref_status_2]];
+    // 士気
+    let morale = Number($("#morale_count").val()) * 5;
+    let status1 = member_info[status_kbn[skill_info.ref_status_1]] + morale;
+    let status2 = member_info[status_kbn[skill_info.ref_status_2]] + morale;
     let min_power = skill_info.min_power * (1 + 0.05 * (skill_lv - 1));
     let max_power = skill_info.max_power * (1 + 0.02 * (skill_lv - 1));
     let status = (status1 * 2 + status2) / 3 - enemy_stat;

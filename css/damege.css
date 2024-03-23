@@ -247,7 +247,10 @@ input[type="button"]#enemy_save {
     width: 95%;
 }
 @media screen and (max-width: 430px) {
-    #enemy_destruction {
+#enemy_stat,
+#enemy_destruction_limit,
+#enemy_destruction_rate,
+#enemy_destruction {
         width: 40px;
     }
     .dp_range,
@@ -295,6 +298,22 @@ table td.row_element-4,
 table td.row_element-5 {
     display: none;
 }
+label input {
+    display: none;
+}
+label.strengthen span {
+    color: #333;
+    font-size: 14px;
+    border: 1px solid #333;
+    border-radius: 7px;
+    padding: 1px 1px 1px 1px;
+    user-select: none;
+}
+label.strengthen input:checked + span {
+    color: #FFF;
+    background: #149f14;
+    border-color: #149f14;
+}
 
 select.buff,
 select.mindeye,
@@ -323,8 +342,11 @@ select.filed {
 .type2_column {
     width: 90px;
 }
+.reinforce_column {
+    width: 37px;
+}
 .skill_name_column {
-    width: 310px;
+    width: 273px;
 }
 .skill_lv_column {
     width: 60px;
@@ -349,7 +371,7 @@ select.filed {
         width: 16.25%;
     }
     .skill_name_column {
-        width: calc(63.5% - 60px);
+        width: calc(63.5% - 97px);
     }
     .pc_only {
         display: none!important;
