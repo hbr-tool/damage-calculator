@@ -234,6 +234,13 @@ function setEventTrigger() {
             updateBuffEffectSize($(value));
         });
     });
+    // バフ/デバフ強化変更
+    $(".strengthen").on("change", function(event) {
+        // バフ効果量を更新
+        $(this).parent().parent().find(".variable_effect_size").each(function(index, value) {
+            updateBuffEffectSize($(value));
+        });
+    });
     // 前衛が3人以上の場合
     $(document).on("change", "#ability_front input", function(event) {
         let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
@@ -773,7 +780,9 @@ function updateBuffEffectSize(option, skill_lv) {
     let effect_size = getEffectSize(skill_buff.buff_kind, buff_id, member_info, skill_lv);
     let chara_id = member_info.style_info.chara_id;
     let chara_name = getCharaData(chara_id).chara_short_name;
-    let effect_text = `${chara_name}: ${skill_buff.buff_name} ${Math.floor(effect_size * 100) / 100}%`;
+    let strengthen = option.parent().parent().parent().find("input").prop("checked") ? 1.2 : 1;
+    let text_effect_size = effect_size * strengthen;
+    let effect_text = `${chara_name}: ${skill_buff.buff_name} ${Math.floor(text_effect_size * 100) / 100}%`;
     option.text(effect_text).data("effect_size", effect_size).data("select_lv", skill_lv);
     // 耐性が変更された場合
     if (skill_buff.buff_kind == 20) {
@@ -889,7 +898,6 @@ function addBuffList(member_info) {
     let is_select = member_info.is_select;
       
     buff_list.forEach(value => {
-        let effect_size = getEffectSize(value.buff_kind, value.buff_id, member_info, value.max_lv);
         let buff_element = 0;
         let only_one = "";
         
@@ -938,16 +946,12 @@ function addBuffList(member_info) {
         if (value.only_first === 1) only_one = "only_first";
         let only_chara_id = value.only_me === 1 ? `only_chara_id-${chara_id}` : "public";
         let only_other_id = value.only_me === 2 ? `only_other_chara_id-${chara_id}` : "";
-        let chara_name = getCharaData(chara_id).chara_short_name;
-        let option_text = `${chara_name}: ${value.buff_name} ${(Math.floor(effect_size * 100) / 100)}%`;
         
         var option = $('<option>')
-            .text(option_text)
             .val(value.buff_id)
             .data("select_lv", value.max_lv)
             .data("max_lv", value.max_lv)
             .data("chara_no", member_info.chara_no)
-            .data("effect_size", effect_size)
             .css("display", "none")
             .addClass("buff_element-" + buff_element)
             .addClass("buff_id-" + value.buff_id)
@@ -959,6 +963,9 @@ function addBuffList(member_info) {
             .addClass("chara_id-" + chara_id);
         
         $("." + str_buff).append(option);
+        $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function(index, value) {
+            updateBuffEffectSize($(value));
+        });
     });
 }
 

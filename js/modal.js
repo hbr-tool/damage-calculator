@@ -145,11 +145,11 @@ function setMember(select_chara_no, style_id, isTrigger) {
     $("#limit_" + select_chara_no).val(limit_count);
     member_info.limit_count = Number(limit_count);
 
+    select_style_list[select_chara_no] = member_info;
     // スキル・バフ・アビリティを追加
     addAttackList(member_info);
     addBuffList(member_info);
     addAbility(member_info);
-    select_style_list[select_chara_no] = member_info;
 
     if (isTrigger) {
         $("#attack_list").trigger("change");
