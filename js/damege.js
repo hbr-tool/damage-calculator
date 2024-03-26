@@ -532,8 +532,10 @@ function calcDamage() {
     // メンバー
     let chara_no = $("#attack_list option:selected").data("chara_no");
     let member_info = select_style_list[chara_no];
+    // 闘志or士気
+    let stat_up = morale < fightingspirit ? morale : fightingspirit;
 
-    let basePower = getBasePower(member_info, fightingspirit + misfortune + morale);
+    let basePower = getBasePower(member_info, stat_up + misfortune);
     let buff = getSumBuffEffectSize();
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1: 1;
     let debuff = getSumDebuffEffectSize();
@@ -554,7 +556,7 @@ function calcDamage() {
         dp_correction_rate = 1.1;
     }
 
-    let critical_power = getBasePower(member_info, fightingspirit - 50 + morale);
+    let critical_power = getBasePower(member_info, stat_up - 50);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
 
