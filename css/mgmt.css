@@ -9,9 +9,17 @@
   }
 }
 
-
 div.frame {
   height: calc(100svh - 75px);
+}
+
+select.orb {
+  border: solid 1px #000;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
 }
 
 td, th {

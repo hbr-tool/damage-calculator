@@ -996,7 +996,7 @@ function addAbility(member_info) {
 
     for (let index = 0; index < ability_list.length; index++) {
         ability_id = ability_list[index];
-        if (ability_id == 0 || ability_id > 1000) {
+        if (ability_id == null || ability_id > 1000) {
             // 1000番以降は不要
             continue;
         }
@@ -1477,6 +1477,9 @@ function createEnemyList(enemy_class) {
     if (enemy_class == 6) {
         // スコアタの場合、グレードを表示する。
         $(".score_attack").css("display", "block");
+        // 表示を逆順にする
+        $("#enemy_list").html($("#enemy_list option").toArray().reverse());
+        $("#enemy_list").prop("selectedIndex", 0);
     } else {
         $(".score_attack").css("display", "none");
     }
@@ -1795,9 +1798,14 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
         }
     }
     // 機転
-    let ability_id = member_info.style_info.ability3;
-    if (ability_id == 501 && member_info.limit_count >= 3) {
+    let ability_id3 = member_info.style_info.ability3;
+    if (ability_id3 == 501 && member_info.limit_count >= 3) {
         effect_size *= 1.25;
+    }
+    // 増幅
+    let ability_id0 = member_info.style_info.ability0;
+    if (ability_id0 == 503) {
+        effect_size *= 1.1;
     }
     return effect_size;
 }
