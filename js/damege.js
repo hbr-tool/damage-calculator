@@ -819,13 +819,13 @@ function resetEnemyResist() {
 
 // 敵耐性変更
 function updateEnemyResist() {
-    skill_info = getAttackInfo();
-    if (skill_info === undefined) {
+    let skill_info = getAttackInfo();
+    let enemy_info = getEnemyInfo();
+    if (skill_info === undefined || enemy_info === undefined) {
         return false
     }
     let element = skill_info.attack_element;
     let grade_sum = getGradeSum();
-    let enemy_info = getEnemyInfo();
     let resist_down = getSumEffectSize("resist_down");
     let element_resist = Number(enemy_info["element_" + element]) - grade_sum["element_" + element];
     // 耐性打ち消し
