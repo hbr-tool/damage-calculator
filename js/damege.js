@@ -315,6 +315,10 @@ function setEventTrigger() {
         }
         $(".row_dp").css("display", "none");
     });
+    // スコアアタック敵強さ変更
+    $("#score_lv").on("change", function(event) {
+        updateEnemyScoreAttack();
+    });
     // 強ブレイクチェック
     $("#strong_break").on("change", function(event) {
         let enemy_info = getEnemyInfo();
@@ -1480,8 +1484,10 @@ function createEnemyList(enemy_class) {
         // 表示を逆順にする
         $("#enemy_list").html($("#enemy_list option").toArray().reverse());
         $("#enemy_list").prop("selectedIndex", 0);
+        $("#score_lv").show();
     } else {
         $(".score_attack").css("display", "none");
+        $("#score_lv").hide();
     }
     if (enemy_class == 1) {
         // 異時層の場合、サブパーティを表示する。
@@ -1594,6 +1600,9 @@ function setEnemyStatus() {
         setDpGarge(i, 0);
     }
     $(".row_dp").css("display", "none");
+    if (enemy_info.score_attack_no) {
+        updateEnemyScoreAttack();
+    }
     updateEnemyResist();
     // バフ効果量を更新
     $(".variable_effect_size").each(function(index, value) {
@@ -1614,6 +1623,45 @@ function updateEnemyStatus(enemy_class_no, enemy_info) {
     let filtered_enemy = enemy_list.filter((obj) => obj.enemy_class == enemy_class && obj.enemy_class_no === enemy_class_no);
     let index = enemy_list.findIndex((obj) => obj === filtered_enemy[0]);
     Object.assign(enemy_list[index], enemy_info);
+}
+
+// スコアアタック敵ステータス設定
+function updateEnemyScoreAttack() {
+    let enemy_info = getEnemyInfo();
+    let score_lv = Number($("#score_lv").val());
+    let enemy_stat = score_stat[score_lv - 100];
+    let enemy_hp =  getScoreHp(score_lv, Number(enemy_info.max_hp));
+    let max_dp_list = enemy_info.max_dp.split(",");
+    for (let i = 0; i < max_dp_list.length; i++) {
+        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]));
+        $("#enemy_dp_" + i).val(enemy_dp.toLocaleString());
+    }
+    $("#enemy_stat").val(enemy_stat);
+    $("#enemy_hp").val(enemy_hp.toLocaleString());
+}
+
+// スコアタHP取得
+function getScoreHp(score_lv, max_hp) {
+    if (score_lv == 140) {
+        // 特殊対応
+        if (max_hp == 900000) {
+            return 7400000
+        } else {
+            return 8400000;
+        }
+    }
+    let count1 = score_lv > 120 ? 20 : score_lv - 100;
+    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
+    let magn = Math.pow(1.055, count1) * Math.pow(1.05, count2);
+    return Math.ceil(max_hp * magn / 1000) * 1000;
+}
+
+// スコアタDP取得
+function getScoreDp(score_lv, max_dp) {
+    let count1 = score_lv > 120 ? 20 : score_lv - 100;
+    let count2 = score_lv > 120 ? score_lv - 120 : 0;
+    let magn = Math.pow(1.04, count1) * Math.pow(1.05, count2);
+    return Math.ceil(max_dp * magn / 1000) * 1000;
 }
 
 // スコアアタック表示

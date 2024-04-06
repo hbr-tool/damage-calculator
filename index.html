@@ -38,6 +38,7 @@
     var status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
     var type_physical = ["", "slash", "stab", "strike"];
     var type_element = ["none", "fire", "ice", "thunder", "light", "dark"];
+    var score_stat = [290, 320, 320, 325, 325, 330, 330, 335, 335, 340, 340, 340, 340, 345, 345, 350, 350, 355, 355, 360, 360, 380, 385, 385, 390, 390, 395, 395, 400, 400, 405, 405, 410, 415, 415, 420, 420, 425, 425, 430, 430];
     var select_attack_skill;
     var open_damage_detail;
     var buff_kbn = [
@@ -84,6 +85,13 @@
         for (let i = 0; i <= 5; i++) $(value).append($('<option>').text(i).val(i))
         $(value).prop("selectedIndex", 5);
       });
+
+      // スコアタレベル
+      var selectOptions = '';
+      for (var i = 140; i >= 101; i--) {
+          selectOptions += '<option value="' + i + '">' + i + '</option>';
+      }
+      $('#score_lv').html(selectOptions);
 
       // 自由入力取得
       for (let i = 0; i < 10; i++) {
@@ -257,6 +265,7 @@
               <select id="enemy_list">
               </select>
               <input id="enemy_save" type="button" value="保存" hidden>
+              <select id="score_lv" hidden></select>
             </div>
           </div>
           <div class="score_attack mx-auto">
