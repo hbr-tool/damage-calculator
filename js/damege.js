@@ -1541,6 +1541,9 @@ function updateGrade() {
 function getGradeSum() {
     let grade_sum = $.extend(true, {}, grade_list.filter((obj) => obj.score_attack_no == 0)[0]);
     let enemy_info = getEnemyInfo();
+    if (enemy_info == undefined) {
+        return;
+    }
     if (enemy_info.enemy_class != 6) {
         // スコアタ以外の場合は、基本値
         return grade_sum;
