@@ -1535,6 +1535,7 @@ function updateGrade() {
         setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i] - grade_sum["element_" + i]);
     }
     updateEnemyResist();
+    updateEnemyScoreAttack();
 }
 
 // グレード情報取得
@@ -1644,6 +1645,7 @@ function updateEnemyScoreAttack() {
     }
     $("#enemy_stat").val(enemy_stat);
     $("#enemy_hp").val(enemy_hp.toLocaleString());
+    
 }
 
 // スコアタHP取得
