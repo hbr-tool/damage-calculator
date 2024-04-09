@@ -593,6 +593,11 @@ function calcDamage() {
     // クリティカル表示
     $("#critical_rate").text(`(発生率: ${Math.round(critical_rate * 100) / 100}%)`);
     $("div.footer").show();
+
+    // スコア計算
+    if ($("#enemy_class").val() == 6) {
+        calcScore(critical_detail, grade_sum.grade_rate);
+    }
 }
 
 // 倍率表示
@@ -1485,9 +1490,11 @@ function createEnemyList(enemy_class) {
         $("#enemy_list").html($("#enemy_list option").toArray().reverse());
         $("#enemy_list").prop("selectedIndex", 0);
         $("#score_lv").show();
+        $("#prediction_score").show();
     } else {
         $(".score_attack").css("display", "none");
         $("#score_lv").hide();
+        $("#prediction_score").hide();
     }
     if (enemy_class == 1) {
         // 異時層の場合、サブパーティを表示する。
@@ -1699,6 +1706,45 @@ function displayScoreAttack(enemy_info) {
             $("#half_content_" + i).append(div);
         });
     }
+}
+
+// スコア設定
+function calcScore(detail, grade_magn) {
+    let score_lv = Number($("#score_lv").val());
+    let is_break = $("#no_break_bonus_check").prop("checked");
+    let turn_count = $("#turn_count").val();
+    let num = score_lv - 100;
+    let no_break_value = is_break ? no_break_bonus[num] : 0;
+    let damage_bonus_avg = getDamageBonus(detail.avg_damage, num);
+    let damage_bonus_max = getDamageBonus(detail.max_damage, num);
+    let damage_bonus_min = getDamageBonus(detail.min_damage, num);
+    // 暫定固定値
+    let summary_score_avg = (level_bonus[num] + no_break_value + damage_bonus_avg) * turn_bonus[turn_count] * (1 + grade_magn / 100);
+    let summary_score_max = (level_bonus[num] + no_break_value + damage_bonus_max) * turn_bonus[turn_count] * (1 + grade_magn / 100);
+    let summary_score_min = (level_bonus[num] + no_break_value + damage_bonus_min) * turn_bonus[turn_count] * (1 + grade_magn / 100);
+    $("#lv_score").val(level_bonus[num].toLocaleString(0));
+    $("#no_break_bonus").val(no_break_value.toLocaleString(0));
+    $("#damage_bonus_avg").val(damage_bonus_avg.toLocaleString(0));
+    $("#damage_bonus_max").val(damage_bonus_max.toLocaleString(0));
+    $("#damage_bonus_min").val(damage_bonus_min.toLocaleString(0));
+    $("#turn_bonus").val("×" + turn_bonus[turn_count]);
+    $("#grade_bonus").val("×" + (1 + grade_magn / 100));
+    $("#summary_score_avg").val(Math.floor(summary_score_avg).toLocaleString(2));
+    $("#summary_score_max").val(Math.floor(summary_score_max).toLocaleString(2));
+    $("#summary_score_min").val(Math.floor(summary_score_min).toLocaleString(2));
+}
+
+function getDamageBonus(damage, num) {
+    let damage_bonus;
+    if (damage <= damage_limit[num]) {
+        damage_bonus = Math.floor(damage / 100);
+    } else {
+        damage_bonus = damage_limit[num] / 100;
+        let rest_damage =  damage - damage_limit[num];
+        let magn = 1.1701 * Math.pow(rest_damage / damage_limit[num], -0.669);
+        damage_bonus += Math.floor(rest_damage * magn / 100);
+    }
+    return Math.floor(damage_bonus * 0.47);
 }
 
 // 敵耐性設定

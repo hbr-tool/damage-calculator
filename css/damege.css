@@ -277,6 +277,21 @@ input[type="range"].result_display::-ms-thumb {
     text-align: right;
     border: 0px;
 }
+/* 予測スコア */
+.prediction {
+    display: inline-block;
+    width: 180px;
+    font-size: 16px;
+}
+
+.prediction_value {
+    width: 80px;
+    font-size: 16px;
+}
+.prediction_shift {
+    margin-left: -23px;
+    width: 203px;
+}
 
 /* バフエリア */
 table tr {
@@ -615,6 +630,11 @@ input[type=checkbox]:disabled + .checkbox01 {
 #half_tab_1:checked ~ #half_content_1 { display: block; }
 #half_tab_2:checked ~ #half_content_2 { display: block; }
 #half_tab_3:checked ~ #half_content_3 { display: block; }
+@media screen and (max-width: 430px) {
+    #half_tab > label {
+        padding: 0.1rem 1rem;
+    }
+}
 
 /* 異時層 */
 .ban_style {
