@@ -120,6 +120,10 @@ img.sub_style {
     margin-left: 3px;
     text-align: center;
 }
+.limit:disabled,
+.jewel:disabled {
+    border:solid 1px black ;
+}
 @media screen and (max-width: 482px) {
     .status_area {
         width: 100%;

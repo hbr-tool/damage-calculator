@@ -81,6 +81,9 @@
         for (let i = 0; i <= 4; i++) $(value).append($('<option>').text(i).val(i))
         $(value).prop("selectedIndex", 2);
       });
+      $(".limit").append($('<option>').text(10).val(10).css("display", "none"));
+      $(".limit").append($('<option>').text(20).val(20).css("display", "none"));
+
       $(".jewel").each(function (index, value) {
         for (let i = 0; i <= 5; i++) $(value).append($('<option>').text(i).val(i))
         $(value).prop("selectedIndex", 5);
@@ -1025,42 +1028,121 @@
                 <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
                 <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
               </div>
+              <div class="flex flex-wrap w-[144px] mx-auto">
+                <input type="image" class="rarity" id="rarity_1" src="img/IconRaritySS.webp">
+                <input type="image" class="rarity opacity-30" id="rarity_2" src="img/IconRarityS.webp">
+                <input type="image" class="rarity opacity-30" id="rarity_3" src="img/IconRarityA.webp">
+              </div>
               <div class="search_result_area">
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31a.webp">
-                  <div id="sytle_list_31A" class="flex flex-wrap troops_31A"></div>
+                <div id="rank_ss">
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31a.webp">
+                    <div id="sytle_list_1_31A" class="flex flex-wrap troops_31A"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31b.webp">
+                    <div id="sytle_list_1_31B" class="flex flex-wrap troops_31B"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31c.webp">
+                    <div id="sytle_list_1_31C" class="flex flex-wrap troops_31C"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31d.webp">
+                    <div id="sytle_list_1_31D" class="flex flex-wrap troops_31D"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31e.webp">
+                    <div id="sytle_list_1_31E" class="flex flex-wrap troops_31E"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31f.webp">
+                    <div id="sytle_list_1_31F" class="flex flex-wrap troops_31F"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31x.webp">
+                    <div id="sytle_list_1_31X" class="flex flex-wrap troops_31X"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/30g.webp">
+                    <div id="sytle_list_1_30G" class="flex flex-wrap troops_30G"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/angelbeats.webp">
+                    <div id="sytle_list_1_AB" class="flex flex-wrap  troops_AB"></div>
+                  </div>
                 </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31b.webp">
-                  <div id="sytle_list_31B" class="flex flex-wrap troops_31B"></div>
+                <div id="rank_s" class="hidden">
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31a.webp">
+                    <div id="sytle_list_2_31A" class="flex flex-wrap troops_31A"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31b.webp">
+                    <div id="sytle_list_2_31B" class="flex flex-wrap troops_31B"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31c.webp">
+                    <div id="sytle_list_2_31C" class="flex flex-wrap troops_31C"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31d.webp">
+                    <div id="sytle_list_2_31D" class="flex flex-wrap troops_31D"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31e.webp">
+                    <div id="sytle_list_2_31E" class="flex flex-wrap troops_31E"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31f.webp">
+                    <div id="sytle_list_2_31F" class="flex flex-wrap troops_31F"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31x.webp">
+                    <div id="sytle_list_2_31X" class="flex flex-wrap troops_31X"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/30g.webp">
+                    <div id="sytle_list_2_30G" class="flex flex-wrap troops_30G"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/angelbeats.webp">
+                    <div id="sytle_list_2_AB" class="flex flex-wrap  troops_AB"></div>
+                  </div>
                 </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31c.webp">
-                  <div id="sytle_list_31C" class="flex flex-wrap troops_31C"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31d.webp">
-                  <div id="sytle_list_31D" class="flex flex-wrap troops_31D"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31e.webp">
-                  <div id="sytle_list_31E" class="flex flex-wrap troops_31E"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31f.webp">
-                  <div id="sytle_list_31F" class="flex flex-wrap troops_31F"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/31x.webp">
-                  <div id="sytle_list_31X" class="flex flex-wrap troops_31X"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/30g.webp">
-                  <div id="sytle_list_30G" class="flex flex-wrap troops_30G"></div>
-                </div>
-                <div class="troops">
-                  <input type="image" class="emblem" src="img/angelbeats.webp">
-                  <div id="sytle_list_AB" class="flex flex-wrap  troops_AB"></div>
+                <div id="rank_a" class="hidden">
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31a.webp">
+                    <div id="sytle_list_3_31A" class="flex flex-wrap troops_31A"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31b.webp">
+                    <div id="sytle_list_3_31B" class="flex flex-wrap troops_31B"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31c.webp">
+                    <div id="sytle_list_3_31C" class="flex flex-wrap troops_31C"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31d.webp">
+                    <div id="sytle_list_3_31D" class="flex flex-wrap troops_31D"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31e.webp">
+                    <div id="sytle_list_3_31E" class="flex flex-wrap troops_31E"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31f.webp">
+                    <div id="sytle_list_3_31F" class="flex flex-wrap troops_31F"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/31x.webp">
+                    <div id="sytle_list_3_31X" class="flex flex-wrap troops_31X"></div>
+                  </div>
+                  <div class="troops">
+                    <input type="image" class="emblem" src="img/30g.webp">
+                    <div id="sytle_list_3_30G" class="flex flex-wrap troops_30G"></div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -17,9 +17,6 @@ class Member {
 // スタイルリスト作成
 function createStyleList() {
     $.each(style_list, function(index, value) {
-        if (value.rarity != 1 && value.chara_id != 104) {
-            return true;
-        }
     	let source = "icon/" + value.image_url;
         let chara_data = getCharaData(value.chara_id);
     	let input = $('<input>')
@@ -32,7 +29,7 @@ function createStyleList() {
             .addClass("element_" + value.element)
             .addClass("element_" + value.element2)
             .addClass("role_" + value.role);
-    	$("#sytle_list_" + chara_data.troops.replace("!", "")).append(input);
+        $("#sytle_list_" + value.rarity + "_"+ chara_data.troops.replace("!", "")).append(input);
     });
 }
 
@@ -74,6 +71,31 @@ function addModalEvent() {
         $(".select_style_list").hide();
         let show_class = ".select_style_list" + narrow.physical + narrow.element + narrow.role;
         $(show_class).show();
+    });
+
+    // レアリティ変更
+    $(".rarity").on('click', function() {
+        $(this).css("opacity", "1");
+        $(this).data("select", "1");
+        if ($(this).prop("id") == "rarity_1") {
+            $("#rarity_2").css("opacity", "0.3").data("select", "0");
+            $("#rarity_3").css("opacity", "0.3").data("select", "0");
+            $("#rank_ss").show();
+            $("#rank_s").hide();
+            $("#rank_a").hide();
+        } else if ($(this).prop("id") == "rarity_2") {
+            $("#rarity_1").css("opacity", "0.3").data("select", "0");
+            $("#rarity_3").css("opacity", "0.3").data("select", "0");
+            $("#rank_ss").hide();
+            $("#rank_s").show();
+            $("#rank_a").hide();
+        } else {
+            $("#rarity_1").css("opacity", "0.3").data("select", "0");
+            $("#rarity_2").css("opacity", "0.3").data("select", "0");
+            $("#rank_ss").hide();
+            $("#rank_s").hide();
+            $("#rank_a").show();
+        }
     });
 
     // スタイルを選択
@@ -122,33 +144,48 @@ function setMember(select_chara_no, style_id, isTrigger) {
     $('#select_chara_' + select_chara_no).attr("src", "icon/" + style_info.image_url);
 
     // ステータスを設定
-    $.each(status_kbn, function(index, value) {
-        if (index == 0) return true;
-        let status = localStorage.getItem(value + "_" + style_info.chara_id);
-        if (status === null || status === undefined) {
-            status = 400;
-            localStorage.setItem(value + "_" + style_info.chara_id, status);
+    let save_item = localStorage.getItem("style_" + style_id);
+    if (save_item) {
+        let items = save_item.split(",");
+        $.each(status_kbn, function(index, value) {
+            if (index == 0) return true;
+            $("#" + value + "_" + select_chara_no).val(items[index]);
+            member_info[value] = Number(items[index]);
+        });
+        $("#limit_" + select_chara_no).val(items[7]);
+        $("#jewel_" + select_chara_no).val(items[8]);
+        member_info.limit_count = Number(items[7]);
+        member_info.jewel_lv = Number(items[8]);
+    } else {
+        // 旧設定
+        $.each(status_kbn, function(index, value) {
+            if (index == 0) return true;
+            let status = localStorage.getItem(value + "_" + style_info.chara_id);
+            if (status === null || status === undefined) {
+                status = 400;
+                localStorage.setItem(value + "_" + style_info.chara_id, status);
+            }
+            $("#" + value + "_" + select_chara_no).val(status);
+            member_info[value] = Number(status);
+        });
+        let jewel = localStorage.getItem("jewel_" + style_info.chara_id);
+        if (jewel === null || jewel === undefined) {
+            jewel = 5;
+            localStorage.setItem("jewel_" + style_info.chara_id, jewel);
         }
-        $("#" + value + "_" + select_chara_no).val(status);
-        member_info[value] = Number(status);
-    });
-    let jewel = localStorage.getItem("jewel_" + style_info.chara_id);
-    if (jewel === null || jewel === undefined) {
-        jewel = 5;
-        localStorage.setItem("jewel_" + style_info.chara_id, jewel);
+        $("#jewel_" + select_chara_no).val(jewel);
+        member_info.jewel_lv = Number(jewel);
+    
+        let limit_count = localStorage.getItem("limit_" + style_info.chara_id);
+        if (limit_count === null || limit_count === undefined) {
+            limit_count = 2;
+            localStorage.setItem("limit_" + style_info.chara_id, limit_count);
+        }
+        $("#limit_" + select_chara_no).val(limit_count);
+        member_info.limit_count = Number(limit_count);
     }
-    $("#jewel_" + select_chara_no).val(jewel);
-    member_info.jewel_lv = Number(jewel);
-
-    let limit_count = localStorage.getItem("limit_" + style_info.chara_id);
-    if (limit_count === null || limit_count === undefined) {
-        limit_count = 2;
-        localStorage.setItem("limit_" + style_info.chara_id, limit_count);
-    }
-    $("#limit_" + select_chara_no).val(limit_count);
-    member_info.limit_count = Number(limit_count);
-
     select_style_list[select_chara_no] = member_info;
+    changeRarity(select_chara_no, style_info.rarity);
     // スキル・バフ・アビリティを追加
     addAttackList(member_info);
     addBuffList(member_info);
@@ -292,4 +329,28 @@ function styleReset(isLocalStorageReset) {
         }
     });
     $("#attack_list").trigger("change");
+}
+
+// レアリティ対応
+function changeRarity(select_chara_no, rarity) {
+    $("#limit_" + select_chara_no).prop("disabled", false);
+    if (rarity == 1) {
+        $("#jewel_" + select_chara_no).prop("disabled", false);
+        $('#limit_' + select_chara_no  + ' option[value="10"]').css('display', 'none');
+        $('#limit_' + select_chara_no  + ' option[value="20"]').css('display', 'none');
+    } else {
+        $("#limit_" + select_chara_no).prop("disabled", true);
+        if (rarity == 2) {
+            $("#jewel_" + select_chara_no).prop("disabled", false);
+            $('#limit_' + select_chara_no  + ' option[value="10"]').css('display', 'block');
+            $('#limit_' + select_chara_no).val(10);
+            select_style_list[select_chara_no].limit_count = 10;
+        } else {
+            $("#jewel_" + select_chara_no).val(0);
+            $("#jewel_" + select_chara_no).prop("disabled", true);
+            $('#limit_' + select_chara_no  + ' option[value="20"]').css('display', 'block');
+            $('#limit_' + select_chara_no).val(20);
+            select_style_list[select_chara_no].limit_count = 20;
+        }
+    }
 }
