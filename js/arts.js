@@ -131,27 +131,39 @@ function combineImagesWithHatching(create_style) {
             arts_select_list[value] = Array(18).fill(0);
         }
     });
+
+    let promises = [];
     // 画像をロードして描画
     $.each(arts_list, function (index, value) {
         let img = $('<img>');
         let select = arts_select_list[value.troops][index % 18];
-        img[0].src = "arts/" + arts_list[index].image_url;
-        let [row, col] = getRowColumn(index);
-        let adjustRow = (Math.floor(row / 3) + 1) * separate;
-        let adjustCol = (Math.floor(col / 6) + 1) * separate;
-        context.drawImage(img[0], col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
 
-        // 未所持の場合網掛けを描画
-        if (select != "1") {
-            drawHatching(context, col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
-        }
+        // 画像の読み込みを管理するプロミスを作成し、配列に追加する
+        let promise = new Promise(function (resolve, reject) {
+            img.on('load', function () {
+                let [row, col] = getRowColumn(index);
+                let adjustRow = (Math.floor(row / 3) + 1) * separate;
+                let adjustCol = (Math.floor(col / 6) + 1) * separate;
+                context.drawImage(img[0], col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
+
+                // 未所持の場合網掛けを描画
+                if (select != "1") {
+                    drawHatching(context, col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
+                }
+                resolve();
+            });
+            img[0].src = "arts/" + arts_list[index].image_url;
+        });
+        promises.push(promise);
     });
 
-    // ダウンロードリンクを作成し、クリック時にダウンロードされるよう設定
-    let downloadLink = document.createElement('a');
-    downloadLink.href = canvas.toDataURL();
-    downloadLink.download = 'arts_deck.png'; // ダウンロード時のファイル名
-    downloadLink.click();
+    Promise.all(promises).then(function() {
+        // ダウンロードリンクを作成し、クリック時にダウンロードされるよう設定
+        let downloadLink = document.createElement('a');
+        downloadLink.href = canvas.toDataURL();
+        downloadLink.download = 'arts_deck.png'; // ダウンロード時のファイル名
+        downloadLink.click();
+    });
 }
 
 // 行と列の番号を計算する
