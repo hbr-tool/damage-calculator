@@ -2,6 +2,7 @@
 const link_list = [
     {url: ".", title: "ダメージ計算ツール"},
     {url: "style_checker.html", title: "スタイル所持率チェッカー"},
+    {url: "arts_list.html", title: "アーツデッキ画像生成"},
 ]
 
 $(function(){ 
