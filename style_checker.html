@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <!-- Searvh Console -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1145880808347586"
     crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-N7FD0VTLNH"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-N7FD0VTLNH');
+  </script>
   <meta charset="unicode">
   <meta content="ヘブンバーンズレッドのSSスタイル所持率チェッカーです。" name="description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,16 +48,12 @@
     <div class="header"></div>
     <div class="frame static w-screen h-screen overflow-y-scroll">
       <div class="display_sp_only overflow-x-scroll">
-        <!-- Rakuten Widget FROM HERE -->
         <script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="101205";rakuten_recommend="on";rakuten_design="slide";rakuten_size="468x60";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3Z2I86%2BER2ODU%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a20031977341_3Z2I86_ER2ODU_2HOM_BS629";rakuten_mediaId="20011816";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script>
-        <!-- Rakuten Widget TO HERE -->
         <img border="0" width="1" height="1" src="https://www18.a8.net/0.gif?a8mat=3Z2I86+ER2ODU+2HOM+BS629" alt="">
       </div>
       <div class="flex">
         <div class="display_pc_only mx-auto mt-20">
-          <!-- Rakuten Widget FROM HERE -->
           <script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="101205";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x600";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3Z2I86%2BER2ODU%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a20031977341_3Z2I86_ER2ODU_2HOM_BS629";rakuten_mediaId="20011811";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script>
-          <!-- Rakuten Widget TO HERE -->
           <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=3Z2I86+ER2ODU+2HOM+BS629" alt="">    
         </div>
         <div class="main_area mx-auto">
@@ -57,7 +62,7 @@
               <div><input type="radio" id="check_style_all" name="target" value="all" checked><label for="check_style_all" class="text-base">全てのスタイル</label></div>
               <div><input type="radio" id="check_style_has" name="target" value="has"><label for="check_style_has" class="text-base">所持スタイルのみ</label></div>
             </div>
-            <input type="button" id="openModalBtn" class="w-32 mt-2 mb-2 default" value="一覧画像を作成">
+            <input type="button" id="openModalBtn" class="w-32 mt-2 mb-2 default" value="画像ダウンロード">
           </div>
           <div class="text-right">
             <input type="button" id="btn_select" class="w-16 mt-2 mb-2 default" value="全選択">
@@ -101,16 +106,27 @@
           </div>
         </div>
         <div class="display_pc_only mx-auto mt-20">
-          <!-- Rakuten Widget FROM HERE -->
           <script type="text/javascript">rakuten_affiliateId="0ea62065.34400275.0ea62066.204f04c0";rakuten_items="ranking";rakuten_genreId="101205";rakuten_recommend="on";rakuten_design="slide";rakuten_size="120x600";rakuten_target="_blank";rakuten_border="on";rakuten_auto_mode="on";rakuten_adNetworkId="a8Net";rakuten_adNetworkUrl="https%3A%2F%2Frpx.a8.net%2Fsvt%2Fejp%3Fa8mat%3D3Z2I86%2BER2ODU%2B2HOM%2BBS629%26rakuten%3Dy%26a8ejpredirect%3D";rakuten_pointbackId="a20031977341_3Z2I86_ER2ODU_2HOM_BS629";rakuten_mediaId="20011811";</script><script type="text/javascript" src="//xml.affiliate.rakuten.co.jp/widget/js/rakuten_widget.js"></script>
-          <!-- Rakuten Widget TO HERE -->
           <img border="0" width="1" height="1" src="https://www19.a8.net/0.gif?a8mat=3Z2I86+ER2ODU+2HOM+BS629" alt="">    
         </div>
       </div>
     </div>
     <div id="modalOverlay" class="modal-overlay"></div>
     <div id="modalContent" class="modal-content">
-      <div id="canvas-container"></div>
+      <label class="font-bold">ダウンロード設定</label>
+      <br>
+      <div id="download_area" class="mt-3">
+        表示列数
+        <select id="image_columns">
+          <option value="4" selected>4</option>
+          <option value="6">6</option>
+          <option value="8">8</option>
+          <option value="10">10</option>
+        </select>
+        <div>
+          <input type="button" id="downloadBtn" class="btn_download mt-2" value="ダウンロード">
+        </div>
+      </div>
     </div>
   </main>
   <footer>

@@ -1,7 +1,7 @@
 // イベントトリガー設定
 function setEventTrigger() {
     // スタイル絞り込み
-    $(".select_style").on('click', function() {
+    $(".select_style").on('click', function () {
         let select = $(this).data("select");
         if (select == "1") {
             released($(this));
@@ -15,8 +15,8 @@ function setEventTrigger() {
     });
 
     // 全選択
-    $("#btn_select").on('click', function() {
-        $(".select_style").each(function(index, value) {
+    $("#btn_select").on('click', function () {
+        $(".select_style").each(function (index, value) {
             selected($(this));
         });
         select_count = style_list.length;
@@ -24,8 +24,8 @@ function setEventTrigger() {
         setRateComplate();
     });
     // 全解除
-    $("#btn_release").on('click', function() {
-        $(".select_style").each(function(index, value) {
+    $("#btn_release").on('click', function () {
+        $(".select_style").each(function (index, value) {
             released($(this));
         });
         select_count = 0;
@@ -34,18 +34,21 @@ function setEventTrigger() {
     });
 
     // ツイート
-    $(".btn_post").on('click', function() {
+    $(".btn_post").on('click', function () {
         let rate_complate = Math.floor(select_count / style_list.length * 1000) / 10;
         let message = `私のSSスタイル所持率は\r\n${select_count}/${style_list.length}(コンプリート率${rate_complate}%)です。\r\n`;
         shareOnTwitter(message);
     });
 
-    //生成ボタン
+    // 画像出力ボタン
     $('#openModalBtn').click(function () {
         $('#modalOverlay, #modalContent').fadeIn();
+    });
+    // ダウンロードボタン
+    $('#downloadBtn').click(function () {
         let target = $('input[name="target"]:checked').val();
 
-        var filtered_style_list = style_list.filter(function(style) {
+        let filtered_style_list = style_list.filter(function (style) {
             let select = localStorage.getItem("style_has_" + style.style_id);
             return target == "all" || select == "1";
         });
@@ -56,8 +59,8 @@ function setEventTrigger() {
     $('#modalOverlay').click(function () {
         $('#modalOverlay, #modalContent').fadeOut();
     });
-}
 
+}
 
 // Twitter起動
 function shareOnTwitter(message) {
@@ -105,7 +108,7 @@ function saveLocalStrage(style_id, select) {
 
 // スタイルリスト作成
 function createStyleList() {
-    $.each(style_list, function(index, value) {
+    $.each(style_list, function (index, value) {
         let source = "icon/" + value.image_url;
         let select = localStorage.getItem("style_has_" + value.style_id);
         let opacity = 0.3;
@@ -139,61 +142,60 @@ function setRateComplate() {
 }
 
 // 比較関数
-function compare( a, b ){
+function compare(a, b) {
     var r = 0;
-    if( a.chara_id < b.chara_id ){ r = -1; }
-    else if( a.chara_id > b.chara_id ){ r = 1; }
+    if (a.chara_id < b.chara_id) { r = -1; }
+    else if (a.chara_id > b.chara_id) { r = 1; }
     return r;
 }
 
- // 画像を生成して Canvas に描画する関数
- function combineImagesWithHatching(create_style) {
-    var canvasContainer = $('#canvas-container');
-    canvasContainer.empty(); // コンテナをクリア
-    var canvas = $('<canvas>');
-    var context = canvas[0].getContext('2d');
-
+// 画像を生成して Canvas に描画する関数
+function combineImagesWithHatching(create_style) {
+    let canvas = document.createElement('canvas');
+    let context = canvas.getContext('2d');
     // Canvas サイズを設定
-    var columns = 4;
-    var rows = Math.ceil(create_style.length / columns);
+    let columns = Number($("#image_columns").val());
+    let rows = Math.ceil(create_style.length / columns);
     // 画像の横幅と高さを半分に縮小
-    var scaledWidth = 376 / 2;
-    var scaledHeight = 144 / 2;
-    canvas[0].width = scaledWidth * columns;
-    canvas[0].height = scaledHeight * rows;
+    let scaledWidth = 376 / 2;
+    let scaledHeight = 144 / 2;
+    canvas.width = scaledWidth * columns;
+    canvas.height = scaledHeight * rows;
 
-    // Canvas をコンテナに追加
-    canvasContainer.append(canvas);
-
+    let promises = [];
     // 画像をロードして描画
-    var loadedImages = 0;
+    $.each(create_style, function (index, value) {
+        let img = $('<img>');
+        let select = localStorage.getItem("style_has_" + value.style_id);
 
-    function loadImageAndDraw(index, style_info) {
-        var img = $('<img>');
-        let select = localStorage.getItem("style_has_" + style_info.style_id);
-        img[0].onload = function () {
-            var row = Math.floor(index / columns);
-            var col = index % columns;
-            context.drawImage(img[0], col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
+        // 画像の読み込みを管理するプロミスを作成し、配列に追加する
+        let promise = new Promise(function (resolve, reject) {
+            img.on('load', function () {
+                let row = Math.floor(index / columns);
+                let col = index % columns;
+                context.drawImage(img[0], col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
+                // 未所持の場合網掛けを描画
+                if (select != "1") {
+                    drawHatching(context, col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
+                }
+                resolve();
+            });
+            img[0].src = "select/" + value.image_url.replace("Thumbnail", "Select");
+        });
+        promises.push(promise);
+    });
 
-            // 未所持の場合網掛けを描画
-            if (select != "1") {
-                drawHatching(context, col * scaledWidth, row * scaledHeight, scaledWidth, scaledHeight);
-            }
-            loadedImages++;
-        };
-        let path = "select/" + style_info.image_url.replace("Thumbnail", "Select");
-        img[0].src = path;
-    }
-
-    // 画像をロードして描画
-    for (var i = 0; i < create_style.length; i++) {
-      loadImageAndDraw(i, create_style[i]);
-    }
+    Promise.all(promises).then(function() {
+        // ダウンロードリンクを作成し、クリック時にダウンロードされるよう設定
+        let downloadLink = document.createElement('a');
+        downloadLink.href = canvas.toDataURL();
+        downloadLink.download = 'style_list.png'; // ダウンロード時のファイル名
+        downloadLink.click();
+    });
 }
 
 // 網掛けを描画する関数
-function drawHatching(context, pos_x, pos_y ,width, height) {
+function drawHatching(context, pos_x, pos_y, width, height) {
     context.beginPath();
     for (var x = 0; x < width; x += 2) {
         context.moveTo(x + pos_x, pos_y);
