@@ -1074,6 +1074,7 @@ function addAbility(member_info) {
                         target = "ability_back";
                         break;
                     case 3: // 全体
+                    case 0: // その他
                         target = "ability_all";
                         break;
                 }
@@ -1123,6 +1124,7 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break
         case 4:	// 全体
+        case 5:	// 敵
         case 0:	// その他
             if (limit_count < limit_border) {
                 disabled = true;
@@ -1544,9 +1546,6 @@ function getEnemyInfo() {
 function updateGrade() {
     let enemy_info = getEnemyInfo();
     let grade_sum = getGradeSum();
-    $("#enemy_hp").val((enemy_info.max_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
-    let max_dp_list = enemy_info.max_dp.split(",");
-    $("#enemy_dp_0").val((max_dp_list[0] * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     for (let i = 1; i <= 3; i++) {
         setEnemyElement("#enemy_physical_" + i, enemy_info["physical_" + i] - grade_sum["physical_" + i]);
     }
@@ -1654,33 +1653,25 @@ function updateEnemyStatus(enemy_class_no, enemy_info) {
 // スコアアタック敵ステータス設定
 function updateEnemyScoreAttack() {
     let enemy_info = getEnemyInfo();
+    let grade_sum = getGradeSum();
     let score_lv = Number($("#score_lv").val());
     let enemy_stat = score_stat[score_lv - 100];
     let enemy_hp =  getScoreHp(score_lv, Number(enemy_info.max_hp));
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
         let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]));
-        $("#enemy_dp_" + i).val(enemy_dp.toLocaleString());
+        $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);
-    $("#enemy_hp").val(enemy_hp.toLocaleString());
-    
+    $("#enemy_hp").val((enemy_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
 }
 
 // スコアタHP取得
 function getScoreHp(score_lv, max_hp) {
-    if (score_lv == 140) {
-        // 特殊対応
-        if (max_hp == 900000) {
-            return 7400000
-        } else {
-            return 8400000;
-        }
-    }
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
     let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
     let magn = Math.pow(1.055, count1) * Math.pow(1.05, count2);
-    return Math.ceil(max_hp * magn / 1000) * 1000;
+    return roundUpToFourSignificantFigures(max_hp * magn);
 }
 
 // スコアタDP取得
@@ -1688,7 +1679,18 @@ function getScoreDp(score_lv, max_dp) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
     let count2 = score_lv > 120 ? score_lv - 120 : 0;
     let magn = Math.pow(1.04, count1) * Math.pow(1.05, count2);
-    return Math.ceil(max_dp * magn / 1000) * 1000;
+    return roundUpToFourSignificantFigures(max_dp * magn);
+}
+
+// 有効数字を3桁にする
+function roundUpToFourSignificantFigures(val) {
+    let num = Math.floor(val)
+    let significantFigures = num.toString().replace(/^-/, '').replace(/^0+/, '').length;
+    if (significantFigures < 4) {
+        return num;
+    }
+    let roundedNum = Math.ceil(num / Math.pow(10, significantFigures - 3)) * Math.pow(10, significantFigures - 3);
+    return roundedNum;
 }
 
 // スコアアタック表示
@@ -1967,6 +1969,11 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
     let ability_id = member_info.style_info.ability3;
     if (ability_id == 502 && member_info.limit_count >= 3) {
         effect_size *= 1.25;
+    }
+    // 減退
+    let ability_id0 = member_info.style_info.ability0;
+    if (ability_id0 == 504) {
+        effect_size *= 1.1;
     }
     return effect_size;
 }
