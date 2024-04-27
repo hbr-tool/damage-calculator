@@ -82,7 +82,7 @@ function setEventTrigger() {
             let chara_no = $(value).data("chara_no");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
-            let member_info = select_style_list[chara_no];
+            let member_info = chara_no < 10 ? select_style_list[chara_no] : sub_style_list[chara_no - 10];
             setAbilityCheck(value, ability_info, limit_border, member_info.limit_count, chara_id_class);
         });
 
