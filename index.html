@@ -516,7 +516,16 @@
                 <input type="text" id="no_break_bonus" class="text-center prediction_value" readonly>
               </div>
               <div>
-                <div class="prediction">最大ダメージボーナス</div>
+                <div class="prediction">
+                  <label class="label_damage_bonus">
+                    最大ダメージボーナス
+                  </label>
+                  <select id="socre_enemy_unit">
+                    <option value="1">1体</option>
+                    <option value="2">2体</option>
+                    <option value="3">3体</option>
+                  </select>
+                </div>
                 <input type="text" id="damage_bonus_avg" class="text-center prediction_value" readonly>
                 <div class="flex items-center">
                   <div class="w-[120px]"></div>

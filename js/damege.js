@@ -1758,7 +1758,8 @@ function getDamageBonus(damage, num) {
         let magn = 1.1701 * Math.pow(rest_damage / damage_limit[num], -0.669);
         damage_bonus += Math.floor(rest_damage * magn / 100);
     }
-    return Math.floor(damage_bonus * 0.47);
+    let socre_enemy_unit = Number($("#socre_enemy_unit").val());
+    return Math.floor(damage_bonus * socre_enemy_unit * 0.47);
 }
 
 // 敵耐性設定

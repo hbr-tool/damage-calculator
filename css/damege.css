@@ -287,7 +287,6 @@ input[type="range"].result_display::-ms-thumb {
     width: 180px;
     font-size: 16px;
 }
-
 .prediction_value {
     width: 80px;
     font-size: 16px;
@@ -295,6 +294,12 @@ input[type="range"].result_display::-ms-thumb {
 .prediction_shift {
     margin-left: -23px;
     width: 203px;
+}
+.label_damage_bonus {
+    margin-top: -3px;
+}
+select#socre_enemy_unit {
+    height: 24px;
 }
 
 /* バフエリア */
