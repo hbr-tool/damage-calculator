@@ -146,13 +146,24 @@ img.sub_style {
 }
 /* 攻撃技 */
 #attack_list {
-    width: 64%;
-    max-width: 256px;
+    width: 60%;
+    max-width: 230px;
 }
 
 #attack_physical,
 #attack_element  {
     margin-top: -1px;
+}
+
+#range_area {
+    margin-top: 1px;
+    color: white;
+    width: 40px;
+    background: #149f14;
+    border-radius: 0.5rem;
+    display: inline-block;
+    text-align: center;
+    height: 21px;
 }
 
 /* 敵情報 */
@@ -284,8 +295,9 @@ input[type="range"].result_display::-ms-thumb {
 /* 予測スコア */
 .prediction {
     display: inline-block;
-    width: 180px;
+    width: 200px;
     font-size: 16px;
+    white-space: nowrap;
 }
 .prediction_value {
     width: 80px;
@@ -293,7 +305,11 @@ input[type="range"].result_display::-ms-thumb {
 }
 .prediction_shift {
     margin-left: -23px;
-    width: 203px;
+    width: 223px;
+    white-space: nowrap;
+}
+.prediction_none {
+    width: 130px;
 }
 .label_damage_bonus {
     margin-top: -3px;
@@ -358,7 +374,7 @@ select.filed {
     width: 615px;
 }
 .title_column {
-    width: 90px;
+    width: 65px;
 }
 .type1_column {
     width: 70px;
@@ -366,15 +382,15 @@ select.filed {
 .type2_column {
     width: 90px;
 }
-.reinforce_column {
-    width: 37px;
-}
 .skill_name_column {
     width: 273px;
 }
+.reinforce_column {
+    width: 37px;
+}
 .skill_lv_column {
-    width: 60px;
-    max-width: 60px;
+    width: 62px;
+    max-width: 62px;
 }
 .sp_only {
     display: none;
@@ -407,6 +423,7 @@ select.filed {
 
 div.lv {
     display: none;
+    white-space: nowrap;
 }
 div.lv::before {
     content: "Lv";
@@ -450,6 +467,10 @@ div.lv select{
 .status_resist_down2,
 .status_charge {
     background-color: rgba(255, 0, 0, 0.3)
+}
+
+.strengthen {
+    white-space: nowrap;
 }
 
 /* ダメージ詳細 */

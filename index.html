@@ -251,13 +251,43 @@
               <label id="sp_cost_5">0</label>
             </div>
           </div>
-          <div class="adjust_width mx-auto flex mt-2">
-            <label class="w-[40px]">攻 撃</label>
-            <select id="attack_list">
-            </select>
-            <div class="lv w-[56px]"><select id="skill_lv"></select></div>
-            <img id="attack_physical" class="w-6 h-6" src="img/blank.png">
-            <img id="attack_element" class="w-6 h-6" src="img/blank.png">
+          <div class="attack_area surround_area mx-auto mt-2 adjust_width">
+            <label class="area_title">攻 撃</label>
+            <div class="flex">
+              <select id="attack_list" class="ml-6">
+              </select>
+              <div class="lv"><select id="skill_lv"></select></div>
+              <img id="attack_physical" class="w-6 h-6" src="img/blank.png">
+              <img id="attack_element" class="w-6 h-6" src="img/blank.png">
+              <label id="range_area">単体</label>
+            </div>
+            <div class="ml-6">
+              <div class="mb-2">
+                <input type="checkbox" id="skill_special_display" checked><label class="checkbox01" for="skill_special_display">専用技以外を非表示にする</label>
+              </div>
+                <!-- バーチカルフォース専用 -->
+              <div class="skill_unique attack_attack_id-115 hidden">
+                <div class="flex">
+                  自身のDP
+                  <div class="dp_gauge">
+                    <input type="range" id="skill_unique_dp_rate" class="player_dp_range dp_range w-[160px]" min="0" max="150" step="1" value="100"
+                    style="background: linear-gradient(to right, rgb(79, 124, 139) 0%, rgb(196, 211, 216) 66.6667%, rgb(255, 255, 255) 66.6667%);">
+                    <output id="player_dp_rate" class="gauge_rate">100%</output>
+                  </div>
+                </div>
+              </div>
+              <!-- コーシュカ・アルマータ専用 -->
+              <div class="skill_unique attack_attack_id-2162 hidden">
+                <div class="flex">
+                  残りSP
+                  <input id="skill_unique_sp" type="number" value="30" class="ml-2 w-12">
+                </div>
+              </div>
+              <!-- 美也専用 -->
+              <div class="skill_unique attack_chara_id-45 hidden">
+                <input type="checkbox" id="skill_unique_cherry_blossoms"><label class="checkbox01" for="skill_unique_cherry_blossoms">桜花の矢</label>
+              </div>
+            </div>
           </div>
           <div class="enemy_select adjust_width mx-auto mt-2">
             <div>
@@ -376,22 +406,22 @@
                   <div>
                     <div class="dp_gauge">
                       <input type="text" id="enemy_dp_3" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_3" class="dp_range" min="0" max="100" step="1" value="0">
+                      <input type="range" id="dp_range_3" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
                       <output id="dp_rate_3" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
                       <input type="text" id="enemy_dp_2" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_2" class="dp_range" min="0" max="100" step="1" value="0">
+                      <input type="range" id="dp_range_2" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
                       <output id="dp_rate_2" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
                       <input type="text" id="enemy_dp_1" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_1" class="dp_range" min="0" max="100" step="1" value="0">
+                      <input type="range" id="dp_range_1" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
                       <output id="dp_rate_1" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
                       <input type="text" id="enemy_dp_0" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_0" class="dp_range" min="0" max="100" step="1" value="0">
+                      <input type="range" id="dp_range_0" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
                       <output id="dp_rate_0" class="gauge_rate">0%</output>
                     </div>
                   </div>
@@ -503,7 +533,7 @@
           </div>
           <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
             <label class="area_title">予測スコア(β版)</label>
-            <div class="mx-auto w-[320px] mt-2">
+            <div class="mx-auto w-[330px] mt-2">
               <div>
                 <div class="prediction">難易度スコア</div>
                 <input type="text" id="lv_score" class="text-center prediction_value" readonly>
@@ -528,7 +558,7 @@
                 </div>
                 <input type="text" id="damage_bonus_avg" class="text-center prediction_value" readonly>
                 <div class="flex items-center">
-                  <div class="w-[120px]"></div>
+                  <div class="prediction_none"></div>
                   <div class="mt-1">（</div> 
                   <input type="text" id="damage_bonus_min" class="text-center prediction_value" readonly>
                   <div class="mt-1">～</div> 
@@ -548,7 +578,7 @@
                 <div class="prediction mt-1">最終スコア</div>
                 <input type="text" id="summary_score_avg" class="text-center prediction_value" readonly>
                 <div class="flex">
-                  <div class="w-[120px]"></div>
+                  <div class="prediction_none"></div>
                   <div class="mt-1">（</div> 
                   <input type="text" id="summary_score_min" class="text-center prediction_value" readonly>
                   <div class="mt-1">～</div> 

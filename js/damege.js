@@ -34,6 +34,8 @@ function setEventTrigger() {
             if (skill_info === undefined || select_attack_skill.attack_physical !== skill_info.attack_physical) {
                 $(".buff_physical-" + select_attack_skill.attack_physical).hide();
             }
+           // キャラ、スタイル専用非表示
+            $(".skill_unique").hide();
 
             $(".status_attack_skill").removeClass("status_attack_skill");
             // 敵情報初期化
@@ -50,6 +52,8 @@ function setEventTrigger() {
         let chara_no = $(this).find("option:selected").data("chara_no");
         let member_info = select_style_list[chara_no];
         let chara_id_class = "chara_id-" + skill_info.chara_id;
+        let style_id_class = "style_id-" + skill_info.style_id;
+        let attack_id_class = "attack_id-" + skill_info.attack_id;
         $(".public.buff_element-0.buff_physical-0").show();
         if (skill_info.attack_element != 0) {
             $(".public.buff_element-" + skill_info.attack_element).show();
@@ -72,6 +76,10 @@ function setEventTrigger() {
             $("#elememt_ring").prop("selectedIndex", 0);
         }
         $(".self_element-0." + chara_id_class).show();
+        // キャラ、スタイル、スキル専用表示
+        $(".attack_" + attack_id_class).show();
+        $(".attack_" + style_id_class).show();
+        $(".attack_" + chara_id_class).show();
 
         // 該当ステータスに着色
         for (let i = 1; i <= 3; i++) {
@@ -95,6 +103,7 @@ function setEventTrigger() {
         $("#attack_element").attr("src", "img/" + attack_element + ".webp");
         $("." + attack_physical).addClass("selected");
         $("." + attack_element).addClass("selected");
+        $("#range_area").text(skill_info.range_area == 1 ? "単体" : "全体");
 
         displayElementRow();
         displayWeakRow();
@@ -107,6 +116,13 @@ function setEventTrigger() {
         // 敵情報再設定
         updateEnemyResist();
         createSkillLvList("skill_lv", max_lv, max_lv);
+    });
+    $("#skill_special_display").on("change", function(event) {
+        if ($("#skill_special_display").prop("checked")) {
+            $(".skill_kind-versatile").hide();
+        } else {
+            $(".skill_kind-versatile").show();
+        }
     });
     // バフスキル変更
     $(".include_lv").on("change", function(event) {
@@ -294,8 +310,14 @@ function setEventTrigger() {
             }
         }
     });
+    // プレイヤーDP変更
+    $(".player_dp_range").on("input", function(event) {
+        let val = $(this).val();
+        $("#player_dp_rate").val(val + '%');
+        applyGradient($(".player_dp_range"), "#4F7C8B", val / 1.5);
+    });
     // 残りDP変更
-    $(".dp_range").on("input", function(event) {
+    $(".enemy_dp_range").on("input", function(event) {
         $("#enemy_destruction_rate").val(100);
         let dp_no = Number($(this).prop("id").replace(/\D/g, ''));
         setDpGarge(dp_no, $(this).val())
@@ -566,12 +588,21 @@ function calcDamage() {
     let funnel_sum = 1 + getSumFunnelEffectList().reduce((accumulator, currentValue) => accumulator + currentValue, 0) / 100;
     let destruction_rate = Number($("#enemy_destruction_rate").val());
     let special = 1 + Number($("#dp_range_0").val() == 0 ? skill_info.hp_damege / 100 : skill_info.dp_damege / 100);
-    // 残DP補正(暫定)
-    let dp_correction_rate = 1;
-    if (skill_info.attack_id == 113) {
-        dp_correction_rate = 1.25;
-    } else if (skill_info.attack_id == 114) {
-        dp_correction_rate = 1.1;
+    // バーチカルフォース
+    let skill_unique_rate = 1;
+    if (skill_info.attack_id == 115) {
+        let dp_rate = Number($("#skill_unique_dp_rate").val());
+        dp_rate = dp_rate < 60 ? 60 : dp_rate;
+        skill_unique_rate += (dp_rate - 100) / 200
+    }
+    // コーシュカ・アルマータ
+    if (skill_info.attack_id == 2162) {
+        let sp = Number($("#skill_unique_sp").val());
+        skill_unique_rate = (sp > 30 ? 30 : sp) / 30;
+    }
+    // 桜花の矢
+    if (skill_info.chara_id == 45 && $("#skill_unique_cherry_blossoms").prop("checked")) {
+        buff += 0.5
     }
 
     let critical_power = getBasePower(member_info, stat_up - 50);
@@ -581,7 +612,7 @@ function calcDamage() {
     damage_detail = new RestGauge();
     critical_detail = new RestGauge();
 
-    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate * dp_correction_rate;
+    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate * skill_unique_rate;
     calculateDamage(basePower, skill_info, buff, debuff, fixed, "#damage", "#destruction_last_rate", damage_detail);
     calculateDamage(basePower * 0.9, skill_info, buff, debuff, fixed, "#damage_min", undefined, damage_detail);
     calculateDamage(basePower * 1.1, skill_info, buff, debuff, fixed, "#damage_max", undefined, damage_detail);
@@ -805,14 +836,55 @@ function updateBuffEffectSize(option, skill_lv) {
     let effect_size = getEffectSize(skill_buff.buff_kind, buff_id, member_info, skill_lv);
     let chara_id = member_info.style_info.chara_id;
     let chara_name = getCharaData(chara_id).chara_short_name;
-    let strengthen = option.parent().parent().parent().find("input").prop("checked") ? 1.2 : 1;
-    let text_effect_size = effect_size * strengthen;
+    let ability_streng = getStrengthen(member_info, skill_buff.buff_kind);
+    // バフ強化1.2倍
+    let strengthen = option.parent().parent().parent().find("input").prop("checked") ? 20 : 0;
+    let text_effect_size = effect_size * (1 + (ability_streng + strengthen) / 100);
+    effect_size = effect_size * (1 + ability_streng / 100);
     let effect_text = `${chara_name}: ${skill_buff.buff_name} ${Math.floor(text_effect_size * 100) / 100}%`;
-    option.text(effect_text).data("effect_size", effect_size).data("select_lv", skill_lv);
+    option.text(effect_text).data("effect_size", effect_size).data("select_lv", skill_lv).data("text_effect_size", text_effect_size);;
     // 耐性が変更された場合
     if (skill_buff.buff_kind == 20) {
         updateEnemyResist();
     }
+}
+
+// バフ強化効果量取得
+function getStrengthen(member_info, buff_kind) {
+    let strengthen = 0;
+    // 攻撃力アップ/属性攻撃力アップ
+    let attack_up =  [0, 1];
+    if (attack_up.includes(buff_kind)) {
+        let ability_id3 = member_info.style_info.ability3;
+        let ability_id0 = member_info.style_info.ability0;
+        // 機転
+        if (ability_id3 == 501 && member_info.limit_count >= 3) {
+            strengthen += 25;
+        }
+        // 増幅
+        if (ability_id0 == 503) {
+            strengthen += 10;
+        }
+        // エクシード 
+        if (ability_id3 == 505) {
+            strengthen += 30;
+        }
+    }
+    // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
+    let defense_down =  [3, 4, 19, 20, 21, 22];
+    if (defense_down.includes(buff_kind)) {
+        // 侵食
+        let ability_id = member_info.style_info.ability3;
+        if (ability_id == 502 && member_info.limit_count >= 3) {
+            strengthen += 25;
+        }
+        // 減退
+        let ability_id0 = member_info.style_info.ability0;
+        if (ability_id0 == 504) {
+            strengthen += 10;
+        }
+    }
+    return strengthen;
 }
 
 // 弱点判定
@@ -887,12 +959,17 @@ function addAttackList(member_info) {
     );
 
     let attack_sort_list = attack_list.sort((x, y) => y.style_id - x.style_id);
+    let checked = $("#skill_special_display").prop("checked");
 
     attack_sort_list.forEach(value => {
+        let display = checked && value.attack_id > 1000 ? "none" : "block";
+        let kind = value.attack_id < 1000 ? "exclusive" : "versatile";
         let option = $('<option>')
-            .text(value.attack_name)
+            .text(`${value.attack_name}(${value.hit_count}Hit)`)
             .val(value.attack_id)
+            .css("display", display)
             .data("chara_no", member_info.chara_no)
+            .addClass("skill_kind-" +  kind)
             .addClass("chara_id-" + value.chara_id);
         $("#attack_list").append(option);
     });
@@ -969,8 +1046,8 @@ function addBuffList(member_info) {
         let str_buff = buff_kbn[value.buff_kind];
         if (value.skill_attack === 0) only_one = 0;
         if (value.only_first === 1) only_one = "only_first";
-        let only_chara_id = value.only_me === 1 ? `only_chara_id-${chara_id}` : "public";
-        let only_other_id = value.only_me === 2 ? `only_other_chara_id-${chara_id}` : "";
+        let only_chara_id = value.range_area == 7 ? `only_chara_id-${chara_id}` : "public";
+        let only_other_id = value.range_area === 8 ? `only_other_chara_id-${chara_id}` : "";
         
         var option = $('<option>')
             .val(value.buff_id)
@@ -1326,8 +1403,11 @@ function getSumEffectSize(class_name) {
         if (selected.val() == "") {
             return true;
         }
-        let strengthen = $(value).parent().parent().find("input[type=checkbox]").prop("checked") ? 1.2 : 1;
-        effect_size += Number($(selected).data("effect_size")) * strengthen;
+        if ($(selected).data("text_effect_size")) {
+            effect_size += Number($(selected).data("text_effect_size"));
+        } else {
+            effect_size += Number($(selected).data("effect_size"));
+        }
     });
     return effect_size;
 }
@@ -1914,16 +1994,6 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
             effect_size += ((skill_info.max_power - skill_info.min_power) / jusl_stat * status + skill_info.min_power) * jewel_lv * 0.04;
         }
     }
-    // 機転
-    let ability_id3 = member_info.style_info.ability3;
-    if (ability_id3 == 501 && member_info.limit_count >= 3) {
-        effect_size *= 1.25;
-    }
-    // 増幅
-    let ability_id0 = member_info.style_info.ability0;
-    if (ability_id0 == 503) {
-        effect_size *= 1.1;
-    }
     return effect_size;
 }
 
@@ -1965,16 +2035,6 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
         } else {
             effect_size += skill_info.max_power * jewel_lv * 0.02;
         }
-    }
-    // 侵食
-    let ability_id = member_info.style_info.ability3;
-    if (ability_id == 502 && member_info.limit_count >= 3) {
-        effect_size *= 1.25;
-    }
-    // 減退
-    let ability_id0 = member_info.style_info.ability0;
-    if (ability_id0 == 504) {
-        effect_size *= 1.1;
     }
     return effect_size;
 }
