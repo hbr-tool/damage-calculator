@@ -176,7 +176,6 @@ function setEventTrigger() {
             setStatusToBuff(option, id);
         }
     });
-
     // スキルレベル変更
     $(".lv_effect").on("change", function(event) {
         let buff_type_id = $(this).attr("id").replace("_lv", "");
@@ -262,6 +261,14 @@ function setEventTrigger() {
     $(".strengthen").on("change", function(event) {
         // バフ効果量を更新
         $(this).parent().parent().find(".variable_effect_size").each(function(index, value) {
+            updateBuffEffectSize($(value));
+        });
+    });
+    // バフ/デバフ強化アビリティ変更
+    $(document).on("change", ".strengthen_ability", function(event) {
+        let chara_id_class = $(this).parent().attr('class').split(' ').find(className => className.startsWith('chara_id-'));
+        // バフ効果量を更新
+        $(".variable_effect_size." + chara_id_class).each(function(index, value) {
             updateBuffEffectSize($(value));
         });
     });
@@ -364,7 +371,7 @@ function setEventTrigger() {
     $(document).on("change", "input.half_check", function(event) {
         updateGrade();
     });
-    // 前半/後半タブ変更
+    // スコアタタブ変更
     $("input[name=rule_tab]").on("change", function(event) {
         updateGrade();
     });
@@ -865,8 +872,8 @@ function getStrengthen(member_info, buff_kind) {
         if (ability_id0 == 503) {
             strengthen += 10;
         }
-        // エクシード 
-        if (ability_id3 == 505) {
+        // エクシード(菅原専用)
+        if (ability_id3 == 505 && $("#ability_all462").prop("checked")) {
             strengthen += 30;
         }
     }
@@ -1162,6 +1169,7 @@ function addAbility(member_info) {
 	            break;
         }
         let name = getCharaData(chara_id).chara_short_name;
+        let fg_update = false;
         let id = target + chara_id + index;
         let chara_id_class = "chara_id-" + chara_id;
         let input = $('<input>').attr("type", "checkbox").attr("id", id)
@@ -1172,6 +1180,11 @@ function addAbility(member_info) {
             .addClass("ability_element-" + ability_info.ability_element)
             .addClass("ability")
             .addClass(chara_id_class);
+        // スキル強化可変アビリティ
+        if (ability_id == 505) {
+            input.addClass("strengthen_ability");
+            fg_update = true;
+        }
         let label = $('<label>')
             .attr("for", id)
             .text(`${name}: ${ability_info.ability_name} (${ability_info.ability_short_explan})`)
@@ -1185,6 +1198,12 @@ function addAbility(member_info) {
         $("#" + target).append(div);
         if (append !== undefined) {
             $(div).append(append);
+        }
+        if (fg_update) {
+            // バフ効果量を更新
+            $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+                updateBuffEffectSize($(value));
+            });
         }
     }
 }
@@ -1829,6 +1848,7 @@ function calcScore(detail, grade_magn) {
 }
 
 function getDamageBonus(damage, num) {
+    damage *= Number($("#socre_enemy_unit").val());
     let damage_bonus;
     if (damage <= damage_limit[num]) {
         damage_bonus = Math.floor(damage / 100);
@@ -1838,8 +1858,7 @@ function getDamageBonus(damage, num) {
         let magn = 1.1701 * Math.pow(rest_damage / damage_limit[num], -0.669);
         damage_bonus += Math.floor(rest_damage * magn / 100);
     }
-    let socre_enemy_unit = Number($("#socre_enemy_unit").val());
-    return Math.floor(damage_bonus * socre_enemy_unit * 0.47);
+    return Math.floor(damage_bonus * 0.47);
 }
 
 // 敵耐性設定
