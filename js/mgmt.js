@@ -14,7 +14,7 @@ function setEventTrigger() {
         downloadStringAsFile(compress, "character_management.sav");
     });
 
-    // データy読込ボタン
+    // データ読込ボタン
     $("#importSaveBtn").on("click", function(event) {
         readFileAsString(function(content) {
             let decompress = decompressString(content) 
@@ -42,10 +42,12 @@ function getData2() {
 }
 
 // 行定義生成
-function createColumns() {
+function createColumns(orb) {
     let newColumns = baseColumns;
     newColumns = addOrbColumn(newColumns, $("#orb1").val());
-    newColumns = addOrbColumn(newColumns, $("#orb2").val());
+    if (orb == 2) {
+        newColumns = addOrbColumn(newColumns, $("#orb2").val());
+    }
     return newColumns;
 }
 
