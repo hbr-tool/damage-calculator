@@ -1,52 +1,139 @@
 let hot1;
 let hot2;
 function setEventTrigger() {
+    // 表示列数変更
+    $("#display_columns").change(function () {
+        createGrid();
+        saveInitDispaly();
+        updateHeight();
+    });
     //　オーブ設定変更
-    $(".orb").change(function() {
+    $(".orb").change(function () {
+        let width = getWidth();
         columns = createColumns();
-        hot1.updateSettings({columns: columns});
-        hot2.updateSettings({columns: columns});
+        if ($("#display_columns").val() == 1) {
+            hot1.updateSettings({ columns: columns, width: width });
+        } else {
+            hot1.updateSettings({ columns: columns, width: width });
+            hot2.updateSettings({ columns: columns, width: width });
+        }
+        updateWidthSetting(width);
+        saveInitDispaly();
     });
 
     // データ保存ボタン
-    $("#exportSaveBtn").on("click", function(event) {
+    $("#exportSaveBtn").on("click", function (event) {
         let compress = compressString(JSON.stringify(data));
         downloadStringAsFile(compress, "character_management.sav");
     });
 
     // データ読込ボタン
-    $("#importSaveBtn").on("click", function(event) {
-        readFileAsString(function(content) {
-            let decompress = decompressString(content) 
+    $("#importSaveBtn").on("click", function (event) {
+        readFileAsString(function (content) {
+            let decompress = decompressString(content)
             let jsondata = JSON.parse(decompress);
             data = replaceCharaData(jsondata)
-            hot1.updateSettings({data: getData1()});
-            hot1.render();
-            hot2.updateSettings({data: getData2()});
-            hot2.render();
+            if ($("#display_columns").val() == 1) {
+                hot1.updateSettings({ data: data });
+                hot1.render();
+            } else {
+                hot1.updateSettings({ data: getData1() });
+                hot1.render();
+                hot2.updateSettings({ data: getData2() });
+                hot2.render();
+            }
             saveStorage();
         });
     });
+
+    $(window).on('resize', function() {
+        updateHeight();
+    });
 };
+
+function updateHeight() {
+    if ($("#display_columns").val() == 1) {
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        const calculatedHeight = windowHeight - 125;
+        hot1.updateSettings({ height: calculatedHeight });
+    } else {
+        hot1.updateSettings({ height: 800 });
+    }
+}
+
+function getWidth() {
+    let width = 350;
+    let values = [$("#orb1").val(), $("#orb2").val(), $("#orb3").val()];
+    let count = values.filter(value => value != 0).length;
+    return width + count * 125;
+}
+
+function createGrid() {
+    let grid1 = document.getElementById('grid1');
+    let grid2 = document.getElementById('grid2');
+    let width = getWidth();
+    if ($("#display_columns").val() == 1) {
+        if (hot1) {
+            hot1.updateSettings({ data: data });
+        } else {
+            hot1 = new Handsontable(grid1, getColumnOptions(data, width));
+        }
+        if (hot2) {
+            hot2.destroy();
+            hot2 = undefined;
+            $("#grid2").hide();
+        }
+        $("#grid_area").addClass("grid-cols-1")
+        $("#grid_area").removeClass("grid-cols-2");
+    } else {
+        let data1 = getData1();
+        let data2 = getData2();
+        if (hot1) {
+            hot1.updateSettings({ data: data1 });
+        } else {
+            hot1 = new Handsontable(grid1, getColumnOptions(data1, width));
+        }
+        if (hot2) {
+            hot2.updateSettings({ data: data2 });
+        } else {
+            hot2 = new Handsontable(grid2, getColumnOptions(data2, width));
+        }
+        $("#grid_area").addClass("grid-cols-2")
+        $("#grid_area").removeClass("grid-cols-1")
+        $("#grid2").show();
+    }
+    updateWidthSetting(width)
+}
+// 表示幅取得
+function updateWidthSetting(width) {
+    let display_columns = $("#display_columns").val();
+    let main_width = 4 + width * display_columns;
+    $("#grid_area").width(main_width);
+}
 
 // データ取得
 function getData1() {
-    return data.filter(function(item) {
+    return data.filter(function (item) {
         return item["chara_id"] <= 24 || 48 < item["chara_id"];
     });
 }
 function getData2() {
-    return data.filter(function(item) {
+    return data.filter(function (item) {
         return item["chara_id"] > 24 && item["chara_id"] <= 48;
     });
 }
 
 // 行定義生成
-function createColumns(orb) {
+function createColumns() {
     let newColumns = baseColumns;
-    newColumns = addOrbColumn(newColumns, $("#orb1").val());
-    if (orb == 2) {
+    if ($("#orb1").val() != 0) {
+        newColumns = addOrbColumn(newColumns, $("#orb1").val());
+    }
+    if ($("#orb2").val() != 0) {
         newColumns = addOrbColumn(newColumns, $("#orb2").val());
+    }
+    if ($("#orb3").val() != 0) {
+        newColumns = addOrbColumn(newColumns, $("#orb3").val());
     }
     return newColumns;
 }
@@ -63,10 +150,10 @@ function addOrbColumn(columns, value) {
 
 // キャラデータ取得
 function replaceCharaData(jsondata) {
-    let editedCharaData = JSON.parse(JSON.stringify(jsondata));
+    let edited_chara_data = JSON.parse(JSON.stringify(chara_data));
 
     // chara_dataのループを行う
-    editedCharaData.forEach(value => {
+    edited_chara_data.forEach(value => {
         // chara_idを取得
         const chara_id = value.chara_id;
         // jsondataから同様のchara_idを持つ列を取得
@@ -82,7 +169,38 @@ function replaceCharaData(jsondata) {
             value["rein"] = 0;
         }
     });
-    return editedCharaData;
+    return edited_chara_data;
+}
+
+// 初期設定
+function initSetting() {
+    let mgmt_init_display = localStorage.getItem('mgmt_init_display');
+    if (mgmt_init_display) {
+        let init = JSON.parse(mgmt_init_display);
+        // 保存状態復元
+        $("#display_columns").val(init["display_columns"]);
+        for (let i = 0; i < 3; i++) {
+            $("#orb" + (i + 1)).val(init["orbs"][i]);
+        }
+    } else {
+        // 初期設定
+        if ($(window).width() <= 610) {
+            $("#display_columns").val(1);
+            $("#orb2").val(0);
+        } else if ($(window).width() <= 950) {
+            $("#display_columns").val(1);
+        } else if ($(window).width() <= 1200) {
+            $("#orb2").val(0);
+        }
+    }
+}
+
+// 初期表示設定
+function saveInitDispaly() {
+    let init = new Object();
+    init["display_columns"] = $("#display_columns").val();
+    init["orbs"] = [$("#orb1").val(), $("#orb2").val(), $("#orb3").val()];
+    localStorage.setItem('mgmt_init_display', JSON.stringify(init));
 }
 
 // ストレージに保存
@@ -96,7 +214,7 @@ function loadStorage() {
     let jsonstr = localStorage.getItem('mgmt_json_data');
     let jsondata = []
     if (jsonstr) {
-        let decompress = decompressString(jsonstr) 
+        let decompress = decompressString(jsonstr)
         jsondata = JSON.parse(decompress);
     }
     data = replaceCharaData(jsondata)
@@ -137,11 +255,11 @@ function readFileAsString(callback) {
     input.type = 'file';
     input.accept = '.sav';
     // ファイルが選択された時の処理
-    input.addEventListener('change', function(event) {
+    input.addEventListener('change', function (event) {
         const file = event.target.files[0];
         const reader = new FileReader();
         // ファイルの読み込みが完了した時の処理
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             const content = event.target.result;
             callback(content); // コールバック関数を呼び出し、ファイルの内容を渡す
         };
@@ -156,18 +274,17 @@ function readFileAsString(callback) {
  * 以下handson設定
  */
 // 行オプション
-function getColumnOptions(data) {
+function getColumnOptions(data, width) {
     return {
         data: data,
         colHeaders: true,
         height: 800,
-        width: 580,
+        width: width,
         columns: columns,
         afterChange: afterChange,
         afterGetColHeader: afterGetColHeader,
-//        fixedColumnsLeft: 6, 
         // 行追加禁止
-        afterCreateRow: function(index, amount){
+        afterCreateRow: function (index, amount) {
             data.splice(index, amount)
         },
     }
@@ -186,10 +303,16 @@ let nestedHeaders = [
         { label: '転生<br>回数', rowspan: 2, class: 'htMiddle' },
         { label: 'スキル<br>Lv', rowspan: 2, class: 'htMiddle' },
         { label: 'ジェネ<br>ライズ', rowspan: 2, class: 'htMiddle' },
-        { label: 'エグゾウォッチャー', colspan: 5, class: 'htMiddle' },
-        { label: 'レクタス/シニスター', colspan: 5, class: 'htMiddle' },
+        { colspan: 5, class: 'htMiddle', id: "1" },
+        { colspan: 5, class: 'htMiddle', id: "2" },
+        { colspan: 5, class: 'htMiddle', id: "3" },
     ],
     [
+        { label: 'R', },
+        { label: 'B', },
+        { label: 'Y', },
+        { label: 'W', },
+        { label: 'P', },
         { label: 'R', },
         { label: 'B', },
         { label: 'Y', },
@@ -203,8 +326,8 @@ let nestedHeaders = [
     ]
 ];
 
-let header = getHeaderHtml(nestedHeaders);
 function afterGetColHeader(col, TH) {
+    let header = getHeaderHtml(nestedHeaders);
     $('table.htCore thead').empty();
     $('table.htCore thead').prepend(header);
 }
@@ -214,14 +337,28 @@ function getHeaderHtml(nestedHeaders) {
         headerHtml.push('<tr>');
         for (const [index, value] of row.entries()) {
             if (typeof value == 'object') {
+                headerHtml.push('<th class=');
+                headerHtml.push(value.class != undefined ? '"' + value.class + '"' : '""');
+                headerHtml.push(value.colspan != undefined ? ' colspan="' + value.colspan + '"' : "");
+                headerHtml.push(value.rowspan != undefined ? ' rowspan="' + value.rowspan + '"' : "");
+                headerHtml.push(value.style != undefined ? ' style="' + value.style + '"' : "");
+                headerHtml.push('>');
                 if (value.label != undefined) {
-                    headerHtml.push('<th class=');
-                    headerHtml.push(value.class != undefined ? '"' + value.class + '"' : '""');
-                    headerHtml.push(value.colspan != undefined ? ' colspan="' + value.colspan + '"' : "");
-                    headerHtml.push(value.rowspan != undefined ? ' rowspan="' + value.rowspan + '"' : "");
-                    headerHtml.push(value.style != undefined ? ' style="' + value.style + '"' : "");
-                    headerHtml.push('>');
                     headerHtml.push(getThHtml(value.label));
+                } else {
+                    let selectedText = ''; // 選択されたテキストを保持する変数を定義
+                    let id = 1;
+                    for (let i = 1; i <= 3; i++) {
+                        const $selectedOption = $("#orb" + i + " option:selected");
+                        if ($selectedOption.val() != 0) {
+                            if (id == value.id) {
+                                selectedText = $selectedOption.text(); // 選択されたテキストを保持
+                                break;
+                            }
+                            id++;
+                        }
+                    }
+                    headerHtml.push(selectedText); // ループの外で保持したテキストを使用                    
                 }
             }
             else {
@@ -246,7 +383,8 @@ baseColumns = [
         renderer: function (instance, td, row, column, prop, value, cellProperties) {
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
-            if (Number(rowData["chara_id"]) % 6 == 0 || Number(rowData["chara_id"]) == 104) {
+            let chara_id = Number(rowData["chara_id"]);
+            if (chara_id < 100 && chara_id % 6 == 0 || chara_id == 104) {
                 $(td).addClass("underLine");
             }
         },
@@ -310,7 +448,7 @@ baseColumns = [
 ];
 
 exoColumns = [
-     {
+    {
         data: "Exo_R",
         className: "htCenter",
         width: 25,
@@ -334,7 +472,7 @@ exoColumns = [
         data: "Exo_P",
         className: "htCenter rightLine",
         width: 25,
-    },   
+    },
 ];
 rectusColumns = [
     {

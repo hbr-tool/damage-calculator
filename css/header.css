@@ -32,7 +32,7 @@ a.header_link {
     right: 20px;
     width: 30px;
     height: 24px;
-    z-index: 12;
+    z-index: 1200;
     box-sizing: border-box;
     cursor: pointer;
     -webkit-transition: all 400ms;
@@ -106,7 +106,7 @@ a.header_link {
         height: 100%;
         font-size: 16px;
         box-sizing: border-box;
-        z-index: 1;
+        z-index: 1000;
         padding-top: 50px;
         transition: .3s;
     }
