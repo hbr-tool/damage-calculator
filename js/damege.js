@@ -1591,8 +1591,10 @@ function createEnemyList(enemy_class) {
     $.each(enemy_list, function(index, value) {
         if (value.enemy_class == enemy_class) {
             var option = $('<option>')
-                        .text(value.enemy_name)
                         .val(value.enemy_class_no);
+            if (enemy_class == 6) {
+                option.text(`#${value.score_attack_no} ${value.enemy_name}`)
+            }
             $("#enemy_list").append(option);
         }
     });
@@ -1755,10 +1757,10 @@ function updateEnemyScoreAttack() {
     let grade_sum = getGradeSum();
     let score_lv = Number($("#score_lv").val());
     let enemy_stat = score_stat[score_lv - 100];
-    let enemy_hp =  getScoreHp(score_lv, Number(enemy_info.max_hp));
+    let enemy_hp =  getScoreHp(score_lv, Number(enemy_info.max_hp), enemy_info.score_attack_no);
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
-        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]));
+        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), enemy_info.score_attack_no);
         $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);
@@ -1766,19 +1768,32 @@ function updateEnemyScoreAttack() {
 }
 
 // スコアタHP取得
-function getScoreHp(score_lv, max_hp) {
+function getScoreHp(score_lv, max_hp, score_attack_no) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
-    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
-    let magn = Math.pow(1.055, count1) * Math.pow(1.05, count2);
-    return roundUpToFourSignificantFigures(max_hp * magn);
+//    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
+    let count2 = score_lv > 120 ? score_lv - 120 : 0;
+    let rate1 = 1.055;
+    let rate2 = 1.05;
+    if (score_attack_no == 50) {
+        rate1 = 1.03;
+        rate2 = 1.045;
+    }
+    let magn = Math.pow(rate1, count1) * Math.pow(rate2, count2);
+    return Math.ceil(max_hp * magn / 1000) * 1000;
 }
 
 // スコアタDP取得
-function getScoreDp(score_lv, max_dp) {
+function getScoreDp(score_lv, max_dp, score_attack_no) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
     let count2 = score_lv > 120 ? score_lv - 120 : 0;
-    let magn = Math.pow(1.04, count1) * Math.pow(1.05, count2);
-    return roundUpToFourSignificantFigures(max_dp * magn);
+    let rate1 = 1.04;
+    let rate2 = 1.05;
+    if (score_attack_no == 50) {
+        rate1 = 1.018;
+        rate2 = 1.022;
+    }
+    let magn = Math.pow(rate1, count1) * Math.pow(rate2, count2);
+    return Math.ceil(max_dp * magn / 1000) * 1000;
 }
 
 // 有効数字を3桁にする

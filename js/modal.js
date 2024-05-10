@@ -1,3 +1,8 @@
+let select_troops = localStorage.getItem('select_troops');
+let select_style_list = Array(6).fill(undefined);
+let sub_style_list = Array(6).fill(undefined);
+let status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
+
 class Member {
     constructor() {
         this.style_info = null;
@@ -187,9 +192,11 @@ function setMember(select_chara_no, style_id, isTrigger) {
     select_style_list[select_chara_no] = member_info;
     changeRarity(select_chara_no, style_info.rarity);
     // スキル・バフ・アビリティを追加
-    addAttackList(member_info);
-    addBuffList(member_info);
-    addAbility(member_info);
+    if (typeof addAttackList == "function") {
+        addAttackList(member_info);
+        addBuffList(member_info);
+        addAbility(member_info);
+    }
 
     if (isTrigger) {
         $("#attack_list").trigger("change");
