@@ -1594,6 +1594,8 @@ function createEnemyList(enemy_class) {
                         .val(value.enemy_class_no);
             if (enemy_class == 6) {
                 option.text(`#${value.score_attack_no} ${value.enemy_name}`)
+            } else {
+                option.text(value.enemy_name);
             }
             $("#enemy_list").append(option);
         }
