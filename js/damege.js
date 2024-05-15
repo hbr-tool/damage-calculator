@@ -675,8 +675,8 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     }
     let rest_hp = Number($("#enemy_hp").val().replace(/,/g, "")) * Number($("#hp_range").val()) / 100;
     let hit_count = skill_info.hit_count;
-    let buff_destruction = getDestructionEffectSize() / 100; 
-    let destruction_size = enemy_destruction * skill_info.destruction * (1 + getEarringEffectSize("blast", 10 - hit_count)) * buff_destruction;
+    let buff_destruction = getDestructionEffectSize(hit_count);
+    let destruction_size = enemy_destruction * skill_info.destruction * buff_destruction;
     let damage = 0;
     let special;
     let add_buff;
@@ -686,11 +686,11 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     function procDamage (power, add_destruction) {
         if (rest_dp[0] <= 0 && dp_penetration) {
             special = 1 + skill_info.hp_damege / 100;
-            add_buff = getEarringEffectSize("attack", hit_count);
+            add_buff = getEarringEffectSize("attack", hit_count) / 100;
             add_debuff = 0;
         } else {
             special = 1 + skill_info.dp_damege / 100;
-            add_buff = getEarringEffectSize("break", hit_count);
+            add_buff = getEarringEffectSize("break", hit_count) / 100;
             add_debuff = getSumEffectSize("dp_debuff") / 100;
         }
         let hit_damage = power * (buff + add_buff) * (debuff + add_debuff) * fixed * special * destruction_rate / 100;
@@ -748,7 +748,7 @@ function getEarringEffectSize(type, hit_count) {
     let earring = $("#earring option:selected");
     if (earring.data("type") === type) {
         let effect_size = Number(earring.data("effect_size"));
-        return (effect_size - (10 / 9 * (hit_count - 1))) / 100;
+        return (effect_size - (10 / 9 * (hit_count - 1)));
     }
     return 0;
 }
@@ -1570,13 +1570,14 @@ function getSumAbilityEffectSize(effect_type) {
 }
 
 // 破壊率アップ効果量取得
-function getDestructionEffectSize() {
+function getDestructionEffectSize(hit_count) {
     let destruction_effect_size = 100;
+    let grade_sum = getGradeSum();
     destruction_effect_size += getSumEffectSize("destruction_rete_up");
     destruction_effect_size += getSumAbilityEffectSize(5);
-    let grade_sum = getGradeSum();
+    destruction_effect_size += getEarringEffectSize("blast", 10 - hit_count);
     destruction_effect_size -= grade_sum.destruction;
-    return destruction_effect_size;
+    return destruction_effect_size / 100;
 }
 
 // アビリティ情報取得
