@@ -1,0 +1,213 @@
+/* 全体 */
+div.frame {
+    height: calc(100svh - 60px);
+}
+.display_area {
+    width: 450px;
+    font-size: 0.875rem;
+}
+.adjust_width {
+    width: 450px;
+}
+@media screen and (max-width: 768px) {
+}
+select {
+    border: solid 1px #000;
+    height: 21px;
+}
+
+/* 部隊/ステータス */
+input.troops_btn {
+    width: 40px;
+    height: 40px;
+    font-size: 25px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    box-shadow:0 6px 0 0 #005400;
+    transform: translateY(-6px);
+}
+
+input.troops_btn:hover {
+    box-shadow:0 2px 0 0 #005400;
+    transform: translateY(-2px);
+}
+
+input.troops_btn.selected_troops {
+    box-shadow:0 2px 0 0 #005400;
+    transform: translateY(-2px);
+}
+
+#style_reset_btn {
+    width: 50px;
+    font-size: 12px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+
+/* ステータスエリア */
+#char_list {
+    width: 482px;
+}
+img.select_style {
+    width: 64px;
+    height: 64px;
+    margin-left: 4px;
+}
+.label_status {
+    line-height: 22px;
+    display: block;
+}
+.limit,
+.earring,
+.bracelet,
+.chain {
+    height: 22px;
+    width: 60px;
+    margin-left: 3px;
+    text-align: center;
+}
+.limit:disabled {
+    border:solid 1px black ;
+}
+@media screen and (max-width: 482px) {
+    .status_area {
+        width: 100%;
+        min-width: 375px;
+    }
+    .label_status {
+        line-height: 21px;
+        display: block;
+    }
+    img.select_style {
+        width: 48px;
+        height: 48px;
+        margin-left: 4px;
+    }
+    .limit,
+    .bracelet,
+    .chain {
+        width: 50px;
+    }
+}
+/* 戦闘開始 */
+input[type="button"].battle_start {
+    width: 80px;
+    font-size: 16px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+/* 敵情報 */
+.surround_area {
+    border: solid gray 2px;
+    border-radius: 20px;
+    padding: 5px;
+
+}
+.enemy_weak {
+    font-weight: bold;
+    color: red;
+}
+.enemy_resist {
+    font-weight: bold;
+    color: blue;
+}
+.enemy_type_icon {
+    width: 32px;
+    height: 32px;
+    margin-top: 4px;
+    margin-left: 5px;
+    margin-bottom: -8px;
+}
+.enemy_type_value {
+    text-align: center;
+    width: 32px;
+    background-color: rgba(0, 0, 0, 0);
+    margin-left: 5px;
+}
+
+#turn_area {
+    width: 720px;
+    margin: auto;
+}
+    
+.turn {
+    border: solid gray 2px;
+    border-radius: 20px;
+    margin-top: 5px;
+    padding: 5px;
+}
+.container {
+    display: flex;
+}
+.left {
+    flex: 1;
+}
+.right {
+    flex: 1;
+}
+.enemy_icon {
+    width: 48px;
+    height: 48px;
+}
+.od_icon {
+    width: 61px;
+    height: 48px;
+}
+.od_number {
+    width: 64px;
+    height: 64px;
+    margin-top: -56px;
+    margin-left: 6px;
+}
+.od_text {
+    padding-top: 11px;
+}
+
+.unit_selected {
+    background-color: #FF0;
+}
+.front_area .unit_skill {
+    font-size: 12px;
+    width: 125px;
+}
+.back_area .unit_skill {
+    font-size: 12px;
+    width: 72px;
+}
+.action_select {
+    margin-top: 28px;
+    font-size: 12px;
+    width: 90px;
+}
+.unit_sp {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: -2px -2px 0 black, 2px -2px 0 black, -2px 2px 0 black, 2px 2px 0 black;
+    margin-top: -72px;
+    text-align: right
+}
+.front_area, 
+.back_area {
+    height: 90px;
+}
+.front_area .unit_sp {
+    margin-right: 28px;
+}
+.back_area .unit_sp {
+    margin-right: 8px;
+}
+img.unit_style {
+    width: 64px;
+    height: 64px;
+}
+.hidden-option {
+    display: none;
+}
