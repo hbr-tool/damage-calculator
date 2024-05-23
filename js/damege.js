@@ -1,21 +1,21 @@
 function setEventTrigger() {
     // リセットボタン
-    $("#style_reset_btn").on("click", function(event) {
+    $("#style_reset_btn").on("click", function (event) {
         styleReset(true);
     });
     // 敵リストイベント
-    $("#enemy_class").on("change", function(event) {
+    $("#enemy_class").on("change", function (event) {
         let enemy_class = $(this).val();
         localStorage.setItem("enemy_class", enemy_class);
         localStorage.setItem("enemy_list", "1");
         createEnemyList(enemy_class);
     });
-    $("#enemy_list").on("change", function(event) {
+    $("#enemy_list").on("change", function (event) {
         localStorage.setItem("enemy_list", $(this).val());
         setEnemyStatus();
     });
     // 攻撃スキル変更
-    $("#attack_list").on("change", function(event) {
+    $("#attack_list").on("change", function (event) {
         let skill_info = getAttackInfo();
         if (select_attack_skill !== undefined) {
             $("." + type_physical[select_attack_skill.attack_physical]).removeClass("selected");
@@ -34,7 +34,7 @@ function setEventTrigger() {
             if (skill_info === undefined || select_attack_skill.attack_physical !== skill_info.attack_physical) {
                 $(".buff_physical-" + select_attack_skill.attack_physical).hide();
             }
-           // キャラ、スタイル専用非表示
+            // キャラ、スタイル専用非表示
             $(".skill_unique").hide();
 
             $(".status_attack_skill").removeClass("status_attack_skill");
@@ -85,7 +85,7 @@ function setEventTrigger() {
         for (let i = 1; i <= 3; i++) {
             $("#" + status_kbn[skill_info["ref_status_" + i]] + "_" + chara_no).addClass("status_attack_skill");
         }
-        $("input[type=checkbox].ability").each(function(index, value) {
+        $("input[type=checkbox].ability").each(function (index, value) {
             let ability_id = $(value).data("ability_id");
             let chara_no = $(value).data("chara_no");
             let ability_info = getAbilityInfo(ability_id);
@@ -108,7 +108,7 @@ function setEventTrigger() {
         displayElementRow();
         displayWeakRow();
 
-        $(".redisplay").each(function(index, value) {
+        $(".redisplay").each(function (index, value) {
             sortEffectSize($(value));
             select2ndSkill($(value));
         });
@@ -117,7 +117,7 @@ function setEventTrigger() {
         updateEnemyResist();
         createSkillLvList("skill_lv", max_lv, max_lv);
     });
-    $("#skill_special_display").on("change", function(event) {
+    $("#skill_special_display").on("change", function (event) {
         if ($("#skill_special_display").prop("checked")) {
             $(".skill_kind-versatile").hide();
         } else {
@@ -125,7 +125,7 @@ function setEventTrigger() {
         }
     });
     // バフスキル変更
-    $(".include_lv").on("change", function(event) {
+    $(".include_lv").on("change", function (event) {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
         $(".status_" + id).removeClass("status_" + id);
@@ -160,14 +160,14 @@ function setEventTrigger() {
         }
     });
     // 耐性ダウン変更
-    $(".resist_down").on("change", function(event) {
+    $(".resist_down").on("change", function (event) {
         updateEnemyResist();
     });
-    $(".enemy_type_value").on("change", function(event) {
+    $(".enemy_type_value").on("change", function (event) {
         displayWeakRow();
     });
     // チャージ変更
-    $("#charge").on("change", function(event) {
+    $("#charge").on("change", function (event) {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
         $(".status_" + id).removeClass("status_" + id);
@@ -177,7 +177,7 @@ function setEventTrigger() {
         }
     });
     // スキルレベル変更
-    $(".lv_effect").on("change", function(event) {
+    $(".lv_effect").on("change", function (event) {
         let buff_type_id = $(this).attr("id").replace("_lv", "");
         let option = $("#" + buff_type_id + " option:selected");
         let chara_no = Number(option.data("chara_no"));
@@ -185,18 +185,18 @@ function setEventTrigger() {
         let buff_id = Number(option.val());
         let skill_lv = $(this).prop("selectedIndex") + 1;
         // バフ効果量更新
-        $(".variable_effect_size.chara_id-" + chara_id + ".buff_id-" + buff_id).each(function(index, value) {
+        $(".variable_effect_size.chara_id-" + chara_id + ".buff_id-" + buff_id).each(function (index, value) {
             updateBuffEffectSize($(value), skill_lv);
         });
         // 同一スキル別セレクトボックス含めて反映
-        $(".chara_id-" + chara_id + ".buff_id-" + buff_id).each(function(index, value) {
-        	if ($(value).prop("selected")) {
-            	$("#" + $(value).parent().attr("id") +"_lv").prop("selectedIndex", skill_lv - 1);
-        	}
+        $(".chara_id-" + chara_id + ".buff_id-" + buff_id).each(function (index, value) {
+            if ($(value).prop("selected")) {
+                $("#" + $(value).parent().attr("id") + "_lv").prop("selectedIndex", skill_lv - 1);
+            }
         });
     });
     // 限界突破変更
-    $(".limit").on("change", function(event) {
+    $(".limit").on("change", function (event) {
         let limit_count = Number($(this).val());
         let chara_no = $(this).attr("id").replace("limit_", "");
         if (select_style_list[chara_no] === undefined) {
@@ -205,7 +205,7 @@ function setEventTrigger() {
         select_style_list[chara_no].limit_count = limit_count;
         let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
         // アビリティのチェックボックスを更新
-        $("input[type=checkbox]." + chara_id_class).each(function(index, value) {
+        $("input[type=checkbox]." + chara_id_class).each(function (index, value) {
             let ability_id = $(value).data("ability_id");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
@@ -215,14 +215,14 @@ function setEventTrigger() {
             }
         });
         // バフ効果量を更新
-        $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+        $(".variable_effect_size." + chara_id_class).each(function (index, value) {
             updateBuffEffectSize($(value));
         });
         // アビリティ項目の表示設定
         setAbilityDisplay(select_style_list[chara_no].limit_count, chara_id_class);
     });
     // 宝珠レベル変更
-    $(".jewel").on("change", function(event) {
+    $(".jewel").on("change", function (event) {
         let chara_no = $(this).attr("id").replace(/[^0-9]/g, '');
         if (select_style_list[chara_no] === undefined) {
             return;
@@ -230,12 +230,12 @@ function setEventTrigger() {
         select_style_list[chara_no].jewel_lv = Number($(this).val());
         let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
         // バフ効果量を更新
-        $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+        $(".variable_effect_size." + chara_id_class).each(function (index, value) {
             updateBuffEffectSize($(value));
         });
     });
     // ステータス変更
-    $(".status").on("change", function(event) {
+    $(".status").on("change", function (event) {
         let chara_no = $(this).attr("id").replace(/[^0-9]/g, '');
         if (select_style_list[chara_no] === undefined) {
             return;
@@ -245,35 +245,35 @@ function setEventTrigger() {
         let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
         if ($(this).hasClass("effect_size")) {
             // バフ効果量を更新
-            $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+            $(".variable_effect_size." + chara_id_class).each(function (index, value) {
                 updateBuffEffectSize($(value));
             });
         }
     });
     // 士気/夢の泪レベル変更
-    $("#morale_count, #tears_of_dreams").on("change", function(event) {
+    $("#morale_count, #tears_of_dreams").on("change", function (event) {
         // バフ効果量を更新
-        $(".variable_effect_size").each(function(index, value) {
+        $(".variable_effect_size").each(function (index, value) {
             updateBuffEffectSize($(value));
         });
     });
     // バフ/デバフ強化変更
-    $(".strengthen").on("change", function(event) {
+    $(".strengthen").on("change", function (event) {
         // バフ効果量を更新
-        $(this).parent().parent().find(".variable_effect_size").each(function(index, value) {
+        $(this).parent().parent().find(".variable_effect_size").each(function (index, value) {
             updateBuffEffectSize($(value));
         });
     });
     // バフ/デバフ強化アビリティ変更
-    $(document).on("change", ".strengthen_ability", function(event) {
+    $(document).on("change", ".strengthen_ability", function (event) {
         let chara_id_class = $(this).parent().attr('class').split(' ').find(className => className.startsWith('chara_id-'));
         // バフ効果量を更新
-        $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+        $(".variable_effect_size." + chara_id_class).each(function (index, value) {
             updateBuffEffectSize($(value));
         });
     });
     // 前衛が3人以上の場合
-    $(document).on("change", "#ability_front input", function(event) {
+    $(document).on("change", "#ability_front input", function (event) {
         let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
         if ($("#ability_front input:checked:not(." + chara_id_class + ")").length > 2) {
             alert("前衛は攻撃キャラクターを除いた2人まで設定できます。");
@@ -282,7 +282,7 @@ function setEventTrigger() {
         }
     });
     // 後衛が3人以上の場合
-    $(document).on("change", "#ability_back input", function(event) {
+    $(document).on("change", "#ability_back input", function (event) {
         if ($("#ability_back input:checked").length > 2) {
             alert("後衛は3人まで設定できます。");
             $(this).prop("checked", false);
@@ -290,19 +290,19 @@ function setEventTrigger() {
         }
     });
     // 破壊率上限変更
-    $("#enemy_destruction_limit").on("change", function(event) {
+    $("#enemy_destruction_limit").on("change", function (event) {
         let destructionValue = Number($("#enemy_destruction_rate").val());
         let maxDestruction = Number($(this).val());
         if (maxDestruction <= 100) {
             $(this).val(100);
             maxDestruction = 100;
-        } 
+        }
         if (maxDestruction < destructionValue) {
             $("#enemy_destruction_rate").val(maxDestruction);
         }
     });
     // 破壊率変更
-    $("#enemy_destruction_rate").on("change", function(event) {
+    $("#enemy_destruction_rate").on("change", function (event) {
         let destructionValue = Number($(this).val());
         if (destructionValue <= 100) {
             $(this).val(100);
@@ -318,13 +318,13 @@ function setEventTrigger() {
         }
     });
     // プレイヤーDP変更
-    $(".player_dp_range").on("input", function(event) {
+    $(".player_dp_range").on("input", function (event) {
         let val = $(this).val();
         $("#player_dp_rate").val(val + '%');
         applyGradient($(".player_dp_range"), "#4F7C8B", val / 1.5);
     });
     // 残りDP変更
-    $(".enemy_dp_range").on("input", function(event) {
+    $(".enemy_dp_range").on("input", function (event) {
         $("#enemy_destruction_rate").val(100);
         let dp_no = Number($(this).prop("id").replace(/\D/g, ''));
         setDpGarge(dp_no, $(this).val())
@@ -337,14 +337,14 @@ function setEventTrigger() {
         for (let i = 0; i < DP_GAUGE_COUNT; i++) {
             if (i < dp_no) {
                 setDpGarge(i, 100);
-            } else if (i > dp_no){
+            } else if (i > dp_no) {
                 setDpGarge(i, 0);
             }
         }
         setHpGarge(100)
     });
     // 残りHP変更
-    $("#hp_range").on("input", function(event) {
+    $("#hp_range").on("input", function (event) {
         setHpGarge($(this).val())
         // DP無力化
         for (let i = 0; i < DP_GAUGE_COUNT; i++) {
@@ -353,53 +353,53 @@ function setEventTrigger() {
         $(".row_dp").css("display", "none");
     });
     // スコアアタック敵強さ変更
-    $("#score_lv").on("change", function(event) {
+    $("#score_lv").on("change", function (event) {
         updateEnemyScoreAttack();
     });
     // 強ブレイクチェック
-    $("#strong_break").on("change", function(event) {
+    $("#strong_break").on("change", function (event) {
         let enemy_info = getEnemyInfo();
         let strong_break = $("#strong_break").prop("checked") ? 300 : 0;
         $("#enemy_destruction_limit").val(enemy_info.destruction_limit + strong_break);
-        $("#enemy_destruction_rate").val(enemy_info.destruction_limit+ strong_break);
+        $("#enemy_destruction_rate").val(enemy_info.destruction_limit + strong_break);
         for (let i = 0; i < DP_GAUGE_COUNT; i++) {
             setDpGarge(i, 0);
         }
         $(".row_dp").css("display", "none");
     });
     // スコアアタックチェック変更
-    $(document).on("change", "input.half_check", function(event) {
+    $(document).on("change", "input.half_check", function (event) {
         updateGrade();
     });
     // スコアタタブ変更
-    $("input[name=rule_tab]").on("change", function(event) {
+    $("input[name=rule_tab]").on("change", function (event) {
         updateGrade();
     });
     // ステータス保存
-    $(".save").on("change", function(event) {
-      if (navigator.cookieEnabled) {
-        let id_split = $(this).prop("id").split("_");
-        if (id_split.length > 1) {
-            let chara_no = Number(id_split[1]);
-            if (select_style_list[chara_no] === undefined) {
-                return
-            }
-            let member_info = select_style_list[chara_no];
-            let style_id = member_info.style_info.style_id;
-            // 新設定
-            let save_item = [member_info.style_info.rarity,
+    $(".save").on("change", function (event) {
+        if (navigator.cookieEnabled) {
+            let id_split = $(this).prop("id").split("_");
+            if (id_split.length > 1) {
+                let chara_no = Number(id_split[1]);
+                if (select_style_list[chara_no] === undefined) {
+                    return
+                }
+                let member_info = select_style_list[chara_no];
+                let style_id = member_info.style_info.style_id;
+                // 新設定
+                let save_item = [member_info.style_info.rarity,
                 member_info.str, member_info.dex,
                 member_info.con, member_info.mnd,
                 member_info.int, member_info.luk,
                 member_info.limit_count, member_info.jewel_lv].join(",");
-            localStorage.setItem("style_" + style_id, save_item);
+                localStorage.setItem("style_" + style_id, save_item);
+            }
         }
-      }
     });
     // 部隊変更ボタンクリック
-      $(".troops_btn").on("click", function(event) {
+    $(".troops_btn").on("click", function (event) {
         if ($(this).hasClass("selected_troops")) {
-          return;
+            return;
         }
         // サブ部隊初期化
         $("#sub_troops").val(-1);
@@ -413,7 +413,7 @@ function setEventTrigger() {
         loadTroopsList(select_troops);
     });
     // サブパーティ変更
-    $("#sub_troops").on("change", function(event) {
+    $("#sub_troops").on("change", function (event) {
         loadSubTroopsList($(this).val());
     });
     // カンマ区切り
@@ -425,7 +425,7 @@ function setEventTrigger() {
         $(this).val(formattedValue);
     });
     // 敵保存ボタンクリック
-    $("#enemy_save").on("click", function(event) {
+    $("#enemy_save").on("click", function (event) {
         let enemy_class_no = Number($("#enemy_list option:selected").val());
         let enemy_name = window.prompt("敵名称を入力してください", "敵" + enemy_class_no);
         if (enemy_name === null) {
@@ -434,9 +434,9 @@ function setEventTrigger() {
         let enemy_info = {};
         enemy_info.enemy_name = enemy_name
         enemy_info.enemy_stat = $("#enemy_stat").val();
-        enemy_info.max_dp =  removeComma($("#enemy_dp_0").val()) + "," + removeComma($("#enemy_dp_1").val()) + ","  + removeComma($("#enemy_dp_2").val()) + ","  + removeComma($("#enemy_dp_3").val());
-        enemy_info.max_hp =  removeComma($("#enemy_hp").val());
-        let enemy_info_status_list = ["destruction_limit", "destruction", 
+        enemy_info.max_dp = removeComma($("#enemy_dp_0").val()) + "," + removeComma($("#enemy_dp_1").val()) + "," + removeComma($("#enemy_dp_2").val()) + "," + removeComma($("#enemy_dp_3").val());
+        enemy_info.max_hp = removeComma($("#enemy_hp").val());
+        let enemy_info_status_list = ["destruction_limit", "destruction",
             "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5",
         ];
         enemy_info_status_list.forEach(value => {
@@ -447,7 +447,7 @@ function setEventTrigger() {
         localStorage.setItem("free_enemy_" + enemy_class_no, JSON.stringify(enemy_info));
     });
     // ダメージ詳細を開く
-    $(".open_detail").on("click", function(event) {
+    $(".open_detail").on("click", function (event) {
         if ($(this).attr("id") == "modal_damage_detail_open1") {
             open_damage_detail = critical_detail;
             $("#skill_power").hide();
@@ -462,7 +462,7 @@ function setEventTrigger() {
         open_damage_detail.setDamageDetail();
     });
     // 残り耐久反映
-    $(".durability_reflection").on("click", function(event) {
+    $(".durability_reflection").on("click", function (event) {
         for (let i = 0; i < DP_GAUGE_COUNT; i++) {
             let enemy_dp = Number($("#enemy_dp_" + i).val().replace(/,/g, ""));
             if (enemy_dp == 0) {
@@ -482,14 +482,14 @@ function setEventTrigger() {
         calcDamage();
     });
     // ダメージ再計算
-    $("input[type=range]").on("mouseup", function(event) {
+    $("input[type=range]").on("mouseup", function (event) {
         calcDamage();
         if (!$(this).data("changed")) {
             // changeイベントのデフォルト動作を防止
             // event.preventDefault();
         }
     });
-    $(document).on("change", "input, select", function(event) {
+    $(document).on("change", "input, select", function (event) {
         calcDamage();
     });
 }
@@ -534,7 +534,7 @@ class RestGauge {
         // 破壊率
         const maxRate = Math.round(this.max_destruction_last_rate * 10) / 10;
         const minRate = Math.round(this.min_destruction_last_rate * 10) / 10;
-        
+
         const rateText = maxRate === minRate ? `${maxRate}%` : `${maxRate}%～${minRate}%`;
         $("#detail_destruction_last_rate").text(rateText);
     }
@@ -589,9 +589,9 @@ function calcDamage() {
 
     let basePower = getBasePower(member_info, stat_up + misfortune);
     let buff = getSumBuffEffectSize();
-    let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1: 1;
+    let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
-    let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1: 1;
+    let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
     let token = getSumTokenEffectSize();
     let element_field = getSumEffectSize("element_field") / 100 + 1;
     let weak_physical = $("#enemy_physical_" + skill_info.attack_physical).val() / 100;
@@ -631,7 +631,7 @@ function calcDamage() {
     calculateDamage(critical_power, skill_info, buff, debuff, fixed * critical_buff, "#critical_damage", "#critical_destruction_last_rate", critical_detail);
     calculateDamage(critical_power * 0.9, skill_info, buff, debuff, fixed * critical_buff, "#critical_damage_min", undefined, critical_detail);
     calculateDamage(critical_power * 1.1, skill_info, buff, debuff, fixed * critical_buff, "#critical_damage_max", undefined, critical_detail);
-	
+
     $("#skill_power").val((Math.floor(basePower * 100) / 100).toFixed(2));
     $("#skill_power_critical").val((Math.floor(critical_power * 100) / 100).toFixed(2));
     $("#mag_buff").val(convertToPercentage(buff));
@@ -669,7 +669,7 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     let destruction_rate = Number($("#enemy_destruction_rate").val());
     let max_destruction_rate = Number($("#enemy_destruction_limit").val());
     let enemy_destruction = Number($("#enemy_destruction").val());
-    let dp_penetration = Number($("#dp_range_1").val())== 0;
+    let dp_penetration = Number($("#dp_range_1").val()) == 0;
     let rest_dp = Array(DP_GAUGE_COUNT).fill(0);
     let dp_no = -1;  // 現在の使用DPゲージ番号を取得
     for (let i = 0; i < DP_GAUGE_COUNT; i++) {
@@ -688,7 +688,7 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
     let add_debuff;
 
     // ダメージ処理
-    function procDamage (power, add_destruction) {
+    function procDamage(power, add_destruction) {
         if (rest_dp[0] <= 0 && dp_penetration) {
             special = 1 + skill_info.hp_damege / 100;
             add_buff = getEarringEffectSize("attack", hit_count) / 100;
@@ -742,9 +742,9 @@ function calculateDamage(basePower, skill_info, buff, debuff, fixed, id, destruc
         rest_damage.avg_damage = damage;
         rest_damage.avg_destruction_last_rate = destruction_rate;
     }
- 
+
     $(id).val(Math.floor(damage).toLocaleString());
-    if (destruction_id)  $(destruction_id).text(`${Math.round(destruction_rate * 10) / 10}%`);
+    if (destruction_id) $(destruction_id).text(`${Math.round(destruction_rate * 10) / 10}%`);
 }
 
 // ピアス効果量取得
@@ -761,45 +761,45 @@ function getEarringEffectSize(type, hit_count) {
 // 消費SP計算
 function getSpCost() {
     // SP消費量計算
-	for (let i = 0; i < select_style_list.length; i++) {
+    for (let i = 0; i < select_style_list.length; i++) {
         if (select_style_list[i] === undefined) {
             continue;
         }
         let chara_id_class = "chara_id-" + select_style_list[i].style_info.chara_id;
         let sp_cost = 0;
         let sp_list = [];
-        $("option." + chara_id_class + ":selected").each(function(index, value) {
+        $("option." + chara_id_class + ":selected").each(function (index, value) {
             switch ($(value).parent().attr("id")) {
                 case "attack_list":
-	                let attack = getAttackInfo();
-	                addSkillCount(sp_list, attack.attack_name, $(value).parent().attr("id"), attack.sp_cost)
-	                break;
+                    let attack = getAttackInfo();
+                    addSkillCount(sp_list, attack.attack_name, $(value).parent().attr("id"), attack.sp_cost)
+                    break;
                 default:
                     // 非表示項目を除く
-                    if ($(value).parent().parent().css('display')  == 'none') {
+                    if ($(value).parent().parent().css('display') == 'none') {
                         break;
                     }
-	                let buff_id = Number($(value).val());
-	                if (buff_id !== undefined && buff_id !== 0 ) {
-	                    let buff = getBuffIdToBuff(buff_id)
-	                    addSkillCount(sp_list, buff.buff_name, $(value).parent().attr("id"), buff.sp_cost)
-	                }
-	                break;
+                    let buff_id = Number($(value).val());
+                    if (buff_id !== undefined && buff_id !== 0) {
+                        let buff = getBuffIdToBuff(buff_id)
+                        addSkillCount(sp_list, buff.buff_name, $(value).parent().attr("id"), buff.sp_cost)
+                    }
+                    break;
             }
         });
         // nameとsp_cost以外の最高値×sp_cost
-        $.each(sp_list, function(index, value) {
+        $.each(sp_list, function (index, value) {
             let single_sp_cost = 0;
             let max_count = 0;
-            $.each(value, function(key, data) {
+            $.each(value, function (key, data) {
                 if (key == "name") {
-                	return true;
+                    return true;
                 } else if (key == "sp_cost") {
-                single_sp_cost = Number(data);
-                	return true;
+                    single_sp_cost = Number(data);
+                    return true;
                 }
                 if (max_count < Number(data)) {
-                	max_count = Number(data);
+                    max_count = Number(data);
                 }
             });
             sp_cost += single_sp_cost * max_count;
@@ -865,7 +865,7 @@ function updateBuffEffectSize(option, skill_lv) {
 function getStrengthen(member_info, skill_buff) {
     let strengthen = 0;
     // 攻撃力アップ/属性攻撃力アップ
-    let attack_up =  [0, 1];
+    let attack_up = [0, 1];
     if (attack_up.includes(skill_buff.buff_kind)) {
         let ability_id3 = member_info.style_info.ability3;
         let ability_id0 = member_info.style_info.ability0;
@@ -883,7 +883,7 @@ function getStrengthen(member_info, skill_buff) {
         }
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
-    let defense_down =  [3, 4, 19, 20, 21, 22];
+    let defense_down = [3, 4, 19, 20, 21, 22];
     if (defense_down.includes(skill_buff.buff_kind)) {
         // 侵食
         let ability_id3 = member_info.style_info.ability3;
@@ -895,8 +895,8 @@ function getStrengthen(member_info, skill_buff) {
         if (ability_id0 == 504) {
             strengthen += 10;
         }
-         // モロイウオ(あいな専用)
-         if (ability_id3 == 506 && $("#ability_all242").prop("checked") && skill_buff.sp_cost <=8) {
+        // モロイウオ(あいな専用)
+        if (ability_id3 == 506 && $("#ability_all242").prop("checked") && skill_buff.sp_cost <= 8) {
             strengthen += 30;
         }
     }
@@ -985,7 +985,7 @@ function addAttackList(member_info) {
             .val(value.attack_id)
             .css("display", display)
             .data("chara_no", member_info.chara_no)
-            .addClass("skill_kind-" +  kind)
+            .addClass("skill_kind-" + kind)
             .addClass("chara_id-" + value.chara_id);
         $("#attack_list").append(option);
     });
@@ -995,7 +995,7 @@ function addAttackList(member_info) {
 function createSkillLvList(id, max_lv, select_lv) {
     let $select = $("#" + id);
     $select.empty();
-    for (var i = 1; i <= max_lv; i ++) {
+    for (var i = 1; i <= max_lv; i++) {
         var option = $("<option>")
             .text(i)
             .val(i);
@@ -1009,16 +1009,15 @@ function createSkillLvList(id, max_lv, select_lv) {
 // バフリストに追加
 function addBuffList(member_info) {
     let chara_id = member_info.style_info.chara_id;
-    let buff_list = skill_buff.filter(obj => 
-        (obj.chara_id === chara_id || obj.chara_id === 0) && 
+    let buff_list = skill_buff.filter(obj =>
+        (obj.chara_id === chara_id || obj.chara_id === 0) &&
         (obj.style_id === member_info.style_info.style_id || obj.style_id === 0)
-        );
-    let is_select = member_info.is_select;
-      
+    );
+
     buff_list.forEach(value => {
         let buff_element = 0;
         let only_one = "";
-        
+
         switch (value.buff_kind) {
             case 11: // 属性フィールド
                 addElementField(member_info, value.buff_name, value.min_power, value.buff_element, value.buff_id, false);
@@ -1043,6 +1042,19 @@ function addBuffList(member_info) {
             case 17: // 連撃(大)
                 only_one = "only_one";
                 break;
+            case 2: // 心眼
+            case 3: // 防御ダウン
+            case 4: // 属性防御ダウン
+            case 5: // 脆弱
+            case 10: // チャージ
+            case 19: // DP防御ダウン
+            case 20: // 耐性ダウン
+            case 21: // 永続防御ダウン
+            case 22: // 永続属性防御ダウン
+                break;
+            default:
+                // 上記以外は適応外
+                return;
         }
         // サブメンバーは一部のみ許可
         switch (value.buff_kind) {
@@ -1056,7 +1068,7 @@ function addBuffList(member_info) {
             case 22: // 永続属性防御ダウン
                 break;
             default:
-                if (!is_select) return;
+                if (!member_info.is_select) return;
                 break;
         }
         let str_buff = buff_kbn[value.buff_kind];
@@ -1064,12 +1076,13 @@ function addBuffList(member_info) {
         if (value.only_first === 1) only_one = "only_first";
         let only_chara_id = value.range_area == 7 ? `only_chara_id-${chara_id}` : "public";
         let only_other_id = value.range_area === 8 ? `only_other_chara_id-${chara_id}` : "";
-        
+
         var option = $('<option>')
             .val(value.buff_id)
             .data("select_lv", value.max_lv)
             .data("max_lv", value.max_lv)
             .data("chara_no", member_info.chara_no)
+            .data("skill_id", value.skill_id)
             .css("display", "none")
             .addClass("buff_element-" + buff_element)
             .addClass("buff_physical-" + "0")
@@ -1081,9 +1094,9 @@ function addBuffList(member_info) {
             .addClass(only_other_id)
             .addClass(only_one)
             .addClass("chara_id-" + chara_id);
-        
+
         $("." + str_buff).append(option);
-        $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function(index, value) {
+        $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function (index, value) {
             updateBuffEffectSize($(value));
         });
     });
@@ -1123,7 +1136,7 @@ function addAbility(member_info) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
         }
-        let limit_border = index == 0 ? 0 : (index === 1 ? 1 : (index === 2 ? 3 : (index === 3 ? 5 : 10))); 
+        let limit_border = index == 0 ? 0 : (index === 1 ? 1 : (index === 2 ? 3 : (index === 3 ? 5 : 10)));
         let display = "none";
 
         if ((ability_info.ability_element === 0 && ability_info.ability_physical == 0)
@@ -1137,16 +1150,16 @@ function addAbility(member_info) {
         let effect_size = ability_info.effect_size;
 
         switch (ability_info.ability_target) {
-	        case 6: // フィールド
-	            addElementField(member_info, ability_info.ability_name, ability_info.effect_size, ability_info.ability_element, 0, true);
+            case 6: // フィールド
+                addElementField(member_info, ability_info.ability_name, ability_info.effect_size, ability_info.ability_element, 0, true);
                 continue;
-	        case 1: // 自分
-	            if (select_attack_skill && select_attack_skill.chara_id !== chara_id) {
-	            	display = "none"
-	            }
-	            target = "ability_self";
-	            element_type = "self_element"
-	            physical_type = "self_physical"
+            case 1: // 自分
+                if (select_attack_skill && select_attack_skill.chara_id !== chara_id) {
+                    display = "none"
+                }
+                target = "ability_self";
+                element_type = "self_element"
+                physical_type = "self_physical"
                 // 狂乱の型/五月雨
                 if (ability_info.ability_id == 6 || ability_info.ability_id == 7) {
                     // 追加
@@ -1154,12 +1167,12 @@ function addAbility(member_info) {
                     var option2 = $('<option>').text("×2").val(2);
                     append = $('<select>').append(option1).append(option2).addClass("ability_select");
                 }
-	            break;
-	        case 2: // 前衛
+                break;
+            case 2: // 前衛
             case 3: // 後衛
             case 5:	// 敵
             case 4:	// 全体
-	        case 0: // その他
+            case 0: // その他
                 switch (ability_info.activation_place) {
                     case 1: // 前衛
                         target = "ability_front";
@@ -1172,11 +1185,11 @@ function addAbility(member_info) {
                         target = "ability_all";
                         break;
                 }
-	            element_type = "public buff_element"
-	            physical_type = "buff_physical"
-	            break;
-	        default:
-	            break;
+                element_type = "public buff_element"
+                physical_type = "buff_physical"
+                break;
+            default:
+                break;
         }
         let name = getCharaData(chara_id).chara_short_name;
         let fg_update = false;
@@ -1211,7 +1224,7 @@ function addAbility(member_info) {
         }
         if (fg_update) {
             // バフ効果量を更新
-            $(".variable_effect_size." + chara_id_class).each(function(index, value) {
+            $(".variable_effect_size." + chara_id_class).each(function (index, value) {
                 updateBuffEffectSize($(value));
             });
         }
@@ -1272,7 +1285,7 @@ function getEffectSize(buff_kind, buff_id, member_info, skill_lv) {
             effect_size = getFunnelEffectSize(buff_id, member_info, skill_lv);
             break;
         default:
-        break;
+            break;
     }
     return effect_size;
 }
@@ -1330,18 +1343,18 @@ function select2ndSkill(select) {
 
 // 単一バフが既に設定済み判定
 function isOnlyBuff(option) {
-    if (option.hasClass("only_first")){
+    if (option.hasClass("only_first")) {
         let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
         let buff_id = "buff_id-" + option.val();
-        if ($("." + class_name +" option." + buff_id + ":selected").length > 1) {
+        if ($("." + class_name + " option." + buff_id + ":selected").length > 1) {
             return true;
         }
     }
     if (option.hasClass("only_one") && select_attack_skill !== undefined) {
         if (option.hasClass("chara_id-" + select_attack_skill.chara_id)) {
             let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
-            let skill_id = "skill_id-" + option.data("skill-id");
-            if ($("." + class_name +" option." + skill_id + ":selected").length > 1) {
+            let skill_id = "skill_id-" + option.data("skill_id");
+            if ($("." + class_name + " option." + skill_id + ":selected").length > 1) {
                 return true;
             }
         }
@@ -1355,7 +1368,7 @@ function isOnlyUse(option) {
         if (option.hasClass("chara_id-" + select_attack_skill.chara_id)) {
             var attack_id = select_attack_skill.attack_id;
             var class_list = option.attr("class").split(" ");
-            
+
             for (var i = 0; i < class_list.length; i++) {
                 var class_name = class_list[i];
                 if (class_name.startsWith("skill_attack-")) {
@@ -1386,7 +1399,7 @@ function setStatusToBuff(option, id) {
     if ($(option).parent().parent().css('display') == 'none') {
         return;
     }
-    let buff = getBuffIdToBuff(Number($(option).val())); 
+    let buff = getBuffIdToBuff(Number($(option).val()));
     if (buff !== undefined) {
         let chara_no = $(option).data("chara_no");
         $("#" + status_kbn[buff.ref_status_1] + "_" + chara_no).addClass("status_" + id);
@@ -1403,14 +1416,14 @@ function resetSkillLv(id) {
 // アビリティ項目の設定
 function setAbilityDisplay(limit_count, chara_id) {
     // フィールドを更新
-    $("#element_field option").each(function(index, value) {
+    $("#element_field option").each(function (index, value) {
         if (index === 0) return true;
         if ($(value).val() == 0) {
             if ($(value).hasClass(chara_id)) {
                 if (limit_count >= 3) {
                     $(value).data("limit_border", true);
                     $(value).css("display", "block");
-                }  else {
+                } else {
                     $(value).data("limit_border", false);
                     $(value).css("display", "none");
                 }
@@ -1427,7 +1440,7 @@ function setAbilityDisplay(limit_count, chara_id) {
 // 効果量合計
 function getSumEffectSize(class_name) {
     let effect_size = 0;
-    $("." + class_name).each(function(index, value) {
+    $("." + class_name).each(function (index, value) {
         let selected = $(value).find("option:selected");
         if (selected.val() == "") {
             return true;
@@ -1475,7 +1488,7 @@ function getSumDebuffEffectSize() {
 function getSumFunnelEffectList() {
     // スキルデバフ合計
     let funnel_list = [];
-    $(".funnel").each(function(index, value) {
+    $(".funnel").each(function (index, value) {
         let selected = $(value).find("option:selected");
         if (selected.val() == "") {
             return true;
@@ -1525,7 +1538,7 @@ function getSumFunnelEffectList() {
         funnel_list.push(size);
     }
     // 降順でソート
-    funnel_list.sort(function(a, b) {
+    funnel_list.sort(function (a, b) {
         return b - a;
     });
     return funnel_list;
@@ -1567,7 +1580,7 @@ function getCriticalBuff() {
 // アビリティ効果量合計取得
 function getSumAbilityEffectSize(effect_type) {
     let ability_effect_size = 0;
-    $("input[type=checkbox].ability:checked").each(function(index, value) {
+    $("input[type=checkbox].ability:checked").each(function (index, value) {
         if ($(value).parent().css("display") === "none") {
             return true;
         }
@@ -1612,10 +1625,10 @@ function getAbilityInfo(ability_id) {
 // 敵リスト作成
 function createEnemyList(enemy_class) {
     $("#enemy_list").empty();
-    $.each(enemy_list, function(index, value) {
+    $.each(enemy_list, function (index, value) {
         if (value.enemy_class == enemy_class) {
             var option = $('<option>')
-                        .val(value.enemy_class_no);
+                .val(value.enemy_class_no);
             if (enemy_class == 6) {
                 option.text(`#${value.score_attack_no} ${value.enemy_name}`)
             } else {
@@ -1696,7 +1709,7 @@ function getGradeSum() {
     }
     let sum_list = ["defense_rate", "dp_rate", "hp_rate", "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5", "destruction", "critical"];
     let checked_id = $('input[name="rule_tab"]:checked').attr('id');
-    $("." + checked_id + ":checked").each(function(index, value) {
+    $("." + checked_id + ":checked").each(function (index, value) {
         let grade_no = Number($(value).data("grade_no"));
         let half = Number(checked_id.match(/\d+/g));
         grade_list.filter((obj) => obj.score_attack_no == enemy_info.score_attack_no && obj.half == half && obj.grade_no == grade_no).forEach(value => {
@@ -1757,11 +1770,11 @@ function setEnemyStatus() {
     }
     updateEnemyResist();
     // バフ効果量を更新
-    $(".variable_effect_size").each(function(index, value) {
+    $(".variable_effect_size").each(function (index, value) {
         updateBuffEffectSize($(value));
     });
     // 再ソート
-    $(".redisplay").each(function(index, value) {
+    $(".redisplay").each(function (index, value) {
         sortEffectSize($(value));
         select2ndSkill($(value));
     });
@@ -1783,7 +1796,7 @@ function updateEnemyScoreAttack() {
     let grade_sum = getGradeSum();
     let score_lv = Number($("#score_lv").val());
     let enemy_stat = score_stat[score_lv - 100];
-    let enemy_hp =  getScoreHp(score_lv, Number(enemy_info.max_hp), enemy_info.score_attack_no);
+    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), enemy_info.score_attack_no);
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
         let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), enemy_info.score_attack_no);
@@ -1796,7 +1809,7 @@ function updateEnemyScoreAttack() {
 // スコアタHP取得
 function getScoreHp(score_lv, max_hp, score_attack_no) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
-//    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
+    //    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
     let count2 = score_lv > 120 ? score_lv - 120 : 0;
     let rate1 = 1.055;
     let rate2 = 1.05;
@@ -1848,13 +1861,13 @@ function displayScoreAttack(enemy_info) {
             let id = "half_" + i + "_grade" + value.grade_no;
             let div = $("<div>");
             let input = $("<input>").attr("type", "checkbox")
-                                    .attr("id", id)
-                                    .data("grade_no", value.grade_no)
-                                    .addClass("half_check")
-                                    .addClass("half_tab_" + i);
+                .attr("id", id)
+                .data("grade_no", value.grade_no)
+                .addClass("half_check")
+                .addClass("half_tab_" + i);
             let label = $("<label>").attr("for", id)
-                                    .addClass("checkbox01")
-                                    .text(value.grade_name + "(グレード:" + value.grade_rate + ")");
+                .addClass("checkbox01")
+                .text(value.grade_name + "(グレード:" + value.grade_rate + ")");
             div.append(input);
             div.append(label);
             $("#half_content_" + i).append(div);
@@ -1895,7 +1908,7 @@ function getDamageBonus(damage, num) {
         damage_bonus = Math.floor(damage / 100);
     } else {
         damage_bonus = damage_limit[num] / 100;
-        let rest_damage =  damage - damage_limit[num];
+        let rest_damage = damage - damage_limit[num];
         let magn = 1.1701 * Math.pow(rest_damage / damage_limit[num], -0.669);
         damage_bonus += Math.floor(rest_damage * magn / 100);
     }
@@ -1909,7 +1922,7 @@ function setEnemyElement(id, val) {
     $(id).removeClass("enemy_weak");
     if (val < 100) {
         $(id).addClass("enemy_resist");
-    } else if (val >100) {
+    } else if (val > 100) {
         $(id).addClass("enemy_weak");
     }
 }
@@ -1918,8 +1931,8 @@ function setEnemyElement(id, val) {
 function sortEffectSize(selecter) {
     // 初期選択を保存
     var selected = selecter.val();
-    var item = selecter.children().sort(function(a, b){
-        var effectA= Number($(a).data("effect_size"));
+    var item = selecter.children().sort(function (a, b) {
+        var effectA = Number($(a).data("effect_size"));
         var effectB = Number($(b).data("effect_size"));
         if (effectA < effectB) {
             return 1;
@@ -1963,30 +1976,30 @@ function getBasePower(member_info, correction) {
     let denominator = 0;
     if (skill_info.ref_status_1 != 0) {
         molecule += member_info[status_kbn[skill_info.ref_status_1]] * 2;
-        denominator +=2;
+        denominator += 2;
     }
     if (skill_info.ref_status_2 != 0) {
         molecule += member_info[status_kbn[skill_info.ref_status_2]];
-        denominator +=1;
+        denominator += 1;
     }
     if (skill_info.ref_status_3 != 0) {
         molecule += member_info[status_kbn[skill_info.ref_status_3]];
-        denominator +=1;
+        denominator += 1;
     }
     let enemy_stat = Number($("#enemy_stat").val()) + correction;
     let status = molecule / denominator;
 
     let skill_lv = Number($("#skill_lv option:selected").val());
     let min_power = skill_info.min_power * (1 + 0.05 * (skill_lv - 1));
-    let max_power = skill_info.max_power * (1 + 0.02 * (skill_lv - 1)); 
+    let max_power = skill_info.max_power * (1 + 0.02 * (skill_lv - 1));
     let skill_stat = skill_info.param_limit;
     let base_power;
     // 宝珠分以外
-    if (enemy_stat - skill_stat / 2 > status){
+    if (enemy_stat - skill_stat / 2 > status) {
         base_power = 1;
-    } else if (enemy_stat > status){
+    } else if (enemy_stat > status) {
         base_power = min_power / (skill_stat / 2) * (status - (enemy_stat - skill_stat / 2));
-    } else if (enemy_stat + skill_stat > status){
+    } else if (enemy_stat + skill_stat > status) {
         base_power = (max_power - min_power) / skill_stat * (status - enemy_stat) + min_power;
     } else {
         base_power = max_power;
@@ -1995,11 +2008,11 @@ function getBasePower(member_info, correction) {
     // 宝珠分(SLvの恩恵を受けない)
     if (jewel_lv > 0) {
         let jusl_stat = skill_stat + jewel_lv * 20;
-        if (enemy_stat - skill_stat / 2 > status){
+        if (enemy_stat - skill_stat / 2 > status) {
             base_power += 0;
-        } else if (enemy_stat > status){
+        } else if (enemy_stat > status) {
             base_power += skill_info.min_power / (jusl_stat / 2) * (status - (enemy_stat - jusl_stat / 2)) * jewel_lv * 0.02;
-        } else if (enemy_stat + jusl_stat > status){
+        } else if (enemy_stat + jusl_stat > status) {
             base_power += ((skill_info.max_power - skill_info.min_power) / jusl_stat * (status - enemy_stat) + skill_info.min_power) * jewel_lv * 0.02;
         } else {
             base_power += skill_info.max_power * jewel_lv * 0.02;
@@ -2124,7 +2137,7 @@ function getFunnelEffectSize(buff_id, member_info, skill_lv) {
         }
     }
 
-   return effect_size;
+    return effect_size;
 }
 
 // ステータスアップ取得
@@ -2170,7 +2183,7 @@ function generateGradient(color1, color2, percent) {
     percent = Math.min(100, Math.max(0, percent));
     // カラーコードを16進数から10進数に変換
     function hexToRgb(hex) {
-      return parseInt(hex, 16);
+        return parseInt(hex, 16);
     }
     // カラーコードの10進数表現
     let r1 = hexToRgb(color1.substring(1, 3));
@@ -2185,8 +2198,8 @@ function generateGradient(color1, color2, percent) {
     let b = Math.round(b1 + (b2 - b1) * (percent / 100));
     // 10進数から16進数に変換
     function rgbToHex(value) {
-      let hex = value.toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
+        let hex = value.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
     }
     let resultColor = "#" + rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
     return resultColor;
