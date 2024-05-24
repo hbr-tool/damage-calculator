@@ -1794,12 +1794,13 @@ function updateEnemyStatus(enemy_class_no, enemy_info) {
 function updateEnemyScoreAttack() {
     let enemy_info = getEnemyInfo();
     let grade_sum = getGradeSum();
+    let score_attack = getScoreAttack(enemy_info.score_attack_no);
     let score_lv = Number($("#score_lv").val());
     let enemy_stat = score_stat[score_lv - 100];
-    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), enemy_info.score_attack_no);
+    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), score_attack);
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
-        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), enemy_info.score_attack_no);
+        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), score_attack);
         $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);
@@ -1807,35 +1808,23 @@ function updateEnemyScoreAttack() {
 }
 
 // スコアタHP取得
-function getScoreHp(score_lv, max_hp, score_attack_no) {
+function getScoreHp(score_lv, max_hp, score_attack) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
-    //    let count2 = score_lv > 138 ? 18 : score_lv > 120 ? score_lv - 120 : 0;
     let count2 = score_lv > 120 ? score_lv - 120 : 0;
-    let rate1 = 1.055;
-    let rate2 = 1.05;
-    if (score_attack_no == 50) {
-        rate1 = 1.03;
-        rate2 = 1.045;
-    }
-    let magn = Math.pow(rate1, count1) * Math.pow(rate2, count2);
+    let magn = Math.pow(Number(score_attack.hp_rate1), count1) * Math.pow(Number(score_attack.hp_rate2), count2);
     return Math.ceil(max_hp * magn / 1000) * 1000;
 }
 
 // スコアタDP取得
-function getScoreDp(score_lv, max_dp, score_attack_no) {
+function getScoreDp(score_lv, max_dp, score_attack) {
     let count1 = score_lv > 120 ? 20 : score_lv - 100;
     let count2 = score_lv > 120 ? score_lv - 120 : 0;
-    let rate1 = 1.04;
-    let rate2 = 1.05;
-    if (score_attack_no == 50) {
-        rate1 = 1.018;
-        rate2 = 1.022;
-    }
-    let magn = Math.pow(rate1, count1) * Math.pow(rate2, count2);
+    let magn = Math.pow(Number(score_attack.dp_rate1), count1) * Math.pow(Number(score_attack.dp_rate2), count2);
     return Math.ceil(max_dp * magn / 1000) * 1000;
 }
 
 // 有効数字を3桁にする
+/*
 function roundUpToFourSignificantFigures(val) {
     let num = Math.floor(val)
     let significantFigures = num.toString().replace(/^-/, '').replace(/^0+/, '').length;
@@ -1844,7 +1833,7 @@ function roundUpToFourSignificantFigures(val) {
     }
     let roundedNum = Math.ceil(num / Math.pow(10, significantFigures - 3)) * Math.pow(10, significantFigures - 3);
     return roundedNum;
-}
+}*/
 
 // スコアアタック表示
 function displayScoreAttack(enemy_info) {
@@ -1852,7 +1841,7 @@ function displayScoreAttack(enemy_info) {
         let grade_info = grade_list.filter((obj) => obj.score_attack_no == enemy_info.score_attack_no && obj.half == i);
         if (grade_info.length == 0) {
             $("#label_half_tab_" + i).hide();
-            break;
+            continue;
         } else {
             $("#label_half_tab_" + i).show();
         }
@@ -1880,11 +1869,13 @@ function calcScore(detail, grade_magn) {
     let score_lv = Number($("#score_lv").val());
     let is_break = $("#no_break_bonus_check").prop("checked");
     let turn_count = $("#turn_count").val();
+    let enemy_info = getEnemyInfo();
+    let score_attack = getScoreAttack(enemy_info.score_attack_no);
     let num = score_lv - 100;
     let no_break_value = is_break ? no_break_bonus[num] : 0;
-    let damage_bonus_avg = getDamageBonus(detail.avg_damage, num);
-    let damage_bonus_max = getDamageBonus(detail.max_damage, num);
-    let damage_bonus_min = getDamageBonus(detail.min_damage, num);
+    let damage_bonus_avg = getDamageBonus(detail.avg_damage, num, score_attack);
+    let damage_bonus_max = getDamageBonus(detail.max_damage, num, score_attack);
+    let damage_bonus_min = getDamageBonus(detail.min_damage, num, score_attack);
     // 暫定固定値
     let summary_score_avg = (level_bonus[num] + no_break_value + damage_bonus_avg) * turn_bonus[turn_count] * (1 + grade_magn / 100);
     let summary_score_max = (level_bonus[num] + no_break_value + damage_bonus_max) * turn_bonus[turn_count] * (1 + grade_magn / 100);
@@ -1901,18 +1892,19 @@ function calcScore(detail, grade_magn) {
     $("#summary_score_min").val(Math.floor(summary_score_min).toLocaleString(2));
 }
 
-function getDamageBonus(damage, num) {
+function getDamageBonus(damage, num, score_attack) {
     damage *= Number($("#socre_enemy_unit").val());
     let damage_bonus;
-    if (damage <= damage_limit[num]) {
+    let damage_limit_value = damage_limit1[num];
+    if (damage <= damage_limit_value) {
         damage_bonus = Math.floor(damage / 100);
     } else {
-        damage_bonus = damage_limit[num] / 100;
-        let rest_damage = damage - damage_limit[num];
-        let magn = 1.1701 * Math.pow(rest_damage / damage_limit[num], -0.669);
+        damage_bonus = damage_limit_value / 100;
+        let rest_damage = damage - damage_limit_value;
+        let magn = 1.1701 * Math.pow(rest_damage / damage_limit_value, -0.669);
         damage_bonus += Math.floor(rest_damage * magn / 100);
     }
-    return Math.floor(damage_bonus * 0.47);
+    return Math.floor(damage_bonus * score_attack.max_damage_rate);
 }
 
 // 敵耐性設定
