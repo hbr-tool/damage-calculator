@@ -284,15 +284,30 @@ function setSubMember(sub_chara_no, style_id) {
     } 
 
     // ステータスを設定
-    $.each(status_kbn, function(index, value) {
-        if (index == 0) return true;
-        const status = localStorage.getItem(value + "_" + style_info.chara_id);
-        if (status) member_info[value] = Number(status);
-    });
-    const jewel = localStorage.getItem("jewel_" + style_info.chara_id);
-    if (jewel) member_info.jewel_lv = Number(jewel);;
-    const limit_count = localStorage.getItem("limit_" + style_info.chara_id);
-    if (limit_count) member_info.limit_count = Number(limit_count);
+    let save_item = localStorage.getItem("style_" + style_id);
+    if (save_item) {
+        let items = save_item.split(",");
+        $.each(status_kbn, function(index, value) {
+            if (index == 0) return true;
+            $("#" + value + "_" + sub_chara_no).val(items[index]);
+            member_info[value] = Number(items[index]);
+        });
+        $("#limit_" + sub_chara_no).val(items[7]);
+        $("#jewel_" + sub_chara_no).val(items[8]);
+        member_info.limit_count = Number(items[7]);
+        member_info.jewel_lv = Number(items[8]);
+    } else {
+        // 旧設定
+        $.each(status_kbn, function(index, value) {
+            if (index == 0) return true;
+            const status = localStorage.getItem(value + "_" + style_info.chara_id);
+            if (status) member_info[value] = Number(status);
+        });
+        const jewel = localStorage.getItem("jewel_" + style_info.chara_id);
+        if (jewel) member_info.jewel_lv = Number(jewel);;
+        const limit_count = localStorage.getItem("limit_" + style_info.chara_id);
+        if (limit_count) member_info.limit_count = Number(limit_count);
+    }
 
     sub_style_list[sub_chara_no] = member_info;
 

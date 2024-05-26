@@ -1132,7 +1132,7 @@ function addAbility(member_info) {
             continue;
         }
         let ability_info = getAbilityInfo(ability_id);
-        if (!is_select && ability_info.ability_target) {
+        if (!is_select && ability_info.ability_target != 6) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
         }

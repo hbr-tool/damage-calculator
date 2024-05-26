@@ -433,6 +433,9 @@ function createBuffIconList(buff_list) {
             case 20: // 耐性ダウン
                 src += "IconResistElement";
                 break;
+            case 24: // 行動不能
+                src += "IconRecoil";
+                break;
             default:
                 break;
         }
@@ -647,8 +650,8 @@ function addBuffUnit(buff_info, place_no) {
     // 対象：場
     if (buff_info.range_area == 0) {
         if (buff_info.buff_kind == 13) {
-            // OD増加
-            now_turn.addOverDrive(buff_info.min_power);
+            // OD増加(サービス・エースが可変)
+            now_turn.addOverDrive(buff_info.max_power);
         }
         return;
     }
@@ -684,6 +687,7 @@ function addBuffUnit(buff_info, place_no) {
         case 12: // 破壊率アップ
         case 16: // 連撃(小)
         case 17: // 連撃(大)
+        case 24: // 行動不能
             // バフ追加
             target_list = getTargetList(buff_info, place_no);
             $.each(target_list, function (index, target_no) {
@@ -692,6 +696,7 @@ function addBuffUnit(buff_info, place_no) {
                 buff.buff_kind = buff_info.buff_kind;
                 buff.buff_element = buff_info.buff_element;
                 buff.effect_size = buff_info.min_power;
+                buff.rest_turn = buff_info.effect_count;
                 unit_data.buff_list.push(buff);
             });
             break;
@@ -769,6 +774,7 @@ function consumeBuffUnit(buff_list, attack_info) {
                 buff_list.splice(i, 1);
                 break;
             default:
+                // 上記以外のバフ消費しない
                 break;
         }
         consume_kind.push(buff_info.buff_kind);
@@ -804,6 +810,14 @@ function getTargetList(buff_info, place_no) {
             break;
         default:
             break;
+    }
+    if (buff_info.target_element != 0) {
+        for (let i = target_list.length - 1; i >= 0; i--) {
+            let unit = getUnitData(target_list[i]);
+            if (!unit || (unit.style.element != buff_info.target_element && unit.style.element != buff_info.target_element2)) {
+                target_list.splice(i, 1);
+            }
+        }
     }
     return target_list;
 }
