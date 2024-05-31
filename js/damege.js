@@ -600,9 +600,9 @@ function calcDamage() {
     let funnel_sum = 1 + getSumFunnelEffectList().reduce((accumulator, currentValue) => accumulator + currentValue, 0) / 100;
     let destruction_rate = Number($("#enemy_destruction_rate").val());
     let special = 1 + Number($("#dp_range_0").val() == 0 ? skill_info.hp_damege / 100 : skill_info.dp_damege / 100);
-    // バーチカルフォース
+    // バーチカルフォース/パドマ・ナーチュナー
     let skill_unique_rate = 1;
-    if (skill_info.attack_id == 115) {
+    if (skill_info.attack_id == 115 || skill_info.attack_id == 2167) {
         let dp_rate = Number($("#skill_unique_dp_rate").val());
         dp_rate = dp_rate < 60 ? 60 : dp_rate;
         skill_unique_rate += (dp_rate - 100) / 200
@@ -620,6 +620,11 @@ function calcDamage() {
     let critical_power = getBasePower(member_info, stat_up - 50);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
+    // 貫通クリティカル
+    if (skill_info.attack_id == 135) {
+        critical_rate = 100;
+        weak_physical = 4;
+    }
 
     damage_detail = new RestGauge();
     critical_detail = new RestGauge();
@@ -905,12 +910,16 @@ function getStrengthen(member_info, skill_buff) {
 
 // 弱点判定
 function isWeak() {
-    skill_info = getAttackInfo();
-    if (skill_info === undefined) {
+    attack_info = getAttackInfo();
+    if (attack_info === undefined) {
         return false
     }
-    let physical_resist = Number($("#enemy_physical_" + skill_info.attack_physical).val());
-    let element_resist = Number($("#enemy_element_" + skill_info.attack_element).val());
+    // 貫通クリティカル
+    if (attack_info.attack_id == 135) {
+        return true;
+    }
+    let physical_resist = Number($("#enemy_physical_" + attack_info.attack_physical).val());
+    let element_resist = Number($("#enemy_element_" + attack_info.attack_element).val());
     return physical_resist * element_resist > 10000;
 }
 
@@ -976,6 +985,10 @@ function addAttackList(member_info) {
 
     let attack_sort_list = attack_list.sort((x, y) => y.style_id - x.style_id);
     let checked = $("#skill_special_display").prop("checked");
+    let optgroup = $("<optgroup>");
+    let chara_data = getCharaData(member_info.style_info.chara_id)
+    optgroup.attr("label", chara_data.chara_name).addClass("chara_id-" + member_info.style_info.chara_id);
+    $("#attack_list").append(optgroup);
 
     attack_sort_list.forEach(value => {
         let display = checked && value.attack_id > 1000 ? "none" : "block";
@@ -1807,34 +1820,6 @@ function updateEnemyScoreAttack() {
     $("#enemy_hp").val((enemy_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
 }
 
-// スコアタHP取得
-function getScoreHp(score_lv, max_hp, score_attack) {
-    let count1 = score_lv > 120 ? 20 : score_lv - 100;
-    let count2 = score_lv > 120 ? score_lv - 120 : 0;
-    let magn = Math.pow(Number(score_attack.hp_rate1), count1) * Math.pow(Number(score_attack.hp_rate2), count2);
-    return Math.ceil(max_hp * magn / 1000) * 1000;
-}
-
-// スコアタDP取得
-function getScoreDp(score_lv, max_dp, score_attack) {
-    let count1 = score_lv > 120 ? 20 : score_lv - 100;
-    let count2 = score_lv > 120 ? score_lv - 120 : 0;
-    let magn = Math.pow(Number(score_attack.dp_rate1), count1) * Math.pow(Number(score_attack.dp_rate2), count2);
-    return Math.ceil(max_dp * magn / 1000) * 1000;
-}
-
-// 有効数字を3桁にする
-/*
-function roundUpToFourSignificantFigures(val) {
-    let num = Math.floor(val)
-    let significantFigures = num.toString().replace(/^-/, '').replace(/^0+/, '').length;
-    if (significantFigures < 4) {
-        return num;
-    }
-    let roundedNum = Math.ceil(num / Math.pow(10, significantFigures - 3)) * Math.pow(10, significantFigures - 3);
-    return roundedNum;
-}*/
-
 // スコアアタック表示
 function displayScoreAttack(enemy_info) {
     for (let i = 1; i <= 3; i++) {
@@ -1895,7 +1880,12 @@ function calcScore(detail, grade_magn) {
 function getDamageBonus(damage, num, score_attack) {
     damage *= Number($("#socre_enemy_unit").val());
     let damage_bonus;
-    let damage_limit_value = damage_limit1[num];
+    let damage_limit_value;
+    if (score_attack.enemy_count == 1) {
+        damage_limit_value = damage_limit1[num];
+    } else {
+        damage_limit_value = damage_limit2[num];
+    }
     if (damage <= damage_limit_value) {
         damage_bonus = Math.floor(damage / 100);
     } else {

@@ -61,7 +61,7 @@ class turn_data {
         for (let i = this.enemy_debuff_list.length - 1; i >= 0; i--) {
             let debuff = this.enemy_debuff_list[i];
             if (debuff.rest_turn <= 1) {
-                buff_list.splice(i, 1);
+                this.enemy_debuff_list.splice(i, 1);
             } else {
                 debuff.rest_turn -= 1;
             }
