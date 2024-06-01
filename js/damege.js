@@ -623,7 +623,6 @@ function calcDamage() {
     // 貫通クリティカル
     if (skill_info.attack_id == 135) {
         critical_rate = 100;
-        weak_physical = 4;
     }
 
     damage_detail = new RestGauge();
@@ -914,10 +913,6 @@ function isWeak() {
     if (attack_info === undefined) {
         return false
     }
-    // 貫通クリティカル
-    if (attack_info.attack_id == 135) {
-        return true;
-    }
     let physical_resist = Number($("#enemy_physical_" + attack_info.attack_physical).val());
     let element_resist = Number($("#enemy_element_" + attack_info.attack_element).val());
     return physical_resist * element_resist > 10000;
@@ -935,12 +930,12 @@ function resetEnemyResist() {
 
 // 敵耐性変更
 function updateEnemyResist() {
-    let skill_info = getAttackInfo();
+    let attack_info = getAttackInfo();
     let enemy_info = getEnemyInfo();
-    if (skill_info === undefined || enemy_info === undefined) {
+    if (attack_info === undefined || enemy_info === undefined) {
         return false
     }
-    let element = skill_info.attack_element;
+    let element = attack_info.attack_element;
     let grade_sum = getGradeSum();
     let resist_down = getSumEffectSize("resist_down");
     let element_resist = Number(enemy_info["element_" + element]) - grade_sum["element_" + element];
@@ -955,6 +950,13 @@ function updateEnemyResist() {
     // 表示変更
     $("#enemy_element_" + element).val(Math.floor(element_resist));
     setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+    // 貫通クリティカル
+    if (attack_info.attack_id == 135) {
+        $("#enemy_element_0").val(100);
+        setEnemyElement("#enemy_element_0", 100);
+        $("#enemy_physical_2").val(400);
+        setEnemyElement("#enemy_physical_2", 400);
+    }
     displayWeakRow();
 }
 
@@ -1877,6 +1879,7 @@ function calcScore(detail, grade_magn) {
     $("#summary_score_min").val(Math.floor(summary_score_min).toLocaleString(2));
 }
 
+// ダメージボーナス算出
 function getDamageBonus(damage, num, score_attack) {
     damage *= Number($("#socre_enemy_unit").val());
     let damage_bonus;
@@ -1887,14 +1890,11 @@ function getDamageBonus(damage, num, score_attack) {
         damage_limit_value = damage_limit2[num];
     }
     if (damage <= damage_limit_value) {
-        damage_bonus = Math.floor(damage / 100);
+        damage_bonus = damage;
     } else {
-        damage_bonus = damage_limit_value / 100;
-        let rest_damage = damage - damage_limit_value;
-        let magn = 1.1701 * Math.pow(rest_damage / damage_limit_value, -0.669);
-        damage_bonus += Math.floor(rest_damage * magn / 100);
+        damage_bonus = damage_limit_value * (1 + Math.log(damage / damage_limit_value));
     }
-    return Math.floor(damage_bonus * score_attack.max_damage_rate);
+    return Math.floor(damage_bonus * score_attack.max_damage_rate / 100);
 }
 
 // 敵耐性設定

@@ -220,7 +220,8 @@ function removeMember(select_chara_no, isTrigger) {
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
     select_style_list[select_chara_no] = undefined;
-    
+    // 消費SP初期化
+    $('#sp_cost_' + select_chara_no).text(0);
     // 画像初期化
     $('#select_chara_' + select_chara_no).attr("src", "img/plus.png");
     if (isTrigger) {
