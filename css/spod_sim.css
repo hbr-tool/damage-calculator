@@ -238,6 +238,12 @@ img.unit_buff {
 .icon_list {
     width: 60px;
 }
+input[type='image'].select_target {
+    width: 64px;
+    height: 64px;
+    margin-left: 1px;
+}
+
 
 .hidden-option {
     display: none;

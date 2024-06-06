@@ -22,17 +22,17 @@ function setEventTrigger() {
             $("." + type_element[select_attack_skill.attack_element]).removeClass("selected");
 
             if (skill_info === undefined || select_attack_skill.chara_id !== skill_info.chara_id) {
-                $(".only_chara_id-" + select_attack_skill.chara_id).hide();
+                toggleItemVisibility(`.only_chara_id-${select_attack_skill.chara_id}`, false);
             }
             if (skill_info === undefined || select_attack_skill.attack_id !== skill_info.attack_id) {
-                $(".skill_attack-" + select_attack_skill.attack_id).hide();
+                toggleItemVisibility(`.skill_attack-${select_attack_skill.attack_id}`, false);
             }
             if (select_attack_skill.attack_element !== 0 && (skill_info === undefined || select_attack_skill.attack_element !== skill_info.attack_element)) {
-                $(".buff_element-" + select_attack_skill.attack_element).hide();
-                $(".row_element-" + select_attack_skill.attack_element).css("display", "none");
+                toggleItemVisibility(`.buff_element-${select_attack_skill.attack_element}`, false);
+                toggleItemVisibility(`.row_element-${select_attack_skill.attack_element}`, false);
             }
             if (skill_info === undefined || select_attack_skill.attack_physical !== skill_info.attack_physical) {
-                $(".buff_physical-" + select_attack_skill.attack_physical).hide();
+                toggleItemVisibility(`.buff_physical-${select_attack_skill.attack_physical}`, false);
             }
             // キャラ、スタイル専用非表示
             $(".skill_unique").hide();
@@ -54,32 +54,32 @@ function setEventTrigger() {
         let chara_id_class = "chara_id-" + skill_info.chara_id;
         let style_id_class = "style_id-" + skill_info.style_id;
         let attack_id_class = "attack_id-" + skill_info.attack_id;
-        $(".public.buff_element-0.buff_physical-0").show();
+        toggleItemVisibility(`.public.buff_element-0.buff_physical-0`, true);
         if (skill_info.attack_element != 0) {
-            $(".public.buff_element-" + skill_info.attack_element).show();
+            toggleItemVisibility(`.public.buff_element-${skill_info.attack_element}`, true);
         }
         if (skill_info.attack_physical != 0) {
-            $(".public.buff_physical-" + skill_info.attack_physical).show();
+            toggleItemVisibility(`.public.buff_physical-${skill_info.attack_physical}`, true);
         }
-        $(".only_" + chara_id_class + ".buff_element-0.skill_attack-0").show();
-        $(".only_" + chara_id_class + ".buff_element-0.skill_attack-999").show();
-        $(".only_" + chara_id_class + ".buff_element-0.skill_attack-" + skill_info.attack_id).show();
+        toggleItemVisibility(`.only_${chara_id_class}.buff_element-0.skill_attack-0`, true);
+        toggleItemVisibility(`.only_${chara_id_class}.buff_element-0.skill_attack-999`, true);
+        toggleItemVisibility(`.only_${chara_id_class}.buff_element-0.skill_attack-${skill_info.attack_id}`, true);
         $(".ability_self").hide();
         if (skill_info.attack_element !== 0) {
             $("#elememt_ring").prop("disabled", false);
-            $(".self_element-" + skill_info.attack_element + "." + chara_id_class).show();
-            $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-0").show();
-            $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-999").show();
-            $(".only_" + chara_id_class + ".buff_element-" + skill_info.attack_element + ".skill_attack-" + skill_info.attack_id).show();
+            toggleItemVisibility(`.self_element-${skill_info.attack_element}.${chara_id_class}`, true);
+            toggleItemVisibility(`.only_${chara_id_class}.buff_element-${skill_info.attack_element}.skill_attack-0`, true);
+            toggleItemVisibility(`.only_${chara_id_class}.buff_element-${skill_info.attack_element}.skill_attack-999`, true);
+            toggleItemVisibility(`.only_${chara_id_class}.buff_element-${skill_info.attack_element}.skill_attack-${skill_info.attack_id}`, true);
         } else {
             $("#elememt_ring").prop("disabled", true);
             $("#elememt_ring").prop("selectedIndex", 0);
         }
-        $(".self_element-0." + chara_id_class).show();
+        toggleItemVisibility(`.self_element-0.${chara_id_class}`, true);
         // キャラ、スタイル、スキル専用表示
-        $(".attack_" + attack_id_class).show();
-        $(".attack_" + style_id_class).show();
-        $(".attack_" + chara_id_class).show();
+        toggleItemVisibility(`.attack_${attack_id_class}`, true);
+        toggleItemVisibility(`.attack_${style_id_class}`, true);
+        toggleItemVisibility(`.attack_${chara_id_class}`, true);
 
         // 該当ステータスに着色
         for (let i = 1; i <= 3; i++) {
@@ -119,9 +119,9 @@ function setEventTrigger() {
     });
     $("#skill_special_display").on("change", function (event) {
         if ($("#skill_special_display").prop("checked")) {
-            $(".skill_kind-versatile").hide();
+            toggleItemVisibility(`.skill_kind-versatile`, false);
         } else {
-            $(".skill_kind-versatile").show();
+            toggleItemVisibility(`.skill_kind-versatile`, true);
         }
     });
     // バフスキル変更
