@@ -677,13 +677,13 @@ function getBuffInfo(skill_id) {
 
 // スキル設定
 function setFrontOptions(select) {
-    select.find("option.front").show();
-    select.find("option.back").hide();
+    toggleItemVisibility(select.find("option.front"), true);
+    toggleItemVisibility(select.find("option.back"), false);
     select.find("option.front:first").prop('selected', true);
 }
 function setBackOptions(select) {
-    select.find("option.front").hide();
-    select.find("option.back").show();
+    toggleItemVisibility(select.find("option.front"), false);
+    toggleItemVisibility(select.find("option.back"), true);
     select.find("option:not(.front):first").prop('selected', true);
 }
 
