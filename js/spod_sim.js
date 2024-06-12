@@ -1,6 +1,7 @@
 let last_turn;
 let turn_list = [];
 let now_turn;
+let battle_enemy_info;
 let physical_name = ["", "斬", "突", "打"]
 let element_name = ["無", "火", "氷", "雷", "光", "闇"]
 class turn_data {
@@ -11,32 +12,58 @@ class turn_data {
         this.add_turn = false;
         this.enemy_debuff_list = [];
         this.unit_list = [];
-        this.add_over_drive_gauge = 0;
         this.over_drive_gauge = 0;
+        this.add_over_drive_gauge = 0;
         this.enemy_count = 1;
+        this.fg_action = false;
     }
 
     // 0:先打ちOD,1:通常戦闘,2:後打ちOD,3:追加ターン
-    turnProceed(val) {
-        this.unitSort();
-        if (val == 1) {
+    turnProceed(kb_action) {
+        if (kb_action == 1) {
+            this.unitSort();
             // 通常
-            $.each(this.unit_list, function (index, value) {
-                if (!value.blank) {
-                    value.unitTurnProceed();
+            $.each(this.unit_list, function (index, unit) {
+                if (!unit.blank) {
+                    unit.unitTurnProceed();
                 }
             });
             // 敵のデバフ消費
             this.debuffConsumption();
             if (!this.add_turn) {
-                this.turn_number++;
+                // オーバードライブ
+                if (this.over_drive_max_turn > 0) {
+                    this.over_drive_turn++;
+                    if (this.over_drive_max_turn < this.over_drive_turn) {
+                        // オーバードライブ終了
+                        this.over_drive_max_turn = 0;
+                        this.over_drive_turn = 0;
+                        if (this.fg_action) {
+                            this.turn_number++;
+                            this.fg_action = false;
+                        }
+                    }
+                } else {
+                    // 通常進行
+                    this.turn_number++;
+                    this.fg_action = false;
+                }
             }
-        } else if (val == 3) {
-
         } else {
             // OD
             this.over_drive_turn = 1;
-            this.over_drive_max_turn = Math.floor(this.over_drive_gauge / 100);
+            let over_drive_level = Math.floor(this.over_drive_gauge / 100)
+            this.startOverDrive(over_drive_level);
+            this.over_drive_max_turn = over_drive_level;
+            this.over_drive_gauge %= 100;
+            this.add_over_drive_gauge = 0;
+            if (kb_action == 2) {
+                // 行動開始＋OD発動
+                this.fg_action = true;
+            } else if (kb_action == 0) {
+                // OD発動
+                this.fg_action = false;
+            }
         }
     }
     unitSort() {
@@ -60,6 +87,14 @@ class turn_data {
             this.over_drive_gauge = 300;
         }
     }
+    startOverDrive(over_drive_level) {
+        let sp_list = [0, 5, 12, 20];
+        $.each(this.unit_list, function (index, unit) {
+            if (!unit.blank) {
+                unit.sp += sp_list[over_drive_level];
+            }
+        });
+    }
     debuffConsumption() {
         for (let i = this.enemy_debuff_list.length - 1; i >= 0; i--) {
             let debuff = this.enemy_debuff_list[i];
@@ -70,12 +105,124 @@ class turn_data {
             }
         }
     }
+    abilityAction(action_kbn) {
+        const self = this;
+        $.each(this.unit_list, function (index, unit) {
+            if (unit.blank) {
+                return true;
+            }
+            let action_list = [];
+            switch (action_kbn) {
+                case 0: // 戦闘開始時
+                    action_list = unit.ability_battle_start;
+                    break;
+                case 1: // 自分のターン開始時
+                    action_list = unit.ability_self_start;
+                    break;
+                case 2: // 行動開始時
+                    action_list = unit.ability_action_start;
+                    break;
+                case 3: // 敵のターン開始時
+                    action_list = unit.ability_enemy_start;
+                    break;
+                case 4: // 追加ターン
+                    action_list = unit.ability_add_turn;
+                    break;
+                case 5: // オーバードライブ開始時
+                    action_list = unit.ability_over_drive;
+                    break;
+            }
+            $.each(action_list, function (index, ability) {
+                // 前衛
+                if (ability.activation_place == 1 && unit.place_no >= 3) {
+                    return true;
+                }
+                // 後衛
+                if (ability.activation_place == 2 && unit.place_no < 3) {
+                    return true;
+                }
+                let target_list = [];
+                switch (ability.ability_target) {
+                    case 1: // 自分
+                        target_list = [unit.place_no];
+                        break;
+                    case 2: // 味方前衛
+                        target_list = [0, 1, 2];
+                        break;
+                    case 3: // 味方後衛
+                        target_list = [3, 4, 5];
+                        break;
+                    case 4: // 味方全員
+                        target_list = [0, 1, 2, 3, 4, 5];
+                        break;
+                }
+                switch (ability.effect_type) {
+                    case 6: // 連撃数アップ
+                        let buff = new buff_data();
+                        buff.buff_kind = ability.effect_size == 40 ? 17 : 16;
+                        buff.buff_element = 0;
+                        buff.effect_size = ability.effect_size;
+                        buff.rest_turn = 99;
+                        unit.buff_list.push(buff);
+                        break;
+                    case 12: // SP回復
+                        $.each(target_list, function (index, target_no) {
+                            let unit_data = getUnitData(self, target_no);
+                            if (unit_data.sp < 20) {
+                                switch (ability.ability_id) {
+                                    case 1109: // 吉報
+                                    case 1111: // みなぎる士気
+                                    case 1119: // 旺盛
+                                        unit_data.add_sp += ability.effect_size;
+                                        break;
+                                    case 1112: // 好機
+                                        if (unit_data.sp <= 3) {
+                                            unit_data.sp += ability.effect_size;
+                                        }
+                                        break;
+                                    case 1118: // 充填
+                                        // チャージ存在チェック
+                                        if (checkBuffExist(unit_data.buff_list, 10)) {
+                                            unit_data.sp += ability.effect_size;
+                                        }
+                                        break;
+                                    default:
+                                        unit_data.sp += ability.effect_size;
+                                        break;
+                                }
+                                if (unit_data.sp > 20) {
+                                    unit_data.sp = 20
+                                }
+                            }
+                        });
+                        break;
+                    case 14: // ODアップ
+                        self.over_drive_gauge += ability.effect_size;
+                        break;
+                    case 15: // 消費SPダウン
+                        break;
+                    case 22: // 厄
+                        break;
+                }
+            });
+        });
+    }
+}
+
+// バフ存在チェック
+function checkBuffExist(buff_list, buff_kind) {
+    let exist_list = buff_list.filter(function (buff_info) {
+        return buff_info.buff_kind == buff_kind;
+    });
+    return exist_list.length > 0;
 }
 
 class unit_data {
     constructor() {
         this.place_no = 99;
         this.sp = 1;
+        this.add_sp = 0;
+        this.sp_cost = 0;
         this.buff_list = [];
         this.add_turn = false;
         this.unit = null;
@@ -85,15 +232,17 @@ class unit_data {
         this.blank = false;
         this.first_ultimate = false;
         this.buff_target_chara_id = null;
+        this.ability_battle_start = [];
+        this.ability_self_start = [];
+        this.ability_action_start = [];
+        this.ability_enemy_start = [];
+        this.ability_add_turn = [];
+        this.ability_over_drive = [];
     }
 
     unitTurnProceed() {
         if (this.sp < 20) {
             this.sp += 2;
-            if (this.place_no <= 2) {
-                // 前衛
-                this.sp += 1;
-            }
             if (this.sp > 20) {
                 this.sp = 20
             }
@@ -108,8 +257,9 @@ class unit_data {
             }
         }
     }
-    payCost(sp_cost) {
-        this.sp -= sp_cost;
+    payCost() {
+        this.sp -= this.sp_cost;
+        this.sp_cost = 0;
     }
     getEarringEffectSize(hit_count) {
         // ドライブ
@@ -194,14 +344,18 @@ function setEventTrigger() {
     });
     // 戦闘開始ボタンクリック
     $(".battle_start").on("click", function (event) {
+        // 初期化
         last_turn = 0;
-        $("#turn_area").html("");
+        $("#battle_area").html("");
+        turn_list = [];
+
+        battle_enemy_info = getEnemyInfo();
         battle_start();
     });
     // スキル変更
     $(document).on("change", "select.unit_skill", function (event) {
         // 対象選択画面
-        chageUnitSkill($(this));
+        selectUnitSkill($(this));
     });
 
     // 行動開始
@@ -210,17 +364,50 @@ function setEventTrigger() {
         $(`.turn${last_turn} select.unit_skill`).off("click");
         $(`.turn${last_turn} .unit_select`).off("click");
         $(`.turn${last_turn} select.unit_skill`).prop("disabled", true);
+        $(`.turn${last_turn} select.action_select`).prop("disabled", true);
         $(".unit_selected").removeClass("unit_selected");
-
-        startAction(last_turn);
+        let kb_action = $(`.turn${last_turn} select.action_select`).val()
+        if (kb_action != 0) {
+            startAction(last_turn);
+        }
         // 次ターンを追加
-        addTurn(now_turn, 1);
+        proceedTurn(now_turn, kb_action);
+    });
+
+    // ターンを戻す
+    $(document).on("click", ".return_turn", function (event) {
+        // 現ターンのイベント削除
+        $(`.turn${last_turn} select.unit_skill`).off("click");
+        $(`.turn${last_turn} .unit_select`).off("click");
+
+        // 前ターンを削除
+        function removeTurnsAfter(turn_number) {
+            // 選択したターン数より大きいターンの要素を取得し、削除
+            $(`#battle_area .turn`).filter(function() {
+                // クラス名からターン数を抽出
+                const turn_class = $(this).attr('class').match(/turn(\d+)/);
+                return turn_class && parseInt(turn_class[1]) > turn_number;
+            }).remove();
+
+            function removeTurnsAbove(temp_list, number) {
+                // 指定されたnumber以上の要素を削除
+                return temp_list.filter(turn => turn.turn_number <= number);
+            }
+            turn_list = removeTurnsAbove(turn_list, turn_number);
+        }
+        last_turn = $(this).data("trun_number");
+        removeTurnsAfter(last_turn);
+        now_turn = turn_list[turn_list.length - 1];
+
+        $(`.turn${last_turn} select.unit_skill`).prop("disabled", false);
+        $(`.turn${last_turn} select.action_select`).prop("disabled", false);
+        setTurnButton();
     });
 }
 
 // スキル変更処理
-function chageUnitSkill(select) {
-    const skill_id = select.find('option:selected').val();
+function selectUnitSkill(select) {
+    const skill_id = Number(select.find('option:selected').val());
     const index = select.index("select.unit_skill");
     const skill_info = getSkillData(skill_id);
     const unit_data = getUnitData(now_turn, index);
@@ -270,24 +457,29 @@ function chageUnitSkill(select) {
         return true;
     }
 
-    function updateSp(target) {
-        let unit_sp = unit_data.sp - skill_info.sp_cost;
-        if (harfSpSkill(skill_info, unit_data)) {
-            unit_sp += skill_info.sp_cost / 2;
-        }
-        $(target).text(unit_sp);
-        $(target).toggleClass("minus", unit_sp < 0);
-    }
-
     async function processSkillChange() {
-        const buff_list = getBuffInfo(skill_info.skill_id);
+        const buff_list = getBuffInfo(skill_id);
         const target_selected = await handleTargetSelection(buff_list);
         if (!target_selected) return;
         setOverDrive();
     }
 
+    function updateSp(target) {
+        unit_data.sp_cost = harfSpSkill(now_turn, skill_info, unit_data) ? skill_info?.sp_cost / 2 : skill_info?.sp_cost;
+        let unit_sp = unit_data.sp - unit_data.sp_cost;
+        $(target).text(getDispSp(unit_data));
+        $(target).toggleClass("minus", unit_sp < 0);
+    }
+
     processSkillChange();
     updateSp(select.parent().find(".unit_sp"));
+    updateAction(now_turn)
+}
+
+// 行動制限
+function updateAction(turn_data) {
+    let is_over_drive = (turn_data.over_drive_gauge + turn_data.add_over_drive_gauge) > 100;
+    toggleItemVisibility($(`.turn${last_turn} select.action_select option[value='2']`), is_over_drive);
 }
 
 // 敵リスト作成
@@ -350,6 +542,32 @@ function battle_start() {
                 (obj.chara_id === value.style_info.chara_id || obj.chara_id === 0) &&
                 (obj.style_id === value.style_info.style_id || obj.style_id === 0)
             );
+            let limit = Number($("#limit_" + index).val());
+            [0, 1, 3, 5, 10].forEach(num => {
+                if (value.style_info[`ability${num}`] && num <= limit) {
+                    let ability_info = getAbilityInfo(value.style_info[`ability${num}`]);
+                    switch (ability_info.activation_timing) {
+                        case 0: // 戦闘開始時
+                            unit.ability_battle_start.push(ability_info);
+                            break;
+                        case 1: // 自分のターン開始時
+                            unit.ability_self_start.push(ability_info);
+                            break;
+                        case 2: // ターン開始時
+                            unit.ability_action_start.push(ability_info);
+                            break;
+                        case 3: // 敵ターン開始時
+                            unit.ability_enemy_start.push(ability_info);
+                            break;
+                        case 4: // 追加ターン
+                            unit.ability_add_turn.push(ability_info);
+                            break;
+                        case 5: // オーバードライブ開始時
+                            unit.ability_over_drive.push(ability_info);
+                            break;
+                    }
+                }
+            });
         } else {
             unit.blank = true;
         }
@@ -357,111 +575,173 @@ function battle_start() {
     });
     turn_init.enemy_count = Number($("#enemy_count").val());;
     turn_init.unit_list = unit_list;
-    turn_list.push(turn_init);
+
+    // 戦闘開始アビリティ
+    turn_init.abilityAction(0);
 
     // 領域表示
     $("#battle_area").css("visibility", "visible");
 
-    // 開始
-    addTurn(turn_init, 1);
+    // ターンを進める
+    proceedTurn(turn_init, 1);
 }
 
-function addTurn(turn_data, kb_add_turn) {
+// ターンを進める
+function proceedTurn(turn_data, kb_action) {
     last_turn++;
     if (!turn_data.add_turn) {
-        turn_data.turnProceed(kb_add_turn);
+        turn_data.turnProceed(kb_action);
+        turn_data.abilityAction(2); // ターン開始時
     }
 
-    let turn = $('<div>').addClass("turn").addClass("turn" + last_turn);
-    let header_area = $('<div>').addClass("flex");
-    let turn_number = $('<div>').text(turn_data.getTurnNumber());
-    let enemy = $('<div>').append($('<img>').attr("src", "icon/BtnEventBattleActive.webp").addClass("enemy_icon")).addClass("left flex");
-    let turn_enemy_count = $("<select>").attr("id", `enemy_count_turn${last_turn}`);
-    for (let i = 1; i <= 3; i++) {
-        let option = $("<option>").val(i).text(`×${i}体`);
-        turn_enemy_count.append(option);
-    }
-    turn_enemy_count.val(turn_data.enemy_count);
-    let debuuf_lidt = createBuffIconList(turn_data.enemy_debuff_list);
-    enemy.append(turn_enemy_count).append(debuuf_lidt);
+    let turn = $('<div>').addClass(`turn turn${last_turn}`);
+    let header_area = $('<div>').addClass("header_area");
+    let header_container = $('<div>').addClass("flex container");
+    let turn_number = $('<div>').text(turn_data.getTurnNumber()).addClass("turn_number");
+    let enemy = $('<div>').addClass("left flex").append(
+        $('<img>').attr("src", "icon/BtnEventBattleActive.webp").addClass("enemy_icon"),
+        $("<select>").attr("id", `enemy_count_turn${last_turn}`).append(
+            ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`×${i + 1}体`))
+        ).val(turn_data.enemy_count),
+        createBuffIconList(turn_data.enemy_debuff_list)
+    );
     let over_drive = createOverDriveGauge(turn_data.over_drive_gauge);
-    header_area.addClass("container").append(turn_number).append(enemy).append(over_drive);
-    let party_member = $('<div>').addClass("flex");
-    let front_area = $('<div>').addClass("flex").addClass("front_area");
-    let back_area = $('<div>').addClass("flex").addClass("back_area");
-    $.each(turn_data.unit_list, function (index, unit) {
-        let chara_div = $('<div>').addClass("unit_select");
-        let img = $('<img>')
-            .data("chara_no", index)
-            .addClass("unit_style");
-        let unit_div = $('<div>').addClass("flex");
-        if (unit.style) {
-            let sp = $('<div>').text(unit.sp).addClass("unit_sp");
-            if (unit.sp < 0) {
-                sp.addClass("minus");
-            }
-            img.attr("src", "icon/" + unit.style.style_info.image_url)
-            let inner_div = $('<div>').append(img).append(sp);
-            unit_div.append(inner_div);
-            chara_div.append(unit_div);
-        } else {
-            img.attr("src", "img/cross.png")
-            chara_div.append(img);
-        }
 
-        let skill_select = $('<select>').addClass("unit_skill");
-        let option = $('<option>').text("なし").val(0).addClass("back");
-        skill_select.append(option);
-        $.each(unit.skill_list, function (index, value) {
+    header_container.append(enemy, over_drive);
+    header_area.append(turn_number, header_container);
+
+    let party_member = $('<div>').addClass("flex");
+    let front_area = $('<div>').addClass("flex front_area");
+    let back_area = $('<div>').addClass("flex back_area");
+    $.each(turn_data.unit_list, function (index, unit) {
+        const chara_div = $('<div>').addClass("unit_select");
+        const img = $('<img>').data("chara_no", index).addClass("unit_style");
+        const unit_div = $('<div>').addClass("flex");
+        const skill_select = $('<select>').addClass("unit_skill");
+
+        const createOptionText = (value) => {
             let text = value.skill_name;
-            if (value.skill_name == "通常攻撃") {
+            if (value.skill_name === "通常攻撃") {
                 text += `(${physical_name[value.attack_physical]}・${element_name[unit.normal_attack_element]})`;
-            } else if (value.skill_name == "追撃") {
+            } else if (value.skill_name === "追撃") {
                 text += `(${physical_name[value.attack_physical]})`;
             } else if (value.attack_id) {
-                text += `(${physical_name[value.attack_physical]}・${element_name[value.attack_element]}/${value.sp_cost})`;
+                let sp_cost = harfSpSkill(turn_data, value, unit) ? value.sp_cost / 2 : value.sp_cost;
+                text += `(${physical_name[value.attack_physical]}・${element_name[value.attack_element]}/${sp_cost})`;
             } else {
                 text += `(${value.sp_cost})`;
             }
-            option = $('<option>').text(text)
-                .val(value.skill_id).addClass(value.skill_name == "追撃" ? "back" : "front");
-            skill_select.append(option);
-        });
-        if (unit.buff_list.length > 0) {
-            unit_div.append(createBuffIconList(unit.buff_list));
-        }
-        // 行動不能
-        const recoil = unit.buff_list.filter((obj) => obj.buff_kind == 24);
-        if (recoil.length > 0) {
-            skill_select.css("visibility", "hidden");
-        }
-        // 対象外        
-        if (!unit.style || turn_data.add_turn && !unit.add_turn) {
-            skill_select.css("visibility", "hidden");
-        }
-        chara_div.prepend(skill_select);
+            return text;
+        };
 
-        if (unit.place_no < 3) {
-            setFrontOptions(skill_select);
-            front_area.append(chara_div);
+        const createSkillOption = (value) => {
+            return $('<option>')
+                .text(createOptionText(value))
+                .val(value.skill_id)
+                .addClass(value.skill_name === "追撃" ? "back" : "front");
+        };
+
+        const appendUnitDetails = () => {
+            const sp = $('<div>').text(getDispSp(unit)).addClass("unit_sp");
+            if (unit.sp < 0) sp.addClass("minus");
+            img.attr("src", `icon/${unit.style.style_info.image_url}`);
+            unit_div.append($('<div>').append(img).append(sp));
+            chara_div.append(unit_div);
+        };
+
+        const appendDefaultImg = () => {
+            img.attr("src", "img/cross.png");
+            chara_div.append(img);
+        };
+
+        const appendSkillOptions = () => {
+            skill_select.append($('<option>').text("なし").val(0).addClass("back"));
+            $.each(unit.skill_list, function (index, value) {
+                skill_select.append(createSkillOption(value));
+            });
+        };
+
+        const handleRecoil = () => {
+            const recoil = unit.buff_list.filter((obj) => obj.buff_kind == 24);
+            if (recoil.length > 0 || !unit.style || (turn_data.add_turn && !unit.add_turn)) {
+                skill_select.css("visibility", "hidden");
+            }
+        };
+
+        const appendBuffList = () => {
+            if (unit.buff_list.length > 0) {
+                unit_div.append(createBuffIconList(unit.buff_list));
+            }
+        };
+
+        const appendToArea = () => {
+            if (unit.place_no < 3) {
+                setFrontOptions(skill_select);
+                front_area.append(chara_div);
+            } else {
+                setBackOptions(skill_select);
+                back_area.append(chara_div);
+            }
+        };
+
+        if (unit.style) {
+            appendUnitDetails();
         } else {
-            setBackOptions(skill_select);
-            back_area.append(chara_div);
+            appendDefaultImg();
         }
+
+        appendSkillOptions();
+        appendBuffList();
+        handleRecoil();
+        chara_div.prepend(skill_select);
+        appendToArea();
+
         unit.add_turn = false;
     });
+
+    const $div = $('<div>').append(
+        $('<select>').addClass('action_select').append(
+            turn_data.over_drive_gauge >= 100 ? $('<option>').val("0").text("OD発動") : null,
+            $('<option>').val("1").text("行動開始").prop("selected", true),
+            $('<option>').val("2").text("行動開始+OD")
+        ),
+        $('<div>').addClass('mx-auto w-[80px] mt-2').append(
+            $('<input>').attr({ type: 'button', value: '次ターン' }).addClass('turn_button next_turn')
+        ).append(
+            $('<input>').attr({ type: 'button', value: 'ここに戻す' }).addClass('turn_button return_turn').data("trun_number", last_turn)
+        )
+    );
+    back_area.append($div)
     party_member.append(front_area).append(back_area)
     turn.append(header_area).append(party_member);
-    $("#turn_area").prepend(turn);
+    $("#battle_area").prepend(turn);
 
     addUnitEvent(turn_data.unit_list);
-    turn_list.push(turn_data);
-
     turn_data.add_turn = false;
+    turn_list.push(deepClone(turn_data));
     now_turn = turn_data;
 
+    setTurnButton();
     // ODゲージを設定
     setOverDrive();
+    // 行動制限
+    updateAction(now_turn);
+}
+
+// ターンボタン表示設定
+function setTurnButton() {
+    // 最初の要素のみ表示
+    $('.next_turn:first').show();
+    $('.next_turn:gt(0)').hide();
+    // 最初の要素を非表示、以降の要素を表示
+    $('.return_turn:first').hide();
+    $('.return_turn:gt(0)').show();    
+}
+
+// SP表示取得
+function getDispSp(unit_data) {
+    let unit_sp = unit_data.sp - unit_data.sp_cost;
+    return unit_sp + (unit_data.add_sp > 0 ? ("+" + unit_data.add_sp) : "");;
 }
 
 // バフアイコンリスト
@@ -605,7 +885,7 @@ function addUnitEvent(unit_list) {
                 setFrontOptions(first_click.find("select"));
                 setBackOptions(second_click.find("select"));
                 let second_sp = second_click.find(".unit_sp");
-                second_sp.text(unit_data.sp);
+                second_sp.text(getDispSp(unit_data));
                 if (unit_data.sp > 0) {
                     second_sp.removeClass("minus");
                 }
@@ -614,7 +894,7 @@ function addUnitEvent(unit_list) {
                 setFrontOptions(second_click.find("select"));
                 setBackOptions(first_click.find("select"));
                 let first_sp = first_click.find(".unit_sp");
-                first_sp.text(first_click_unit_data.sp);
+                first_sp.text(getDispSp(first_click_unit_data));
                 if (first_click_unit_data.sp > 0) {
                     first_sp.removeClass("minus");
                 }
@@ -666,13 +946,18 @@ function getSkillData(skill_id) {
 }
 // 攻撃情報取得
 function getAttackInfo(attack_id) {
-    const filtered_attack = skill_attack.filter((obj) => obj.attack_id === attack_id);
+    const filtered_attack = skill_attack.filter((obj) => obj.attack_id == attack_id);
     return filtered_attack.length > 0 ? filtered_attack[0] : undefined;
 }
 // バフ情報取得
 function getBuffInfo(skill_id) {
-    const filtered_buff = skill_buff.filter((obj) => obj.skill_id === skill_id);
+    const filtered_buff = skill_buff.filter((obj) => obj.skill_id == skill_id);
     return filtered_buff;
+}
+// アビリティ情報取得
+function getAbilityInfo(ability_id) {
+    const filtered_ability = ability_list.filter((obj) => obj.ability_id == ability_id);
+    return filtered_ability.length > 0 ? filtered_ability[0] : undefined;
 }
 
 // スキル設定
@@ -690,41 +975,33 @@ function setBackOptions(select) {
 // 行動開始
 function startAction(turn_number) {
     let seq = sortActionSeq(turn_number);
-    let enemy_count = Number($(`#enemy_count_turn${turn_number}`).val());
-    now_turn.enemy_count = enemy_count;
     $.each(seq, function (index, skill_data) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(now_turn, skill_data.place_no);
-        let sp_cost = skill_info.sp_cost;
-        let od_plus = 0;
         let attack_info;
 
         let buff_list = getBuffInfo(skill_info.skill_id);
         for (let i = 0; i < buff_list.length; i++) {
             addBuffUnit(now_turn, buff_list[i], skill_data.place_no, unit_data.buff_target_chara_id);
         }
-        let funnel_list = unit_data.getfunnelList();
         if (skill_info.skill_name == "通常攻撃") {
-            od_plus = 7.5
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
-            od_plus += funnel_list.length * 2.5 * enemy_count;
         } else if (skill_info.attack_id) {
             attack_info = getAttackInfo(skill_info.attack_id);
-            let earring = 1 + unit_data.getEarringEffectSize(11 - attack_info.hit_count) / 100;
-            let hit_od = Math.floor(2.5 * earring * 100) / 100
-            if (attack_info.range_area == 1) {
-                enemy_count = 1;
-            }
-            od_plus = attack_info.hit_count * hit_od * enemy_count;
-            od_plus += funnel_list.length * hit_od * enemy_count;
         }
 
         if (attack_info) {
             consumeBuffUnit(unit_data.buff_list, attack_info);
         }
-        unit_data.payCost(sp_cost);
-        now_turn.addOverDrive(od_plus);
+        origin(skill_info, unit_data);
+        unit_data.payCost();
     });
+
+    
+    now_turn.over_drive_gauge += now_turn.add_over_drive_gauge;
+    if (now_turn.over_drive_gauge > 300) {
+        now_turn.over_drive_gauge = 300;
+    }
 }
 
 // OD上昇量取得
@@ -737,7 +1014,6 @@ function getOverDrive(turn_number, enemy_count) {
         let unit_data = getUnitData(temp_turn, skill_data.place_no);
         let attack_info;
 
-        let funnel_list = unit_data.getfunnelList();
         let buff_list = getBuffInfo(skill_info.skill_id);
         buff_list.forEach(function (buff_info) {
             let skip = false;
@@ -765,42 +1041,94 @@ function getOverDrive(turn_number, enemy_count) {
                     // サービス・エースが可変
                     od_plus += buff_info.max_power;
                 }
-                addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data.buff_target_chara_id);
+                // 連撃のみ処理
+                if (buff_info.buff_kind == 16 || buff_info.buff_kind == 17) {
+                    addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data.buff_target_chara_id);
+                }
             }
         });
-
+        let funnel_list = unit_data.getfunnelList();
+        let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
         if (skill_info.skill_name == "通常攻撃") {
-            od_plus += 7.5
-            attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
-            od_plus += funnel_list.length * 2.5 * enemy_count;
+            if (isResist(physical, unit_data.normal_attack_element)) {
+                od_plus += 7.5
+                od_plus += funnel_list.length * 2.5;
+            }
         } else if (skill_info.attack_id) {
             attack_info = getAttackInfo(skill_info.attack_id);
-            let earring = 1 + unit_data.getEarringEffectSize(11 - attack_info.hit_count) / 100;
-            let hit_od = Math.floor(2.5 * earring * 100) / 100
-            if (attack_info.range_area == 1) {
-                enemy_count = 1;
+            if (isResist(physical, attack_info.attack_element)) {
+                let earring = 1 + unit_data.getEarringEffectSize(11 - attack_info.hit_count) / 100;
+                let hit_od = Math.floor(2.5 * earring * 100) / 100
+                if (attack_info.range_area == 1) {
+                    enemy_count = 1;
+                }
+                od_plus += attack_info.hit_count * hit_od * enemy_count;
+                od_plus += funnel_list.length * hit_od * enemy_count;
             }
-            od_plus += attack_info.hit_count * hit_od * enemy_count;
-            od_plus += funnel_list.length * hit_od * enemy_count;
+        }
+    });
+
+    // 後衛の選択取得
+    $(`.turn${turn_number} .back_area select.unit_skill option:selected`).each(function (index, element) {
+        if ($(element).css("visibility") == "hidden") {
+            return true;
+        }
+        let skill_id = $(element).val();
+        if (skill_id == 0) {
+            return true;
+        }
+        if ($(element).text().startsWith("追撃")) {
+            let skill_info = getSkillData(skill_id);
+            let chara_data = getCharaData(skill_info.chara_id);
+            od_plus += chara_data.pursuit * 2.5;
         }
     });
     return od_plus;
 }
 
+// 耐性判定
+function isResist(physical, element) {
+    let physical_rate = battle_enemy_info[`physical_${physical}`];
+    let element_rate = battle_enemy_info[`element_${element}`];
+    return physical_rate / 100 * element_rate / 100 >= 1;
+}
+
 // 独自仕様
 function origin(skill_info, unit_data) {
-    if (harfSpSkill(skill_info, unit_data)) {
-        unit_data.sp += skill_info.sp_cost / 2;
-        unit_data.first_ultimate = true;
+    switch (skill_info.skill_id) {
+        // 初回判定
+        case 422: // 必滅！ヴェインキック+
+            unit_data.first_ultimate = true;
+            break;
     }
     return;
 }
 
 // 消費SP半減
-function harfSpSkill(skill_info, unit_data) {
+function harfSpSkill(turn_data, skill_info, unit_data) {
     switch (skill_info.skill_id) {
-        case 416: // 必滅！ヴェインキック+
+        case 359: // とどけ！ 誓いのしるし(挑発)
+            if (checkBuffExist(turn_data.enemy_debuff_list, 25)) {
+                return true;
+            }
+            break;
+        case 361: // にゃんこ大魔法(防御ダウン)
+            if (checkBuffExist(turn_data.enemy_debuff_list, 3)) {
+                return true;
+            }
+            break;
+        case 381: // 御稲荷神話(脆弱)
+            if (checkBuffExist(turn_data.enemy_debuff_list, 5)) {
+                return true;
+            }
+            break;
+        case 422: // 必滅！ヴェインキック+
             if (!unit_data.first_ultimate) {
+                return true;
+            }
+            break;
+        case 472: // ロリータフルバースト(追加ターン)
+            if (unit_data.add_turn) {
                 return true;
             }
             break;
@@ -854,7 +1182,7 @@ function addBuffUnit(turn_data, buff_info, place_no, buff_target_chara_id) {
                 let buff = new buff_data();
                 buff.buff_kind = buff_info.buff_kind;
                 buff.buff_element = buff_info.buff_element;
-                buff.effect_size = buff_info.min_power;
+                buff.effect_size = buff_info.max_power;
                 if (buff_info.buff_kind == 24) {
                     buff.rest_turn = buff_info.effect_count;
                 } else {
@@ -1002,7 +1330,7 @@ function sortActionSeq(turn_number) {
         if ($(element).css("visibility") == "hidden") {
             return true;
         }
-        let skill_id = $(element).val();
+        let skill_id = Number($(element).val());
         if (skill_id == 0) {
             return true;
         }

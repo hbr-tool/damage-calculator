@@ -96,13 +96,26 @@ img.select_style {
     }
 }
 /* 戦闘開始 */
-input[type="button"].battle_start {
+.battle_start {
     width: 80px;
     font-size: 16px;
     color: #fff;
     background: #149f14;
     border-radius: 100vh;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
 }
+
+.battle_start:hover {
+    background: #1ec11e; /* ハイライトカラー */
+}
+
+.battle_start:active {
+    background: #117f11; /* 押下時のカラー */
+    transform: scale(0.95); /* 押下時の縮小 */
+}
+
 /* 敵情報 */
 .surround_area {
     border: solid gray 2px;
@@ -133,19 +146,27 @@ input[type="button"].battle_start {
 }
 
 #battle_area {
-    width: 720px;
+    width: 1125px;
     margin: auto;
-    display: flex;
 } 
-input[type="button"].next_turn {
+.turn_button {
     width: 80px;
     font-size: 16px;
     color: #fff;
     background: #149f14;
     border-radius: 100vh;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
 }
-#turn_area {
-    width: 600px;
+
+.turn_button:hover {
+    background: #1ec11e; /* ハイライトカラー */
+}
+
+.turn_button:active {
+    background: #117f11; /* 押下時のカラー */
+    transform: scale(0.95); /* 押下時の縮小 */
 }
 
 .turn {
@@ -153,6 +174,14 @@ input[type="button"].next_turn {
     border-radius: 20px;
     margin-top: 5px;
     padding: 5px;
+    display: flex;
+}
+.header_area {
+    width: 375px;
+}
+.turn_number {
+    font-size: 18px;
+    font-weight: bold;
 }
 .container {
     display: flex;
@@ -193,7 +222,7 @@ input[type="button"].next_turn {
     width: 72px;
 }
 .action_select {
-    margin-top: 28px;
+    margin-top: 10px;
     font-size: 12px;
     width: 120px;
 }
@@ -206,7 +235,8 @@ input[type="button"].next_turn {
      2px -2px 10px #000 ,
     -2px -2px 10px #000;
     margin-top: -72px;
-    text-align: right
+    text-align: right;
+    pointer-events: none;
 }
 .unit_sp.minus {
     text-shadow:  2px  2px 10px #f00 ,
