@@ -9,7 +9,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N7FD0VTLNH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-N7FD0VTLNH');
   </script>
@@ -99,7 +99,7 @@
       // スコアタレベル
       var selectOptions = '';
       for (var i = 140; i >= 101; i--) {
-          selectOptions += '<option value="' + i + '">' + i + '</option>';
+        selectOptions += '<option value="' + i + '">' + i + '</option>';
       }
       $('#score_lv').html(selectOptions);
 
@@ -261,15 +261,17 @@
             </div>
             <div class="ml-6">
               <div class="mb-2">
-                <input type="checkbox" id="skill_special_display" checked><label class="checkbox01" for="skill_special_display">専用技以外を非表示にする</label>
+                <input type="checkbox" id="skill_special_display" checked><label class="checkbox01"
+                  for="skill_special_display">専用技以外を非表示にする</label>
               </div>
-                <!-- バーチカルフォース/パドマ・ナーチュナー専用 -->
-              <div class="skill_unique attack_attack_id-115 attack_attack_id-2167 hidden">
+              <!-- バーチカルフォース/パドマ・ナーチュナー/花舞う、可憐のフレア専用 -->
+              <div class="skill_unique attack_attack_id-115 attack_attack_id-2167 attack_attack_id-136 hidden">
                 <div class="flex">
                   自身のDP
                   <div class="dp_gauge">
-                    <input type="range" id="skill_unique_dp_rate" class="player_dp_range dp_range w-[160px]" min="0" max="150" step="1" value="100"
-                    style="background: linear-gradient(to right, rgb(79, 124, 139) 0%, rgb(196, 211, 216) 66.6667%, rgb(255, 255, 255) 66.6667%);">
+                    <input type="range" id="skill_unique_dp_rate" class="player_dp_range dp_range w-[160px]" min="0"
+                      max="150" step="1" value="100"
+                      style="background: linear-gradient(to right, rgb(79, 124, 139) 0%, rgb(196, 211, 216) 66.6667%, rgb(255, 255, 255) 66.6667%);">
                     <output id="player_dp_rate" class="gauge_rate">100%</output>
                   </div>
                 </div>
@@ -283,7 +285,8 @@
               </div>
               <!-- 美也専用 -->
               <div class="skill_unique attack_chara_id-45 hidden">
-                <input type="checkbox" id="skill_unique_cherry_blossoms"><label class="checkbox01" for="skill_unique_cherry_blossoms">桜花の矢</label>
+                <input type="checkbox" id="skill_unique_cherry_blossoms"><label class="checkbox01"
+                  for="skill_unique_cherry_blossoms">桜花の矢</label>
               </div>
             </div>
           </div>
@@ -416,23 +419,31 @@
                   <div class="w-5">DP</div>
                   <div>
                     <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_3" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_3" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
+                      <input type="text" id="enemy_dp_3" value="" readonly class="w-20 text-right enemy_input comma"
+                        pattern="\d*">
+                      <input type="range" id="dp_range_3" class="enemy_dp_range dp_range" min="0" max="100" step="1"
+                        value="0">
                       <output id="dp_rate_3" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_2" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_2" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
+                      <input type="text" id="enemy_dp_2" value="" readonly class="w-20 text-right enemy_input comma"
+                        pattern="\d*">
+                      <input type="range" id="dp_range_2" class="enemy_dp_range dp_range" min="0" max="100" step="1"
+                        value="0">
                       <output id="dp_rate_2" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_1" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_1" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
+                      <input type="text" id="enemy_dp_1" value="" readonly class="w-20 text-right enemy_input comma"
+                        pattern="\d*">
+                      <input type="range" id="dp_range_1" class="enemy_dp_range dp_range" min="0" max="100" step="1"
+                        value="0">
                       <output id="dp_rate_1" class="gauge_rate">0%</output>
                     </div>
                     <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_0" value="" readonly class="w-20 text-right enemy_input comma" pattern="\d*">
-                      <input type="range" id="dp_range_0" class="enemy_dp_range dp_range" min="0" max="100" step="1" value="0">
+                      <input type="text" id="enemy_dp_0" value="" readonly class="w-20 text-right enemy_input comma"
+                        pattern="\d*">
+                      <input type="range" id="dp_range_0" class="enemy_dp_range dp_range" min="0" max="100" step="1"
+                        value="0">
                       <output id="dp_rate_0" class="gauge_rate">0%</output>
                     </div>
                   </div>
@@ -540,6 +551,8 @@
                   <option value="10">10</option>
                 </select>
               </div>
+              <input type="checkbox" id="eternal_vows" class="ml-3 pt-0.5"><label class="checkbox01"
+                for="eternal_vows">永遠なる誓い</label>
             </div>
           </div>
           <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
@@ -570,11 +583,11 @@
                 <input type="text" id="damage_bonus_avg" class="text-center prediction_value" readonly>
                 <div class="flex items-center">
                   <div class="prediction_none"></div>
-                  <div class="mt-1">（</div> 
+                  <div class="mt-1">（</div>
                   <input type="text" id="damage_bonus_min" class="text-center prediction_value" readonly>
-                  <div class="mt-1">～</div> 
+                  <div class="mt-1">～</div>
                   <input type="text" id="damage_bonus_max" class="text-center prediction_value" readonly>
-                  <div class="mt-1">）</div> 
+                  <div class="mt-1">）</div>
                 </div>
               </div>
               <div>
@@ -590,11 +603,11 @@
                 <input type="text" id="summary_score_avg" class="text-center prediction_value" readonly>
                 <div class="flex">
                   <div class="prediction_none"></div>
-                  <div class="mt-1">（</div> 
+                  <div class="mt-1">（</div>
                   <input type="text" id="summary_score_min" class="text-center prediction_value" readonly>
-                  <div class="mt-1">～</div> 
+                  <div class="mt-1">～</div>
                   <input type="text" id="summary_score_max" class="text-center prediction_value" readonly>
-                  <div class="mt-1">）</div> 
+                  <div class="mt-1">）</div>
                 </div>
               </div>
             </div>
@@ -809,7 +822,8 @@
                     class="debuff redisplay permanent_element_down include_lv">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-5"><label class="strengthen"><input type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-2 row_element-5"><label class="strengthen"><input
+                      type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-2 row_element-5">
                   <div class="lv"><select id="element_down1_lv" class="lv_effect"></select></div>
                 </td>
@@ -820,7 +834,8 @@
                     class="debuff redisplay permanent_element_down include_lv">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-5"><label class="strengthen"><input type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-2 row_element-5"><label class="strengthen"><input
+                      type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-2 row_element-5">
                   <div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div>
                 </td>
@@ -851,7 +866,8 @@
                     class="resist resist_down redisplay element include_lv">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-3 row_element-5"><label class="strengthen"><input type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-3 row_element-5"><label class="strengthen"><input
+                      type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-3 row_element-5"></td>
                 </td>
               </tr>
@@ -861,7 +877,8 @@
                     class="resist resist_down redisplay element include_lv">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-3 row_element-5"><label class="strengthen"><input type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-3 row_element-5"><label class="strengthen"><input
+                      type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-3 row_element-5"></td>
               </tr>
               <tr class="sp_only">

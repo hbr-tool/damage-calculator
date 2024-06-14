@@ -1,3 +1,6 @@
+// 貫通クリティカル
+let penetration_attack_list = [135, 137];
+
 function setEventTrigger() {
     // リセットボタン
     $("#style_reset_btn").on("click", function (event) {
@@ -141,6 +144,12 @@ function setEventTrigger() {
             }
             if (isOnlyUse(option)) {
                 if (!confirm(option.text() + "は\r\n通常、他スキルに設定出来ませんが、設定してよろしいですか？")) {
+                    $(this).prop("selectedIndex", 0);
+                    return;
+                }
+            }
+            if (isSameBuff($(option))) {
+                if (!confirm(option.text() + "は\r\n同一スキルが既に設定されています。設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
                     return;
                 }
@@ -607,6 +616,12 @@ function calcDamage() {
         dp_rate = dp_rate < 60 ? 60 : dp_rate;
         skill_unique_rate += (dp_rate - 100) / 200
     }
+    // 花舞う、可憐のフレア
+    if (skill_info.attack_id == 136) {
+        let dp_rate = Number($("#skill_unique_dp_rate").val());
+        dp_rate = dp_rate > 100 ? 100 : dp_rate;
+        skill_unique_rate += (100 - dp_rate) / 100 * 75 / 100;
+    }
     // コーシュカ・アルマータ
     if (skill_info.attack_id == 2162) {
         let sp = Number($("#skill_unique_sp").val());
@@ -621,7 +636,7 @@ function calcDamage() {
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
     // 貫通クリティカル
-    if (skill_info.attack_id == 135) {
+    if (penetration_attack_list.includes(skill_info.attack_id)) {
         critical_rate = 100;
     }
 
@@ -951,7 +966,7 @@ function updateEnemyResist() {
     $("#enemy_element_" + element).val(Math.floor(element_resist));
     setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
     // 貫通クリティカル
-    if (attack_info.attack_id == 135) {
+    if (penetration_attack_list.includes(attack_info.attack_id)) {
         $("#enemy_element_0").val(100);
         setEnemyElement("#enemy_element_0", 100);
         $("#enemy_physical_2").val(400);
@@ -1337,10 +1352,14 @@ function select2ndSkill(select) {
                 $(option).prop("selected", false);
                 continue;
             }
-            if (isOtherOnlyUse($(option))) {
+            if (isSameBuff($(option))) {
                 $(option).prop("selected", false);
                 continue;
             }
+            if (isOtherOnlyUse($(option))) {
+                $(option).prop("selected", false);
+                continue;
+            }            
             if (buff_id == 0) {
                 // アビリティ
                 break;
@@ -1402,6 +1421,19 @@ function isOnlyUse(option) {
 function isOtherOnlyUse(option) {
     if (select_attack_skill !== undefined) {
         if (option.hasClass("only_other_chara_id-" + select_attack_skill.chara_id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 複数設定出来ないバフで扱いは同一のもの
+function isSameBuff(option) {
+    let convert_skill_id = {"4" : "133", "133" : "4"};
+    if (option.hasClass("only_first")) {
+        let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
+        let buff_id = "buff_id-" + convert_skill_id[option.val()];
+        if ($("." + class_name + " option." + buff_id + ":selected").length > 0) {
             return true;
         }
     }
@@ -1488,6 +1520,8 @@ function getSumBuffEffectSize() {
     sum_buff += token_count * getSumAbilityEffectSize(31);
     // 士気
     sum_buff += Number($("#morale_count").val()) * 5;
+    // 永遠なる誓い
+    sum_buff += $("#eternal_vows").prop("checked") ? 50 : 0;
     return 1 + sum_buff / 100;
 }
 
@@ -1652,12 +1686,16 @@ function createEnemyList(enemy_class) {
             $("#enemy_list").append(option);
         }
     });
-    if (enemy_class == 6) {
-        // スコアタの場合、グレードを表示する。
-        $(".score_attack").css("display", "block");
+
+    if (enemy_class == 6 || enemy_class == 8) {
         // 表示を逆順にする
         $("#enemy_list").html($("#enemy_list option").toArray().reverse());
         $("#enemy_list").prop("selectedIndex", 0);
+    }
+
+    if (enemy_class == 6) {
+        // スコアタの場合、グレードを表示する。
+        $(".score_attack").css("display", "block");
         $("#score_lv").show();
         $("#prediction_score").show();
     } else {
