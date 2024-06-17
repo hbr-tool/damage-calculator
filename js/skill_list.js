@@ -479,7 +479,7 @@
     {"skill_id":477,"skill_name":"豪快！パイレーツキャノン","chara_id":24,"style_id":118,"sp_cost":7,"attack_id":133,"attack_physical":3,"attack_element":5},
     {"skill_id":478,"skill_name":"春爛漫","chara_id":32,"style_id":0,"sp_cost":6,"attack_id":null,"attack_physical":2,"attack_element":null},
     {"skill_id":479,"skill_name":"回る！ぽんぽこ花吹雪","chara_id":32,"style_id":119,"sp_cost":18,"attack_id":134,"attack_physical":2,"attack_element":4},
-    {"skill_id":480,"skill_name":"スイーツチャージ！","chara_id":25,"style_id":0,"sp_cost":5,"attack_id":2164,"attack_physical":3,"attack_element":0},
+    {"skill_id":480,"skill_name":"スイーツチャージ！","chara_id":19,"style_id":0,"sp_cost":5,"attack_id":2164,"attack_physical":3,"attack_element":0},
     {"skill_id":481,"skill_name":"華麗なるファントム・シーフ","chara_id":39,"style_id":120,"sp_cost":15,"attack_id":135,"attack_physical":2,"attack_element":0},
     {"skill_id":482,"skill_name":"解けない謎はない","chara_id":39,"style_id":0,"sp_cost":8,"attack_id":null,"attack_physical":2,"attack_element":null},
     {"skill_id":483,"skill_name":"艶色のサラスヴァティー","chara_id":40,"style_id":121,"sp_cost":11,"attack_id":null,"attack_physical":3,"attack_element":null},

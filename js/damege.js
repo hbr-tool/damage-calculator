@@ -1267,14 +1267,28 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
     let checked = true;
     switch (ability_info.ability_target) {
         case 1:	// 自分
+            disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && disabled);
+            checked = limit_count >= limit_border && $(input).hasClass(chara_id);
+            break
         case 2:	// 前衛
         case 3:	// 後衛
-            disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && disabled);
+            // 前衛または後衛かつ、本人以外
+            if ((ability_info.activation_place == 1 || ability_info.activation_place == 2) && !$(input).hasClass(chara_id)) {
+                disabled = false;
+            } else {
+                disabled = true;
+            }
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break
         case 4:	// 全体
         case 5:	// 敵
         case 0:	// その他
+            // 前衛または後衛かつ、本人以外
+            if ((ability_info.activation_place == 1 || ability_info.activation_place == 2) && !$(input).hasClass(chara_id)) {
+                disabled = false;
+            } else {
+                disabled = true;
+            }
             if (limit_count < limit_border) {
                 disabled = true;
                 checked = false;
@@ -1359,7 +1373,7 @@ function select2ndSkill(select) {
             if (isOtherOnlyUse($(option))) {
                 $(option).prop("selected", false);
                 continue;
-            }            
+            }
             if (buff_id == 0) {
                 // アビリティ
                 break;
@@ -1429,7 +1443,7 @@ function isOtherOnlyUse(option) {
 
 // 複数設定出来ないバフで扱いは同一のもの
 function isSameBuff(option) {
-    let convert_skill_id = {"4" : "133", "133" : "4"};
+    let convert_skill_id = { "4": "133", "133": "4" };
     if (option.hasClass("only_first")) {
         let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
         let buff_id = "buff_id-" + convert_skill_id[option.val()];
@@ -1623,6 +1637,8 @@ function getCriticalBuff() {
     let critical_buff = 50;
     critical_buff += getSumEffectSize("critical_buff");
     critical_buff += getSumAbilityEffectSize(4);
+    // 星空の航路+
+    critical_buff += $("option.skill_id-490:selected").length * 30;
     return 1 + critical_buff / 100;
 }
 

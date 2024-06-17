@@ -144,7 +144,20 @@ img.select_style {
     background-color: rgba(0, 0, 0, 0);
     margin-left: 5px;
 }
+/* 補助入力 */
+.step_od_gauge {
+    text-align: right;
+    border: #000 solid 1px;
+    height: 25px;
+}
+.step_sp {
+    width: 40px;
+    text-align: right;
+    border: #000 solid 1px;
+    height: 25px;
+}
 
+/* バトルエリア */
 #battle_area {
     width: 1125px;
     margin: auto;
@@ -173,18 +186,17 @@ img.select_style {
     border: solid gray 2px;
     border-radius: 20px;
     margin-top: 5px;
-    padding: 5px;
+    padding: 0px 5px 5px 5px;
     display: flex;
 }
 .header_area {
     width: 375px;
+    display: flex;
+    justify-content: space-between;
 }
 .turn_number {
     font-size: 18px;
     font-weight: bold;
-}
-.container {
-    display: flex;
 }
 .left {
     flex: 1;
@@ -234,7 +246,7 @@ img.select_style {
     -2px  2px 10px #000 ,
      2px -2px 10px #000 ,
     -2px -2px 10px #000;
-    margin-top: -72px;
+    margin-top: -56px;
     text-align: right;
     pointer-events: none;
 }
@@ -246,7 +258,7 @@ img.select_style {
 }
 .front_area, 
 .back_area {
-    height: 90px;
+    height: 70px;
 }
 .front_area .unit_sp {
     /* margin-right: 60px; */
@@ -255,18 +267,21 @@ img.select_style {
     margin-right: 8px;
 }
 img.unit_style {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
 }
 img.unit_buff {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
 }
 .back_area .icon_list {
     display: none;
 }
 .icon_list {
-    width: 60px;
+    width: 75px;
+}
+.enemy_icon_list {
+    width: 130px;
 }
 input[type='image'].select_target {
     width: 64px;
@@ -274,7 +289,37 @@ input[type='image'].select_target {
     margin-left: 1px;
 }
 
-
 .hidden-option {
     display: none;
+}
+
+/* モーダル画面*/
+.modal_label {
+    font-size: 20px;
+    font-weight: bold;
+}
+.select_effect {
+    display: none;
+}
+
+.select_effect.active {
+    display: block;
+    text-align: center;
+}
+
+.effect_button {
+    width: 150px;
+    font-size: 16px;
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+}
+
+.effect_button:hover {
+    background: #1ec11e; /* ハイライトカラー */
+}
+
+.effect_button:active {
+    background: #117f11; /* 押下時のカラー */
+    transform: scale(0.95); /* 押下時の縮小 */
 }
