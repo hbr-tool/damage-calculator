@@ -76,13 +76,8 @@ class turn_data {
     // 0:先打ちOD,1:通常戦闘,2:後打ちOD,3:追加ターン
     turnProceed(kb_next) {
         let self = this;
+        this.enemy_debuff_list.sort((a, b) => a.buff_kind - b.buff_kind);
         if (kb_next == KB_NEXT_ACTION) {
-            // 通常
-            $.each(this.unit_list, function (index, unit) {
-                if (!unit.blank) {
-                    unit.unitTurnProceed(self);
-                }
-            });
             // オーバードライブ
             if (this.over_drive_max_turn > 0) {
                 this.over_drive_turn++;
@@ -97,7 +92,13 @@ class turn_data {
                 }
             } else {
                 // 通常進行
+                $.each(this.unit_list, function (index, unit) {
+                    if (!unit.blank) {
+                        unit.unitTurnProceed(self);
+                    }
+                });
                 this.turn_number++;
+                this.abilityAction(KB_ABILIRY_SELF_START);
                 this.fg_action = false;
                 if (this.turn_number % this.step_turn == 0) {
                     this.over_drive_gauge += this.step_over_drive_down;
@@ -1577,7 +1578,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 debuff.buff_kind = buff_info.buff_kind;
                 debuff.buff_element = buff_info.buff_element;
                 debuff.effect_size = buff_info.min_power;
-                if (buff_info.buff_kind == BUFF_ETERNAL_DEFENSEDOWN || buff_info.buff_kind == BUFF_ELEMENT_ETERNAL_DEFENSEDOWN) {
+                if (buff_info.buff_kind == BUFF_RESISTDOWN || buff_info.buff_kind == BUFF_ETERNAL_DEFENSEDOWN || buff_info.buff_kind == BUFF_ELEMENT_ETERNAL_DEFENSEDOWN) {
                     debuff.rest_turn = 99;
                 } else {
                     debuff.rest_turn = buff_info.effect_count;
