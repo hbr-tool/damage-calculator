@@ -1414,8 +1414,15 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
                 return true;
             }
             break;
-        case 472: // ロリータフルバースト(追加ターン)
+        case 472: // ロリータフルバースト
+            // 追加ターン
             if (unit_data.additional_turn) {
+                return true;
+            }
+            break;
+        case 476: // ヌラルジャ
+            // オーバードライブ中
+            if (turn_data.over_drive_max_turn > 0) {
                 return true;
             }
             break;
