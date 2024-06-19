@@ -455,9 +455,12 @@ function setEventTrigger() {
     // 敵リストイベント
     $("#enemy_class").on("change", function (event) {
         let enemy_class = $(this).val();
+        localStorage.setItem("enemy_class", enemy_class);
+        localStorage.setItem("enemy_list", "1");
         createEnemyList(enemy_class);
     });
     $("#enemy_list").on("change", function (event) {
+        localStorage.setItem("enemy_list", $(this).val());
         setEnemyStatus();
     });
     // 部隊変更ボタンクリック
@@ -474,13 +477,15 @@ function setEventTrigger() {
     });
     // 戦闘開始ボタンクリック
     $(".battle_start").on("click", function (event) {
-        // 初期化
-        last_turn = 0;
-        $("#battle_area").html("");
-        turn_list = [];
+        if ($("#battle_area").css("visibility") === "hidden" || confirm("現在の結果が消えますが、よろしいですか？")) {
+            // 初期化
+            last_turn = 0;
+            $("#battle_area").html("");
+            turn_list = [];
+            battle_enemy_info = getEnemyInfo();
 
-        battle_enemy_info = getEnemyInfo();
-        battle_start();
+            battle_start();
+        }
     });
     // 行動選択変更
     $(document).on("change", "select.action_select", function (event) {
@@ -851,7 +856,7 @@ function proceedTurn(turn_data, kb_next) {
     header_left.append(turn_number).append(enemy);
     header_area.append(header_left, over_drive);
 
-    let party_member = $('<div>').addClass("flex");
+    let party_member = $('<div>').addClass("party_member");
     let front_area = $('<div>').addClass("flex front_area");
     let back_area = $('<div>').addClass("flex back_area");
 

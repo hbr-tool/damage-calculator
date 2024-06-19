@@ -2,15 +2,36 @@
 div.frame {
     height: calc(100svh - 60px);
 }
+
+input[type="button"] {
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+input[type="button"]:hover {
+    background: #1ec11e;
+}
+
+input[type="button"]:active {
+    background: #117f11;
+    transform: scale(0.95);
+}
+
 .display_area {
     width: 450px;
     font-size: 0.875rem;
 }
+
 .adjust_width {
     width: 450px;
 }
-@media screen and (max-width: 768px) {
-}
+
+@media screen and (max-width: 768px) {}
+
 select {
     border: solid 1px #000;
     height: 21px;
@@ -22,47 +43,46 @@ input.troops_btn {
     height: 40px;
     font-size: 25px;
     color: #fff;
-    background: #149f14;
     border-radius: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-left: 5px;
-    box-shadow:0 6px 0 0 #005400;
+    box-shadow: 0 6px 0 0 #005400;
     transform: translateY(-6px);
 }
 
 input.troops_btn:hover {
-    box-shadow:0 2px 0 0 #005400;
+    box-shadow: 0 2px 0 0 #005400;
     transform: translateY(-2px);
 }
 
 input.troops_btn.selected_troops {
-    box-shadow:0 2px 0 0 #005400;
+    box-shadow: 0 2px 0 0 #005400;
     transform: translateY(-2px);
 }
 
 #style_reset_btn {
     width: 50px;
     font-size: 12px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
 }
 
 /* ステータスエリア */
 #char_list {
     width: 482px;
 }
+
 img.select_style {
     width: 64px;
     height: 64px;
     margin-left: 4px;
 }
+
 .label_status {
     line-height: 22px;
     display: block;
 }
+
 .limit,
 .earring,
 .bracelet,
@@ -72,48 +92,41 @@ img.select_style {
     margin-left: 3px;
     text-align: center;
 }
+
 .limit:disabled {
-    border:solid 1px black ;
+    border: solid 1px black;
 }
+
 @media screen and (max-width: 482px) {
-    .status_area {
+    .display_area {
+        width: 400px;
+    }
+
+    #char_list {
+        width: 400px;
+    }
+
+    .adjust_width {
         width: 100%;
+        max-width: 400px;
         min-width: 375px;
     }
-    .label_status {
-        line-height: 21px;
-        display: block;
-    }
-    img.select_style {
-        width: 48px;
-        height: 48px;
-        margin-left: 4px;
-    }
+
     .limit,
+    .earring,
     .bracelet,
     .chain {
         width: 50px;
     }
 }
+
 /* 戦闘開始 */
 .battle_start {
     width: 80px;
     font-size: 16px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
     border: none;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.1s ease;
-}
-
-.battle_start:hover {
-    background: #1ec11e; /* ハイライトカラー */
-}
-
-.battle_start:active {
-    background: #117f11; /* 押下時のカラー */
-    transform: scale(0.95); /* 押下時の縮小 */
 }
 
 /* 敵情報 */
@@ -123,14 +136,17 @@ img.select_style {
     padding: 5px;
 
 }
+
 .enemy_weak {
     font-weight: bold;
     color: red;
 }
+
 .enemy_resist {
     font-weight: bold;
     color: blue;
 }
+
 .enemy_type_icon {
     width: 32px;
     height: 32px;
@@ -138,18 +154,21 @@ img.select_style {
     margin-left: 5px;
     margin-bottom: -8px;
 }
+
 .enemy_type_value {
     text-align: center;
     width: 32px;
     background-color: rgba(0, 0, 0, 0);
     margin-left: 5px;
 }
+
 /* 補助入力 */
 .step_od_gauge {
     text-align: right;
     border: #000 solid 1px;
     height: 25px;
 }
+
 .step_sp {
     width: 40px;
     text-align: right;
@@ -161,25 +180,14 @@ img.select_style {
 #battle_area {
     width: 1125px;
     margin: auto;
-} 
+}
+
 .turn_button {
     width: 80px;
     font-size: 16px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
     border: none;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.1s ease;
-}
-
-.turn_button:hover {
-    background: #1ec11e; /* ハイライトカラー */
-}
-
-.turn_button:active {
-    background: #117f11; /* 押下時のカラー */
-    transform: scale(0.95); /* 押下時の縮小 */
 }
 
 .turn {
@@ -189,35 +197,60 @@ img.select_style {
     padding: 0px 5px 5px 5px;
     display: flex;
 }
+.party_member {
+    display: flex;
+}
+@media screen and (max-width: 768px) {
+    #battle_area {
+        width: 400px;
+        margin: auto;
+    }
+
+    .turn {
+        display: block;
+    }
+
+    .party_member {
+        display: block;
+    }    
+}
+
 .header_area {
     width: 375px;
     display: flex;
     justify-content: space-between;
 }
+
 .turn_number {
     font-size: 18px;
     font-weight: bold;
 }
+
 .left {
     flex: 1;
 }
+
 .right {
     flex: 1;
 }
+
 .enemy_icon {
     width: 36px;
     height: 36px;
 }
+
 .od_icon {
     width: 61px;
     height: 48px;
 }
+
 .od_number {
     width: 48px;
     height: 48px;
     margin-top: -48px;
     margin-left: 14px;
 }
+
 .od_text {
     padding-top: 11px;
 }
@@ -225,64 +258,78 @@ img.select_style {
 .unit_selected {
     background-color: #FF0;
 }
+
 .front_area .unit_skill {
     font-size: 12px;
     width: 125px;
 }
+
 .back_area .unit_skill {
     font-size: 12px;
     width: 72px;
 }
+
 .action_select {
     margin-top: 10px;
     font-size: 12px;
     width: 120px;
 }
+
 .unit_sp {
     font-size: 24px;
     font-weight: bold;
     color: #fff;
-    text-shadow:  2px  2px 10px #000 ,
-    -2px  2px 10px #000 ,
-     2px -2px 10px #000 ,
-    -2px -2px 10px #000;
+    text-shadow: 2px 2px 10px #000,
+        -2px 2px 10px #000,
+        2px -2px 10px #000,
+        -2px -2px 10px #000;
     margin-top: -56px;
     text-align: right;
     pointer-events: none;
 }
+
 .unit_sp.minus {
-    text-shadow:  2px  2px 10px #f00 ,
-    -2px  2px 10px #f00 ,
-     2px -2px 10px #f00 ,
-    -2px -2px 10px #f00;
+    text-shadow: 2px 2px 10px #f00,
+        -2px 2px 10px #f00,
+        2px -2px 10px #f00,
+        -2px -2px 10px #f00;
 }
-.front_area, 
+
+.front_area,
 .back_area {
     height: 70px;
 }
+
 .front_area .unit_sp {
     /* margin-right: 60px; */
 }
+
 .back_area .unit_sp {
     margin-right: 8px;
 }
+
 img.unit_style {
     width: 48px;
     height: 48px;
 }
+
 img.unit_buff {
     width: 24px;
     height: 24px;
 }
+
 .back_area .icon_list {
     display: none;
 }
+
 .icon_list {
     width: 75px;
 }
+
 .enemy_icon_list {
     width: 130px;
 }
+
 input[type='image'].select_target {
     width: 64px;
     height: 64px;
@@ -298,6 +345,7 @@ input[type='image'].select_target {
     font-size: 20px;
     font-weight: bold;
 }
+
 .select_effect {
     display: none;
 }
@@ -310,16 +358,4 @@ input[type='image'].select_target {
 .effect_button {
     width: 150px;
     font-size: 16px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
-}
-
-.effect_button:hover {
-    background: #1ec11e; /* ハイライトカラー */
-}
-
-.effect_button:active {
-    background: #117f11; /* 押下時のカラー */
-    transform: scale(0.95); /* 押下時の縮小 */
 }
