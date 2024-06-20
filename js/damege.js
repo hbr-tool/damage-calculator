@@ -938,7 +938,7 @@ function resetEnemyResist() {
     let enemy_info = getEnemyInfo();
     // 表示変更
     let physical = select_attack_skill.attack_physical;
-    let element_physical = enemy_info["element_" + physical];
+    let element_physical = enemy_info["physical_" + physical];
     $("#enemy_physical_" + physical).val(Math.floor(element_physical));
     setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical));
     let element = select_attack_skill.attack_element;
