@@ -493,7 +493,7 @@
     {"skill_id":491,"skill_name":"トゥルーペネトレーター+","chara_id":39,"style_id":0,"sp_cost":15,"attack_id":137,"attack_physical":2,"attack_element":0},
     {"skill_id":1001,"skill_name":"クリティカルシンキング","chara_id":0,"style_id":0,"sp_cost":5,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":1002,"skill_name":"リペアライト","chara_id":0,"style_id":0,"sp_cost":11,"attack_id":null,"attack_physical":null,"attack_element":null},
-    {"skill_id":1003,"skill_name":"ドライブゲイン","chara_id":0,"style_id":0,"sp_cost":5,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":1003,"skill_name":"ドライブゲイン","chara_id":0,"style_id":0,"sp_cost":6,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":1004,"skill_name":"プロテクション","chara_id":0,"style_id":0,"sp_cost":3,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":1005,"skill_name":"アタックライズ","chara_id":0,"style_id":0,"sp_cost":4,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":1006,"skill_name":"コンセントレーション","chara_id":0,"style_id":0,"sp_cost":4,"attack_id":null,"attack_physical":null,"attack_element":null},

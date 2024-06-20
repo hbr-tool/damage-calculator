@@ -935,12 +935,16 @@ function isWeak() {
 
 // 敵耐性初期化
 function resetEnemyResist() {
-    let element = select_attack_skill.attack_element;
     let enemy_info = getEnemyInfo();
-    let element_resist = enemy_info["element_" + element];
     // 表示変更
-    $("#enemy_element_" + element).val(Math.floor(element_resist));
-    setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+    let physical = select_attack_skill.attack_physical;
+    let element_physical = enemy_info["element_" + physical];
+    $("#enemy_physical_" + physical).val(Math.floor(element_physical));
+    setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical));
+    let element = select_attack_skill.attack_element;
+    let element_element = enemy_info["element_" + element];
+    $("#enemy_element_" + element).val(Math.floor(element_element));
+    setEnemyElement("#enemy_element_" + element, Math.floor(element_element));
 }
 
 // 敵耐性変更
