@@ -1155,19 +1155,22 @@ function addUnitEvent() {
             first_click_unit_data.place_no = index;
             unit_data.place_no = first_click_index;
 
-            // 前衛と後衛が入れ替わった場合、
+            // 前衛と後衛が入れ替わった場合
             if (index >= 0 && index <= 2 && first_click_index >= 3 && first_click_index <= 5) {
                 setFrontOptions(first_click.find("select"));
                 setBackOptions(second_click.find("select"));
+                unit_data.sp_cost = 0;
                 let second_sp = second_click.find(".unit_sp");
                 second_sp.text(getDispSp(unit_data));
                 if (unit_data.sp > 0) {
                     second_sp.removeClass("minus");
                 }
             }
+            // 後衛と前衛が入れ替わった場合
             if (index >= 3 && index <= 5 && first_click_index >= 0 && first_click_index <= 2) {
                 setFrontOptions(second_click.find("select"));
                 setBackOptions(first_click.find("select"));
+                first_click_unit_data.sp_cost = 0;
                 let first_sp = first_click.find(".unit_sp");
                 first_sp.text(getDispSp(first_click_unit_data));
                 if (first_click_unit_data.sp > 0) {
