@@ -491,7 +491,7 @@ function setEventTrigger() {
     // 行動選択変更
     $(document).on("change", "select.action_select", function (event) {
         if ($(this).val() == "0") {
-            $(`.turn${last_turn} .front_area select.unit_skill`).prop("selectedIndex", 1);
+            $(`.turn${last_turn} .front_area select.unit_skill`).prop("selectedIndex", 0);
             $(`.turn${last_turn} .back_area select.unit_skill`).prop("selectedIndex", 0);
             $(`.turn${last_turn} select.unit_skill`).trigger("change");
         }
