@@ -122,9 +122,10 @@ function setEventTrigger() {
     });
     $("#skill_special_display").on("change", function (event) {
         if ($("#skill_special_display").prop("checked")) {
-            toggleItemVisibility(`.skill_kind-versatile`, false);
+            toggleItemVisibility(`option.skill_kind-versatile`, false);
+            $("#attack_list").trigger("change");
         } else {
-            toggleItemVisibility(`.skill_kind-versatile`, true);
+            toggleItemVisibility(`option.skill_kind-versatile`, true);
         }
     });
     // バフスキル変更

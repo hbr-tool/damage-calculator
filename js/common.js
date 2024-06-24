@@ -44,12 +44,57 @@ function isSafari() {
 // アイテム非表示
 function toggleItemVisibility(selector, shouldShow) {
   $(selector).each(function () {
-    if ($(this).is('option') && isSafari()) {
-      // Safariではoptionタグを無効化
-      $(this).prop('disabled', !shouldShow);
+    if ($(this).is('option')) {
+      if (shouldShow) {
+        $(this).showOption();
+      } else {
+        $(this).hideOption();
+      }
     } else {
-      // その他のブラウザではoptionタグを非表示または表示
+      // option以外は表示/非表示切り替え
       $(this).toggle(shouldShow);
     }
   });
+}
+
+$.fn.showOption = function () {
+  this.each(function () {
+    if (this.tagName == "OPTION") {
+      var opt = this;
+      if ($(this).parent().get(0).tagName == "SPAN") {
+        var span = $(this).parent().get(0);
+        $(span).replaceWith(opt);
+        $(span).remove();
+      }
+      opt.disabled = false;
+      $(opt).show();
+    }
+  });
+  return this;
+}
+$.fn.hideOption = function () {
+  this.each(function () {
+    if (this.tagName == "OPTION") {
+      var opt = this;
+
+      // 選択状態を解除
+      if (opt.selected) {
+        $(opt).prop('selected', false);
+
+        // 他のオプションを選択状態にする（必要に応じて）
+        var select = $(opt).closest('select');
+        if (select.length > 0) {
+          select.val(select.find('option').not(opt).first().val());
+        }
+      }
+      if ($(this).parent().get(0).tagName == "SPAN") {
+        var span = $(this).parent().get(0);
+        $(span).hide();
+      } else {
+        $(opt).wrap("<span>").hide();
+      }
+      opt.disabled = true;
+    }
+  });
+  return this;
 }
