@@ -14,3 +14,58 @@
         display: block;
     }
 }
+
+/* チェックボックス */
+input[type=checkbox] {
+    display: none;
+}
+.checkbox01 {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 25px;
+    padding-right: 0px;
+    position: relative;
+    width: auto;
+}
+.checkbox01::before {
+    background: #fff;
+    border: 1px solid #231815;
+    content: '';
+    display: block;
+    height: 16px;
+    left: 5px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+.checkbox01::after {
+    border-right: 3px solid #149f14;
+    border-bottom: 3px solid #149f14;
+    content: '';
+    display: block;
+    height: 13px;
+    left: 10px;
+    margin-top: -8px;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    transform: rotate(45deg);
+    width: 6px;
+}
+input[type=checkbox]:checked + .checkbox01::after {
+    opacity: 1;
+}
+input[type=checkbox]:disabled + .checkbox01::before {
+    opacity: 0.2;
+}
+input[type=checkbox]:checked:disabled + .checkbox01:after {
+    border-right: 3px solid #aaa;
+    border-bottom: 3px solid #aaa;
+}
+input[type=checkbox]:disabled + .checkbox01 {
+	cursor: default;
+}
