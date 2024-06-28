@@ -1884,10 +1884,10 @@ function updateEnemyScoreAttack() {
     let score_attack = getScoreAttack(enemy_info.score_attack_no);
     let score_lv = Number($("#score_lv").val());
     let enemy_stat = score_stat[score_lv - 100];
-    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), score_attack);
+    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), score_attack, enemy_info);
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
-        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), score_attack);
+        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), score_attack, enemy_info);
         $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);

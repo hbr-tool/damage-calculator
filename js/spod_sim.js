@@ -1519,6 +1519,10 @@ function getSpCost(turn_data, skill_info, unit) {
         if (checkAbilityExist(unit.ability_other, 1506)) {
             sp_cost -= 2;
         }
+        // 優美なる剣舞
+        if (checkAbilityExist(unit.ability_other, 1512)) {
+            sp_cost -= 2;
+        }
     }
     return sp_cost
 }
@@ -1534,22 +1538,26 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
                 return true;
             }
             break;
-        case 361: // にゃんこ大魔法(防御ダウン)
+        case 361: // にゃんこ大魔法
+            // 防御ダウン
             if (checkBuffExist(turn_data.enemy_debuff_list, 3)) {
                 return true;
             }
             break;
-        case 381: // 御稲荷神話(脆弱)
+        case 381: // 御稲荷神話
+            // 脆弱
             if (checkBuffExist(turn_data.enemy_debuff_list, 5)) {
                 return true;
             }
             break;
         case 422: // 必滅！ヴェインキック+
+            // 初回
             if (!unit_data.first_ultimate) {
                 return true;
             }
             break;
         case 472: // ロリータフルバースト
+        case 493: // 蒼焔ノ螺旋
             // 追加ターン
             if (unit_data.additional_turn) {
                 return true;
@@ -1579,6 +1587,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
 
     // 個別判定
     switch (buff_info.buff_id) {
+        // 選択されなかった
         case 2: // トリック・カノン(攻撃力低下)
         case 46: // 次の主役はあなた(破壊率200％未満)
         case 141: // 夢視るデザイア(SP回復)
@@ -1600,26 +1609,31 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 return;
             }
             break;
-        case 111: // 豪快！パイレーツキャノン(敵1体)
+        // 敵1体
+        case 111: // 豪快！パイレーツキャノン
             if (turn_data.enemy_count != 1) {
                 return;
             }
             break;
-        case 112: // 豪快！パイレーツキャノン(敵2体)
+        // 敵2体
+        case 112: // 豪快！パイレーツキャノン
             if (turn_data.enemy_count != 2) {
                 return;
             }
             break;
-        case 113: // 豪快！パイレーツキャノン(敵3体)
+        // 敵3体
+        case 113: // 豪快！パイレーツキャノン
             if (turn_data.enemy_count != 3) {
                 return;
             }
             break;
-        case 3315: // スイーツチャージ！(1ターン目のみ)
+        // 1ターン目のみ
+        case 3315: // スイーツチャージ！
             if (turn_data.turn_number != 1) {
                 return;
             }
             break;
+        // 初回のみ
         case 39: // ルーイン・イリュージョン(クリダメ)
         case 40: // ルーイン・イリュージョン(心眼)
         case 92: // 醒めたる思い(雷属性攻撃アップ)
@@ -1628,8 +1642,15 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 return;
             }
             break;
+        // OD中のみ
         case 76: // フローズン・ワルツ(連撃)
             if (turn_data.over_drive_max_turn == 0) {
+                return;
+            }
+            break;
+        // 追加ターンのみ
+        case 146: // 蒼焔ノ迷宮(ATTACK)(連撃)
+            if (turn_data.additional_turn) {
                 return;
             }
             break;
@@ -1705,7 +1726,11 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             });
             break;
         case BUFF_ADDITIONALTURN: // 追加ターン
-            use_unit_data.additional_turn = true;
+            target_list = getTargetList(turn_data, buff_info, place_no, use_unit_data.buff_target_chara_id);
+            $.each(target_list, function (index, target_no) {
+                let unit_data = getUnitData(turn_data, target_no);
+                unit_data.additional_turn = true;
+            });
             turn_data.additional_turn = true;
         default:
             break;
