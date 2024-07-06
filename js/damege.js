@@ -636,6 +636,14 @@ function calcDamage() {
     if (attack_info.chara_id == 45 && $("#skill_unique_cherry_blossoms").prop("checked")) {
         buff += 0.5
     }
+    // 影分身(アーデルハイト)
+    if (attack_info.chara_id == 17 && $("#skill_unique_shadow_clone_17").prop("checked")) {
+        buff += 0.3;
+    }
+    // 影分身(マリー)
+    if (attack_info.chara_id == 18 && $("#skill_unique_shadow_clone_18").prop("checked")) {
+        buff += 0.3;
+    }
 
     let critical_power = getBasePower(member_info, stat_up - 50);
     let critical_rate = getCriticalRate(member_info);
@@ -756,7 +764,7 @@ function calculateDamage(basePower, attack_info, buff, debuff, fixed, id, destru
 
     // 0以下補正
     rest_dp = rest_dp.map(dp => Math.max(0, dp));
-//    rest_hp = Math.max(0, rest_hp);
+    //    rest_hp = Math.max(0, rest_hp);
     if (id.includes("max")) {
         rest_damage.max_rest_dp = rest_dp;
         rest_damage.max_rest_hp = rest_hp;
@@ -1082,13 +1090,13 @@ function addBuffList(member_info) {
             case 8: // 属性クリティカル率アップ
             case 9: // 属性クリティカルダメージアップ
                 buff_element = value.buff_element;
+            case 2: // 心眼
             case 6: // クリ率
             case 7: // クリダメ
             case 16: // 連撃(小)
             case 17: // 連撃(大)
                 only_one = "only_one";
                 break;
-            case 2: // 心眼
             case 3: // 防御ダウン
             case 4: // 属性防御ダウン
             case 5: // 脆弱
@@ -1891,6 +1899,7 @@ function updateEnemyScoreAttack() {
         $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);
+    $("#socre_enemy_unit").val(score_attack.enemy_count);
     $("#enemy_hp").val((enemy_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
 }
 
