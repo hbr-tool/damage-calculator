@@ -290,11 +290,8 @@ function setSubMember(sub_chara_no, style_id) {
         let items = save_item.split(",");
         $.each(status_kbn, function(index, value) {
             if (index == 0) return true;
-            $("#" + value + "_" + sub_chara_no).val(items[index]);
             member_info[value] = Number(items[index]);
         });
-        $("#limit_" + sub_chara_no).val(items[7]);
-        $("#jewel_" + sub_chara_no).val(items[8]);
         member_info.limit_count = Number(items[7]);
         member_info.jewel_lv = Number(items[8]);
     } else {
