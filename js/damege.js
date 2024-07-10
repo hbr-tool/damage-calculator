@@ -2117,8 +2117,8 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
     } else {
         effect_size += (max_power - min_power) / skill_stat * status + min_power;
     }
-    if (buff_info.buff_kind != 0 && buff_info.buff_kind != 1) {
-        // 攻撃力アップと属性攻撃アップ以外はここまで
+    if (buff_info.buff_kind != 0 && buff_info.buff_kind != 1 && buff_info.buff_kind != 6) {
+        // 攻撃力アップ、属性攻撃アップ、クリティカル率アップ以外はここまで
         return effect_size;
     }
     // 宝珠分(SLvの恩恵を受けない)
