@@ -689,11 +689,15 @@ function selectUnitSkill(select) {
             case 427: // ファンタズム
                 effect_type = 4;
                 break;
+            case 495: // レッドラウンドイリュージョン
+            case 497: // 浮き浮きサニー・ボマー
+                effect_type = 5;
+                break;
             default:
                 break;
         }
         if (effect_type != 0) {
-            for (let i = 1; i <= 4; i++) {
+            for (let i = 1; i <= 5; i++) {
                 if (i == effect_type) {
                     $(`#effect_type${i}`).addClass("active");
                 } else {
@@ -719,9 +723,14 @@ function selectUnitSkill(select) {
 
         setOverDrive();
         let sp_cost = select.find('option:selected').data("sp_cost");
-        // コーシュカ・アルマータ
         if (skill_id == 199) {
+            // コーシュカ・アルマータ
             sp_cost = unit_data.sp;
+        } else if (skill_id == 495) {
+            // レッドラウンドイリュージョン
+            if (unit_data.buff_effect_select_type == 1) {
+                sp_cost /= 2;
+            }
         }
 
         updateSp(select.parent().find(".unit_sp"), sp_cost);
@@ -1576,6 +1585,12 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
                 return true;
             }
             break;
+        case 495: // レッドラウンドイリュージョン
+            // 影分身
+            if (unit_data.buff_effect_select_type == 1) {
+                return true;
+            }
+            break;
     }
     return false;
 }
@@ -1593,6 +1608,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case 2: // トリック・カノン(攻撃力低下)
         case 46: // 次の主役はあなた(破壊率200％未満)
         case 141: // 夢視るデザイア(SP回復)
+        case 497: // 浮き浮きサニー・ボマー(クリティカル率アップ/クリティカルダメージアップ/心眼)
         case 3301: // ブレスショット(SP回復)
         case 3302: // 闘気斬(SP回復)
         case 3303: // ヴィヴィットシュート(SP回復)

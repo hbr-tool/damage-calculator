@@ -68,8 +68,5 @@ td {
 
 input[type="button"].default {
   font-size: 16px;
-  color: #fff;
-  background: #149f14;
-  border-radius: 100vh;
   height: 26px;
 }

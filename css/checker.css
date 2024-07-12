@@ -36,9 +36,6 @@ div.frame {
 
 input[type="button"].default {
   font-size: 16px;
-  color: #fff;
-  background: #149f14;
-  border-radius: 100vh;
   height: 26px;
 }
 
@@ -53,9 +50,6 @@ input[type="button"].btn_post {
 input[type="button"].btn_download {
   font-size: 16px;
   width: 100px;
-  color: #fff;
-  background: #149f14;
-  border-radius: 100vh;
   height: 24px;
   margin-left: auto;
   margin-right: auto;

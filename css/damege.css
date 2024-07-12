@@ -232,9 +232,6 @@ img.sub_style {
 input[type="button"]#enemy_save {
     width: 40px;
     font-size: 12px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
 }
 
 #enemy_stat,
@@ -319,6 +316,11 @@ select#socre_enemy_unit {
 }
 
 /* バフエリア */
+#all_delete {
+    font-size: 12px;
+    width: 85px;
+    margin-left: 70px;
+}
 table tr {
     line-height: 16px;
 }
@@ -396,6 +398,9 @@ select.filed {
     display: none;
 }
 @media screen and (max-width: 615px) {
+    #all_delete {
+        margin-left: 0px;
+    }
     .buff_area {
         min-width: 365px;
         width: 95%;
@@ -526,17 +531,11 @@ div.lv select{
 input[type="button"].open_detail {
     width: 50px;
     font-size: 12px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
 }
 
 input[type="button"].durability_reflection {
     width: 150px;
     font-size: 14px;
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
 }
 
 @media screen and (max-width: 560px) {

@@ -3,24 +3,6 @@ div.frame {
     height: calc(100svh - 60px);
 }
 
-input[type="button"] {
-    color: #fff;
-    background: #149f14;
-    border-radius: 100vh;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.1s ease;
-}
-
-input[type="button"]:hover {
-    background: #1ec11e;
-}
-
-input[type="button"]:active {
-    background: #117f11;
-    transform: scale(0.95);
-}
-
 .display_area {
     width: 450px;
     font-size: 0.875rem;
@@ -160,6 +142,10 @@ img.select_style {
     width: 32px;
     background-color: rgba(0, 0, 0, 0);
     margin-left: 5px;
+}
+
+.enemy_input {
+    border: #000 solid 1px;
 }
 
 /* 補助入力 */

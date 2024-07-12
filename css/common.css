@@ -15,6 +15,25 @@
     }
 }
 
+/* ボタン */
+input[type="button"] {
+    color: #fff;
+    background: #149f14;
+    border-radius: 100vh;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+}
+
+input[type="button"]:hover {
+    background: #1ec11e;
+}
+
+input[type="button"]:active {
+    background: #117f11;
+    transform: scale(0.95);
+}
+
 /* チェックボックス */
 input[type=checkbox] {
     display: none;
