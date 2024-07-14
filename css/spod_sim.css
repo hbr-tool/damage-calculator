@@ -68,11 +68,15 @@ img.select_style {
 .limit,
 .earring,
 .bracelet,
-.chain {
+.chain,
+.init_sp {
     height: 22px;
     width: 60px;
     margin-left: 3px;
     text-align: center;
+}
+.init_sp {
+    border: #000 1px solid;
 }
 
 .limit:disabled {

@@ -480,6 +480,24 @@ function setEventTrigger() {
         localStorage.setItem("enemy_list", $(this).val());
         setEnemyStatus();
     });
+    $('.enemy_type_value').on('input', function () {
+        if (!isNaN(value)) {
+            let value = $(this).val().replace(/[^\d]/g, '');
+            let int_value = parseInt(value, 10);
+            if (int_value < 0) {
+                int_value = 0;
+            } else if (int_value > 999) {
+                int_value = 999;
+            }
+            $(this).val(int_value);
+        }
+    });
+    $('.enemy_type_value').on('blur', function () {
+        let value = parseInt($(this).val(), 10);
+        if (isNaN(value)) {
+            $(this).val('0');
+        }
+    });
     // 部隊変更ボタンクリック
     $(".troops_btn").on("click", function (event) {
         if ($(this).hasClass("selected_troops")) {
@@ -513,7 +531,12 @@ function setEventTrigger() {
         $("#battle_area").html("");
         turn_list = [];
         battle_enemy_info = getEnemyInfo();
-
+        for (let i = 1; i <= 3; i++) {
+            battle_enemy_info[`physical_${i}`] = Number($(`#enemy_physical_${i}`).val());
+        }
+        for (let i = 0; i <= 5; i++) {
+            battle_enemy_info[`element_${i}`] = Number($(`#enemy_element_${i}`).val());
+        }
         procBattleStart();
     });
     // 行動選択変更
@@ -806,6 +829,7 @@ function procBattleStart() {
         let unit = new unit_data();
         unit.place_no = index;
         if (value) {
+            unit.sp = Number($("#init_sp_" + index).val());
             unit.sp += Number($("#chain_" + index).val()) + init_sp_add;
             unit.normal_attack_element = $("#bracelet_" + index).val();
             unit.earring_effect_size = Number($(`#earring_${index} option:selected`).val());
