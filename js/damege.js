@@ -143,7 +143,7 @@ function setEventTrigger() {
         if (selected_index === 0) {
             resetSkillLv(id);
         } else {
-            let option = $(this).children().eq(selected_index);
+            let option = $(this).find("option").eq(selected_index);
             if (isOnlyBuff(option)) {
                 if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが、設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
@@ -189,7 +189,7 @@ function setEventTrigger() {
         let id = $(this).prop("id");
         $(".status_" + id).removeClass("status_" + id);
         if (selected_index !== 0) {
-            let option = $(this).children().eq(selected_index);
+            let option = $(this).find("option").eq(selected_index);
             setStatusToBuff(option, id);
         }
     });
