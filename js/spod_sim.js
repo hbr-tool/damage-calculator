@@ -1530,6 +1530,7 @@ function origin(turn_data, skill_info, unit_data) {
         case 387: // 流星+
         case 422: // 必滅！ヴェインキック+
         case 450: // 醒めたる思い
+        case 505: // ブラッディ・ダンス+
             unit_data.first_ultimate = true;
             break;
         case 177: // エリミネイト・ポッシブル
@@ -1546,7 +1547,7 @@ function origin(turn_data, skill_info, unit_data) {
 function getSpCost(turn_data, skill_info, unit) {
     let sp_cost = skill_info.sp_cost;
     if (harfSpSkill(turn_data, skill_info, unit)) {
-        sp_cost /= 2
+        sp_cost = Math.ceil(sp_cost + 2)
     }
     // 追加ターン
     if (turn_data.additional_turn) {
@@ -1586,6 +1587,7 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
             }
             break;
         case 422: // 必滅！ヴェインキック+
+        case 505: // ブラッディ・ダンス+
             // 初回
             if (!unit_data.first_ultimate) {
                 return true;

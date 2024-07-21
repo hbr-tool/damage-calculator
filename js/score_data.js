@@ -13,6 +13,7 @@ let score_attack_list = [
     { "score_attack_no": 53, "enemy_count": 1, "max_damage_rate": 0.670, "dp_rate1": 1.020, "dp_rate2": 1.020, "hp_rate1": 1.040, "hp_rate2": 1.050 },
     { "score_attack_no": 54, "enemy_count": 2, "max_damage_rate": 0.470, "dp_rate1": 1.020, "dp_rate2": 1.020, "hp_rate1": 1.040, "hp_rate2": 1.050 },
     { "score_attack_no": 55, "enemy_count": 1, "max_damage_rate": 0.670, "dp_rate1": 1.020, "dp_rate2": 1.020, "hp_rate1": 1.040, "hp_rate2": 1.050 },
+    { "score_attack_no": 56, "enemy_count": 1, "max_damage_rate": 0.670, "dp_rate1": 1.020, "dp_rate2": 1.020, "hp_rate1": 1.040, "hp_rate2": 1.050 },
 ];
 const const_score = {
     "score_dp_52": [180000, 200000, 210000, 221000, 231000, 242000, 252000, 263000, 273000, 284000, 294000, 305000, 315000, 326000, 336000, 357000, 347000, 357000, 368000, 379000, 400000, 450000, 472000, 492000, 512000, 532000, 552000, 572000, 592000, 612000, 632000, 652000, 672000, 692000, 712000, 732000, 752000, 772000, 792000, 812000, 832000],
