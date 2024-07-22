@@ -1,5 +1,5 @@
 // 貫通クリティカル
-let penetration_attack_list = [135, 137];
+let penetration_attack_list = [84, 135, 137];
 
 function setEventTrigger() {
     // リセットボタン
@@ -1000,9 +1000,19 @@ function updateEnemyResist() {
     if (penetration_attack_list.includes(attack_info.attack_id)) {
         $("#enemy_element_0").val(100);
         setEnemyElement("#enemy_element_0", 100);
-        $("#enemy_physical_2").val(400);
-        setEnemyElement("#enemy_physical_2", 400);
-    }
+        let physical = attack_info.attack_physical;
+        let week_value = 100;
+        if (attack_info.attack_id == 135) {
+            // 華麗なるファントム・シーフ
+            week_value += 400;
+        } else {
+            // 唯雅粛正(チャージ)
+            // トゥルーペネトレーター+
+            week_value += 300;
+        }
+        $(`#enemy_physical_${physical}`).val(week_value);
+        setEnemyElement(`#enemy_physical_${physical}`, week_value);
+}
     displayWeakRow();
 }
 

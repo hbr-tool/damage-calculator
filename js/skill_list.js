@@ -376,7 +376,7 @@
     {"skill_id":375,"skill_name":"キルキルヒカル","chara_id":5,"style_id":0,"sp_cost":9,"attack_id":2055,"attack_physical":1,"attack_element":4},
     {"skill_id":376,"skill_name":"破壊のシニシズム","chara_id":5,"style_id":84,"sp_cost":15,"attack_id":81,"attack_physical":1,"attack_element":4},
     {"skill_id":377,"skill_name":"主君の努め","chara_id":32,"style_id":0,"sp_cost":7,"attack_id":2024,"attack_physical":2,"attack_element":0},
-    {"skill_id":378,"skill_name":"冀望","chara_id":35,"style_id":0,"sp_cost":7,"attack_id":null,"attack_physical":1,"attack_element":null},
+    {"skill_id":378,"skill_name":"冀望","chara_id":35,"style_id":0,"sp_cost":6,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":379,"skill_name":"唯雅粛正","chara_id":35,"style_id":85,"sp_cost":18,"attack_id":83,"attack_physical":1,"attack_element":0},
     {"skill_id":380,"skill_name":"天変の相","chara_id":45,"style_id":0,"sp_cost":5,"attack_id":2151,"attack_physical":2,"attack_element":0},
     {"skill_id":381,"skill_name":"御稲荷神話","chara_id":45,"style_id":86,"sp_cost":14,"attack_id":85,"attack_physical":2,"attack_element":3},
