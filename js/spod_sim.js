@@ -1547,7 +1547,7 @@ function origin(turn_data, skill_info, unit_data) {
 function getSpCost(turn_data, skill_info, unit) {
     let sp_cost = skill_info.sp_cost;
     if (harfSpSkill(turn_data, skill_info, unit)) {
-        sp_cost = Math.ceil(sp_cost + 2)
+        sp_cost = Math.ceil(sp_cost / 2)
     }
     // 追加ターン
     if (turn_data.additional_turn) {
