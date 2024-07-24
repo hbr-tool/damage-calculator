@@ -289,6 +289,11 @@ function setEventTrigger() {
             updateBuffEffectSize($(value));
         });
     });
+    // フィールド強化変更
+    $(".strengthen_field").on("change", function (event) {
+        // フィールド効果量を更新
+        updateFieldEffectSize();
+    });
     // 前衛が3人以上の場合
     $(document).on("change", "#ability_front input", function (event) {
         let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
@@ -884,6 +889,24 @@ function renameSkill(skill_name) {
     return skill_name;
 }
 
+// フィールド効果量更新
+function updateFieldEffectSize() {
+    let option = $(".element_field").find("option:selected");
+    let buff_id = Number(option.val());
+    let skill_buff = getBuffIdToBuff(buff_id);
+    if (skill_buff) {
+        let chara_no = Number(option.data("chara_no"));
+        let member_info = chara_no < 10 ? select_style_list[chara_no] : sub_style_list[chara_no - 10];
+        let chara_id = member_info.style_info.chara_id;
+        let chara_name = getCharaData(chara_id).chara_short_name;    
+        // フィールド強化15%
+        let strengthen = $(".strengthen_field").parent().find("input").prop("checked") ? 15 : 0;
+        let effect_size = skill_buff.max_power + strengthen;
+        let effect_text = `${chara_name}: ${skill_buff.buff_name} ${Math.floor(effect_size * 100) / 100}%`;
+        option.text(effect_text).data("effect_size", effect_size).data("text_effect_size", effect_size);;
+    }
+}
+
 // バフ効果量更新
 function updateBuffEffectSize(option, skill_lv) {
     let buff_id = Number(option.val());
@@ -1164,7 +1187,8 @@ function addBuffList(member_info) {
             .addClass(only_chara_id)
             .addClass(only_other_id)
             .addClass(only_one)
-            .addClass("chara_id-" + chara_id);
+            .addClass("chara_id-" + chara_id)
+        ;
 
         $("." + str_buff).append(option);
         $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function (index, value) {
@@ -1181,6 +1205,7 @@ function addElementField(member_info, field_name, effect_size, field_element, bu
     let option = $('<option>')
         .text(option_text)
         .data("effect_size", effect_size)
+        .data("chara_no", member_info.chara_no)
         .data("limit_border", limit_border)
         .val(buff_id)
         .css("display", "none")
@@ -1394,7 +1419,8 @@ function select2ndSkill(select) {
         let option = select.find("option")[i];
         if ($(option).css("display") !== "none") {
             let buff_id = Number($(option).val());
-            if (buff_id == 1000 || buff_id == 1300 || buff_id == 1600 || buff_id == 1700) {
+            let buff_info = getBuffIdToBuff(buff_id);
+            if (buff_info.skill_id > 9000) {
                 // アタッカライズ、クリシン、コンセ、ソフニング
                 continue;
             }

@@ -196,6 +196,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
         addAttackList(member_info);
         addBuffList(member_info);
         addAbility(member_info);
+        $(".display_chara_id-" + member_info.style_info.chara_id).css("display", "block");
     }
 
     if (isTrigger) {
@@ -219,6 +220,9 @@ function removeMember(select_chara_no, isTrigger) {
     });
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
+    $(".display_chara_id-" + chara_id).css("display", "none");
+    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id  + " input").trigger("change");
     select_style_list[select_chara_no] = undefined;
     // 消費SP初期化
     $('#sp_cost_' + select_chara_no).text(0);
@@ -313,6 +317,9 @@ function setSubMember(sub_chara_no, style_id) {
     addBuffList(member_info);
     // フィールドのみ追加
     addAbility(member_info);
+    if (member_info.style_info.chara_id != 4) {
+        $(".display_chara_id-" + member_info.style_info.chara_id).css("display", "block");
+    }
 }
 
 // メンバーを外す
@@ -326,7 +333,8 @@ function removeSubMember(sub_chara_no) {
         return;
     }
     // 入れ替えスタイルのスキルを削除
-    let chara_id_class = ".chara_id-" + member_info.style_info.chara_id;
+    let chara_id = member_info.style_info.chara_id;
+    let chara_id_class = ".chara_id-" + chara_id;
     let parent = $(".include_lv " + chara_id_class + ":selected").parent();
     $.each(parent, function(index, value) {
         // 暫定的にdisplay:none追加
@@ -334,7 +342,10 @@ function removeSubMember(sub_chara_no) {
         select2ndSkill($("#" + $(value).prop("id")));
     });
     // 該当メンバーのスキル削除
-    $(chara_id_class).remove();   
+    $(chara_id_class).remove();
+    $(".display_chara_id-" + chara_id).css("display", "none");
+    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id  + " input").trigger("change");
     sub_style_list[sub_chara_no] = undefined;
 }
 
