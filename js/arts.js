@@ -36,9 +36,9 @@ function setEventTrigger() {
         deck_count = 0;
         setDeckCount();
     });
-    //生成ボタン
+    // 生成ボタン
     $('#outputBtn').click(function () {
-        combineImagesWithHatching(null);
+        combineImagesWithHatching();
     });
 }
 
@@ -81,13 +81,14 @@ function createArtsList() {
         if (arts_select) {
             arts_select_list[value] = arts_select.split(",");
         } else {
-            arts_select_list[value] = Array(18).fill(0);
+            arts_select_list[value] = Array(24).fill(0);
         }
     });
     $.each(arts_list, function (index, value) {
         let source = "arts/" + value.image_url;
         let opacity = 0.3;
-        let select = arts_select_list[value.troops][index % 18];
+        let idx = (Number(value.rarity) - 1) * 6 + Number(value.chara_id) - 1;
+        let select = arts_select_list[value.troops][idx];
         if (select == "1") {
             deck_count += 1;
             opacity = 1;
@@ -106,13 +107,13 @@ function createArtsList() {
 }
 
 // 画像を生成して Canvas に描画する関数
-function combineImagesWithHatching(create_style) {
+function combineImagesWithHatching() {
     let canvas = document.createElement('canvas');
     let context = canvas.getContext('2d');
     // Canvas サイズを設定
     let separate = 5;
     let columns = 12;
-    let rows = Math.ceil(arts_list.length / columns);
+    let rows = 10;
     // 画像の横幅と高さを半分に縮小
     let scaledWidth = Math.floor(512 / 4);
     let scaledHeight = Math.floor(702 / 4);
@@ -128,7 +129,7 @@ function combineImagesWithHatching(create_style) {
         if (arts_select) {
             arts_select_list[value] = arts_select.split(",");
         } else {
-            arts_select_list[value] = Array(18).fill(0);
+            arts_select_list[value] = Array(24).fill(0);
         }
     });
 
@@ -136,13 +137,14 @@ function combineImagesWithHatching(create_style) {
     // 画像をロードして描画
     $.each(arts_list, function (index, value) {
         let img = $('<img>');
-        let select = arts_select_list[value.troops][index % 18];
+        let idx = (Number(value.rarity) - 1) * 6 + Number(value.chara_id) - 1;
+        let select = arts_select_list[value.troops][idx];
 
         // 画像の読み込みを管理するプロミスを作成し、配列に追加する
         let promise = new Promise(function (resolve, reject) {
             img.on('load', function () {
-                let [row, col] = getRowColumn(index);
-                let adjustRow = (Math.floor(row / 3) + 1) * separate;
+                let [row, col] = getRowColumn(value.troops, Number(value.rarity), Number(value.chara_id));
+                let adjustRow = (Math.floor(row / 4) + 1) * separate;
                 let adjustCol = (Math.floor(col / 6) + 1) * separate;
                 context.drawImage(img[0], col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
 
@@ -167,13 +169,30 @@ function combineImagesWithHatching(create_style) {
 }
 
 // 行と列の番号を計算する
-function getRowColumn(number) {
-    let stage = Math.floor(number / 36);
-    let vertical = Math.floor((number % 18) / 6);
-    let mass = Math.floor((number % 36) / 18);
-    let beside = number % 6;
+function getRowColumn(troops, rarity, chara_id) {
+    let stage = 0;
+    let mass = 0;
+    if (troops == "31A") {
+        stage = 0;
+        mass = 0;
+    } else if (troops == "31B") {
+        stage = 0;
+        mass = 1;
+    } else if (troops == "31C") {
+        stage = 4;
+        mass = 0;
+    } else if (troops == "31E") {
+        stage = 4;
+        mass = 1;
+    } else if (troops == "31F") {
+        stage = 7;
+        mass = 0;
+    }
 
-    let row = stage * 3 + vertical;
+    let vertical = rarity - 1;
+    let beside = chara_id - 1;
+
+    let row = stage + vertical;
     let column = mass * 6 + beside;
     return [row, column];
 }
