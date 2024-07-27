@@ -936,36 +936,34 @@ function getStrengthen(member_info, skill_buff) {
     // 攻撃力アップ/属性攻撃力アップ
     let attack_up = [0, 1];
     if (attack_up.includes(skill_buff.buff_kind)) {
-        let ability_id3 = member_info.style_info.ability3;
-        let ability_id0 = member_info.style_info.ability0;
+        let ability_list = [member_info.style_info.ability0, member_info.style_info.ability00, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
         // 機転
-        if (ability_id3 == 501 && member_info.limit_count >= 3) {
+        if (ability_list.includes(501) && member_info.limit_count >= 3) {
             strengthen += 25;
         }
         // 増幅
-        if (ability_id0 == 503) {
+        if (ability_list.includes(503)) {
             strengthen += 10;
         }
         // エクシード(菅原専用)
-        if (ability_id3 == 505 && $("#ability_all462").prop("checked")) {
+        if (ability_list.includes(505) && $("#ability_all463").prop("checked")) {
             strengthen += 30;
         }
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
     let defense_down = [3, 4, 19, 20, 21, 22];
     if (defense_down.includes(skill_buff.buff_kind)) {
+        let ability_list = [member_info.style_info.ability0, member_info.style_info.ability00, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
         // 侵食
-        let ability_id3 = member_info.style_info.ability3;
-        if (ability_id3 == 502 && member_info.limit_count >= 3) {
+        if (ability_list.includes(502) && member_info.limit_count >= 3) {
             strengthen += 25;
         }
         // 減退
-        let ability_id0 = member_info.style_info.ability0;
-        if (ability_id0 == 504) {
+        if (ability_list.includes(504) ) {
             strengthen += 10;
         }
         // モロイウオ(あいな専用)
-        if (ability_id3 == 506 && $("#ability_all242").prop("checked") && skill_buff.sp_cost <= 8) {
+        if (ability_list.includes(506)  && $("#ability_all243").prop("checked") && skill_buff.sp_cost <= 8) {
             strengthen += 30;
         }
     }
@@ -1218,7 +1216,7 @@ function addElementField(member_info, field_name, effect_size, field_element, bu
 // アビリティ追加
 function addAbility(member_info) {
     let chara_id = member_info.style_info.chara_id;
-    let ability_list = [member_info.style_info.ability0, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
+    let ability_list = [member_info.style_info.ability0, member_info.style_info.ability00, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
     let is_select = member_info.is_select;
 
     for (let index = 0; index < ability_list.length; index++) {
@@ -1232,7 +1230,7 @@ function addAbility(member_info) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
         }
-        let limit_border = index == 0 ? 0 : (index === 1 ? 1 : (index === 2 ? 3 : (index === 3 ? 5 : 10)));
+        let limit_border = index <= 1 ? 0 : (index === 2 ? 1 : (index === 3 ? 3 : (index === 4 ? 5 : 10)));
         let display = "none";
 
         if ((ability_info.ability_element === 0 && ability_info.ability_physical == 0)
