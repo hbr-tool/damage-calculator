@@ -1,39 +1,63 @@
+const troop_list = ["31A", "31B", "31C", "31E", "31F"];
+const endless2nd = ["31A", "31B", "31C", "31E"];
+const endless3rd = ["31A", "31B", "31C", "31F"];
+const MAX_TROOPS_ARTS_COUNT = 24;
+const TROOPS_ARTS_COUNT = {
+    "31A": 4,
+    "31B": 3,
+    "31C": 3,
+    "31E": 3,
+    "31F": 3,
+}
+
 // イベントトリガー設定
 function setEventTrigger() {
     // スタイルクリック
     $(".select_arts").on('click', function () {
-        let select = $(this).data("select");
+        let select = $(this).hasClass("selected");
         let troops = $(this).data("troops");
 
         if (select == "1") {
             released($(this), troops);
-            deck_count -= 1;
         } else {
             selected($(this), troops);
-            deck_count += 1;
         }
         setDeckCount();
     });
     // 全選択
     $("#btn_select").on('click', function () {
         $(".select_arts").each(function (index, value) {
-            selected($(this));
+            if ($(this).is(':visible')) {
+                selected($(this));
+            }
         });
         $.each(troop_list, function (index, value) {
             saveLocalStrage(value);
         });
-        deck_count = arts_list.length;
         setDeckCount();
     });
     // 全解除
     $("#btn_release").on('click', function () {
         $(".select_arts").each(function (index, value) {
-            released($(this));
+            if ($(this).is(':visible')) {
+                released($(this));
+            }
         });
         $.each(troop_list, function (index, value) {
             saveLocalStrage(value);
         });
-        deck_count = 0;
+        setDeckCount();
+    });
+    // 表示変更
+    $("#show_arts").on('change', function () {
+        let show_list = getShowTroopsList()
+        $.each(troop_list, function (index, value) {
+            if (show_list.includes(value)) {
+                $(`#arts_list_${value}`).show();
+            } else {
+                $(`#arts_list_${value}`).hide();
+            }
+        });
         setDeckCount();
     });
     // 生成ボタン
@@ -42,22 +66,35 @@ function setEventTrigger() {
     });
 }
 
+// 表示部隊リスト取得
+function getShowTroopsList() {
+    let show_list = troop_list;
+    switch ($("#show_arts").val()) {
+        case "2":
+            show_list = endless2nd;
+            break;
+        case "3":
+            show_list = endless3rd;
+            break;
+    }
+    return show_list
+}
+
 // デッキ枚数設定
 function setDeckCount() {
+    let deck_count = $(".select_arts.selected").filter(':visible').length;
     $("#deck_count").text(deck_count + "枚");
 }
 
 // 選択
 function selected(item, troops) {
-    item.css("opacity", "1");
-    item.data("select", "1");
+    item.addClass("selected");
     saveLocalStrage(troops);
 }
 
 // 解除
 function released(item, troops) {
-    item.css("opacity", "0.3");
-    item.data("select", "0");
+    item.removeClass("selected");
     saveLocalStrage(troops);
 }
 
@@ -68,9 +105,17 @@ function saveLocalStrage(troops) {
     }
     let selectValues = [];
     $('#arts_list_' + troops).children().each(function () {
-        selectValues.push($(this).data('select'));
+        selectValues.push($(this).hasClass('selected') ? "1" : "0");
     });
     localStorage.setItem("arts_select_" + troops, selectValues.join(','));
+}
+
+// 部隊リスト作成
+function createTroopList() {
+    $.each(troop_list, function (index, value) {
+        let div = $("<div>").prop("id", `arts_list_${value}`).addClass(`troops flex flex-wrap troops_${value} h-min`)
+        $("#arts_troops").append(div);
+    });
 }
 
 // アーツリスト作成
@@ -81,27 +126,24 @@ function createArtsList() {
         if (arts_select) {
             arts_select_list[value] = arts_select.split(",");
         } else {
-            arts_select_list[value] = Array(24).fill(0);
+            arts_select_list[value] = Array(MAX_TROOPS_ARTS_COUNT).fill(0);
         }
     });
     $.each(arts_list, function (index, value) {
         let source = "arts/" + value.image_url;
-        let opacity = 0.3;
+        // let opacity = 0.3;
         let idx = (Number(value.rarity) - 1) * 6 + Number(value.chara_id) - 1;
         let select = arts_select_list[value.troops][idx];
-        if (select == "1") {
-            deck_count += 1;
-            opacity = 1;
-        }
-
         let input = $('<input>')
             .attr("type", "image")
             .attr("src", source)
             .data("select", select)
             .data("troops", value.troops)
-            .addClass("select_arts")
-            .css("opacity", opacity);
-        $("#arts_list_" + value.troops.replace("!", "")).append(input);
+            .addClass("select_arts");
+        if (select == "1") {
+            input.addClass("selected");
+        }
+        $("#arts_list_" + value.troops).append(input);
     });
     setDeckCount();
 }
@@ -113,7 +155,9 @@ function combineImagesWithHatching() {
     // Canvas サイズを設定
     let separate = 5;
     let columns = 12;
-    let rows = 10;
+
+    let show_list = getShowTroopsList();
+    let rows = getRowSize(show_list);
     // 画像の横幅と高さを半分に縮小
     let scaledWidth = Math.floor(512 / 4);
     let scaledHeight = Math.floor(702 / 4);
@@ -129,13 +173,16 @@ function combineImagesWithHatching() {
         if (arts_select) {
             arts_select_list[value] = arts_select.split(",");
         } else {
-            arts_select_list[value] = Array(24).fill(0);
+            arts_select_list[value] = Array(MAX_TROOPS_ARTS_COUNT).fill(0);
         }
     });
 
     let promises = [];
     // 画像をロードして描画
     $.each(arts_list, function (index, value) {
+        if (!show_list.includes(value.troops)) {
+            return true;
+        }
         let img = $('<img>');
         let idx = (Number(value.rarity) - 1) * 6 + Number(value.chara_id) - 1;
         let select = arts_select_list[value.troops][idx];
@@ -143,7 +190,7 @@ function combineImagesWithHatching() {
         // 画像の読み込みを管理するプロミスを作成し、配列に追加する
         let promise = new Promise(function (resolve, reject) {
             img.on('load', function () {
-                let [row, col] = getRowColumn(value.troops, Number(value.rarity), Number(value.chara_id));
+                let [row, col] = getRowColumn(show_list, value.troops, Number(value.rarity), Number(value.chara_id));
                 let adjustRow = (Math.floor(row / 4) + 1) * separate;
                 let adjustCol = (Math.floor(col / 6) + 1) * separate;
                 context.drawImage(img[0], col * scaledWidth + adjustCol, row * scaledHeight + adjustRow, scaledWidth, scaledHeight);
@@ -159,7 +206,7 @@ function combineImagesWithHatching() {
         promises.push(promise);
     });
 
-    Promise.all(promises).then(function() {
+    Promise.all(promises).then(function () {
         // ダウンロードリンクを作成し、クリック時にダウンロードされるよう設定
         let downloadLink = document.createElement('a');
         downloadLink.href = canvas.toDataURL();
@@ -168,26 +215,40 @@ function combineImagesWithHatching() {
     });
 }
 
+// 画像の行サイズ取得
+function getRowSize(show_list) {
+    let stage = 0;
+    let add = 0;
+    $.each(show_list, function (index, value) {
+        if (index % 2 == 0) {
+            add = TROOPS_ARTS_COUNT[value];
+        } else {
+            add = add > TROOPS_ARTS_COUNT[value] ? add : TROOPS_ARTS_COUNT[value];
+            stage += add;
+            add = 0;
+        }
+    });
+    return stage + add;
+}
+
 // 行と列の番号を計算する
-function getRowColumn(troops, rarity, chara_id) {
+function getRowColumn(show_list, troops, rarity, chara_id) {
     let stage = 0;
     let mass = 0;
-    if (troops == "31A") {
-        stage = 0;
-        mass = 0;
-    } else if (troops == "31B") {
-        stage = 0;
-        mass = 1;
-    } else if (troops == "31C") {
-        stage = 4;
-        mass = 0;
-    } else if (troops == "31E") {
-        stage = 4;
-        mass = 1;
-    } else if (troops == "31F") {
-        stage = 7;
-        mass = 0;
-    }
+
+    let add = 0;
+    $.each(show_list, function (index, value) {
+        if (value == troops) {
+            mass = index % 2;
+            return false;
+        }
+        if (index % 2 == 0) {
+            add = TROOPS_ARTS_COUNT[value];
+        } else {
+            add = add > TROOPS_ARTS_COUNT[value] ? add : TROOPS_ARTS_COUNT[value];
+            stage += add;
+        }
+    });
 
     let vertical = rarity - 1;
     let beside = chara_id - 1;
