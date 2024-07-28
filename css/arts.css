@@ -29,10 +29,10 @@ div.frame {
   background-color: black;
 }
 
-input[type="button"].default {
-  font-size: 14px;
-  color: #fff;
-  background: #149f14;
-  border-radius: 100vh;
-  height: 26px;
+.selected {
+  opacity : 1!important;
+}
+
+.select_arts {
+  opacity : 0.3;
 }
