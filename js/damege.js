@@ -966,6 +966,10 @@ function getStrengthen(member_info, skill_buff) {
         if (ability_list.includes(506)  && $("#ability_all243").prop("checked") && skill_buff.sp_cost <= 8) {
             strengthen += 30;
         }
+        // 王の眼差し
+        if (ability_list.includes(507)  && $("#ability_front11").prop("checked")) {
+            strengthen += 25;
+        }
     }
     return strengthen;
 }
@@ -1298,7 +1302,7 @@ function addAbility(member_info) {
             .addClass("ability")
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
-        if (ability_id == 505 || ability_id == 506) {
+        if (ability_id == 505 || ability_id == 506 || ability_id == 507) {
             input.addClass("strengthen_ability");
             fg_update = true;
         }
