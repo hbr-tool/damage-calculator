@@ -1611,12 +1611,12 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
                 return true;
             }
             break;
-        case 495: // レッドラウンドイリュージョン
-            // 影分身
-            if (unit_data.buff_effect_select_type == 1) {
-                return true;
-            }
-            break;
+        // case 495: // レッドラウンドイリュージョン
+        //     // 影分身
+        //     if (unit_data.buff_effect_select_type == 1) {
+        //         return true;
+        //     }
+        //     break;
     }
     return false;
 }
