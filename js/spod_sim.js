@@ -772,7 +772,7 @@ function selectUnitSkill(select) {
 
 // 行動制限
 function updateAction(turn_data) {
-    let is_over_drive = (turn_data.over_drive_gauge + turn_data.add_over_drive_gauge) > 100;
+    let is_over_drive = (turn_data.over_drive_gauge + turn_data.add_over_drive_gauge) >= 100;
     toggleItemVisibility($(`.turn${last_turn} select.action_select option[value='2']`), is_over_drive);
 }
 
