@@ -267,8 +267,64 @@ function setEventTrigger() {
             });
         }
     });
+    // 入力制限
+    $(".limit_number").on("change", function (event) {
+        let min = parseInt(this.min);
+        let max = parseInt(this.max);
+        let value = parseInt(this.value);
+        if (value < min) {
+            this.value = min;
+        }
+        if (value > max) {
+            this.value = max;
+        }
+    });
+    // バイクパーツ交換
+    $(".bike_parts").on("change", function () {
+        let has_charge = false;
+        let has_mindeye = false;
+        let has_funnel = false;
+        $('.bike_parts').each(function () {
+            if ($(this).val() === "3") {
+                has_charge = true;
+            }
+            if ($(this).val() === "6") {
+                has_mindeye = true;
+            }
+            if ($(this).val() === "8") {
+                has_funnel = true;
+            }
+        });
+        if (has_charge) {
+            toggleItemVisibility(`.skill_id-8001`, true);
+            $(".charge").each(function (index, value) {
+                sortEffectSize($(value));
+                select2ndSkill($(value));
+            });
+        } else {
+            toggleItemVisibility(`.skill_id-8001`, false);
+        }
+        if (has_mindeye) {
+            toggleItemVisibility(`.skill_id-8002`, true);
+            $(".mindeye").each(function (index, value) {
+                sortEffectSize($(value));
+                select2ndSkill($(value));
+            });
+        } else {
+            toggleItemVisibility(`.skill_id-8002`, false);
+        }
+        if (has_funnel) {
+            toggleItemVisibility(`.skill_id-8003`, true);
+            $(".funnel").each(function (index, value) {
+                sortEffectSize($(value));
+                select2ndSkill($(value));
+            });
+        } else {
+            toggleItemVisibility(`.skill_id-8003`, false);
+        }
+    });
     // 士気/夢の泪レベル変更
-    $("#morale_count, #tears_of_dreams").on("change", function (event) {
+    $("#morale_count, #tears_of_dreams, #all_status_up").on("change", function (event) {
         // バフ効果量を更新
         $(".variable_effect_size").each(function (index, value) {
             updateBuffEffectSize($(value));
@@ -597,23 +653,28 @@ function calcDamage() {
     let grade_sum = getGradeSum();
 
     // 闘志
-    let fightingspirit = $("#fightingspirit").prop("checked") ? -20 : 0;
+    let fightingspirit = $("#fightingspirit").prop("checked") ? 20 : 0;
     // 厄
-    let misfortune = $("#misfortune").prop("checked") ? -20 : 0;
+    let misfortune = $("#misfortune").prop("checked") ? 20 : 0;
     // 士気
-    let morale = Number($("#morale_count").val()) * -5;
+    let morale = Number($("#morale_count").val()) * 5;
     // 夢の泪
     let tears_of_dreams = 0;
     if ($("#enemy_class").val() == 1) {
         tears_of_dreams = Number($("#tears_of_dreams").val()) * tears_of_dreams_list[Number($("#enemy_list").val())];
     }
+    // 全能力アップ
+    let all_status_up = 0;
+    if ($("#enemy_class").val() == 11) {
+        all_status_up = Number($("#all_status_up").val());
+    }
     // メンバー
     let chara_no = $("#attack_list option:selected").data("chara_no");
     let member_info = select_style_list[chara_no];
     // 闘志or士気
-    let stat_up = (morale < fightingspirit ? morale : fightingspirit) - tears_of_dreams;
+    let stat_up = (morale > fightingspirit ? morale : fightingspirit) + tears_of_dreams + all_status_up;
 
-    let basePower = getBasePower(member_info, stat_up + misfortune);
+    let basePower = getBasePower(member_info, stat_up, misfortune);
     let buff = getSumBuffEffectSize();
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
@@ -657,7 +718,7 @@ function calcDamage() {
         buff += 0.3;
     }
 
-    let critical_power = getBasePower(member_info, stat_up - 50);
+    let critical_power = getBasePower(member_info, stat_up, 50);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
     // 貫通クリティカル
@@ -898,7 +959,7 @@ function updateFieldEffectSize() {
         let chara_no = Number(option.data("chara_no"));
         let member_info = chara_no < 10 ? select_style_list[chara_no] : sub_style_list[chara_no - 10];
         let chara_id = member_info.style_info.chara_id;
-        let chara_name = getCharaData(chara_id).chara_short_name;    
+        let chara_name = getCharaData(chara_id).chara_short_name;
         // フィールド強化15%
         let strengthen = $(".strengthen_field").parent().find("input").prop("checked") ? 15 : 0;
         let effect_size = skill_buff.max_power + strengthen;
@@ -959,15 +1020,15 @@ function getStrengthen(member_info, skill_buff) {
             strengthen += 25;
         }
         // 減退
-        if (ability_list.includes(504) ) {
+        if (ability_list.includes(504)) {
             strengthen += 10;
         }
         // モロイウオ(あいな専用)
-        if (ability_list.includes(506)  && $("#ability_all243").prop("checked") && skill_buff.sp_cost <= 8) {
+        if (ability_list.includes(506) && $("#ability_all243").prop("checked") && skill_buff.sp_cost <= 8) {
             strengthen += 30;
         }
         // 王の眼差し
-        if (ability_list.includes(507)  && $("#ability_front11").prop("checked")) {
+        if (ability_list.includes(507) && $("#ability_front11").prop("checked")) {
             strengthen += 25;
         }
     }
@@ -1037,7 +1098,7 @@ function updateEnemyResist() {
         }
         $(`#enemy_physical_${physical}`).val(week_value);
         setEnemyElement(`#enemy_physical_${physical}`, week_value);
-}
+    }
     displayWeakRow();
 }
 
@@ -1106,7 +1167,7 @@ function createSkillLvList(id, max_lv, select_lv) {
 function addBuffList(member_info) {
     let chara_id = member_info.style_info.chara_id;
     let buff_list = skill_buff.filter(obj =>
-        (obj.chara_id === chara_id || obj.chara_id === 0) &&
+        (obj.chara_id === chara_id || (obj.chara_id === 0 && obj.chara_id < 500)) &&
         (obj.style_id === member_info.style_info.style_id || obj.style_id === 0)
     );
 
@@ -1190,7 +1251,7 @@ function addBuffList(member_info) {
             .addClass(only_other_id)
             .addClass(only_one)
             .addClass("chara_id-" + chara_id)
-        ;
+            ;
 
         $("." + str_buff).append(option);
         $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function (index, value) {
@@ -1605,6 +1666,8 @@ function getSumBuffEffectSize() {
     sum_buff += Number($("#morale_count").val()) * 5;
     // 永遠なる誓い
     sum_buff += $("#eternal_vows").prop("checked") ? 50 : 0;
+    // 制圧戦
+    sum_buff += getBikePartsEffectSize("buff");
     return 1 + sum_buff / 100;
 }
 
@@ -1612,7 +1675,10 @@ function getSumBuffEffectSize() {
 function getSumDebuffEffectSize() {
     // スキルデバフ合計
     let sum_debuff = getSumEffectSize("debuff");
+    // 防御ダウンアビリティ
     sum_debuff += getSumAbilityEffectSize(2);
+    // 制圧戦
+    sum_debuff += getBikePartsEffectSize("debuff");
     return 1 + sum_debuff / 100;
 }
 
@@ -1686,6 +1752,50 @@ function getSumTokenEffectSize(buff_id, chara_no, skill_lv) {
     return 1;
 }
 
+// 制圧戦のバイクパーツ取得
+function getBikePartsEffectSize(buff_kind) {
+    // 制圧戦以外は無し
+    if ($("#enemy_class").val() != 11) {
+        return 0;
+    }
+    let buff = 0;
+    let debuff = 0;
+    let critical_rate = 0;
+    let critical_buff = 0;
+    for (let i = 1; i <= 3; i++) {
+        let option = Number($(`#bike_parts_${i}`).val());
+        switch (option) {
+            case 1: // 攻撃＋
+                buff += 20;
+                break;
+            case 2: // クリティカル率＋
+                critical_rate += 30;
+                break;
+            case 4: // 敵防御ダウン
+                debuff += 30;
+                break;
+            case 5: // 攻撃＋＋
+                buff += 50;
+                break;
+            case 7: // クリティカル率ダメージ＋
+                critical_buff += 30;
+                break;
+        }
+    }
+    switch (buff_kind) {
+        case "buff":
+            return buff;
+        case "debuff":
+            return debuff;
+        case "critical_rate":
+            return critical_rate;
+        case "critical_buff":
+            return critical_buff;
+        default:
+            return 0;
+    }
+}
+
 // クリティカル率取得
 function getCriticalRate(member_info) {
     let critical_rate = 1.5;
@@ -1700,6 +1810,8 @@ function getCriticalRate(member_info) {
     critical_rate = critical_rate < 0 ? 0 : critical_rate;
     // 永遠なる誓い
     critical_rate += $("#eternal_vows").prop("checked") ? 15 : 0;
+    // 制圧戦
+    critical_rate += getBikePartsEffectSize("critical_rate");
     return critical_rate > 100 ? 100 : critical_rate;
 }
 
@@ -1710,6 +1822,8 @@ function getCriticalBuff() {
     critical_buff += getSumAbilityEffectSize(4);
     // 星空の航路+
     critical_buff += $("option.skill_id-490:selected").length * 30;
+    // 制圧戦
+    critical_buff += getBikePartsEffectSize("critical_buff");
     return 1 + critical_buff / 100;
 }
 
@@ -1795,6 +1909,27 @@ function createEnemyList(enemy_class) {
         $(".sub_party").css("display", "block");
     } else {
         $(".sub_party").css("display", "none");
+    }
+    if (enemy_class == 11) {
+        // 制圧戦、バイクバフを表示する。
+        $(".bike_buff").css("display", "block");
+        $(".bike_parts").val(0);
+        // メンバー情報作成
+        let member_info = new Member();
+        member_info.is_select = true;
+        member_info.chara_no = 6;
+        let style_info = {};
+        style_info.chara_id = 501;
+        style_info.jewel_type = 0;
+        member_info.style_info = style_info;
+        select_style_list[6] = member_info;
+        addBuffList(member_info);
+    } else {
+        if(select_style_list[6]) {
+            removeMember(6, true);
+            select_style_list[6] = undefined;
+        }
+        $(".bike_buff").css("display", "none");
     }
     if (enemy_class == 99) {
         // 自由入力の場合、入力を解除する
@@ -2074,7 +2209,7 @@ function getAttackInfo() {
 }
 
 // 基礎攻撃力取得
-function getBasePower(member_info, correction) {
+function getBasePower(member_info, member_correction, enemy_correction) {
     let jewel_lv = 0;
     if (member_info.style_info.jewel_type == "1") {
         jewel_lv = member_info.jewel_lv;
@@ -2083,18 +2218,18 @@ function getBasePower(member_info, correction) {
     let molecule = 0;
     let denominator = 0;
     if (attack_info.ref_status_1 != 0) {
-        molecule += member_info[status_kbn[attack_info.ref_status_1]] * 2;
+        molecule += (member_info[status_kbn[attack_info.ref_status_1]] + member_correction) * 2;
         denominator += 2;
     }
     if (attack_info.ref_status_2 != 0) {
-        molecule += member_info[status_kbn[attack_info.ref_status_2]];
+        molecule += member_info[status_kbn[attack_info.ref_status_2]] + member_correction;
         denominator += 1;
     }
     if (attack_info.ref_status_3 != 0) {
-        molecule += member_info[status_kbn[attack_info.ref_status_3]];
+        molecule += member_info[status_kbn[attack_info.ref_status_3]] + member_correction;
         denominator += 1;
     }
-    let enemy_stat = Number($("#enemy_stat").val()) + correction;
+    let enemy_stat = Number($("#enemy_stat").val()) - enemy_correction;
     let status = molecule / denominator;
 
     let skill_lv = Number($("#skill_lv option:selected").val());
@@ -2146,7 +2281,7 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
         skill_lv = buff_info.max_lv;
     }
     // 固定量のバフ
-    if (status_kbn[buff_info.ref_status_1] == 0) {
+    if (status_kbn[buff_info.ref_status_1] == 0 || buff_info.min_power == buff_info.max_power) {
         return buff_info.min_power;
     }
     // 士気
@@ -2250,12 +2385,19 @@ function getFunnelEffectSize(buff_id, member_info, skill_lv) {
 
 // ステータスアップ取得
 function getStatUp() {
+    // 士気
     let morale = Number($("#morale_count").val()) * 5;
     let tears_of_dreams = 0;
+    // 夢の泪
     if ($("#enemy_class").val() == 1) {
         tears_of_dreams = Number($("#tears_of_dreams").val()) * tears_of_dreams_list[Number($("#enemy_list").val())];
     }
-    return morale + tears_of_dreams;
+    // メンバー全能力アップ
+    let all_status_up = 0;
+    if ($("#enemy_class").val() == 11) {
+        all_status_up = Number($("#all_status_up").val());
+    }
+    return morale + tears_of_dreams + all_status_up;
 }
 
 // DPゲージ設定

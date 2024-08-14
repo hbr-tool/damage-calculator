@@ -50,5 +50,6 @@ let chara_data = [
     {"chara_id":101,"chara_name":"立華かなで","chara_short_name":"かなで","troops":"AB!","physical":1,"pursuit":2},
     {"chara_id":102,"chara_name":"仲村ゆり","chara_short_name":"ゆり","troops":"AB!","physical":2,"pursuit":1},
     {"chara_id":103,"chara_name":"入江みゆき","chara_short_name":"みゆき","troops":"AB!","physical":3,"pursuit":3},
-    {"chara_id":104,"chara_name":"渕田ひさ子","chara_short_name":"ひさ子","troops":"AB!","physical":3,"pursuit":2},    
+    {"chara_id":104,"chara_name":"渕田ひさ子","chara_short_name":"ひさ子","troops":"AB!","physical":3,"pursuit":2},
+    {"chara_id":501,"chara_name":"七瀬七海","chara_short_name":"七海","troops":"HEA","physical":0,"pursuit":0},
 ];

@@ -46,7 +46,7 @@ function setEventTrigger() {
         });
     });
 
-    $(window).on('resize', function() {
+    $(window).on('resize', function () {
         updateHeight();
     });
 };
@@ -150,7 +150,10 @@ function addOrbColumn(columns, value) {
 
 // キャラデータ取得
 function replaceCharaData(jsondata) {
-    let edited_chara_data = JSON.parse(JSON.stringify(chara_data));
+    let edited_chara_data = JSON.parse(JSON.stringify(chara_data.filter(function (chara) {
+        // chara_idが500以上のものを排除
+        return chara.chara_id < 500;
+    })));
 
     // chara_dataのループを行う
     edited_chara_data.forEach(value => {
