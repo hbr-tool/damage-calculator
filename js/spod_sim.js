@@ -78,7 +78,6 @@ class turn_data {
 
     // 0:先打ちOD,1:通常戦闘,2:後打ちOD,3:追加ターン
     turnProceed(kb_next) {
-        let self = this;
         this.enemy_debuff_list.sort((a, b) => a.buff_kind - b.buff_kind);
         if (kb_next == KB_NEXT_ACTION) {
             // オーバードライブ
@@ -94,30 +93,11 @@ class turn_data {
                     this.over_drive_max_turn = 0;
                     this.over_drive_turn = 0;
                     if (this.fg_action) {
-                        this.turn_number++;
-                        this.fg_action = false;
+                        this.nextTurn();
                     }
-                    // 敵のデバフ消費
-                    this.debuffConsumption();
                 }
             } else {
-                // 通常進行
-                $.each(this.unit_list, function (index, unit) {
-                    if (!unit.blank) {
-                        unit.unitTurnProceed(self);
-                    }
-                });
-                this.turn_number++;
-                this.abilityAction(KB_ABILIRY_SELF_START);
-                this.fg_action = false;
-                if (this.turn_number % this.step_turn == 0) {
-                    this.over_drive_gauge += this.step_over_drive_down;
-                    if (this.over_drive_gauge < 0) {
-                        this.over_drive_gauge = 0;
-                    }
-                }
-                // 敵のデバフ消費
-                this.debuffConsumption();
+                this.nextTurn();
             }
         } else {
             // OD
@@ -140,6 +120,26 @@ class turn_data {
                 this.fg_action = false;
             }
         }
+    }
+    nextTurn() {
+        let self = this;
+        // 通常進行
+        $.each(this.unit_list, function (index, unit) {
+            if (!unit.blank) {
+                unit.unitTurnProceed(self);
+            }
+        });
+        this.turn_number++;
+        this.fg_action = false;
+        this.abilityAction(KB_ABILIRY_SELF_START);
+        if (this.turn_number % this.step_turn == 0) {
+            this.over_drive_gauge += this.step_over_drive_down;
+            if (this.over_drive_gauge < 0) {
+                this.over_drive_gauge = 0;
+            }
+        }
+        // 敵のデバフ消費
+        this.debuffConsumption();
     }
     unitSort() {
         this.unit_list.sort((a, b) => a.place_no - b.place_no);
@@ -553,7 +553,11 @@ function setEventTrigger() {
             setOverDrive();
         }
     });
-
+    // スキル変更
+    $(document).on("change", "select.enemy_count", function (event) {
+        // ODゲージを設定
+        setOverDrive();
+    });
     // スキル変更
     $(document).on("change", "select.unit_skill", function (event) {
         // スキル変更処理
@@ -600,7 +604,9 @@ function setEventTrigger() {
         removeTurnsAfter(last_turn);
         now_turn = turn_list[turn_list.length - 1];
 
-        $(`.turn${last_turn} select.unit_skill`).prop("disabled", false);
+        if ($(`.turn${last_turn} select.action_select`).val() != KB_NEXT_OD) {
+            $(`.turn${last_turn} select.unit_skill`).prop("disabled", false);
+        }
         $(`.turn${last_turn} select.action_select`).prop("disabled", false);
         addUnitEvent();
         setTurnButton();
@@ -918,7 +924,7 @@ function proceedTurn(turn_data, kb_next) {
         $('<img>').attr("src", "icon/BtnEventBattleActive.webp").addClass("enemy_icon"),
         $("<select>").attr("id", `enemy_count_turn${last_turn}`).append(
             ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`×${i + 1}体`))
-        ).val(turn_data.enemy_count),
+        ).val(turn_data.enemy_count).addClass("enemy_count"),
         createBuffIconList(turn_data.enemy_debuff_list, 5, 7).addClass("enemy_icon_list")
     );
     let over_drive = createOverDriveGauge(turn_data.over_drive_gauge);
