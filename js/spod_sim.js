@@ -1232,7 +1232,7 @@ function getBuffIconImg(buff_info) {
 function createOverDriveGauge(over_drive_gauge) {
     let over_drive = $('<div>').addClass("flex");
     let over_drive_label = $('<label>').addClass("od_text");
-    let over_drive_img = $('<div>').append($('<img>').attr("src", "img/FrameOverdriveGaugeR.webp").addClass("od_icon"));
+    let over_drive_img = $('<div>').append($('<img>').attr("src", "img/FrameOverdriveGaugeR.webp").addClass("od_icon")).addClass("inc_od_icon");
     if (over_drive_gauge >= 100) {
         let gauge = Math.floor(over_drive_gauge / 100);
         over_drive_img.append($('<img>').attr("src", `img/ButtonOverdrive${gauge}Default.webp`).addClass("od_number"));
