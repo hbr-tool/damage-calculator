@@ -832,6 +832,9 @@ function procBattleStart() {
     let init_sp_add = Number($("#init_sp_add").val());
     // スタイル情報を作成
     $.each(select_style_list, function (index, value) {
+        if (index >= 6) {
+            return false;
+        }
         let unit = new unit_data();
         unit.place_no = index;
         if (value) {
