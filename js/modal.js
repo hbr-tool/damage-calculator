@@ -1,6 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
-let select_style_list = Array(7).fill(undefined);
+let select_style_list = Array(6).fill(undefined);
 let sub_style_list = Array(6).fill(undefined);
+let support_style_list = Array(6).fill(undefined);
 let status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
 
 class Member {
@@ -194,7 +195,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
     // スキル・バフ・アビリティを追加
     if (typeof addAttackList == "function") {
         addAttackList(member_info);
-        addBuffList(member_info);
+        addBuffList(member_info, 0);
         addAbility(member_info);
         $(".display_chara_id-" + member_info.style_info.chara_id).css("display", "block");
     }
@@ -314,7 +315,7 @@ function setSubMember(sub_chara_no, style_id) {
     sub_style_list[sub_chara_no] = member_info;
 
     // デバフのみを追加
-    addBuffList(member_info);
+    addBuffList(member_info, 1);
     // フィールドのみ追加
     addAbility(member_info);
     if (member_info.style_info.chara_id != 4) {
@@ -347,6 +348,29 @@ function removeSubMember(sub_chara_no) {
     $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
     $(".display_chara_id-" + chara_id  + " input").trigger("change");
     sub_style_list[sub_chara_no] = undefined;
+}
+
+// サポートメンバーを外す
+function removeSupportMember(support_chara_no) {
+    let member_info = support_style_list[support_chara_no]
+    if (member_info === undefined) {
+        return;
+    }
+    // 入れ替えスタイルのスキルを削除
+    let chara_id = member_info.style_info.chara_id;
+    let chara_id_class = ".chara_id-" + chara_id;
+    let parent = $(".include_lv " + chara_id_class + ":selected").parent();
+    $.each(parent, function(index, value) {
+        // 暫定的にdisplay:none追加
+        $(value).find(chara_id_class).css("display", "none");
+        select2ndSkill($("#" + $(value).prop("id")));
+    });
+    // 該当メンバーのスキル削除
+    $(chara_id_class).remove();
+    $(".display_chara_id-" + chara_id).css("display", "none");
+    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id  + " input").trigger("change");
+    support_style_list[support_chara_no] = undefined;
 }
 
 // スタイルリセット

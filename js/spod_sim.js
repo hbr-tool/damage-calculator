@@ -338,7 +338,7 @@ class unit_data {
         this.earring_effect_size = 0;
         this.skill_list = [];
         this.blank = false;
-        this.first_ultimate = false;
+        this.first_use = [];
         this.buff_target_chara_id = null;
         this.buff_effect_select_type = 0;
         this.ability_battle_start = [];
@@ -1540,7 +1540,9 @@ function origin(turn_data, skill_info, unit_data) {
         case 422: // 必滅！ヴェインキック+
         case 450: // 醒めたる思い
         case 505: // ブラッディ・ダンス+
-            unit_data.first_ultimate = true;
+        case 507: // そよ風に吹かれて
+        case 508: // リフレッシング・チアーズ！
+            unit_data.first_use.push(skill_info.skill_id);
             break;
         case 177: // エリミネイト・ポッシブル
             let target_unit_data = getUnitData(turn_data, unit_data.buff_target_chara_id)
@@ -1597,8 +1599,10 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
             break;
         case 422: // 必滅！ヴェインキック+
         case 505: // ブラッディ・ダンス+
+        case 507: // そよ風に吹かれて
+        case 508: // リフレッシング・チアーズ！
             // 初回
-            if (!unit_data.first_ultimate) {
+            if (!unit_data.first_use.includes(skill_info.skill_id)) {
                 return true;
             }
             break;
@@ -1691,7 +1695,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case 40: // ルーイン・イリュージョン(心眼)
         case 92: // 醒めたる思い(雷属性攻撃アップ)
         case 99: // 流星+(連撃)
-            if (use_unit_data.first_ultimate) {
+            if (use_unit_data.first_use.includes(buff_info.skill_id)) {
                 return;
             }
             break;

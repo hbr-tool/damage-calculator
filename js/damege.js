@@ -143,7 +143,7 @@ function setEventTrigger() {
         if (selected_index === 0) {
             resetSkillLv(id);
         } else {
-            let option = $(this).find("option").eq(selected_index);
+            let option = $(this).find("option:selected");
             if (isOnlyBuff(option)) {
                 if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが、設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
@@ -957,7 +957,7 @@ function updateFieldEffectSize() {
     let skill_buff = getBuffIdToBuff(buff_id);
     if (skill_buff) {
         let chara_no = Number(option.data("chara_no"));
-        let member_info = chara_no < 10 ? select_style_list[chara_no] : sub_style_list[chara_no - 10];
+        let member_info = chara_no < 10 ? select_style_list[chara_no] : chara_no < 20 ? sub_style_list[chara_no - 10] : support_style_list[chara_no - 20];
         let chara_id = member_info.style_info.chara_id;
         let chara_name = getCharaData(chara_id).chara_short_name;
         // フィールド強化15%
@@ -974,7 +974,7 @@ function updateBuffEffectSize(option, skill_lv) {
     skill_lv = skill_lv || Number(option.data("select_lv"));
     let chara_no = Number(option.data("chara_no"));
     let skill_buff = getBuffIdToBuff(buff_id);
-    let member_info = chara_no < 10 ? select_style_list[chara_no] : sub_style_list[chara_no - 10];
+    let member_info = chara_no < 10 ? select_style_list[chara_no] : chara_no < 20 ? sub_style_list[chara_no - 10] : support_style_list[chara_no - 20];
     let effect_size = getEffectSize(skill_buff.buff_kind, buff_id, member_info, skill_lv);
     let chara_id = member_info.style_info.chara_id;
     let chara_name = getCharaData(chara_id).chara_short_name;
@@ -1164,10 +1164,10 @@ function createSkillLvList(id, max_lv, select_lv) {
 }
 
 // バフリストに追加
-function addBuffList(member_info) {
+function addBuffList(member_info, member_kind) {
     let chara_id = member_info.style_info.chara_id;
     let buff_list = skill_buff.filter(obj =>
-        (obj.chara_id === chara_id || (obj.chara_id === 0 && obj.chara_id < 500)) &&
+        (obj.chara_id === chara_id || obj.chara_id === 0) &&
         (obj.style_id === member_info.style_info.style_id || obj.style_id === 0)
     );
 
@@ -1175,6 +1175,28 @@ function addBuffList(member_info) {
         let buff_element = 0;
         let only_one = "";
 
+        if (member_kind == 1) {
+            // サブメンバーは一部のみ許可
+            switch (value.buff_kind) {
+                case 3: // 防御ダウン
+                case 4: // 属性防御ダウン
+                case 5: // 脆弱
+                case 11: // 属性フィールド
+                case 19: // DP防御ダウン
+                case 20: // 耐性ダウン
+                case 21: // 永続防御ダウン
+                case 22: // 永続属性防御ダウン
+                    break;
+                default:
+                    return;
+            }
+        }
+        if (member_kind == 2) {
+            // サポートメンバーはサポートスキルのみ許可
+            if (value.skill_id < 5000 || 9000 < value.skill_id) {
+                return;
+            }
+        }
         switch (value.buff_kind) {
             case 11: // 属性フィールド
                 addElementField(member_info, value.buff_name, value.min_power, value.buff_element, value.buff_id, false);
@@ -1213,23 +1235,9 @@ function addBuffList(member_info) {
                 // 上記以外は適応外
                 return;
         }
-        // サブメンバーは一部のみ許可
-        switch (value.buff_kind) {
-            case 3: // 防御ダウン
-            case 4: // 属性防御ダウン
-            case 5: // 脆弱
-            case 11: // 属性フィールド
-            case 19: // DP防御ダウン
-            case 20: // 耐性ダウン
-            case 21: // 永続防御ダウン
-            case 22: // 永続属性防御ダウン
-                break;
-            default:
-                if (!member_info.is_select) return;
-                break;
-        }
+
         let str_buff = buff_kbn[value.buff_kind];
-        if (value.skill_attack === 0) only_one = 0;
+        if (!value.skill_attack1) only_one = undefined;
         if (value.only_first === 1) only_one = "only_first";
         let only_chara_id = value.range_area == 7 ? `only_chara_id-${chara_id}` : "public";
         let only_other_id = value.range_area === 8 ? `only_other_chara_id-${chara_id}` : "";
@@ -1246,12 +1254,19 @@ function addBuffList(member_info) {
             .addClass("buff_id-" + value.buff_id)
             .addClass("skill_id-" + value.skill_id)
             .addClass("variable_effect_size")
-            .addClass("skill_attack-" + value.skill_attack)
             .addClass(only_chara_id)
             .addClass(only_other_id)
             .addClass(only_one)
             .addClass("chara_id-" + chara_id)
             ;
+        if (value.skill_attack1) {
+            option.addClass("skill_attack-" + value.skill_attack1)
+        } else {
+            option.addClass("skill_attack-0")
+        }
+        if (value.skill_attack2) {
+            option.addClass("skill_attack-" + value.skill_attack2);
+        }
 
         $("." + str_buff).append(option);
         $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function (index, value) {
@@ -1547,15 +1562,17 @@ function isOnlyUse(option) {
             var attack_id = select_attack_skill.attack_id;
             var class_list = option.attr("class").split(" ");
 
+            let ret = true;
             for (var i = 0; i < class_list.length; i++) {
                 var class_name = class_list[i];
                 if (class_name.startsWith("skill_attack-")) {
                     var partial_class = class_name.replace("skill_attack-", "");
-                    if (Number(partial_class) != 0 && Number(partial_class) != 999 && attack_id != Number(partial_class)) {
-                        return true;
+                    if (Number(partial_class) != 0 && Number(partial_class) != 999 && attack_id == Number(partial_class)) {
+                        ret = false;
                     }
                 }
             }
+            return ret;
         }
     }
     return false;
@@ -1917,18 +1934,15 @@ function createEnemyList(enemy_class) {
         // メンバー情報作成
         let member_info = new Member();
         member_info.is_select = true;
-        member_info.chara_no = 6;
+        member_info.chara_no = 20;
         let style_info = {};
         style_info.chara_id = 501;
         style_info.jewel_type = 0;
         member_info.style_info = style_info;
-        select_style_list[6] = member_info;
-        addBuffList(member_info);
+        support_style_list[0] = member_info;
+        addBuffList(member_info, 2);
     } else {
-        if(select_style_list[6]) {
-            removeMember(6, true);
-            select_style_list[6] = undefined;
-        }
+        removeSupportMember(0);
         $(".bike_buff").css("display", "none");
     }
     if (enemy_class == 99) {
@@ -2273,7 +2287,7 @@ function getBuffIdToBuff(buff_id) {
 // バフ効果量
 function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
     let jewel_lv = 0;
-    if (member_info.style_info.jewel_type == target_jewel_type) {
+    if (member_info.style_info && member_info.style_info.jewel_type == target_jewel_type) {
         jewel_lv = member_info.jewel_lv;
     }
     let buff_info = getBuffIdToBuff(buff_id);
@@ -2316,7 +2330,7 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
 // デバフ効果量
 function getDebuffEffectSize(buff_id, member_info, skill_lv) {
     let jewel_lv = 0;
-    if (member_info.style_info.jewel_type == "4") {
+    if (member_info.style_info && member_info.style_info.jewel_type == "4") {
         jewel_lv = member_info.jewel_lv;
     }
     let enemy_stat = Number($("#enemy_stat").val());
