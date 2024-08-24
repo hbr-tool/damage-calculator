@@ -1498,7 +1498,7 @@ function select2ndSkill(select) {
         if ($(option).css("display") !== "none") {
             let buff_id = Number($(option).val());
             let buff_info = getBuffIdToBuff(buff_id);
-            if (buff_info.skill_id > 9000) {
+            if (buff_info && buff_info.skill_id > 9000) {
                 // アタッカライズ、クリシン、コンセ、ソフニング
                 continue;
             }
