@@ -438,6 +438,10 @@ div.lv select{
     height: 21px;
 }
 
+label[class*="block_chara_id-"] {
+    display: block!important;
+}
+
 /* ステータスの色　*/
 .status_attack_skill,
 .status_power_up1,

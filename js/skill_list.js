@@ -488,7 +488,7 @@
     {"skill_id":486,"skill_name":"聖女の守護","chara_id":14,"style_id":0,"sp_cost":6,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":487,"skill_name":"花舞う、可憐のフレア","chara_id":14,"style_id":122,"sp_cost":14,"attack_id":136,"attack_physical":3,"attack_element":1},
     {"skill_id":488,"skill_name":"クリャートヴァ","chara_id":42,"style_id":0,"sp_cost":9,"attack_id":null,"attack_physical":2,"attack_element":null},
-    {"skill_id":489,"skill_name":"惚のヴァージンロード","chara_id":42,"style_id":123,"sp_cost":10,"attack_id":null,"attack_physical":2,"attack_element":null},
+    {"skill_id":489,"skill_name":"恍惚のヴァージンロード","chara_id":42,"style_id":123,"sp_cost":10,"attack_id":null,"attack_physical":2,"attack_element":null},
     {"skill_id":490,"skill_name":"星屑の航路+","chara_id":14,"style_id":0,"sp_cost":13,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":491,"skill_name":"トゥルーペネトレーター+","chara_id":39,"style_id":0,"sp_cost":15,"attack_id":137,"attack_physical":2,"attack_element":0},
     {"skill_id":492,"skill_name":"蒼焔ノ迷宮","chara_id":43,"style_id":124,"sp_cost":15,"attack_id":138,"attack_physical":1,"attack_element":2},

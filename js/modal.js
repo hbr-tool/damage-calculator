@@ -22,10 +22,10 @@ class Member {
 
 // スタイルリスト作成
 function createStyleList() {
-    $.each(style_list, function(index, value) {
-    	let source = "icon/" + value.image_url;
+    $.each(style_list, function (index, value) {
+        let source = "icon/" + value.image_url;
         let chara_data = getCharaData(value.chara_id);
-    	let input = $('<input>')
+        let input = $('<input>')
             .attr("type", "image")
             .attr("src", source)
             .attr("title", "[" + value.style_name + "]" + chara_data.chara_name)
@@ -35,21 +35,21 @@ function createStyleList() {
             .addClass("element_" + value.element)
             .addClass("element_" + value.element2)
             .addClass("role_" + value.role);
-        $("#sytle_list_" + value.rarity + "_"+ chara_data.troops.replace("!", "")).append(input);
+        $("#sytle_list_" + value.rarity + "_" + chara_data.troops.replace("!", "")).append(input);
     });
 }
 
 // モーダル系イベント
 function addModalEvent() {
     // モーダルを開く
-    $('.showmodal').on('click', function() {
+    $('.showmodal').on('click', function () {
         chara_no = $(this).data("chara_no");
         MicroModal.show('modal_style_section');
     });
 
-    let narrow = {"physical": "", "element": "", "role": "" };
+    let narrow = { "physical": "", "element": "", "role": "" };
     // スタイル絞り込み
-    $(".narrow").on('click', function() {
+    $(".narrow").on('click', function () {
         let classification = "";
         if ($(this).hasClass("physical")) {
             classification = "physical";
@@ -80,7 +80,7 @@ function addModalEvent() {
     });
 
     // レアリティ変更
-    $(".rarity").on('click', function() {
+    $(".rarity").on('click', function () {
         $(this).css("opacity", "1");
         $(this).data("select", "1");
         if ($(this).prop("id") == "rarity_1") {
@@ -105,13 +105,13 @@ function addModalEvent() {
     });
 
     // スタイルを選択
-    $('input.select_style_list').on('click', function(){
+    $('input.select_style_list').on('click', function () {
         setMember(chara_no, $(this).data("style_id"), true)
         closeModel();
     });
 
     // メンバーを外す
-    $('.remove_btn').on('click', function() {
+    $('.remove_btn').on('click', function () {
         localStorage.removeItem(`troops_${select_troops}_${chara_no}`);
         removeMember(chara_no, true);
         closeModel();
@@ -137,13 +137,13 @@ function setMember(select_chara_no, style_id, isTrigger) {
     }
     // メンバーの情報を削除
     removeMember(select_chara_no, isTrigger);
-    
+
     // メンバー情報作成
     let member_info = new Member();
     member_info.is_select = true;
     member_info.chara_no = Number(select_chara_no);
     member_info.style_info = style_info;
- 
+
     localStorage.setItem(`troops_${select_troops}_${select_chara_no}`, style_id);
 
     // 画像切り替え
@@ -153,7 +153,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
     let save_item = localStorage.getItem("style_" + style_id);
     if (save_item) {
         let items = save_item.split(",");
-        $.each(status_kbn, function(index, value) {
+        $.each(status_kbn, function (index, value) {
             if (index == 0) return true;
             $("#" + value + "_" + select_chara_no).val(items[index]);
             member_info[value] = Number(items[index]);
@@ -164,7 +164,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
         member_info.jewel_lv = Number(items[8]);
     } else {
         // 旧設定
-        $.each(status_kbn, function(index, value) {
+        $.each(status_kbn, function (index, value) {
             if (index == 0) return true;
             let status = localStorage.getItem(value + "_" + style_info.chara_id);
             if (status === null || status === undefined) {
@@ -181,7 +181,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
         }
         $("#jewel_" + select_chara_no).val(jewel);
         member_info.jewel_lv = Number(jewel);
-    
+
         let limit_count = localStorage.getItem("limit_" + style_info.chara_id);
         if (limit_count === null || limit_count === undefined) {
             limit_count = 2;
@@ -197,7 +197,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
         addAttackList(member_info);
         addBuffList(member_info, 0);
         addAbility(member_info);
-        $(".display_chara_id-" + member_info.style_info.chara_id).css("display", "block");
+        $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
     }
 
     if (isTrigger) {
@@ -214,16 +214,16 @@ function removeMember(select_chara_no, isTrigger) {
     let chara_id = select_style_list[select_chara_no].style_info.chara_id;
     let chara_id_class = ".chara_id-" + chara_id;
     let parent = $(".include_lv " + chara_id_class + ":selected").parent();
-    $.each(parent, function(index, value) {
+    $.each(parent, function (index, value) {
         // 暫定的にdisplay:none追加
         $(value).find(chara_id_class).css("display", "none");
         select2ndSkill($("#" + $(value).prop("id")));
     });
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
-    $(".display_chara_id-" + chara_id).css("display", "none");
-    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
-    $(".display_chara_id-" + chara_id  + " input").trigger("change");
+    $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
+    $(".display_chara_id-" + chara_id + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id + " input").trigger("change");
     select_style_list[select_chara_no] = undefined;
     // 消費SP初期化
     $('#sp_cost_' + select_chara_no).text(0);
@@ -287,13 +287,13 @@ function setSubMember(sub_chara_no, style_id) {
         $('#sub_chara_container_' + sub_chara_no).addClass("ban_style");
         sub_style_list[sub_chara_no] = undefined;
         return false;
-    } 
+    }
 
     // ステータスを設定
     let save_item = localStorage.getItem("style_" + style_id);
     if (save_item) {
         let items = save_item.split(",");
-        $.each(status_kbn, function(index, value) {
+        $.each(status_kbn, function (index, value) {
             if (index == 0) return true;
             member_info[value] = Number(items[index]);
         });
@@ -301,7 +301,7 @@ function setSubMember(sub_chara_no, style_id) {
         member_info.jewel_lv = Number(items[8]);
     } else {
         // 旧設定
-        $.each(status_kbn, function(index, value) {
+        $.each(status_kbn, function (index, value) {
             if (index == 0) return true;
             const status = localStorage.getItem(value + "_" + style_info.chara_id);
             if (status) member_info[value] = Number(status);
@@ -319,7 +319,7 @@ function setSubMember(sub_chara_no, style_id) {
     // フィールドのみ追加
     addAbility(member_info);
     if (member_info.style_info.chara_id != 4) {
-        $(".display_chara_id-" + member_info.style_info.chara_id).css("display", "block");
+        $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
     }
 }
 
@@ -337,16 +337,16 @@ function removeSubMember(sub_chara_no) {
     let chara_id = member_info.style_info.chara_id;
     let chara_id_class = ".chara_id-" + chara_id;
     let parent = $(".include_lv " + chara_id_class + ":selected").parent();
-    $.each(parent, function(index, value) {
+    $.each(parent, function (index, value) {
         // 暫定的にdisplay:none追加
         $(value).find(chara_id_class).css("display", "none");
         select2ndSkill($("#" + $(value).prop("id")));
     });
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
-    $(".display_chara_id-" + chara_id).css("display", "none");
-    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
-    $(".display_chara_id-" + chara_id  + " input").trigger("change");
+    $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
+    $(".display_chara_id-" + chara_id + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id + " input").trigger("change");
     sub_style_list[sub_chara_no] = undefined;
 }
 
@@ -360,22 +360,22 @@ function removeSupportMember(support_chara_no) {
     let chara_id = member_info.style_info.chara_id;
     let chara_id_class = ".chara_id-" + chara_id;
     let parent = $(".include_lv " + chara_id_class + ":selected").parent();
-    $.each(parent, function(index, value) {
+    $.each(parent, function (index, value) {
         // 暫定的にdisplay:none追加
         $(value).find(chara_id_class).css("display", "none");
         select2ndSkill($("#" + $(value).prop("id")));
     });
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
-    $(".display_chara_id-" + chara_id).css("display", "none");
-    $(".display_chara_id-" + chara_id  + " input").prop("checked", false);
-    $(".display_chara_id-" + chara_id  + " input").trigger("change");
+    $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
+    $(".display_chara_id-" + chara_id + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id + " input").trigger("change");
     support_style_list[support_chara_no] = undefined;
 }
 
 // スタイルリセット
 function styleReset(isLocalStorageReset) {
-    $.each(select_style_list, function(index, value) {
+    $.each(select_style_list, function (index, value) {
         if (index > 5) {
             return false;
         }
@@ -394,19 +394,19 @@ function changeRarity(select_chara_no, rarity) {
     $("#limit_" + select_chara_no).prop("disabled", false);
     if (rarity == 1) {
         $("#jewel_" + select_chara_no).prop("disabled", false);
-        $('#limit_' + select_chara_no  + ' option[value="10"]').css('display', 'none');
-        $('#limit_' + select_chara_no  + ' option[value="20"]').css('display', 'none');
+        $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'none');
+        $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'none');
     } else {
         $("#limit_" + select_chara_no).prop("disabled", true);
         if (rarity == 2) {
             $("#jewel_" + select_chara_no).prop("disabled", false);
-            $('#limit_' + select_chara_no  + ' option[value="10"]').css('display', 'block');
+            $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'block');
             $('#limit_' + select_chara_no).val(10);
             select_style_list[select_chara_no].limit_count = 10;
         } else {
             $("#jewel_" + select_chara_no).val(0);
             $("#jewel_" + select_chara_no).prop("disabled", true);
-            $('#limit_' + select_chara_no  + ' option[value="20"]').css('display', 'block');
+            $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'block');
             $('#limit_' + select_chara_no).val(20);
             select_style_list[select_chara_no].limit_count = 20;
         }
