@@ -316,10 +316,9 @@ select#socre_enemy_unit {
 }
 
 /* バフエリア */
-#all_delete {
-    font-size: 12px;
-    width: 85px;
-    margin-left: 70px;
+.buff_btn {
+    width: 75px;
+    margin-top: 2px;
 }
 table tr {
     line-height: 16px;
@@ -628,4 +627,76 @@ input[type="button"].durability_reflection {
     height: 100%;
     background-color: rgba(128, 0, 0, 0.5); /* 黒色の半透明レイヤー */
     pointer-events: none; /* マウスイベントを透過させる */
+}
+
+/* バフ一括設定 */
+.container_multi_buff {
+    background-color: #fff;
+    padding: 20px;
+    width: 350px;
+    max-height: calc(100svh - 50px);
+    border-radius: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.multi_inner_headline {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: -10px;
+}
+#bulk_buff_setting {
+    width: 50px;
+    height: 28px;
+    font-size: 18px;
+    font-weight: normal;
+}
+span.chara_name {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.buff_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 縦方向の中央揃え */
+    padding: 1px;
+}
+
+.orb_buff {
+    display: none;
+}
+
+.multi-way-choice input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+.multi-way-choice label {
+    background-color: #f0f0f0;
+    color: #999;
+    text-align: center;
+    font-size: 17px;
+    line-height: 1;
+    padding: 1px 8px;
+    margin-right: -1px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+}
+.multi-way-choice:hover {
+    cursor: pointer;
+}
+.multi-way-choice input:checked + label {
+    background-color: #6af;
+    color:#222;
+}
+.multi-way-choice label:first-of-type {
+    border-radius: 5px 0 0 5px;
+}
+.multi-way-choice label:last-of-type {
+    border-radius: 0 5px 5px 0;
 }

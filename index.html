@@ -36,6 +36,7 @@
   <script src="js/chara_style.js"></script>
   <script src="js/damege.js"></script>
   <script src="js/modal.js"></script>
+  <script src="js/skill_list.js"></script>
   <script src="js/skill_attack.js"></script>
   <script src="js/skill_buff.js"></script>
   <script src="js/ability.js"></script>
@@ -273,7 +274,7 @@
             <div class="ml-6">
               <div class="mb-2">
                 <input type="checkbox" id="skill_special_display" checked><label class="checkbox01"
-                  for="skill_special_display">専用技以外を非表示にする</label>
+                  for="skill_special_display">EXスキル以外を非表示にする</label>
               </div>
               <!-- バーチカルフォース/パドマ・ナーチュナー/花舞う、可憐のフレア専用 -->
               <div class="skill_unique attack_attack_id-115 attack_attack_id-2167 attack_attack_id-136 hidden">
@@ -657,7 +658,10 @@
         </div>
         <div class="buff_area text-right mx-auto">
           <div class="flex justify-between items-center w-full">
-            <input type="button" id="all_delete" value="バフを全て外す">
+            <div class="ml-6">
+              <input type="button" id="all_delete" class="buff_btn" value="全て外す">
+              <input type="button" id="open_select_buff" class="buff_btn" value="一括設定">
+            </div>
             <div class="flex items-center">
               <input type="checkbox" id="auto_skill" checked>
               <label class="checkbox01 ml-2" for="auto_skill">スタイル/攻撃スキル/敵選択時に最適スキルを自動選択する</label>
@@ -679,7 +683,7 @@
               <tr>
                 <td rowspan="10" class="kind pc_only">バフ</td>
                 <td class="type" colspan="2">攻撃力UP1</td>
-                <td><select id="power_up1" class="buff power_up redisplay include_lv">
+                <td><select id="power_up1" class="buff power_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-4 hidden"><input
@@ -690,7 +694,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">攻撃力UP2</td>
-                <td><select id="power_up2" class="buff power_up redisplay include_lv">
+                <td><select id="power_up2" class="buff power_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-4 hidden"><input
@@ -701,7 +705,8 @@
               </tr>
               <tr>
                 <td class="type row_element" colspan="2">属性攻撃力UP1</td>
-                <td class="row_element"><select id="element_up1" class="buff element_up redisplay include_lv">
+                <td class="row_element"><select id="element_up1" class="buff element_up redisplay include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"><label class="strengthen display_chara_id-4 hidden"><input
@@ -712,7 +717,8 @@
               </tr>
               <tr>
                 <td class="type row_element" colspan="2">属性攻撃力UP2</td>
-                <td class="row_element"><select id="element_up2" class="buff element_up redisplay include_lv">
+                <td class="row_element"><select id="element_up2" class="buff element_up redisplay include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"><label class="strengthen display_chara_id-4 hidden"><input
@@ -723,7 +729,7 @@
               </tr>
               <tr>
                 <td class="type row_weak" colspan="2">心眼1</td>
-                <td class="row_weak"><select id="mindeye1" class="mindeye redisplay include_lv">
+                <td class="row_weak"><select id="mindeye1" class="mindeye redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_weak"></td>
@@ -733,7 +739,7 @@
               </tr>
               <tr>
                 <td class="type row_weak" colspan="2">心眼2</td>
-                <td class="row_weak"><select id="mindeye2" class="mindeye redisplay include_lv">
+                <td class="row_weak"><select id="mindeye2" class="mindeye redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_weak"></td>
@@ -743,7 +749,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">連撃1</td>
-                <td><select id="funnel1" class="funnel redisplay include_lv">
+                <td><select id="funnel1" class="funnel redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -753,7 +759,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">連撃2</td>
-                <td><select id="funnel2" class="funnel redisplay include_lv">
+                <td><select id="funnel2" class="funnel redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -763,7 +769,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">破壊率UP1</td>
-                <td><select id="destruction_rete_up1" class="destruction_rete_up  redisplay include_lv">
+                <td><select id="destruction_rete_up1" class="destruction_rete_up  redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -773,7 +779,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">破壊率UP2</td>
-                <td><select id="destruction_rete_up2" class="destruction_rete_up redisplay include_lv">
+                <td><select id="destruction_rete_up2" class="destruction_rete_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -787,7 +793,7 @@
               <tr>
                 <td rowspan="14" class="kind pc_only">デバフ</td>
                 <td class="type" colspan="2">防御力DOWN1</td>
-                <td><select id="defense_down1" class="debuff redisplay defense_down include_lv">
+                <td><select id="defense_down1" class="debuff redisplay defense_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -798,7 +804,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">防御力DOWN2</td>
-                <td><select id="defense_down2" class="debuff redisplay defense_down include_lv">
+                <td><select id="defense_down2" class="debuff redisplay defense_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -809,7 +815,8 @@
               </tr>
               <tr>
                 <td class="type row_dp" colspan="2">DP防御力DOWN1</td>
-                <td class="row_dp"><select id="dp_defense_down1" class="dp_debuff redisplay dp_defense_down include_lv">
+                <td class="row_dp"><select id="dp_defense_down1" class="dp_debuff redisplay dp_defense_down include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_dp"><label class="strengthen display_chara_id-11 hidden"><input
@@ -820,7 +827,8 @@
               </tr>
               <tr>
                 <td class="type row_dp" colspan="2">DP防御力DOWN2</td>
-                <td class="row_dp"><select id="dp_defense_down2" class="dp_debuff redisplay dp_defense_down include_lv">
+                <td class="row_dp"><select id="dp_defense_down2" class="dp_debuff redisplay dp_defense_down include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_dp"><label class="strengthen display_chara_id-11 hidden"><input
@@ -831,7 +839,8 @@
               </tr>
               <tr>
                 <td class="type row_element" colspan="2">属性防御力DOWN1</td>
-                <td class="row_element"><select id="element_down1" class="debuff redisplay element_down include_lv">
+                <td class="row_element"><select id="element_down1" class="debuff redisplay element_down include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"><label class="strengthen display_chara_id-11 hidden"><input
@@ -842,7 +851,8 @@
               </tr>
               <tr>
                 <td class="type row_element" colspan="2">属性防御力DOWN2</td>
-                <td class="row_element"><select id="element_down2" class="debuff redisplay element_down include_lv">
+                <td class="row_element"><select id="element_down2" class="debuff redisplay element_down include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"><label class="strengthen display_chara_id-11 hidden"><input
@@ -854,7 +864,7 @@
               <tr>
                 <td class="type" colspan="2">防御力DOWN1(永)</td>
                 <td class=""><select id="permanent_defense_down1"
-                    class="debuff redisplay permanent_defense_down include_lv">
+                    class="debuff redisplay permanent_defense_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -866,7 +876,7 @@
               <tr>
                 <td class="type" colspan="2">防御力DOWN2(永)</td>
                 <td class=""><select id="permanent_defense_down2"
-                    class="debuff redisplay permanent_defense_down include_lv">
+                    class="debuff redisplay permanent_defense_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -878,7 +888,7 @@
               <tr>
                 <td class="type row_element-2 row_element-5" colspan="2">属性防御力DOWN1(永)</td>
                 <td class="row_element-2 row_element-5"><select id="permanent_element_down1"
-                    class="debuff redisplay permanent_element_down include_lv">
+                    class="debuff redisplay permanent_element_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element-2 row_element-5"><label
@@ -890,7 +900,7 @@
               </tr>
               <tr>
                 <td class="type row_element-2 row_element-5" colspan="2">属性防御力DOWN2(永)</td>
-                <td class="row_element-2 row_element-5"><select id="permanent_element_down2"
+                <td class="row_element-2 row_element-5"><select id="permanent_element_down2" name="buff"
                     class="debuff redisplay permanent_element_down include_lv">
                     <option selected value="">無し</option>
                   </select></td>
@@ -903,7 +913,7 @@
               </tr>
               <tr>
                 <td class="type row_weak" colspan="2">脆弱1</td>
-                <td class="row_weak"><select id="fragile1" class="fragile redisplay include_lv">
+                <td class="row_weak"><select id="fragile1" class="fragile redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_weak"><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -914,7 +924,7 @@
               </tr>
               <tr>
                 <td class="type row_weak" colspan="2">脆弱2</td>
-                <td class="row_weak"><select id="fragile2" class="fragile redisplay include_lv">
+                <td class="row_weak"><select id="fragile2" class="fragile redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_weak"><label class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
@@ -926,7 +936,7 @@
               <tr class="">
                 <td class="type row_element-3 row_element-5" colspan="2">耐性ダウン1</td>
                 <td class="row_element-3 row_element-5"><select id="resist_down1"
-                    class="resist resist_down redisplay element include_lv">
+                    class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
@@ -937,7 +947,7 @@
               <tr>
                 <td class="type row_element-3 row_element-5" colspan="2">耐性ダウン2</td>
                 <td class="row_element-3 row_element-5"><select id="resist_down2"
-                    class="resist resist_down redisplay element include_lv">
+                    class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
@@ -950,7 +960,7 @@
               <tr>
                 <td rowspan="8" class="kind pc_only">クリティカル</td>
                 <td colspan="2">クリティカル率UP1</td>
-                <td><select id="critical_up1" class="critical_rate critical_up redisplay include_lv">
+                <td><select id="critical_up1" class="critical_rate critical_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -960,7 +970,7 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">クリティカル率UP2</td>
-                <td><select id="critical_up2" class="critical_rate critical_up redisplay include_lv">
+                <td><select id="critical_up2" class="critical_rate critical_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -970,7 +980,8 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">クリダメUP1</td>
-                <td><select id="critical_damege1" class="critical_buff critical_damege redisplay include_lv">
+                <td><select id="critical_damege1" class="critical_buff critical_damege redisplay include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -980,7 +991,8 @@
               </tr>
               <tr>
                 <td class="type" colspan="2">クリダメUP2</td>
-                <td><select id="critical_damege2" class="critical_buff critical_damege redisplay include_lv">
+                <td><select id="critical_damege2" class="critical_buff critical_damege redisplay include_lv"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -991,7 +1003,7 @@
               <tr>
                 <td class="type row_element" colspan="2">属性クリ率UP1</td>
                 <td class="row_element"><select id="critical_element1"
-                    class="critical_rate critical_element redisplay include_lv">
+                    class="critical_rate critical_element redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"></td>
@@ -1002,7 +1014,7 @@
               <tr>
                 <td class="type row_element" colspan="2">属性クリ率UP2</td>
                 <td class="row_element"><select id="critical_element2"
-                    class="critical_rate critical_element redisplay include_lv">
+                    class="critical_rate critical_element redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"></td>
@@ -1013,7 +1025,7 @@
               <tr>
                 <td class="type row_element" colspan="2">属性クリダメUP1</td>
                 <td class="row_element"><select id="critical_damege_element1"
-                    class="critical_buff critical_damege_element redisplay include_lv">
+                    class="critical_buff critical_damege_element redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"></td>
@@ -1024,7 +1036,7 @@
               <tr>
                 <td class="type row_element" colspan="2">属性クリダメUP2</td>
                 <td class="row_element"><select id="critical_damege_element2"
-                    class="critical_buff critical_damege_element redisplay include_lv">
+                    class="critical_buff critical_damege_element redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"></td>
@@ -1038,7 +1050,8 @@
               <tr>
                 <td class="kind row_element pc_only">フィールド</td>
                 <td class="type row_element" colspan="2">属性フィールド</td>
-                <td class="row_element"><select id="element_field" class="filed element_field element redisplay">
+                <td class="row_element"><select id="element_field" class="filed element_field element redisplay"
+                    name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class="row_element"><label class="strengthen strengthen_field display_chara_id-3 hidden"><input
@@ -1051,7 +1064,7 @@
               <tr>
                 <td class="kind pc_only">チャージ</td>
                 <td class="type" colspan="2">チャージ</td>
-                <td class=""><select id="charge" class="buff charge redisplay include_lv">
+                <td class=""><select id="charge" class="buff charge redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""></td>
@@ -1402,6 +1415,26 @@
                 <input type="text" id="mag_critical" class="text-center magnification_value" readonly>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal micromodal-slide" id="modal_select_buff" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container container_multi_buff" role="dialog" aria-modal="true" aria-labelledby="select_buff">
+          <div class="multi_inner_headline">
+            <div class="buff_container">
+              <div class="mx-auto">一括設定</div>
+              <input type="button" id="bulk_buff_setting" href="javascript:void(0)" class="text-center" value="設定">
+            </div>
+          </div>
+          <div class="text-xs">
+            ※複数設定不可のスキルは複数反映されません。
+          </div>
+          <div>
+            <input type="checkbox" id="orb_buff"><label for="orb_buff" class="checkbox01">オーブスキルを表示する</label>
+          </div>
+          <div id="select_buff" aria-hidden="true" class="modal text-left w-[300px] mx-auto">
           </div>
         </div>
       </div>
