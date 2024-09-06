@@ -744,8 +744,8 @@ function calcDamage() {
         dp_rate = dp_rate > 100 ? 100 : dp_rate;
         skill_unique_rate += (100 - dp_rate) / 100 * 75 / 100;
     }
-    // コーシュカ・アルマータ
-    if (attack_info.attack_id == 2162) {
+    // コーシュカ・アルマータ/疾きこと風の如し
+    if (attack_info.attack_id == 2162 || attack_info.attack_id == 154) {
         let sp = Number($("#skill_unique_sp").val());
         skill_unique_rate = (sp > 30 ? 30 : sp) / 30;
     }
@@ -910,6 +910,27 @@ function getEarringEffectSize(type, hit_count) {
     if (earring.data("type") === type) {
         let effect_size = Number(earring.data("effect_size"));
         return (effect_size - (10 / 9 * (hit_count - 1)));
+    }
+    return 0;
+}
+
+// チェーン効果量取得
+function getChainEffectSize(type) {
+    switch ($("#chain").val()) {
+        case "1":
+        case "2":
+        case "3":
+        case "4":
+        case "5":
+            switch (type) {
+                case "skill":
+                    return 10;
+                case "blast":
+                    return 10;
+                default:
+                    break;
+            }
+            break;
     }
     return 0;
 }
@@ -1889,6 +1910,7 @@ function getSumBuffEffectSize() {
     if ($("#overdrive").prop("checked")) {
         sum_buff += 10;
     }
+    sum_buff += getChainEffectSize("skill");
     // トークン
     let token_count = Number($("#token_count").val());
     sum_buff += token_count * getSumAbilityEffectSize(31);
@@ -2092,6 +2114,7 @@ function getDestructionEffectSize(hit_count) {
     destruction_effect_size += getSumEffectSize("destruction_rete_up");
     destruction_effect_size += getSumAbilityEffectSize(5);
     destruction_effect_size += getEarringEffectSize("blast", 10 - hit_count);
+    destruction_effect_size += getChainEffectSize("blast");
     destruction_effect_size -= grade_sum.destruction;
     return destruction_effect_size / 100;
 }

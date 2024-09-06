@@ -288,8 +288,8 @@
                   </div>
                 </div>
               </div>
-              <!-- コーシュカ・アルマータ専用 -->
-              <div class="skill_unique attack_attack_id-2162 hidden">
+              <!-- コーシュカ・アルマータ/疾きこと風の如し専用 -->
+              <div class="skill_unique attack_attack_id-154 attack_attack_id-2162 hidden">
                 <div class="flex">
                   残りSP
                   <input id="skill_unique_sp" type="number" value="30" class="ml-2 w-12">
@@ -553,6 +553,13 @@
                   <option value="7" data-effect_size="10" data-type="blast">ブラスト10%</option>
                   <option value="8" data-effect_size="12" data-type="blast">ブラスト12%</option>
                   <option value="9" data-effect_size="15" data-type="blast">ブラスト15%</option>
+                </select>
+              </div>
+              <div class="flex">
+                <div class="pt-0.5">チェーン</div>
+                <select id="chain">
+                  <option value="0">選択無し</option>
+                  <option value="1">銀氷</option>
                 </select>
               </div>
               <div class="flex">
@@ -934,25 +941,25 @@
                 </td>
               </tr>
               <tr class="">
-                <td class="type row_element-3 row_element-5" colspan="2">耐性ダウン1</td>
-                <td class="row_element-3 row_element-5"><select id="resist_down1"
+                <td class="type row_element-2 row_element-3 row_element-5" colspan="2">耐性ダウン1</td>
+                <td class="row_element-2 row_element-3 row_element-5"><select id="resist_down1"
                     class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
+                <td class="row_element-2 row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
                       type="checkbox"><span>強化</span></label></td>
-                <td class="row_element-3 row_element-5"></td>
+                <td class="row_element-2 row_element-3 row_element-5"></td>
                 </td>
               </tr>
               <tr>
-                <td class="type row_element-3 row_element-5" colspan="2">耐性ダウン2</td>
-                <td class="row_element-3 row_element-5"><select id="resist_down2"
+                <td class="type row_element-2 row_element-3 row_element-5" colspan="2">耐性ダウン2</td>
+                <td class="row_element-2 row_element-3 row_element-5"><select id="resist_down2"
                     class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
+                <td class="row_element-2 row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
                       type="checkbox"><span>強化</span></label></td>
-                <td class="row_element-3 row_element-5"></td>
+                <td class="row_element-2 row_element-3 row_element-5"></td>
               </tr>
               <tr class="sp_only">
                 <td colspan="5" class="kind">クリティカル</td>

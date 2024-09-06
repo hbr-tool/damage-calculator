@@ -289,6 +289,15 @@ class turn_data {
                         buff.buff_kind = BUFF_ARROWCHERRYBLOSSOMS;
                         buff.buff_element = 0;
                         buff.rest_turn = -1;
+                        buff.buff_name = ability.ability_name
+                        unit.buff_list.push(buff);
+                        break;
+                    case 8: // チャージ
+                        buff = new buff_data();
+                        buff.buff_kind = BUFF_CHARGE;
+                        buff.buff_element = 0;
+                        buff.rest_turn = -1;
+                        buff.buff_name = ability.ability_name
                         unit.buff_list.push(buff);
                         break;
                 }
@@ -752,8 +761,8 @@ function selectUnitSkill(select) {
 
         setOverDrive();
         let sp_cost = select.find('option:selected').data("sp_cost");
-        if (skill_id == 199) {
-            // コーシュカ・アルマータ
+        if (skill_id == 199 || skill_id == 517) {
+            // コーシュカ・アルマータ、疾きこと風の如し
             sp_cost = unit_data.sp;
         } else if (skill_id == 495) {
             // レッドラウンドイリュージョン
@@ -1570,6 +1579,10 @@ function getSpCost(turn_data, skill_info, unit) {
         if (checkAbilityExist(unit.ability_other, 1512)) {
             sp_cost -= 2;
         }
+        // 疾駆
+        if (checkAbilityExist(unit.ability_other, 1515)) {
+            sp_cost -= 2;
+        }
     }
     return sp_cost
 }
@@ -1608,6 +1621,7 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
             break;
         case 472: // ロリータフルバースト
         case 493: // 蒼焔ノ螺旋
+        case 515: // 放課後の淡いスリル
             // 追加ターン
             if (unit_data.additional_turn) {
                 return true;
