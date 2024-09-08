@@ -499,7 +499,7 @@
     {"skill_id":497,"skill_name":"浮き浮きサニー・ボマー","chara_id":18,"style_id":126,"sp_cost":15,"kb_skill":5,"attack_id":142,"attack_physical":2,"attack_element":1},
     {"skill_id":498,"skill_name":"蜃気楼","chara_id":18,"style_id":0,"sp_cost":8,"kb_skill":0,"attack_id":null,"attack_physical":2,"attack_element":null},
     {"skill_id":499,"skill_name":"おひさまの匂い","chara_id":6,"style_id":0,"sp_cost":6,"kb_skill":0,"attack_id":null,"attack_physical":1,"attack_element":null},
-    {"skill_id":500,"skill_name":"メディテーション","chara_id":3,"style_id":0,"sp_cost":0,"kb_skill":0,"attack_id":null,"attack_physical":3,"attack_element":null},
+    {"skill_id":500,"skill_name":"メディテーション","chara_id":3,"style_id":0,"sp_cost":0,"kb_skill":1,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":501,"skill_name":"潮風ハイボルテージ","chara_id":3,"style_id":127,"sp_cost":14,"kb_skill":5,"attack_id":144,"attack_physical":3,"attack_element":3},
     {"skill_id":502,"skill_name":"意気揚々","chara_id":5,"style_id":0,"sp_cost":10,"kb_skill":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":503,"skill_name":"フグリングクラッシュ","chara_id":5,"style_id":128,"sp_cost":14,"kb_skill":5,"attack_id":145,"attack_physical":1,"attack_element":5},
