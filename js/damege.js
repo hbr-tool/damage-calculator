@@ -1,5 +1,5 @@
 // 貫通クリティカル
-let penetration_attack_list = [84, 135, 137];
+let penetration_attack_list = [84, 135, 137, 156];
 /** 敵リスト*/
 // 異時層
 const KB_ENEMY_CLASS_HARD_LAYER = 1;
@@ -745,7 +745,7 @@ function calcDamage() {
         skill_unique_rate += (100 - dp_rate) / 100 * 75 / 100;
     }
     // コーシュカ・アルマータ/疾きこと風の如し
-    if (attack_info.attack_id == 2162 || attack_info.attack_id == 154 || attack_info.attack_id == 155 ) {
+    if (attack_info.attack_id == 2162 || attack_info.attack_id == 154 || attack_info.attack_id == 155) {
         let sp = Number($("#skill_unique_sp").val());
         skill_unique_rate = (sp > 30 ? 30 : sp) / 30;
     }
@@ -1153,13 +1153,21 @@ function updateEnemyResist() {
         setEnemyElement("#enemy_element_0", 100);
         let physical = attack_info.attack_physical;
         let week_value = 100;
-        if (attack_info.attack_id == 135) {
-            // 華麗なるファントム・シーフ
-            week_value += 400;
-        } else {
-            // 唯雅粛正(チャージ)
-            // トゥルーペネトレーター+
-            week_value += 300;
+        switch (attack_info.attack_id) {
+            case 135:
+                // 華麗なるファントム・シーフ
+                week_value += 400;
+                break;
+            case 84:
+            case 137:
+            case 156:
+                // 唯雅粛正(チャージ)
+                // トゥルーペネトレーター+
+                // バブルデストロイヤー
+                week_value += 300;
+                break;
+            default:
+                break;
         }
         $(`#enemy_physical_${physical}`).val(week_value);
         setEnemyElement(`#enemy_physical_${physical}`, week_value);
@@ -1479,7 +1487,7 @@ function addBuffList(member_info, member_kind) {
             .data("chara_id", chara_id)
             .css("display", "none")
             .addClass("buff_element-" + buff_element)
-            .addClass("buff_physical-" + "0")
+            .addClass("buff_physical-0")
             .addClass("buff_id-" + value.buff_id)
             .addClass("skill_id-" + value.skill_id)
             .addClass("variable_effect_size")
@@ -1521,6 +1529,7 @@ function addElementField(member_info, field_name, effect_size, field_element, bu
         .css("display", "none")
         .addClass("public")
         .addClass(`buff_element-${field_element}`)
+        .addClass("buff_physical-0")
         .addClass(`chara_id-${chara_id}`);
     let span = $('<span>')
     span.append(option);

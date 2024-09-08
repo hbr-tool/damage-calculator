@@ -854,7 +854,8 @@ function procBattleStart() {
             unit.style = value;
             unit.skill_list = skill_list.filter(obj =>
                 (obj.chara_id === value.style_info.chara_id || obj.chara_id === 0) &&
-                (obj.style_id === value.style_info.style_id || obj.style_id === 0)
+                (obj.style_id === value.style_info.style_id || obj.style_id === 0) &&
+                obj.kb_skill != 1
             );
             let limit = Number($("#limit_" + index).val());
             ["0", "00", "1", "3", "5", "10"].forEach(num => {
