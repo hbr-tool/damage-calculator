@@ -2561,7 +2561,7 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
         return buff_info.min_power;
     }
     // 士気
-    let stat_up = getStatUp();
+    let stat_up = getStatUp(member_info);
     let status = member_info[status_kbn[buff_info.ref_status_1]] + stat_up;
     let min_power = buff_info.min_power * (1 + 0.03 * (skill_lv - 1));
     let max_power = buff_info.max_power * (1 + 0.02 * (skill_lv - 1));
@@ -2601,7 +2601,7 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
         skill_lv = buff_info.max_lv;
     }
     // 士気
-    let stat_up = getStatUp();
+    let stat_up = getStatUp(member_info);
     let status1 = member_info[status_kbn[buff_info.ref_status_1]] + stat_up;
     let status2 = member_info[status_kbn[buff_info.ref_status_2]] + stat_up;
     let min_power = buff_info.min_power * (1 + 0.05 * (skill_lv - 1));
@@ -2670,9 +2670,12 @@ function getEnemyDefenceRate(grade_sum) {
 }
 
 // ステータスアップ取得
-function getStatUp() {
+function getStatUp(member_info) {
     // 士気
-    let morale = Number($("#morale_count").val()) * 5;
+    let morale = 0;
+    if (member_info.is_select) {
+        morale = Number($("#morale_count").val()) * 5;
+    }
     let tears_of_dreams = 0;
     // 夢の泪
     if ($("#enemy_class").val() == 1) {
