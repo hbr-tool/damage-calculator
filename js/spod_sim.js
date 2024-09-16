@@ -1505,6 +1505,18 @@ function getOverDrive(turn_number, enemy_count) {
         let buff_list = getBuffInfo(skill_info.skill_id);
         let attack_info = getAttackInfo(skill_info.attack_id);
         let unit_od_plus = 0;
+        
+        let correction = 1;
+        let badies = 0;
+        // オギャり状態
+        if (checkBuffExist(unit_data.buff_list, BUFF_BABIED)) {
+            badies += 20;
+        }
+        let earring = 0;
+        if (skill_info.attack_id) {
+            earring = unit_data.getEarringEffectSize(attack_info.hit_count);
+        }
+
         buff_list.forEach(function (buff_info) {
             // OD増加
             if (buff_info.buff_kind == 13) {
@@ -1514,11 +1526,11 @@ function getOverDrive(turn_number, enemy_count) {
                 }
                 // サービス・エースが可変
                 if (skill_info.attack_id) {
-                    let earring = 1 + unit_data.getEarringEffectSize(attack_info.hit_count) / 100;
-                    unit_od_plus += Math.floor(buff_info.max_power * earring * 100) / 100;
+                    correction = 1 + (badies + earring) /100;
                 } else {
-                    unit_od_plus += buff_info.max_power;
+                    correction = 1 + badies / 100;
                 }
+                unit_od_plus += Math.floor(buff_info.max_power * correction * 100) / 100;
             }
             // 連撃のみとオギャり状態処理
             if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || buff_info.buff_kind == BUFF_BABIED) {
@@ -1527,6 +1539,7 @@ function getOverDrive(turn_number, enemy_count) {
         });
         let funnel_list = unit_data.getfunnelList();
         let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
+
         if (skill_info.skill_name == "通常攻撃") {
             if (isResist(physical, unit_data.normal_attack_element, skill_info.attack_id)) {
                 unit_od_plus += 7.5
@@ -1534,8 +1547,8 @@ function getOverDrive(turn_number, enemy_count) {
             }
         } else if (skill_info.attack_id) {
             if (isResist(physical, attack_info.attack_element, skill_info.attack_id)) {
-                let earring = 1 + unit_data.getEarringEffectSize(attack_info.hit_count) / 100;
-                let hit_od = Math.floor(2.5 * earring * 100) / 100
+                correction = 1 + (badies + earring) /100;
+                let hit_od = Math.floor(2.5 * correction * 100) / 100;
                 if (attack_info.range_area == 1) {
                     enemy_count = 1;
                 }
@@ -1546,11 +1559,6 @@ function getOverDrive(turn_number, enemy_count) {
                 }
                 unit_od_plus += funnel_list.length * hit_od * enemy_count;
             }
-        }
-
-        // オギャり状態
-        if (checkBuffExist(unit_data.buff_list, BUFF_BABIED)) {
-            unit_od_plus *= 1.2;
         }
         od_plus += unit_od_plus;
     });
