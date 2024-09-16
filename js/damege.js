@@ -1927,6 +1927,8 @@ function getSumBuffEffectSize() {
     sum_buff += Number($("#morale_count").val()) * 5;
     // 永遠なる誓い
     sum_buff += $("#eternal_vows").prop("checked") ? 50 : 0;
+    // オギャり
+    sum_buff += $("#babied").prop("checked") ? 30 : 0;
     // 制圧戦
     sum_buff += getBikePartsEffectSize("buff");
     return 1 + sum_buff / 100;

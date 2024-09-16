@@ -424,7 +424,8 @@
                 </select>
                 <div id="skull_feather_1st" class="ml-2 hidden">
                   防御力アップ×
-                  <input type="number" id="skull_feather_1st_defense" class="text-center h-6" min="0" max="20" value="0">
+                  <input type="number" id="skull_feather_1st_defense" class="text-center h-6" min="0" max="20"
+                    value="0">
                 </div>
               </div>
             </div>
@@ -603,6 +604,8 @@
               </div>
               <input type="checkbox" id="eternal_vows" class="ml-3 pt-0.5"><label class="checkbox01"
                 for="eternal_vows">永遠なる誓い</label>
+              <input type="checkbox" id="babied" class="ml-3 pt-0.5"><label class="checkbox01"
+                for="babied">オギャり</label>
             </div>
           </div>
           <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
@@ -946,8 +949,8 @@
                     class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
-                      type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-2 row_element-3 row_element-5"><label
+                    class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-2 row_element-3 row_element-5"></td>
                 </td>
               </tr>
@@ -957,8 +960,8 @@
                     class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-3 row_element-5"><label class="strengthen display_chara_id-11 hidden"><input
-                      type="checkbox"><span>強化</span></label></td>
+                <td class="row_element-2 row_element-3 row_element-5"><label
+                    class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label></td>
                 <td class="row_element-2 row_element-3 row_element-5"></td>
               </tr>
               <tr class="sp_only">
@@ -1057,8 +1060,7 @@
               <tr>
                 <td class="kind pc_only">フィールド</td>
                 <td class="type " colspan="2">フィールド</td>
-                <td class=""><select id="element_field" class="filed element_field element redisplay"
-                    name="buff">
+                <td class=""><select id="element_field" class="filed element_field element redisplay" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
                 <td class=""><label class="strengthen strengthen_field display_chara_id-3 hidden"><input
@@ -1428,7 +1430,8 @@
     </div>
     <div class="modal micromodal-slide" id="modal_select_buff" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_multi_buff" role="dialog" aria-modal="true" aria-labelledby="select_buff">
+        <div class="modal__container container_multi_buff" role="dialog" aria-modal="true"
+          aria-labelledby="select_buff">
           <div class="multi_inner_headline">
             <div class="buff_container">
               <div class="mx-auto">一括設定</div>

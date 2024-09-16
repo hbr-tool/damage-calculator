@@ -52,8 +52,21 @@ const BUFF_GIVEATTACKBUFFUP = 28; // バフ強化
 const BUFF_GIVEDEBUFFUP = 29; // デバフ強化
 const BUFF_ARROWCHERRYBLOSSOMS = 30; // 桜花の矢
 const BUFF_ETERNAL_OARH = 31; // 永遠なる誓い
+const BUFF_EX_DOUBLE = 32; // EXスキル連続発動
+const BUFF_BABIED = 33; // オギャり
 const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
 const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
+
+const RANGE_FILED = 0; // 場
+const RANGE_ENEMY_UNIT = 1; // 敵単体
+const RANGE_ENEMY_ALL = 2; // 敵全体
+const RANGE_ALLY_UNIT = 3; // 味方単体
+const RANGE_ALLY_FRONT = 4; // 味方前衛
+const RANGE_ALLY_BACK = 5; // 味方後衛
+const RANGE_ALLY_ALL = 6; // 味方全員
+const RANGE_SELF = 7; // 自分
+const RANGE_SELF_OTHER = 8; // 自分以外
+const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
 
 const BUFF_FUNNEL_LIST = [BUFF_FUNNEL_SMALL, BUFF_FUNNEL_LARGE, BUFF_ABILITY_FUNNEL_SMALL, BUFF_ABILITY_FUNNEL_LARGE];
 
@@ -389,8 +402,8 @@ class unit_data {
         this.buffSort();
         for (let i = this.buff_list.length - 1; i >= 0; i--) {
             let buff_info = this.buff_list[i];
-            // 星屑の航路/星屑の航路+
-            if (buff_info.skill_id == 67 || buff_info.skill_id == 490) {
+            // 星屑の航路/星屑の航路+/バウンシー・ブルーミー
+            if (buff_info.skill_id == 67 || buff_info.skill_id == 490 || buff_info.skill_id == 522) {
                 if (buff_info.rest_turn == 1) {
                     this.buff_list.splice(i, 1);
                 } else {
@@ -448,8 +461,12 @@ class unit_data {
             return b.effect_size - a.effect_size;
         });
 
-        // 上位2つの要素を取得
-        let top_two = ret.slice(0, 2 + ability_count);
+        let consume = 2;
+        if (checkBuffExist(this.buff_list, BUFF_EX_DOUBLE)) {
+            consume = 4;
+        }
+        // 上位の要素を取得       
+        let top_two = ret.slice(0, consume + ability_count);
 
         // 新しいリストを作成
         let result_list = [];
@@ -562,7 +579,7 @@ function setEventTrigger() {
             setOverDrive();
         }
     });
-    // スキル変更
+    // 敵カウント変更
     $(document).on("change", "select.enemy_count", function (event) {
         // ODゲージを設定
         setOverDrive();
@@ -686,7 +703,7 @@ function selectUnitSkill(select) {
     }
 
     async function handleTargetSelection(buff_list) {
-        if (buff_list.some(buff => buff.range_area == 3)) {
+        if (buff_list.some(buff => buff.range_area == RANGE_ALLY_UNIT || buff.range_area == RANGE_SELF_AND_UNIT)) {
             const target_no = await showModalSelectTarget();
             if (!target_no && target_no !== 0) {
                 select.prop("selectedIndex", 0);
@@ -820,6 +837,7 @@ function setEnemyStatus() {
     for (let i = 0; i <= 5; i++) {
         setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i]);
     }
+    $("#enemy_count").val(enemy_info.enemy_count);
 }
 // 敵耐性設定
 function setEnemyElement(id, val) {
@@ -855,7 +873,7 @@ function procBattleStart() {
             unit.skill_list = skill_list.filter(obj =>
                 (obj.chara_id === value.style_info.chara_id || obj.chara_id === 0) &&
                 (obj.style_id === value.style_info.style_id || obj.style_id === 0) &&
-                obj.kb_skill != 1
+                obj.skill_active == 0
             );
             let limit = Number($("#limit_" + index).val());
             ["0", "00", "1", "3", "5", "10"].forEach(num => {
@@ -1054,8 +1072,12 @@ function proceedTurn(turn_data, kb_next) {
         )
     );
     back_area.append($div)
-    party_member.append(front_area).append(back_area)
-    turn.append(header_area).append(party_member);
+
+    party_member.append(front_area).append(back_area);
+    let remark_area = $('<div>').addClass("remark_area");
+    let remaek_text = $("<textarea>").addClass("remaek_text")
+    remark_area.append(remaek_text);
+    turn.append(header_area).append(party_member).append(remark_area);
     if (next_display == "1") {
         $("#battle_area").prepend(turn);
     } else {
@@ -1229,6 +1251,12 @@ function getBuffIconImg(buff_info) {
             break;
         case BUFF_ETERNAL_OARH: // 永遠なる誓い
             src += "iconEternalOath";
+            break;
+        case BUFF_EX_DOUBLE: // EXスキル連続使用
+            src += "IconDoubleActionExtraSkill";
+            break;
+        case BUFF_BABIED: // オギャり
+            src += "IconBabied";
             break;
         default:
             break;
@@ -1454,7 +1482,7 @@ function startAction(turn_data, turn_number) {
         }
 
         if (attack_info) {
-            consumeBuffUnit(unit_data.buff_list, attack_info);
+            consumeBuffUnit(unit_data.buff_list, attack_info, skill_info);
         }
         origin(turn_data, skill_info, unit_data);
         unit_data.payCost();
@@ -1475,7 +1503,8 @@ function getOverDrive(turn_number, enemy_count) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(temp_turn, skill_data.place_no);
         let buff_list = getBuffInfo(skill_info.skill_id);
-
+        let attack_info = getAttackInfo(skill_info.attack_id);
+        let unit_od_plus = 0;
         buff_list.forEach(function (buff_info) {
             // OD増加
             if (buff_info.buff_kind == 13) {
@@ -1484,10 +1513,15 @@ function getOverDrive(turn_number, enemy_count) {
                     return true;
                 }
                 // サービス・エースが可変
-                od_plus += buff_info.max_power;
+                if (skill_info.attack_id) {
+                    let earring = 1 + unit_data.getEarringEffectSize(attack_info.hit_count) / 100;
+                    unit_od_plus += Math.floor(buff_info.max_power * earring * 100) / 100;
+                } else {
+                    unit_od_plus += buff_info.max_power;
+                }
             }
-            // 連撃のみ処理
-            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind)) {
+            // 連撃のみとオギャり状態処理
+            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || buff_info.buff_kind == BUFF_BABIED) {
                 addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data);
             }
         });
@@ -1495,21 +1529,30 @@ function getOverDrive(turn_number, enemy_count) {
         let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
         if (skill_info.skill_name == "通常攻撃") {
             if (isResist(physical, unit_data.normal_attack_element, skill_info.attack_id)) {
-                od_plus += 7.5
-                od_plus += funnel_list.length * 2.5;
+                unit_od_plus += 7.5
+                unit_od_plus += funnel_list.length * 2.5;
             }
         } else if (skill_info.attack_id) {
-            let attack_info = getAttackInfo(skill_info.attack_id);
             if (isResist(physical, attack_info.attack_element, skill_info.attack_id)) {
                 let earring = 1 + unit_data.getEarringEffectSize(attack_info.hit_count) / 100;
                 let hit_od = Math.floor(2.5 * earring * 100) / 100
                 if (attack_info.range_area == 1) {
                     enemy_count = 1;
                 }
-                od_plus += attack_info.hit_count * hit_od * enemy_count;
-                od_plus += funnel_list.length * hit_od * enemy_count;
+                if (checkBuffExist(unit_data.buff_list, BUFF_EX_DOUBLE)) {
+                    unit_od_plus += attack_info.hit_count * hit_od * 2 * enemy_count;
+                } else {
+                    unit_od_plus += attack_info.hit_count * hit_od * enemy_count;
+                }
+                unit_od_plus += funnel_list.length * hit_od * enemy_count;
             }
         }
+
+        // オギャり状態
+        if (checkBuffExist(unit_data.buff_list, BUFF_BABIED)) {
+            unit_od_plus *= 1.2;
+        }
+        od_plus += unit_od_plus;
     });
 
     // 後衛の選択取得
@@ -1585,7 +1628,7 @@ function getSpCost(turn_data, skill_info, unit) {
             sp_cost -= 2;
         }
     }
-    return sp_cost
+    return sp_cost < 0 ? 0 : sp_cost;
 }
 
 // 消費SP半減
@@ -1726,10 +1769,6 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 return;
             }
             break;
-        // 多重追加防止
-        case 56: // 破壊のシニシズム
-            return;
-            break;
     }
     let target_list;
     // 対象策定
@@ -1752,6 +1791,8 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_GIVEDEBUFFUP: // デバフ強化
         case BUFF_ARROWCHERRYBLOSSOMS: // 桜花の矢
         case BUFF_ETERNAL_OARH: // 永遠なる誓い
+        case BUFF_EX_DOUBLE: // EXスキル連続使用
+        case BUFF_BABIED: // オギャり
             // バフ追加
             target_list = getTargetList(turn_data, buff_info, place_no, use_unit_data.buff_target_chara_id);
             if (buff_info.buff_kind == 0 || buff_info.buff_kind == 1) {
@@ -1760,7 +1801,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                     return buff_info.buff_kind != BUFF_GIVEATTACKBUFFUP;
                 });
             }
-            let single_buff_list = [BUFF_CHARGE, BUFF_RECOIL, BUFF_GIVEATTACKBUFFUP, BUFF_GIVEDEBUFFUP, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH];
+            let single_buff_list = [BUFF_CHARGE, BUFF_RECOIL, BUFF_GIVEATTACKBUFFUP, BUFF_GIVEDEBUFFUP, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED];
             $.each(target_list, function (index, target_no) {
                 let unit_data = getUnitData(turn_data, target_no);
                 // 単一バフ
@@ -1836,22 +1877,26 @@ function createBuffData(buff_info) {
             break;
     }
 
-    // 星屑のみ特殊仕様
-    if (buff_info.skill_id == 67 || buff_info.skill_id == 490) {
+    // 星屑とバウンシー・ブルーミーのみ特殊仕様
+    if (buff_info.skill_id == 67 || buff_info.skill_id == 490 || buff_info.skill_id == 522) {
         buff.rest_turn = 3;
     }
     return buff;
 }
 
 // 攻撃時にバフ消費
-function consumeBuffUnit(buff_list, attack_info) {
+function consumeBuffUnit(buff_list, attack_info, skill_info) {
     let consume_kind = [];
-    // バフ追加
+    let consume_count = 2
+    if (checkBuffExist(buff_list, BUFF_EX_DOUBLE)) {
+        consume_count = 4;
+    }
+    // バフ消費
     for (let i = buff_list.length - 1; i >= 0; i--) {
         buff_info = buff_list[i];
         const countWithFilter = consume_kind.filter(buff_kind => buff_kind === buff_info.buff_kind).length;
-        // 同一バフは2個まで
-        if (countWithFilter < 2) {
+        // 同一バフは制限
+        if (countWithFilter < consume_count) {
             switch (buff_info.buff_kind) {
                 case BUFF_ELEMENT_ATTACKUP: // 属性攻撃力アップ
                     if (attack_info.attack_element != buff_info.buff_element) {
@@ -1884,6 +1929,13 @@ function consumeBuffUnit(buff_list, attack_info) {
                         continue;
                     }
                     // 通常攻撃でも消費
+                    buff_list.splice(i, 1);
+                    break;
+                case BUFF_EX_DOUBLE:	// EXスキル連続使用
+                    // EXスキルでのみ消費
+                    if (skill_info.skill_kind != 1 && skill_info.skill_kind != 2) {
+                        continue;
+                    }
                     buff_list.splice(i, 1);
                     break;
                 default:
@@ -1976,6 +2028,12 @@ function getBuffKindName(buff_info) {
         case BUFF_ETERNAL_OARH: // 永遠なる誓い
             buff_kind_name += "永遠なる誓い";
             break;
+        case BUFF_EX_DOUBLE: // EXスキル連続使用
+            buff_kind_name += "EXスキル連続使用";
+            break;
+        case BUFF_BABIED: // オギャり
+            buff_kind_name += "オギャり";
+            break;
         default:
             break;
     }
@@ -1986,31 +2044,37 @@ function getBuffKindName(buff_info) {
 // ターゲットリスト追加
 function getTargetList(turn_data, buff_info, place_no, buff_target_chara_id) {
     let target_list = [];
+    let target_unit_data;
     switch (buff_info.range_area) {
-        case 0: // 場
+        case RANGE_FILED: // 場
             break;
-        case 1: // 敵単体
+        case RANGE_ENEMY_UNIT: // 敵単体
             break;
-        case 2: // 敵全体
+        case RANGE_ENEMY_ALL: // 敵全体
             break;
-        case 3: // 味方単体
-            let target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
+        case RANGE_ALLY_UNIT: // 味方単体
+            target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
             target_list.push(target_unit_data[0].place_no);
             break;
-        case 4: // 味方前衛
+        case RANGE_ALLY_FRONT: // 味方前衛
             target_list = [0, 1, 2];
             break;
-        case 5: // 味方後衛
+        case RANGE_ALLY_BACK: // 味方後衛
             target_list = [3, 4, 5];
             break;
-        case 6: // 味方全員
+        case RANGE_ALLY_ALL: // 味方全員
             target_list = [...Array(6).keys()];
             break;
-        case 7: // 自分
+        case RANGE_SELF: // 自分
             target_list.push(place_no);
             break;
-        case 8: // 自分以外
+        case RANGE_SELF_OTHER: // 自分以外
             target_list = [...Array(6).keys()].filter(num => num !== place_no);
+            break;
+        case RANGE_SELF_AND_UNIT: // 味方単体
+            target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
+            target_list.push(place_no);
+            target_list.push(target_unit_data[0].place_no);
             break;
         default:
             break;
