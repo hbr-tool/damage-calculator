@@ -1647,19 +1647,23 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
         case 359: // とどけ！ 誓いのしるし
         case 487: // 花舞う、可憐のフレア
             // 挑発
-            if (checkBuffExist(turn_data.enemy_debuff_list, 25)) {
+            if (checkBuffExist(unit_data.buff_list, BUFF_TARGET)) {
+                return true;
+            }
+            // 全体挑発
+            if (checkBuffExist(unit_data.buff_list, BUFF_COVER)) {
                 return true;
             }
             break;
         case 361: // にゃんこ大魔法
             // 防御ダウン
-            if (checkBuffExist(turn_data.enemy_debuff_list, 3)) {
+            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_DEFENSEDOWN)) {
                 return true;
             }
             break;
         case 381: // 御稲荷神話
             // 脆弱
-            if (checkBuffExist(turn_data.enemy_debuff_list, 5)) {
+            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE)) {
                 return true;
             }
             break;
