@@ -266,6 +266,11 @@ img.select_style {
     font-size: 14px;
 }
 
+.od_minus {
+    font-weight: bold;
+    color: red;
+}
+
 .unit_selected {
     background-color: #FF0;
 }

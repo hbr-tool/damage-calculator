@@ -1577,13 +1577,6 @@ function addAbility(member_info) {
                 target = "ability_self";
                 element_type = "self_element"
                 physical_type = "self_physical"
-                // 狂乱の型/五月雨
-                if (ability_info.ability_id == 6 || ability_info.ability_id == 7) {
-                    // 追加
-                    var option1 = $('<option>').text("×1").val(1);
-                    var option2 = $('<option>').text("×2").val(2);
-                    append = $('<select>').append(option1).append(option2).addClass("ability_select");
-                }
                 break;
             case 2: // 前衛
             case 3: // 後衛
@@ -1607,6 +1600,14 @@ function addAbility(member_info) {
                 break;
             default:
                 break;
+        }
+        // 狂乱の型/五月雨/浄化の喝采/破砕の喝采
+        const APPEND_SELECT_LIST = [6, 7, 407, 408];
+        if (APPEND_SELECT_LIST.includes(ability_info.ability_id)) {
+            // 追加
+            var option1 = $('<option>').text("×1").val(1);
+            var option2 = $('<option>').text("×2").val(2);
+            append = $('<select>').append(option1).append(option2).addClass("ability_select");
         }
         let name = getCharaData(chara_id).chara_short_name;
         let fg_update = false;
@@ -1954,50 +1955,31 @@ function getSumFunnelEffectList() {
         if (selected.val() == "") {
             return true;
         }
-        let effect_size = Number($(selected).data("effect_size"));
-        let loop = 0;
-        let size = 0
-        if (effect_size == 50) {
-            loop = 5;
-            size = 10;
-        } else if (effect_size == 30) {
-            loop = 3;
-            size = 10;
-        } else if (effect_size == 10) {
-            loop = 1;
-            size = 10;
-        } else if (effect_size == 100) {
-            loop = 10;
-            size = 10;
-        } else if (effect_size == 120) {
-            loop = 3;
-            size = 40;
-        } else if (effect_size == 80) {
-            loop = 2;
+        let buff_info = getBuffIdToBuff(Number($(selected).val()));
+        let loop = buff_info.max_power;
+        let size = 10;
+        if (buff_info.buff_kind == 17) {
             size = 40;
         }
         for (let i = 0; i < loop; i++) {
             funnel_list.push(size);
         }
     });
-    let effect_size = getSumAbilityEffectSize(6);
-    let loop = 0;
-    if (effect_size == 10) {
-        loop = 5;
-        size = 10;
-    } else if (effect_size == 20) {
-        loop = 10;
-        size = 10;
-    } else if (effect_size == 40) {
-        loop = 3;
-        size = 40;
-    } else if (effect_size == 80) {
-        loop = 6;
-        size = 40;
-    }
-    for (let i = 0; i < loop; i++) {
-        funnel_list.push(size);
-    }
+
+    $("input[type=checkbox].ability:checked").each(function (index, value) {
+        if ($(value).parent().css("display") === "none") {
+            return true;
+        }
+        let ability_info = getAbilityInfo(Number($(value).data("ability_id")));
+        if (ability_info.effect_type == 6) {
+            let size = ability_info.effect_size;
+            let loop = ability_info.effect_count;
+            loop *= Number($(value).parent().find("select").val());
+            for (let i = 0; i < loop; i++) {
+                funnel_list.push(size);
+            }
+        }
+    });
     // 降順でソート
     funnel_list.sort(function (a, b) {
         return b - a;
@@ -2084,7 +2066,7 @@ function getCriticalBuff() {
     critical_buff += getSumEffectSize("critical_buff");
     critical_buff += getSumAbilityEffectSize(4);
     // 星空の航路+
-    critical_buff += $("option.skill_id-490:selected").length * 30;
+    critical_buff += $("option.skill_id-491:selected").length * 30;
     // 制圧戦
     critical_buff += getBikePartsEffectSize("critical_buff");
     return 1 + critical_buff / 100;
