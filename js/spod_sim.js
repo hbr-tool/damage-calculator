@@ -1562,15 +1562,16 @@ function getOverDrive(turn_number, enemy_count) {
             if (isResist(physical, attack_info.attack_element, skill_info.attack_id)) {
                 correction = 1 + (badies + earring) / 100;
                 let hit_od = Math.floor(2.5 * correction * 100) / 100;
+                let enemy_target = enemy_count;
                 if (attack_info.range_area == 1) {
-                    enemy_count = 1;
+                    enemy_target = 1;
                 }
                 if (checkBuffExist(unit_data.buff_list, BUFF_EX_DOUBLE)) {
-                    unit_od_plus += attack_info.hit_count * hit_od * 2 * enemy_count;
+                    unit_od_plus += attack_info.hit_count * hit_od * 2 * enemy_target;
                 } else {
-                    unit_od_plus += attack_info.hit_count * hit_od * enemy_count;
+                    unit_od_plus += attack_info.hit_count * hit_od * enemy_target;
                 }
-                unit_od_plus += funnel_list.length * hit_od * enemy_count;
+                unit_od_plus += funnel_list.length * hit_od * enemy_target;
             }
         }
         od_plus += unit_od_plus;
