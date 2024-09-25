@@ -1478,6 +1478,9 @@ function setBackOptions(select) {
 // 行動開始
 function startAction(turn_data, turn_number) {
     let seq = sortActionSeq(turn_number);
+    // 攻撃後に付与されるバフ種
+    const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP, 
+        BUFF_ELEMENT_CRITICALDAMAGEUP, BUFF_CHARGE, BUFF_DAMAGERATEUP];
     $.each(seq, function (index, skill_data) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(turn_data, skill_data.place_no);
@@ -1485,7 +1488,10 @@ function startAction(turn_data, turn_number) {
 
         let buff_list = getBuffInfo(skill_info.skill_id);
         for (let i = 0; i < buff_list.length; i++) {
-            addBuffUnit(turn_data, buff_list[i], skill_data.place_no, unit_data);
+            let buff_info = buff_list[i];
+            if (!(buff_info.skill_attack1 == 999 && ATTACK_AFTER_LIST.includes(buff_info.buff_kind))) {
+                addBuffUnit(turn_data, buff_info, skill_data.place_no, unit_data);
+            }
         }
         if (skill_info.skill_name == "通常攻撃") {
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
@@ -1495,6 +1501,14 @@ function startAction(turn_data, turn_number) {
 
         if (attack_info) {
             consumeBuffUnit(unit_data.buff_list, attack_info, skill_info);
+        }
+
+        // 攻撃後にバフを付与
+        for (let i = 0; i < buff_list.length; i++) {
+            let buff_info = buff_list[i];
+            if (buff_info.skill_attack1 == 999 && ATTACK_AFTER_LIST.includes(buff_info.buff_kind)) {
+                addBuffUnit(turn_data, buff_info, skill_data.place_no, unit_data);
+            }
         }
         origin(turn_data, skill_info, unit_data);
         unit_data.payCost();

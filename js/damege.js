@@ -1441,7 +1441,10 @@ function addBuffList(member_info, member_kind) {
                 only_one = "only_one";
                 break;
             case 1: // 属性攻撃アップ
-                only_one = "only_one";
+                let attack_info = getAttackInfo(value.skill_attack1);
+                if (value.buff_element == attack_info.attack_element) {
+                    only_one = "only_one";
+                }
             case 4: // 属性防御ダウン
             case 20: // 耐性ダウン
             case 22: // 永続属性防御ダウン
@@ -1730,6 +1733,8 @@ function select2ndSkill(select) {
         // 外されていた場合は、「無し」にする。
         if (select.find(":selected").css("display") == "none") {
             select.prop("selectedIndex", 0);
+        }
+        if (select.prop("selectedIndex") == 0) {
             resetSkillLv(id);
             $(".status_" + id).removeClass("status_" + id);
         }
@@ -1811,7 +1816,7 @@ function isOnlyUse(option) {
                 var class_name = class_list[i];
                 if (class_name.startsWith("skill_attack-")) {
                     var partial_class = class_name.replace("skill_attack-", "");
-                    if (Number(partial_class) != 0 && Number(partial_class) != 999 && attack_id == Number(partial_class)) {
+                    if (Number(partial_class) != 0 && (Number(partial_class) == 999 || attack_id == Number(partial_class))) {
                         ret = false;
                     }
                 }
