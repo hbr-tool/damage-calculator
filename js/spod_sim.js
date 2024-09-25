@@ -1630,10 +1630,10 @@ function origin(turn_data, skill_info, unit_data) {
             unit_data.first_use.push(skill_info.skill_id);
             break;
         case 177: // エリミネイト・ポッシブル
-            let target_unit_data = getUnitData(turn_data, unit_data.buff_target_chara_id)
-            if (target_unit_data.sp < 3) {
-                target_unit_data.sp = 3;
-            }
+            // let target_unit_data = getUnitData(turn_data, unit_data.buff_target_chara_id)
+            // if (target_unit_data.sp < 3) {
+            //     target_unit_data.sp = 3;
+            // }
             break;
     }
     return;
