@@ -45,15 +45,16 @@ const BUFF_ETERNAL_DEFENSEDOWN = 21; // 永続防御力ダウン
 const BUFF_ELEMENT_ETERNAL_DEFENSEDOWN = 22; // 永続属性防御ダウン
 const BUFF_HEALSP = 23; // SP増加
 const BUFF_RECOIL = 24; // 行動不能
-const BUFF_TARGET = 25; // 挑発
+const BUFF_PROVOKE = 25; // 挑発
 const BUFF_ADDITIONALTURN = 26 // 追加ターン
-const BUFF_COVER = 27; // 全体挑発
+const BUFF_COVER = 27; // 注目
 const BUFF_GIVEATTACKBUFFUP = 28; // バフ強化
 const BUFF_GIVEDEBUFFUP = 29; // デバフ強化
 const BUFF_ARROWCHERRYBLOSSOMS = 30; // 桜花の矢
 const BUFF_ETERNAL_OARH = 31; // 永遠なる誓い
 const BUFF_EX_DOUBLE = 32; // EXスキル連続発動
 const BUFF_BABIED = 33; // オギャり
+const BUFF_MORALE = 34; // 士気
 const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
 const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
 
@@ -266,7 +267,6 @@ class turn_data {
                             if (unit_data.sp < 20) {
                                 switch (ability.ability_id) {
                                     case 1109: // 吉報
-                                    case 1111: // みなぎる士気
                                     case 1119: // 旺盛
                                         unit_data.add_sp += ability.effect_size;
                                         break;
@@ -279,6 +279,16 @@ class turn_data {
                                         // チャージ存在チェック
                                         if (checkBuffExist(unit_data.buff_list, BUFF_CHARGE)) {
                                             unit_data.sp += ability.effect_size;
+                                        }
+                                        break;
+                                    case 1111: // みなぎる士気
+                                        let exist_list = unit_data.buff_list.filter(function (buff_info) {
+                                            return buff_info.buff_kind == BUFF_MORALE;
+                                        });
+                                        if (exist_list.length > 0) {
+                                            if (exist_list[0].lv >= 6) {
+                                                unit_data.sp += ability.effect_size;
+                                            }
                                         }
                                         break;
                                     case 1204: // エンゲージリンク
@@ -373,10 +383,17 @@ class unit_data {
         this.ability_additional_turn = [];
         this.ability_over_drive = [];
         this.ability_other = [];
+        this.next_turn_min_sp = -1;
     }
 
     unitTurnProceed(turn_data) {
         this.buffSort();
+        if (this.next_turn_min_sp > 0) {
+            if (this.next_turn_min_sp > this.sp) {
+                this.sp = this.next_turn_min_sp;
+                this.next_turn_min_sp = -1
+            }
+        }
         if (this.sp < 20) {
             this.sp += 2;
             if (this.place_no < 3) {
@@ -490,6 +507,7 @@ class buff_data {
         this.buff_kind = 0;
         this.skill_id = -1;
         this.buff_name = null;
+        this.lv = 0;
     }
 }
 
@@ -1237,10 +1255,10 @@ function getBuffIconImg(buff_info) {
         case BUFF_RECOIL: // 行動不能
             src += "IconRecoil";
             break;
-        case BUFF_TARGET: // 挑発
+        case BUFF_PROVOKE: // 挑発
             src += "IconTarget";
             break;
-        case BUFF_COVER: // 全体挑発
+        case BUFF_COVER: // 注目
             src += "IconCover";
             break;
         case BUFF_GIVEATTACKBUFFUP: // バフ強化
@@ -1261,7 +1279,8 @@ function getBuffIconImg(buff_info) {
         case BUFF_BABIED: // オギャり
             src += "IconBabied";
             break;
-        default:
+        case BUFF_MORALE: // 士気
+            src += "IconMorale";
             break;
     }
     if (buff_info.buff_element != 0) {
@@ -1393,7 +1412,14 @@ function addUnitEvent() {
             let label = $("<label>");
             let buff_kind_name = getBuffKindName(buff_info);
             let turn = buff_info.rest_turn < 0 ? "∞" : buff_info.rest_turn;
-            label.html(`${buff_kind_name}<br>${buff_info.buff_name}(残りターン${turn})`);
+            switch (buff_info.buff_kind) {
+                case BUFF_MORALE: // 士気
+                    label.html(`${buff_kind_name}<br>${buff_info.buff_name}(Lv${buff_info.lv})`);
+                    break;
+                default:
+                    label.html(`${buff_kind_name}<br>${buff_info.buff_name}(残りターン${turn})`);
+                    break;
+            }
             buff_detail.append(div.append(label));
         });
         MicroModal.show('modal_buff_detail_list');
@@ -1479,7 +1505,7 @@ function setBackOptions(select) {
 function startAction(turn_data, turn_number) {
     let seq = sortActionSeq(turn_number);
     // 攻撃後に付与されるバフ種
-    const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP, 
+    const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP,
         BUFF_ELEMENT_CRITICALDAMAGEUP, BUFF_CHARGE, BUFF_DAMAGERATEUP];
     $.each(seq, function (index, skill_data) {
         let skill_info = skill_data.skill_info;
@@ -1644,10 +1670,8 @@ function origin(turn_data, skill_info, unit_data) {
             unit_data.first_use.push(skill_info.skill_id);
             break;
         case 177: // エリミネイト・ポッシブル
-            // let target_unit_data = getUnitData(turn_data, unit_data.buff_target_chara_id)
-            // if (target_unit_data.sp < 3) {
-            //     target_unit_data.sp = 3;
-            // }
+            let target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === unit_data.buff_target_chara_id);
+            target_unit_data[0].next_turn_min_sp = 3;
             break;
     }
     return;
@@ -1684,11 +1708,11 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
         case 359: // とどけ！ 誓いのしるし
         case 488: // 花舞う、可憐のフレア
             // 挑発
-            if (checkBuffExist(unit_data.buff_list, BUFF_TARGET)) {
+            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE)) {
                 return true;
             }
-            // 全体挑発
-            if (checkBuffExist(unit_data.buff_list, BUFF_COVER)) {
+            // 注目
+            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER)) {
                 return true;
             }
             break;
@@ -1834,8 +1858,6 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_FUNNEL_SMALL: // 連撃(小)
         case BUFF_FUNNEL_LARGE: // 連撃(大)
         case BUFF_RECOIL: // 行動不能
-        case BUFF_TARGET: // 挑発
-        case BUFF_COVER: // 全体挑発
         case BUFF_GIVEATTACKBUFFUP: // バフ強化
         case BUFF_GIVEDEBUFFUP: // デバフ強化
         case BUFF_ARROWCHERRYBLOSSOMS: // 桜花の矢
@@ -1865,6 +1887,26 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 unit_data.buff_list.push(buff);
             });
             break;
+        case BUFF_MORALE: // 士気
+            // バフ追加
+            target_list = getTargetList(turn_data, buff_info, place_no, use_unit_data.buff_target_chara_id);
+            $.each(target_list, function (index, target_no) {
+                let unit_data = getUnitData(turn_data, target_no);
+                let exist_list = unit_data.buff_list.filter(function (buff_info) {
+                    return buff_info.buff_kind == BUFF_MORALE;
+                });
+                let buff;
+                if (exist_list.length > 0) {
+                    buff = exist_list[0];
+                } else {
+                    buff = createBuffData(buff_info, use_unit_data);
+                    unit_data.buff_list.push(buff);
+                }
+                if (buff.lv < 10) {
+                    buff.lv += buff_info.effect_count;
+                }
+            });
+            break;
         case BUFF_DEFENSEDOWN: // 防御力ダウン
         case BUFF_ELEMENT_DEFENSEDOWN: // 属性防御力ダウン
         case BUFF_FRAGILE: // 脆弱
@@ -1872,6 +1914,8 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_RESISTDOWN: // 耐性ダウン
         case BUFF_ETERNAL_DEFENSEDOWN: // 永続防御ダウン
         case BUFF_ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
+        case BUFF_PROVOKE: // 挑発
+        case BUFF_COVER: // 注目
             // デバフ追加
             let add_count = 1;
             if (buff_info.range_area == RANGE_ENEMY_ALL) {
@@ -1927,7 +1971,8 @@ function createBuffData(buff_info, use_unit_data) {
                 buff.rest_turn++;
             }
             break;
-        case BUFF_COVER: // 全体挑発
+        case BUFF_PROVOKE: // 挑発
+        case BUFF_COVER: // 注目
             buff.rest_turn = buff_info.max_power;
             break;
         default:
@@ -2074,11 +2119,11 @@ function getBuffKindName(buff_info) {
         case BUFF_RECOIL: // 行動不能
             buff_kind_name += "行動不能";
             break;
-        case BUFF_TARGET: // 挑発
+        case BUFF_PROVOKE: // 挑発
             buff_kind_name += "挑発";
             break;
-        case BUFF_COVER: // 全体挑発
-            buff_kind_name += "全体挑発";
+        case BUFF_COVER: // 注目
+            buff_kind_name += "注目";
             break;
         case BUFF_GIVEATTACKBUFFUP: // バフ強化
             buff_kind_name += "バフ強化";
@@ -2097,6 +2142,9 @@ function getBuffKindName(buff_info) {
             break;
         case BUFF_BABIED: // オギャり
             buff_kind_name += "オギャり";
+            break;
+        case BUFF_MORALE: // 士気
+            buff_kind_name += "士気";
             break;
         default:
             break;
