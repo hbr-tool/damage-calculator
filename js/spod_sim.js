@@ -8,7 +8,6 @@ let physical_name = ["", "斬", "突", "打"];
 let element_name = ["無", "火", "氷", "雷", "光", "闇"];
 let next_display;
 
-const KB_NEXT_OD = 0;
 const KB_NEXT_ACTION = 1;
 const KB_NEXT_ACTION_OD = 2;
 
@@ -82,6 +81,7 @@ class turn_data {
         this.additional_turn = false;
         this.enemy_debuff_list = [];
         this.unit_list = [];
+        this.start_over_drive_gauge = 0;
         this.over_drive_gauge = 0;
         this.add_over_drive_gauge = 0;
         this.enemy_count = 1;
@@ -93,6 +93,14 @@ class turn_data {
         this.step_sp_down = 0;
     }
 
+    unitLoop(func) {
+        $.each(this.unit_list, function (index, unit) {
+            if (!unit.blank) {
+                func(unit);
+            }
+        });
+    }
+
     // 0:先打ちOD,1:通常戦闘,2:後打ちOD,3:追加ターン
     turnProceed(kb_next) {
         this.enemy_debuff_list.sort((a, b) => a.buff_kind - b.buff_kind);
@@ -100,10 +108,8 @@ class turn_data {
             // オーバードライブ
             if (this.over_drive_max_turn > 0) {
                 this.over_drive_turn++;
-                $.each(this.unit_list, function (index, unit) {
-                    if (!unit.blank) {
-                        unit.unitOverDriveTurnProceed();
-                    }
+                this.unitLoop(function(unit) {
+                    unit.unitOverDriveTurnProceed();
                 });
                 if (this.over_drive_max_turn < this.over_drive_turn) {
                     // オーバードライブ終了
@@ -117,35 +123,22 @@ class turn_data {
                 this.nextTurn();
             }
         } else {
-            // OD
-            this.over_drive_turn = 1;
-            let over_drive_level = Math.floor(this.over_drive_gauge / 100)
-            this.startOverDrive(over_drive_level);
-            this.over_drive_max_turn = over_drive_level;
-            this.over_drive_gauge = 0;
-            this.add_over_drive_gauge = 0;
-            if (kb_next == KB_NEXT_ACTION_OD) {
-                // 行動開始＋OD発動
-                this.fg_action = true;
-                $.each(this.unit_list, function (index, unit) {
-                    if (!unit.blank) {
-                        unit.unitOverDriveTurnProceed();
-                    }
-                });
-            } else if (kb_next == KB_NEXT_OD) {
-                // OD発動
-                this.fg_action = false;
-            }
+            // 行動開始＋OD発動
+            this.startOverDrive();
+            this.fg_action = true;
+            this.unitLoop(function(unit) {
+                unit.unitOverDriveTurnProceed();
+            });
         }
     }
+
     nextTurn() {
         let self = this;
         // 通常進行
-        $.each(this.unit_list, function (index, unit) {
-            if (!unit.blank) {
-                unit.unitTurnProceed(self);
-            }
+        this.unitLoop(function(unit) {
+            unit.unitTurnProceed(self);
         });
+
         this.turn_number++;
         this.fg_action = false;
         this.abilityAction(KB_ABILIRY_SELF_START);
@@ -155,6 +148,7 @@ class turn_data {
                 this.over_drive_gauge = 0;
             }
         }
+        this.start_over_drive_gauge = this.over_drive_gauge;
         // 敵のデバフ消費
         this.debuffConsumption();
     }
@@ -179,12 +173,26 @@ class turn_data {
             this.over_drive_gauge = 300;
         }
     }
-    startOverDrive(over_drive_level) {
+    startOverDrive() {
+        let over_drive_level = Math.floor(this.over_drive_gauge / 100)
+        this.over_drive_turn = 1;
+        this.over_drive_max_turn = over_drive_level;
+        this.over_drive_gauge = 0;
+        this.add_over_drive_gauge = 0;
+
         let sp_list = [0, 5, 12, 20];
-        $.each(this.unit_list, function (index, unit) {
-            if (!unit.blank) {
-                unit.sp += sp_list[over_drive_level];
-            }
+        this.unitLoop(function(unit) {
+            unit.over_drive_sp = sp_list[over_drive_level];
+        });
+    }
+    removeOverDrive() {
+        this.over_drive_turn = 0;
+        this.over_drive_max_turn = 0;
+        this.over_drive_gauge = this.start_over_drive_gauge;
+        this.add_over_drive_gauge = 0;
+
+        this.unitLoop(function(unit) {
+            unit.over_drive_sp = 0;
         });
     }
     debuffConsumption() {
@@ -199,10 +207,7 @@ class turn_data {
     }
     abilityAction(action_kbn) {
         const self = this;
-        $.each(this.unit_list, function (index, unit) {
-            if (unit.blank) {
-                return true;
-            }
+        this.unitLoop(function(unit) {
             let action_list = [];
             switch (action_kbn) {
                 case KB_ABILIRY_BATTLE_START: // 戦闘開始時
@@ -364,11 +369,11 @@ class unit_data {
     constructor() {
         this.place_no = 99;
         this.sp = 1;
+        this.over_drive_sp = 0;
         this.add_sp = 0;
         this.sp_cost = 0;
         this.buff_list = [];
         this.additional_turn = false;
-        this.unit = null;
         this.normal_attack_element = 0;
         this.earring_effect_size = 0;
         this.skill_list = [];
@@ -431,6 +436,9 @@ class unit_data {
                 }
             }
         }
+        // OverDriveゲージをSPに加算
+        this.sp += this.over_drive_sp;
+        this.over_drive_sp = 0;
     }
     buffSort() {
         this.buff_list.sort((a, b) => {
@@ -441,9 +449,25 @@ class unit_data {
         });
     }
     payCost() {
-        this.sp -= this.sp_cost;
+        if (this.sp_cost == 99) {
+            this.sp = 0;
+            this.over_drive_sp = 0;
+        } else {
+            this.sp -= this.sp_cost;
+        }
         this.sp_cost = 0;
     }
+    
+    getDispSp() {
+        let unit_sp;
+        if (this.sp_cost == 99) {
+            unit_sp = 0;
+        } else {
+            unit_sp = this.sp + this.over_drive_sp- this.sp_cost;
+        }
+        return unit_sp + (this.add_sp > 0 ? ("+" + this.add_sp) : "");;
+    }
+
     getEarringEffectSize(hit_count) {
         // ドライブ
         if (this.earring_effect_size != 0) {
@@ -588,17 +612,7 @@ function setEventTrigger() {
     });
     // 行動選択変更
     $(document).on("change", "select.action_select", function (event) {
-        if ($(this).val() == "0") {
-            $(`.turn${last_turn} .front_area select.unit_skill`).prop("selectedIndex", 0);
-            $(`.turn${last_turn} .back_area select.unit_skill`).prop("selectedIndex", 0);
-            $(`.turn${last_turn} select.unit_skill`).trigger("change");
-            $(`.turn${last_turn} .front_area select.unit_skill`).prop("disabled", true);
-            $(`.turn${last_turn} .back_area select.unit_skill`).prop("disabled", true);
-        } else {
-            $(`.turn${last_turn} .front_area select.unit_skill`).prop("disabled", false);
-            $(`.turn${last_turn} .back_area select.unit_skill`).prop("disabled", false);
-            setOverDrive();
-        }
+        setOverDrive();
     });
     // 敵カウント変更
     $(document).on("change", "select.enemy_count", function (event) {
@@ -619,14 +633,24 @@ function setEventTrigger() {
         $(`.turn${last_turn} .enemy_icon_list`).off("click");
         $(`.turn${last_turn} select.unit_skill`).prop("disabled", true);
         $(`.turn${last_turn} select.action_select`).prop("disabled", true);
+        $(`.turn${last_turn} .trigger_over_drive`).prop("disabled", true);
         $(".unit_selected").removeClass("unit_selected");
         let kb_next = $(`.turn${last_turn} select.action_select`).val()
         let turn_data = deepClone(now_turn);
-        if (kb_next != KB_NEXT_OD) {
-            startAction(turn_data, last_turn);
-        }
+        startAction(turn_data, last_turn);
         // 次ターンを追加
         proceedTurn(turn_data, kb_next);
+    });
+
+    // OD発動/解除
+    $(document).on("click", ".trigger_over_drive", function (event) {
+        if ($(this).prop("checked")) {
+            now_turn.startOverDrive();
+        } else {
+            now_turn.removeOverDrive();
+        }
+        updateAction(now_turn)
+        updateTurn($(`.turn${last_turn}`), now_turn);
     });
 
     // ターンを戻す
@@ -651,10 +675,9 @@ function setEventTrigger() {
         removeTurnsAfter(last_turn);
         now_turn = turn_list[turn_list.length - 1];
 
-        if ($(`.turn${last_turn} select.action_select`).val() != KB_NEXT_OD) {
-            $(`.turn${last_turn} select.unit_skill`).prop("disabled", false);
-        }
+        $(`.turn${last_turn} select.unit_skill`).prop("disabled", false);
         $(`.turn${last_turn} select.action_select`).prop("disabled", false);
+        $(`.turn${last_turn} .trigger_over_drive`).prop("disabled", false);
         addUnitEvent();
         setTurnButton();
     });
@@ -799,24 +822,23 @@ function selectUnitSkill(select) {
 
         setOverDrive();
         let sp_cost = select.find('option:selected').data("sp_cost");
-        if (skill_id == 199 || skill_id == 518) {
-            // コーシュカ・アルマータ、疾きこと風の如し
-            sp_cost = unit_data.sp;
-        } else if (skill_id == 496) {
+        if (skill_id == 496) {
             // レッドラウンドイリュージョン
             if (unit_data.buff_effect_select_type == 1) {
                 sp_cost /= 2;
             }
         }
-
-        updateSp(select.parent().find(".unit_sp"), sp_cost);
+        unit_data.sp_cost = sp_cost;
+        updateSp(select.parent().find(".unit_sp"));
         updateAction(now_turn)
     }
 
-    function updateSp(target, sp_cost) {
-        unit_data.sp_cost = sp_cost;
-        let unit_sp = unit_data.sp - sp_cost;
-        $(target).text(getDispSp(unit_data));
+    function updateSp(target) {
+        let unit_sp = unit_data.sp + unit_data.over_drive_sp - unit_data.sp_cost;
+        if (unit_data.sp_cost == 99) {
+            unit_sp = 0;
+        }
+        $(target).text(unit_data.getDispSp());
         $(target).toggleClass("minus", unit_sp < 0);
     }
 
@@ -825,8 +847,15 @@ function selectUnitSkill(select) {
 
 // 行動制限
 function updateAction(turn_data) {
-    let is_over_drive = (turn_data.over_drive_gauge + turn_data.add_over_drive_gauge) >= 100;
-    toggleItemVisibility($(`.turn${last_turn} select.action_select option[value='2']`), is_over_drive);
+    let is_over_drive = true;
+    // 行動後ODゲージ100以上かつ、OD中以外
+    if ((turn_data.over_drive_gauge + turn_data.add_over_drive_gauge) < 100) {
+        is_over_drive = false;
+    };
+    if (turn_data.over_drive_max_turn > 0) {
+        is_over_drive = false;
+    };
+    toggleItemVisibility($(`.turn${last_turn} select.action_select option[value='${KB_NEXT_ACTION_OD}']`), is_over_drive);
 }
 
 // 敵リスト作成
@@ -961,7 +990,7 @@ function proceedTurn(turn_data, kb_next) {
         turn_data.abilityAction(KB_ABILIRY_ADDITIONALTURN);
     } else {
         turn_data.turnProceed(kb_next);
-        if (kb_next == KB_NEXT_OD || kb_next == KB_NEXT_ACTION_OD) {
+        if (kb_next == KB_NEXT_ACTION_OD) {
             turn_data.abilityAction(KB_ABILIRY_OD_START);
         } else {
             turn_data.abilityAction(KB_ABILIRY_ACTION_START);
@@ -975,9 +1004,9 @@ function proceedTurn(turn_data, kb_next) {
     let enemy = $('<div>').addClass("left flex").append(
         $('<img>').attr("src", "icon/BtnEventBattleActive.webp").addClass("enemy_icon"),
         $("<select>").attr("id", `enemy_count_turn${last_turn}`).append(
-            ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`×${i + 1}体`))
+            ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`${i + 1}体`))
         ).val(turn_data.enemy_count).addClass("enemy_count"),
-        createBuffIconList(turn_data.enemy_debuff_list, 5, 7).addClass("enemy_icon_list")
+        createBuffIconList(turn_data.enemy_debuff_list, 4, 7).addClass("enemy_icon_list")
     );
     let over_drive = createOverDriveGauge(turn_data.over_drive_gauge);
 
@@ -1023,7 +1052,7 @@ function proceedTurn(turn_data, kb_next) {
         };
 
         const appendUnitDetails = () => {
-            const sp = $('<div>').text(getDispSp(unit)).addClass("unit_sp");
+            const sp = $('<div>').text(unit.getDispSp()).addClass("unit_sp");
             if (unit.sp < 0) sp.addClass("minus");
             img.attr("src", `icon/${unit.style.style_info.image_url}`);
             unit_div.append($('<div>').append(img).append(sp));
@@ -1082,11 +1111,12 @@ function proceedTurn(turn_data, kb_next) {
 
     const $div = $('<div>').append(
         $('<select>').addClass('action_select').append(
-            turn_data.over_drive_gauge >= 100 ? $('<option>').val("0").text("OD発動") : null,
-            $('<option>').val("1").text("行動開始").prop("selected", true),
-            $('<option>').val("2").text("行動開始+OD")
+            $('<option>').val(KB_NEXT_ACTION).text("行動開始").prop("selected", true),
+            $('<option>').val(KB_NEXT_ACTION_OD).text("行動開始+OD")
         ),
-        $('<div>').addClass('mx-auto w-[80px] mt-2').append(
+        $('<div>').addClass('flex').css('justify-content', 'flex-end').append(
+            turn_data.over_drive_gauge >= 100 && turn_data.over_drive_max_turn == 0 ? $('<input>').attr({ type: 'checkbox' }).addClass('trigger_over_drive') : null
+        ).append(
             $('<input>').attr({ type: 'button', value: '次ターン' }).addClass('turn_button next_turn')
         ).append(
             $('<input>').attr({ type: 'button', value: 'ここに戻す' }).addClass('turn_button return_turn').data("trun_number", last_turn)
@@ -1117,29 +1147,32 @@ function proceedTurn(turn_data, kb_next) {
     updateAction(now_turn);
 }
 
+function updateTurn(selector, turn_data) {
+    // ターン表示更新
+    selector.find(".turn_number").text(turn_data.getTurnNumber());
+    // ODゲージ更新
+    setOverDrive();
+    // SP更新
+    turn_data.unitLoop(function(unit) {
+        let target = selector.find(".unit_sp")[unit.place_no];
+        $(target).text(unit.getDispSp());
+    })
+}
+
 // ターンボタン表示設定
 function setTurnButton() {
+    // 最後の要素のみ表示
+    $('.next_turn:last').show();
+    $('.next_turn:not(:last)').hide();
     if (next_display == "1") {
-        // 最初の要素のみ表示
-        $('.next_turn:first').show();
-        $('.next_turn:gt(0)').hide();
         // 最初の要素を非表示、以降の要素を表示
         $('.return_turn:first').hide();
         $('.return_turn:gt(0)').show();
     } else {
-        // 最後の要素のみ表示
-        $('.next_turn:last').show();
-        $('.next_turn:not(:last)').hide();
         // 最後の要素を非表示、以前の要素を表示
         $('.return_turn:last').hide();
         $('.return_turn:not(:last)').show();
     }
-}
-
-// SP表示取得
-function getDispSp(unit_data) {
-    let unit_sp = unit_data.sp - unit_data.sp_cost;
-    return unit_sp + (unit_data.add_sp > 0 ? ("+" + unit_data.add_sp) : "");;
 }
 
 // バフアイコンリスト
@@ -1308,15 +1341,13 @@ function createOverDriveGauge(over_drive_gauge) {
 function setOverDrive() {
     let turn_data = now_turn;
     let over_drive_gauge = turn_data.over_drive_gauge;
-    if ($(`.turn${last_turn} select.action_select`).val() == "0") {
-        over_drive_gauge = 0;
-    } else {
-        let enemy_count = Number($(`#enemy_count_turn${last_turn}`).val());
-        let add_over_drive_gauge = getOverDrive(last_turn, enemy_count);
-        turn_data.add_over_drive_gauge = add_over_drive_gauge;
-        over_drive_gauge += add_over_drive_gauge;
-        over_drive_gauge = over_drive_gauge > 300 ? 300 : over_drive_gauge;
-    }
+
+    let enemy_count = Number($(`#enemy_count_turn${last_turn}`).val());
+    let add_over_drive_gauge = getOverDrive(last_turn, enemy_count);
+    turn_data.add_over_drive_gauge = add_over_drive_gauge;
+    over_drive_gauge += add_over_drive_gauge;
+    over_drive_gauge = over_drive_gauge > 300 ? 300 : over_drive_gauge;
+
     let span_before = $("<span>").text(`${(turn_data.over_drive_gauge).toFixed(2)}%`);
     if (turn_data.over_drive_gauge < 0) {
         span_before.addClass("od_minus");
@@ -1374,8 +1405,8 @@ function addUnitEvent() {
                 setBackOptions(second_click.find("select"));
                 unit_data.sp_cost = 0;
                 let second_sp = second_click.find(".unit_sp");
-                second_sp.text(getDispSp(unit_data));
-                if (unit_data.sp > 0) {
+                second_sp.text(unit_data.getDispSp());
+                if (unit_data.sp >= 0) {
                     second_sp.removeClass("minus");
                 }
             }
@@ -1385,8 +1416,8 @@ function addUnitEvent() {
                 setBackOptions(first_click.find("select"));
                 first_click_unit_data.sp_cost = 0;
                 let first_sp = first_click.find(".unit_sp");
-                first_sp.text(getDispSp(first_click_unit_data));
-                if (first_click_unit_data.sp > 0) {
+                first_sp.text(first_click_unit_data.getDispSp());
+                if (first_click_unit_data.sp >= 0) {
                     first_sp.removeClass("minus");
                 }
             }
@@ -1397,7 +1428,7 @@ function addUnitEvent() {
             first_click = null;
             first_click_index = -1;
             // OD再表示
-            setOverDrive(now_turn);
+            setOverDrive();
         }
     });
 
@@ -1526,7 +1557,7 @@ function startAction(turn_data, turn_number) {
         }
 
         if (attack_info) {
-            consumeBuffUnit(unit_data.buff_list, attack_info, skill_info);
+            consumeBuffUnit(unit_data, attack_info, skill_info);
         }
 
         // 攻撃後にバフを付与
@@ -1988,7 +2019,8 @@ function createBuffData(buff_info, use_unit_data) {
 }
 
 // 攻撃時にバフ消費
-function consumeBuffUnit(buff_list, attack_info, skill_info) {
+function consumeBuffUnit(unit_data, attack_info, skill_info) {
+    let buff_list = unit_data.buff_list;
     let consume_kind = [];
     let consume_count = 2
     if (checkBuffExist(buff_list, BUFF_EX_DOUBLE)) {
@@ -2016,7 +2048,8 @@ function consumeBuffUnit(buff_list, attack_info, skill_info) {
                     }
                     if (buff_info.buff_kind == BUFF_MINDEYE) {
                         // 弱点のみ消費
-                        if (!isWeak(attack_info.physical, attack_info.attack_element, attack_info.attack_id)) {
+                        let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
+                        if (!isWeak(physical, attack_info.attack_element, attack_info.attack_id)) {
                             continue;
                         }
                     }

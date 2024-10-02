@@ -97,7 +97,11 @@ img.select_style {
         max-width: 400px;
         min-width: 375px;
     }
-
+    img.select_style {
+        width: 48px;
+        height: 48px;
+        margin-left: 4px;
+    }
     .limit,
     .earring,
     .bracelet,
@@ -122,6 +126,18 @@ img.select_style {
     border-radius: 20px;
     padding: 5px;
 
+}
+
+#enemy_select {
+    margin-left: 1rem;
+}
+
+#enemy_class {
+    max-width: 120px;
+}
+
+#enemy_list {
+    max-width: 225px;
 }
 
 .enemy_weak {
@@ -153,6 +169,21 @@ img.select_style {
     border: #000 solid 1px;
 }
 
+
+@media screen and (max-width: 482px) {
+    #enemy_class {
+        max-width: 100px;
+    }
+    
+    #enemy_list {
+        max-width: 200px;
+    }
+
+    #enemy_select {
+        margin-left: 0px;
+    }
+}
+
 /* 補助入力 */
 .step_od_gauge {
     text-align: right;
@@ -174,11 +205,34 @@ img.select_style {
 }
 
 .turn_button {
-    width: 80px;
-    font-size: 16px;
+    width: 60px;
+    font-size: 14px;
     border: none;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.trigger_over_drive {
+    display: flex!important;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
+    appearance: none;
+    background-color: #e2e2e2;
+    border-radius: 100vh;
+    padding-right: 4px;
+    padding-left: 4px;
+}
+
+.trigger_over_drive:checked {
+    background-color: #149f14;
+    color: white;
+    transform: scale(1.05);
+}
+
+.trigger_over_drive:before {
+    content: 'OD発動';
 }
 
 .turn {
@@ -218,6 +272,10 @@ img.select_style {
     .remaek_text {
         height: 25px;
     }
+
+    .turn_button {
+        width: 80px;
+    }
 }
 
 .header_area {
@@ -240,8 +298,12 @@ img.select_style {
 }
 
 .enemy_icon {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
+}
+
+.enemy_count {
+    width: 50px;
 }
 
 .inc_od_icon {
@@ -365,6 +427,13 @@ input[type='image'].select_target {
 
 .scroll-content {
     display: flex;
+}
+
+
+@media screen and (max-width: 768px) {
+    .action_select {
+        width: 145px;
+    }
 }
 
 
