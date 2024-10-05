@@ -53,6 +53,10 @@ function setEventTrigger() {
             if (attack_info === undefined || select_attack_skill.chara_id !== attack_info.chara_id) {
                 toggleItemVisibility(`.only_chara_id-${select_attack_skill.chara_id}`, false);
             }
+            if (attack_info === undefined || select_attack_skill.style_element) {
+                toggleItemVisibility(`.buff_target_element-${select_attack_skill.style_element}`, false);
+                toggleItemVisibility(`.buff_target_element-${select_attack_skill.style_element2}`, false);
+            }
             if (attack_info === undefined || select_attack_skill.attack_id !== attack_info.attack_id) {
                 toggleItemVisibility(`.skill_attack-${select_attack_skill.attack_id}`, false);
             }
@@ -109,6 +113,12 @@ function setEventTrigger() {
         toggleItemVisibility(`.attack_${attack_id_class}`, true);
         toggleItemVisibility(`.attack_${style_id_class}`, true);
         toggleItemVisibility(`.attack_${chara_id_class}`, true);
+        // スタイル属性専用を非表示
+        for (let i = 1; i <= 5; i++) {
+            if (attack_info.style_element != i && attack_info.style_element2 != i ) {
+                toggleItemVisibility(`.buff_target_element-${i}`, false);
+            }
+        }
 
         // 該当ステータスに着色
         for (let i = 1; i <= 3; i++) {
@@ -1491,6 +1501,7 @@ function addBuffList(member_info, member_kind) {
             .css("display", "none")
             .addClass("buff_element-" + buff_element)
             .addClass("buff_physical-0")
+            .addClass(value.target_element == 0 ? "" : `buff_target_element-${value.target_element}`)
             .addClass("buff_id-" + value.buff_id)
             .addClass("skill_id-" + value.skill_id)
             .addClass("variable_effect_size")
@@ -2459,10 +2470,14 @@ function sortEffectSize(selecter) {
 // 攻撃情報取得
 function getAttackInfo() {
     const attack_id = Number($("#attack_list option:selected").val());
+    const chara_no = Number($("#attack_list option:selected").data("chara_no"));
     const filtered_attack = skill_attack.filter((obj) => obj.attack_id === attack_id);
     let attack_info = filtered_attack.length > 0 ? filtered_attack[0] : undefined;
     if (attack_info) {
         attack_info.attack_physical = getCharaData(attack_info.chara_id).physical;
+        let member_info = select_style_list[chara_no];
+        attack_info.style_element = member_info.style_info.element;
+        attack_info.style_element2 = member_info.style_info.element2;
     }
     return attack_info;
 }
