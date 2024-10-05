@@ -79,6 +79,10 @@ hr.line {
 .narrow_area {
   grid-template-columns: repeat(8, minmax(0, 1fr));
 }
+
+.select_style_list {
+  cursor: pointer;
+}
 @media screen and (max-width: 768px) {
   .select_style_list {
     width: 48px;
