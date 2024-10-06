@@ -959,7 +959,7 @@ function getSpCost() {
             switch ($(value).parent().attr("id")) {
                 case "attack_list":
                     let attack = getAttackInfo();
-                    addSkillCount(sp_list, attack.attack_name, $(value).parent().attr("id"), attack.sp_cost)
+                    addSkillCount(sp_list, attack.skill_id, $(value).parent().attr("id"), attack.sp_cost)
                     break;
                 default:
                     // 非表示項目を除く
@@ -969,17 +969,17 @@ function getSpCost() {
                     let buff_id = Number($(value).val());
                     if (buff_id !== undefined && buff_id !== 0) {
                         let buff = getBuffIdToBuff(buff_id)
-                        addSkillCount(sp_list, buff.buff_name, $(value).parent().attr("id"), buff.sp_cost)
+                        addSkillCount(sp_list, buff.skill_id, $(value).parent().attr("id"), buff.sp_cost)
                     }
                     break;
             }
         });
-        // nameとsp_cost以外の最高値×sp_cost
+        // skill_idとsp_cost以外の最高値×sp_cost
         $.each(sp_list, function (index, value) {
             let single_sp_cost = 0;
             let max_count = 0;
             $.each(value, function (key, data) {
-                if (key == "name") {
+                if (key == "skill_id") {
                     return true;
                 } else if (key == "sp_cost") {
                     single_sp_cost = Number(data);
@@ -996,15 +996,14 @@ function getSpCost() {
 }
 
 // スキル使用回数取得
-function addSkillCount(sp_list, name, id, sp_cost) {
-    name = renameSkill(name);
-    const array = sp_list.filter((obj) => renameSkill(obj.name) === name);
+function addSkillCount(sp_list, skill_id, id, sp_cost) {
+    const array = sp_list.filter((obj) => obj.skill_id === skill_id);
 
     let single = {};
     if (array.length) {
         single = array[0];
     } else {
-        single.name = name;
+        single.skill_id = skill_id;
         single.sp_cost = sp_cost;
         sp_list[sp_list.length] = single;
     }
@@ -1014,15 +1013,6 @@ function addSkillCount(sp_list, name, id, sp_cost) {
     } else {
         single[kind] = 1;
     }
-}
-
-// スキル名の特定文字列削除
-function renameSkill(skill_name) {
-    let str_replace = ["(初回)", "(弱点)", '(破壊率200%以上)', '(オーバードライブ)', '(チャージ)', '(追加ターン)', '(挑発)', "(火)", "(闇)", "(31A3人以上)", "(31C3人以上)"];
-    str_replace.forEach(value => {
-        skill_name = skill_name.replace(value, "");
-    });
-    return skill_name;
 }
 
 // フィールド効果量更新
