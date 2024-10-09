@@ -60,6 +60,10 @@ img.select_style {
     margin-left: 4px;
 }
 
+.dragging {
+    opacity: 0.5; /* ドラッグ中は半透明に */
+}
+
 .label_status {
     line-height: 22px;
     display: block;

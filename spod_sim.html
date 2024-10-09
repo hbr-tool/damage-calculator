@@ -291,13 +291,13 @@
           </li>
         </ui>
       </div>
-      <div class="mx-auto w-[375px] mt-2">
+      <div class="mx-auto w-[380px] mt-2">
         次のターンを
-        <select id="next_display" class="h-[25px]">
+        <select id="next_display" class="h-[22px] text-sm">
           <option value="1">上に表示</option>
           <option value="2">下に表示</option>
         </select>
-        <input type="checkbox" id="is_overwrite"><label class="checkbox01" for="is_overwrite">上書き確認</label>
+        <input type="checkbox" id="is_overwrite"><label class="checkbox01 text-sm" for="is_overwrite">上書き確認</label>
         <input type="button" class="battle_start" value="戦闘開始">
       </div>
       <div id="battle_area" style="visibility: hidden;">
@@ -520,6 +520,18 @@
             </div>
             <div>
               <p>本ツールはヘブバンのSP、ODのシミュレーションツールです。</p>
+              <br>
+              <p><b>操作方法</b></p>
+              <p><b>1.スタイル選択</b></p>
+              <p>クリック(タップ)でスタイル選択画面でスタイルを選択します。</p>
+              <p>選択したスタイルは、ドラッグ(スワイプ)で入れ替え出来ます。</p>
+              <p><b>2.戦闘開始</b></p>
+              <p>初期設定を行ったら戦闘開始ボタンで開始します。</p>
+              <p>キャラクター同士の入れ替えは、スタイルを選択して入れ替えます（ゲーム内準拠）</p>
+              <p><b>3.オーバードライブ</b></p>
+              <p>オーバードライブゲージが100%以上ある場合は、「OD発動」ボタンが追加されます。</p>
+              <p>行動後にゲージが100％以上ある場合、「行動開始+OD」が追加されます。</p>
+              <br>
               <p>SPとODに関連するスキル、アビリティのデータは追加してありますが、現在、以下のスキル、アビリティに制約がかかっています。</p>
               <p>■アビリティ</p>
               <p>・怪盗乱麻：SP上昇効果なし</p>
