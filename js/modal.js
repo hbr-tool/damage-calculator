@@ -163,30 +163,20 @@ function setMember(select_chara_no, style_id, isTrigger) {
         member_info.limit_count = Number(items[7]);
         member_info.jewel_lv = Number(items[8]);
     } else {
-        // 旧設定
+        // 初期設定
         $.each(status_kbn, function (index, value) {
-            if (index == 0) return true;
-            let status = localStorage.getItem(value + "_" + style_info.chara_id);
-            if (status === null || status === undefined) {
-                status = 400;
-                localStorage.setItem(value + "_" + style_info.chara_id, status);
-            }
+            let status = 400;
+            localStorage.setItem(value + "_" + style_info.chara_id, status);
             $("#" + value + "_" + select_chara_no).val(status);
             member_info[value] = Number(status);
         });
-        let jewel = localStorage.getItem("jewel_" + style_info.chara_id);
-        if (jewel === null || jewel === undefined) {
-            jewel = 5;
-            localStorage.setItem("jewel_" + style_info.chara_id, jewel);
-        }
+        let jewel = 5;
+        localStorage.setItem("jewel_" + style_info.chara_id, jewel);
         $("#jewel_" + select_chara_no).val(jewel);
         member_info.jewel_lv = Number(jewel);
 
-        let limit_count = localStorage.getItem("limit_" + style_info.chara_id);
-        if (limit_count === null || limit_count === undefined) {
-            limit_count = 2;
-            localStorage.setItem("limit_" + style_info.chara_id, limit_count);
-        }
+        let limit_count = 2;
+        localStorage.setItem("limit_" + style_info.chara_id, limit_count);
         $("#limit_" + select_chara_no).val(limit_count);
         member_info.limit_count = Number(limit_count);
     }
@@ -299,17 +289,6 @@ function setSubMember(sub_chara_no, style_id) {
         });
         member_info.limit_count = Number(items[7]);
         member_info.jewel_lv = Number(items[8]);
-    } else {
-        // 旧設定
-        $.each(status_kbn, function (index, value) {
-            if (index == 0) return true;
-            const status = localStorage.getItem(value + "_" + style_info.chara_id);
-            if (status) member_info[value] = Number(status);
-        });
-        const jewel = localStorage.getItem("jewel_" + style_info.chara_id);
-        if (jewel) member_info.jewel_lv = Number(jewel);;
-        const limit_count = localStorage.getItem("limit_" + style_info.chara_id);
-        if (limit_count) member_info.limit_count = Number(limit_count);
     }
 
     sub_style_list[sub_chara_no] = member_info;

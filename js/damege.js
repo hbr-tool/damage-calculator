@@ -710,6 +710,8 @@ function calcDamage() {
     let fightingspirit = $("#fightingspirit").prop("checked") ? 20 : 0;
     // 厄
     let misfortune = $("#misfortune").prop("checked") ? 20 : 0;
+    // ハッキング
+    let hacking = $("#hacking").prop("checked") ? 100 : 0;
     // 士気
     let morale = Number($("#morale_count").val()) * 5;
     // 夢の泪
@@ -727,8 +729,10 @@ function calcDamage() {
     let member_info = select_style_list[chara_no];
     // 闘志or士気
     let stat_up = (morale > fightingspirit ? morale : fightingspirit) + tears_of_dreams + all_status_up;
+    // 厄orハッキング
+    let stat_down = hacking || misfortune;
 
-    let basePower = getBasePower(member_info, stat_up, misfortune);
+    let basePower = getBasePower(member_info, stat_up, stat_down);
     let buff = getSumBuffEffectSize();
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
@@ -772,7 +776,7 @@ function calcDamage() {
         buff += 0.3;
     }
 
-    let critical_power = getBasePower(member_info, stat_up, 50);
+    let critical_power = getBasePower(member_info, stat_up, stat_down || 50 );
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
     // 貫通クリティカル
@@ -1637,6 +1641,7 @@ function addAbility(member_info) {
         let div = $('<div>').append(input).append(label)
             .addClass(element_type + "-" + ability_info.ability_element)
             .addClass(physical_type + "-" + ability_info.ability_physical)
+            .addClass(ability_info.ability_target_element == 0 ? "" : `buff_target_element-${ability_info.ability_target_element}`)
             .addClass(target)
             .addClass(chara_id_class)
             .css("display", display);

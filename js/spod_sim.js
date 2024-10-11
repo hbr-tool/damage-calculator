@@ -108,7 +108,7 @@ class turn_data {
             // オーバードライブ
             if (this.over_drive_max_turn > 0) {
                 this.over_drive_turn++;
-                this.unitLoop(function(unit) {
+                this.unitLoop(function (unit) {
                     unit.unitOverDriveTurnProceed();
                 });
                 if (this.over_drive_max_turn < this.over_drive_turn) {
@@ -126,7 +126,7 @@ class turn_data {
             // 行動開始＋OD発動
             this.startOverDrive();
             this.fg_action = true;
-            this.unitLoop(function(unit) {
+            this.unitLoop(function (unit) {
                 unit.unitOverDriveTurnProceed();
             });
         }
@@ -135,7 +135,7 @@ class turn_data {
     nextTurn() {
         let self = this;
         // 通常進行
-        this.unitLoop(function(unit) {
+        this.unitLoop(function (unit) {
             unit.unitTurnProceed(self);
         });
 
@@ -181,7 +181,7 @@ class turn_data {
         this.add_over_drive_gauge = 0;
 
         let sp_list = [0, 5, 12, 20];
-        this.unitLoop(function(unit) {
+        this.unitLoop(function (unit) {
             unit.over_drive_sp = sp_list[over_drive_level];
         });
     }
@@ -191,7 +191,7 @@ class turn_data {
         this.over_drive_gauge = this.start_over_drive_gauge;
         this.add_over_drive_gauge = 0;
 
-        this.unitLoop(function(unit) {
+        this.unitLoop(function (unit) {
             unit.over_drive_sp = 0;
         });
     }
@@ -207,7 +207,7 @@ class turn_data {
     }
     abilityAction(action_kbn) {
         const self = this;
-        this.unitLoop(function(unit) {
+        this.unitLoop(function (unit) {
             let action_list = [];
             switch (action_kbn) {
                 case KB_ABILIRY_BATTLE_START: // 戦闘開始時
@@ -457,13 +457,13 @@ class unit_data {
         }
         this.sp_cost = 0;
     }
-    
+
     getDispSp() {
         let unit_sp;
         if (this.sp_cost == 99) {
             unit_sp = 0;
         } else {
-            unit_sp = this.sp + this.over_drive_sp- this.sp_cost;
+            unit_sp = this.sp + this.over_drive_sp - this.sp_cost;
         }
         return unit_sp + (this.add_sp > 0 ? ("+" + this.add_sp) : "");;
     }
@@ -536,6 +536,152 @@ class buff_data {
 }
 
 function setEventTrigger() {
+    let dragged_element = null;
+    let drag_image = null;
+
+    // ドラッグ開始時に実行
+    $('.select_style').on('dragstart', function (e) {
+        dragged_element = this; // ドラッグ中の要素を保持
+        e.originalEvent.dataTransfer.setData('text/plain', ''); // 必須のため空文字列を設定
+
+        // 半透明化
+        $(this).addClass('dragging');
+
+        // ドラッグ中の画像を表示
+        drag_image = new Image();
+        drag_image.src = this.src;
+        // 画像がロードされた後にサイズを設定
+        drag_image.onload = () => {
+            drag_image.width = this.width;
+            drag_image.height = this.height;
+            e.originalEvent.dataTransfer.setDragImage(drag_image, 10, 10);
+        };
+    });
+    // ドラッグ終了時にクラスを解除
+    $('.select_style').on('dragend', function () {
+        $(this).removeClass('dragging');
+    });
+    // ドラッグ要素が他の要素の上に入ったとき
+    $('.select_style').on('dragover', function (e) {
+        e.preventDefault(); // デフォルト動作を防ぎ、ドロップを許可
+    });
+    // ドロップ時に要素を入れ替える
+    $('.select_style').on('drop', function (e) {
+        e.preventDefault();
+        if (dragged_element !== this) {
+            let before_chara_no = $(dragged_element).data("chara_no");
+            let after_chara_no = $(this).data("chara_no");
+            swapCharaData(before_chara_no, after_chara_no);
+        }
+    });
+    // タッチ開始時の処理 (dragstartの代替)
+    $('.select_style').on('touchstart', function (e) {
+        dragged_element = this; // ドラッグ中の要素を保持
+
+        // 半透明化
+        $(this).addClass('dragging');
+
+        // ドラッグ中の画像を表示するための準備
+        if (drag_image) {
+            $(drag_image).remove();
+            drag_image = null;
+        }
+    });
+    // タッチ移動時の処理
+    $(document).on('touchmove', function (e) {
+        if (dragged_element) {
+            e.preventDefault();
+            const touch = e.originalEvent.touches[0];
+            if (drag_image) {
+                $(drag_image).css({
+                    left: touch.pageX + 1,
+                    top: touch.pageY + 1
+                });
+            } else {
+                drag_image = new Image();
+                drag_image.src = dragged_element.src;
+
+                // 画像のロード完了後にサイズを設定
+                drag_image.onload = () => {
+                    drag_image.width = dragged_element.width;
+                    drag_image.height = dragged_element.height;
+
+                    $(drag_image).css({
+                        position: 'absolute',
+                        left: touch.pageX + 1,
+                        top: touch.pageY + 1,
+                        opacity: 0.7 // 半透明
+                    }).appendTo('body');
+                };
+            }
+        }
+    });
+    // タッチ終了時の処理 (dragendの代替)
+    $(document).on('touchend', function (e) {
+        if (dragged_element) {
+            // タッチ終了時の座標を取得
+            const touch = e.originalEvent.changedTouches[0];
+            const touchX = touch.pageX;
+            const touchY = touch.pageY;
+
+            // 指定の位置にある要素が .select_style かどうかを判定
+            const touchedElement = document.elementFromPoint(touchX, touchY);
+            if ($(touchedElement).hasClass('select_style')) {
+                let before_chara_no = $(dragged_element).data("chara_no");
+                let after_chara_no = $(touchedElement).data("chara_no");
+                swapCharaData(before_chara_no, after_chara_no);
+            }
+
+            $(dragged_element).removeClass('dragging');
+            dragged_element = null;
+
+            // 表示されていた画像を削除
+            if (drag_image) {
+                $(drag_image).remove();
+                drag_image = null;
+            }
+        }
+    });
+    // キャラ入れ替え
+    function swapCharaData(before_chara_no, after_chara_no) {
+        let tmp_style = select_style_list[before_chara_no];
+        let tmp_src = $(`#select_chara_${before_chara_no}`).attr("src");
+
+        // ドラッグされた要素の属性情報を一時的に保存
+        let attributes = ['limit', 'earring', 'bracelet', 'chain', 'init_sp'];
+        let tmp_values = attributes.map(attr => $(`#${attr}_${before_chara_no}`).val());
+
+        // 進む方向を決定（前に進むなら -1, 後ろに進むなら +1）
+        let direction = before_chara_no < after_chara_no ? 1 : -1;
+
+        let troops_no = $(".troops_btn.selected_troops").val();
+        // 移動処理
+        for (let i = before_chara_no; i !== after_chara_no; i += direction) {
+            select_style_list[i] = select_style_list[i + direction];
+            $(`#select_chara_${i}`).attr("src", $(`#select_chara_${i + direction}`).attr("src"));
+            swapValues(i, i + direction, attributes);
+            let style_id = localStorage.getItem(`troops_${troops_no}_${i + direction}`);
+            if (style_id) {
+                localStorage.setItem(`troops_${troops_no}_${i}`, style_id);
+            } else {
+                localStorage.removeItem(`troops_${troops_no}_${i}`);
+            }
+        }
+
+        // 最後に、ドラッグされた要素をドラッグ先に挿入
+        select_style_list[after_chara_no] = tmp_style;
+        $(`#select_chara_${after_chara_no}`).attr("src", tmp_src);
+        attributes.forEach((attr, index) => $(`#${attr}_${after_chara_no}`).val(tmp_values[index]));
+        localStorage.setItem(`troops_${troops_no}_${after_chara_no}`, tmp_style.style_info.style_id);
+    }
+    function swapValues(index1, index2, attributes) {
+        attributes.forEach(attr => {
+            let temp = $(`#${attr}_${index1}`).val();
+            $(`#${attr}_${index1}`).val($(`#${attr}_${index2}`).val());
+            $(`#${attr}_${index2}`).val(temp);
+        });
+    }
+
     // リセットボタン
     $("#style_reset_btn").on("click", function (event) {
         styleReset(true);
@@ -1153,7 +1299,7 @@ function updateTurn(selector, turn_data) {
     // ODゲージ更新
     setOverDrive();
     // SP更新
-    turn_data.unitLoop(function(unit) {
+    turn_data.unitLoop(function (unit) {
         let target = selector.find(".unit_sp")[unit.place_no];
         $(target).text(unit.getDispSp());
     })
