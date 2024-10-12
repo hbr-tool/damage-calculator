@@ -115,7 +115,7 @@ function setEventTrigger() {
         toggleItemVisibility(`.attack_${chara_id_class}`, true);
         // スタイル属性専用を非表示
         for (let i = 1; i <= 5; i++) {
-            if (attack_info.style_element != i && attack_info.style_element2 != i ) {
+            if (attack_info.style_element != i && attack_info.style_element2 != i) {
                 toggleItemVisibility(`.buff_target_element-${i}`, false);
             }
         }
@@ -319,6 +319,7 @@ function setEventTrigger() {
         let has_charge = false;
         let has_mindeye = false;
         let has_funnel = false;
+        let has_funnel_impro = false;
         $('.bike_parts').each(function () {
             if ($(this).val() === "3") {
                 has_charge = true;
@@ -328,6 +329,9 @@ function setEventTrigger() {
             }
             if ($(this).val() === "8") {
                 has_funnel = true;
+            }
+            if ($(this).val() === "15") {
+                has_funnel_impro = true;
             }
         });
         if (has_charge) {
@@ -356,6 +360,15 @@ function setEventTrigger() {
             });
         } else {
             toggleItemVisibility(`.skill_id-8003`, false);
+        }
+        if (has_funnel_impro) {
+            toggleItemVisibility(`.skill_id-8004`, true);
+            $(".funnel").each(function (index, value) {
+                sortEffectSize($(value));
+                select2ndSkill($(value));
+            });
+        } else {
+            toggleItemVisibility(`.skill_id-8004`, false);
         }
     });
     // 士気/夢の泪レベル変更
@@ -776,7 +789,7 @@ function calcDamage() {
         buff += 0.3;
     }
 
-    let critical_power = getBasePower(member_info, stat_up, stat_down || 50 );
+    let critical_power = getBasePower(member_info, stat_up, stat_down || 50);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
     // 貫通クリティカル
@@ -2018,6 +2031,7 @@ function getBikePartsEffectSize(buff_kind) {
     let debuff = 0;
     let critical_rate = 0;
     let critical_buff = 0;
+    let destruction_rate = 0;
     for (let i = 1; i <= 3; i++) {
         let option = Number($(`#bike_parts_${i}`).val());
         switch (option) {
@@ -2036,6 +2050,27 @@ function getBikePartsEffectSize(buff_kind) {
             case 7: // クリティカル率ダメージ＋
                 critical_buff += 30;
                 break;
+            case 9: // 破壊率＋
+                destruction_rate += 100;
+                break;
+            case 10: // 攻撃＋改
+                buff += 40;
+                break;
+            case 11: // クリティカル率＋改
+                critical_rate += 45;
+                break;
+            case 12: // 敵防御ダウン改
+                debuff += 30;
+                break;
+            case 13: // 攻撃＋＋改
+                buff += 65;
+                break;
+            case 14: // クリティカル率ダメージ＋改
+                critical_buff += 40;
+                break;
+            case 16: // 破壊率＋改
+                destruction_rate += 120;
+                break;
         }
     }
     switch (buff_kind) {
@@ -2047,6 +2082,8 @@ function getBikePartsEffectSize(buff_kind) {
             return critical_rate;
         case "critical_buff":
             return critical_buff;
+        case "destruction_rate":
+            return destruction_rate;
         default:
             return 0;
     }
@@ -2119,6 +2156,8 @@ function getDestructionEffectSize(hit_count) {
     destruction_effect_size += getSumAbilityEffectSize(5);
     destruction_effect_size += getEarringEffectSize("blast", 10 - hit_count);
     destruction_effect_size += getChainEffectSize("blast");
+    // 制圧戦
+    destruction_effect_size += getBikePartsEffectSize("destruction_rate");
     destruction_effect_size -= grade_sum.destruction;
     return destruction_effect_size / 100;
 }

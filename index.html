@@ -76,7 +76,8 @@
       "permanent_element_down",
     ];
     const DP_GAUGE_COUNT = 4;
-    const BIKE_PARTS_LIST = ["無し(その他)", "攻撃＋", "クリティカル率＋", "チャージ", "敵防御ダウン", "攻撃＋＋", "心眼", "クリティカル率ダメージ＋", "連撃＋"];
+    const BIKE_PARTS_LIST = ["無し(その他)", "攻撃＋", "クリティカル率＋", "チャージ", "敵防御ダウン", "攻撃＋＋", "心眼(改)", "クリティカル率ダメージ＋", "連撃＋", "破壊率＋", 
+                            "攻撃＋改", "クリティカル率＋改", "敵防御ダウン改", "攻撃＋＋改", "クリティカル率ダメージ＋改", "連撃＋改", "破壊率＋改"];
     $(function () {
       // スタイルリスト作成
       createStyleList();
@@ -433,7 +434,7 @@
           <div class="bike_buff adjust_width mx-auto">
             <div class="mt-2">
               メンバーの全能力＋
-              <input type="number" min="0" max="190" step="1" id="all_status_up" value="0" class="limit_number">
+              <input type="number" min="0" max="286" step="1" id="all_status_up" value="0" class="limit_number">
             </div>
             <div class="mt-1">
               <sapn>バイクパーツ</sapn>

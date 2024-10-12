@@ -540,6 +540,7 @@
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":8003,"skill_name":"連撃＋","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":8004,"skill_name":"連撃＋(改)","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9001,"skill_name":"クリティカルシンキング","chara_id":0,"style_id":0,"sp_cost":5,"skill_active":0,"skill_kind":7,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9002,"skill_name":"リペアライト","chara_id":0,"style_id":0,"sp_cost":11,"skill_active":0,"skill_kind":7,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9003,"skill_name":"ドライブゲイン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"attack_id":null,"attack_physical":null,"attack_element":null},
