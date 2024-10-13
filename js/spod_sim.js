@@ -975,20 +975,20 @@ function selectUnitSkill(select) {
             }
         }
         unit_data.sp_cost = sp_cost;
-        updateSp(select.parent().find(".unit_sp"));
+        updateSp(unit_data, select.parent().find(".unit_sp"));
         updateAction(now_turn)
     }
-
-    function updateSp(target) {
-        let unit_sp = unit_data.sp + unit_data.over_drive_sp - unit_data.sp_cost;
-        if (unit_data.sp_cost == 99) {
-            unit_sp = 0;
-        }
-        $(target).text(unit_data.getDispSp());
-        $(target).toggleClass("minus", unit_sp < 0);
-    }
-
     processSkillChange();
+}
+
+// SP更新
+function updateSp(unit_data, target) {
+    let unit_sp = unit_data.sp + unit_data.over_drive_sp - unit_data.sp_cost;
+    if (unit_data.sp_cost == 99) {
+        unit_sp = 0;
+    }
+    $(target).text(unit_data.getDispSp());
+    $(target).toggleClass("minus", unit_sp < 0);
 }
 
 // 行動制限
@@ -1169,33 +1169,6 @@ function proceedTurn(turn_data, kb_next) {
         const img = $('<img>').data("chara_no", index).addClass("unit_style");
         const unit_div = $('<div>').addClass("flex");
         const skill_select = $('<select>').addClass("unit_skill");
-        let sp_cost = 0;
-
-        const createOptionText = (value) => {
-            let text = value.skill_name;
-            if (value.skill_name === "通常攻撃") {
-                sp_cost = 0;
-                text += `(${physical_name[value.attack_physical]}・${element_name[unit.normal_attack_element]})`;
-            } else if (value.skill_name === "追撃") {
-                sp_cost = 0;
-                text += `(${physical_name[value.attack_physical]})`;
-            } else if (value.attack_id) {
-                sp_cost = getSpCost(turn_data, value, unit);
-                text += `(${physical_name[value.attack_physical]}・${element_name[value.attack_element]}/${sp_cost})`;
-            } else {
-                sp_cost = getSpCost(turn_data, value, unit);
-                text += `(${sp_cost})`;
-            }
-            return text;
-        };
-
-        const createSkillOption = (value) => {
-            return $('<option>')
-                .text(createOptionText(value))
-                .val(value.skill_id)
-                .data("sp_cost", sp_cost)
-                .addClass(value.skill_name === "追撃" ? "back" : "front");
-        };
 
         const appendUnitDetails = () => {
             const sp = $('<div>').text(unit.getDispSp()).addClass("unit_sp");
@@ -1208,13 +1181,6 @@ function proceedTurn(turn_data, kb_next) {
         const appendDefaultImg = () => {
             img.attr("src", "img/cross.png");
             chara_div.append(img);
-        };
-
-        const appendSkillOptions = () => {
-            skill_select.append($('<option>').text("なし").val(0).addClass("back").data("sp_cost", 0));
-            $.each(unit.skill_list, function (index, value) {
-                skill_select.append(createSkillOption(value));
-            });
         };
 
         const handleRecoil = () => {
@@ -1246,7 +1212,7 @@ function proceedTurn(turn_data, kb_next) {
             appendDefaultImg();
         }
 
-        appendSkillOptions();
+        appendSkillOptions(skill_select, turn_data, unit);
         appendBuffList();
         handleRecoil();
         chara_div.prepend(skill_select);
@@ -1293,16 +1259,69 @@ function proceedTurn(turn_data, kb_next) {
     updateAction(now_turn);
 }
 
+// スキルセット作成
+const appendSkillOptions = (skill_select, turn_data, unit) => {
+    skill_select.append($('<option>').text("なし").val(0).addClass("back").data("sp_cost", 0));
+    $.each(unit.skill_list, function (index, value) {
+        skill_select.append(createSkillOption(value, turn_data, unit));
+    });
+};
+const createSkillOption = (value, turn_data, unit) => {
+    let sp_cost = 0;
+    const createOptionText = (value) => {
+        let text = value.skill_name;
+        if (value.skill_name === "通常攻撃") {
+            sp_cost = 0;
+            text += `(${physical_name[value.attack_physical]}・${element_name[unit.normal_attack_element]})`;
+        } else if (value.skill_name === "追撃") {
+            sp_cost = 0;
+            text += `(${physical_name[value.attack_physical]})`;
+        } else if (value.attack_id) {
+            sp_cost = getSpCost(turn_data, value, unit);
+            text += `(${physical_name[value.attack_physical]}・${element_name[value.attack_element]}/${sp_cost})`;
+        } else {
+            sp_cost = getSpCost(turn_data, value, unit);
+            text += `(${sp_cost})`;
+        }
+        return text;
+    };
+    return $('<option>')
+        .text(createOptionText(value))
+        .val(value.skill_id)
+        .data("sp_cost", sp_cost)
+        .addClass(value.skill_name === "追撃" ? "back" : "front");
+};
+
+// ターン表示更新
 function updateTurn(selector, turn_data) {
     // ターン表示更新
     selector.find(".turn_number").text(turn_data.getTurnNumber());
     // ODゲージ更新
     setOverDrive();
-    // SP更新
     turn_data.unitLoop(function (unit) {
-        let target = selector.find(".unit_sp")[unit.place_no];
-        $(target).text(unit.getDispSp());
-    })
+        let target_skill = selector.find(".unit_skill")[unit.place_no];
+        // ODで消費SP変更
+        let skill_id = Number($(target_skill).val());
+        switch (skill_id) {
+            case 477: // ヌラルジャ
+                // スキル更新
+                let select_index = $(target_skill).prop("selectedIndex");
+                $(target_skill).html("");
+                appendSkillOptions($(target_skill), turn_data, unit)
+                if (unit.place_no < 3) {
+                    setFrontOptions($(target_skill));
+                } else {
+                    setBackOptions($(target_skill));
+                }
+                $(target_skill).prop("selectedIndex", select_index);
+                let skill_info = getSkillData(skill_id);
+                unit.sp_cost = getSpCost(turn_data, skill_info, unit);
+                break;
+        }
+        // SP更新
+        let target_sp = selector.find(".unit_sp")[unit.place_no];
+        updateSp(unit, target_sp)
+    });
 }
 
 // ターンボタン表示設定
