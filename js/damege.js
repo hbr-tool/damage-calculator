@@ -789,7 +789,7 @@ function calcDamage() {
         buff += 0.3;
     }
 
-    let critical_power = getBasePower(member_info, stat_up, stat_down || 50);
+    let critical_power = getBasePower(member_info, stat_up, stat_down > 50 ? stat_down : 50);
     let critical_rate = getCriticalRate(member_info);
     let critical_buff = getCriticalBuff();
     // 貫通クリティカル
