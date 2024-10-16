@@ -19,55 +19,6 @@ const KB_ABILIRY_ADDITIONALTURN = 4;
 const KB_ABILIRY_OD_START = 5;
 const KB_ABILIRY_OTHER = 6;
 
-const BUFF_ATTACKUP = 0; // 攻撃力アップ
-const BUFF_ELEMENT_ATTACKUP = 1; // 属性アップ
-const BUFF_MINDEYE = 2; // 心眼
-const BUFF_DEFENSEDOWN = 3; // 防御ダウン
-const BUFF_ELEMENT_DEFENSEDOWN = 4; // 属性防御ダウン
-const BUFF_FRAGILE = 5; // 脆弱
-const BUFF_CRITICALRATEUP = 6; // クリ率
-const BUFF_CRITICALDAMAGEUP = 7; // クリダメ
-const BUFF_ELEMENT_CRITICALRATEUP = 8; // 属性クリ率
-const BUFF_ELEMENT_CRITICALDAMAGEUP = 9; // 属性クリダメ
-const BUFF_CHARGE = 10;// チャージ
-const BUFF_FIELD = 11; // フィールド
-const BUFF_DAMAGERATEUP = 12; // 破壊率アップ
-const BUFF_OVERDRIVEPOINTUP = 13; // OD増加
-const BUFF_FIGHTINGSPIRIT = 14; // 闘志
-const BUFF_MISFORTUNE = 15; // 厄
-const BUFF_FUNNEL_SMALL = 16; // 連撃(小)
-const BUFF_FUNNEL_LARGE = 17; // 連撃(大)
-const BUFF_STRONG_BREAK = 18; // 強ブレイク
-const BUFF_DEFENSEDP = 19; // DP防御ダウン
-const BUFF_RESISTDOWN = 20; // 耐性ダウン
-const BUFF_ETERNAL_DEFENSEDOWN = 21; // 永続防御力ダウン
-const BUFF_ELEMENT_ETERNAL_DEFENSEDOWN = 22; // 永続属性防御ダウン
-const BUFF_HEALSP = 23; // SP増加
-const BUFF_RECOIL = 24; // 行動不能
-const BUFF_PROVOKE = 25; // 挑発
-const BUFF_ADDITIONALTURN = 26 // 追加ターン
-const BUFF_COVER = 27; // 注目
-const BUFF_GIVEATTACKBUFFUP = 28; // バフ強化
-const BUFF_GIVEDEBUFFUP = 29; // デバフ強化
-const BUFF_ARROWCHERRYBLOSSOMS = 30; // 桜花の矢
-const BUFF_ETERNAL_OARH = 31; // 永遠なる誓い
-const BUFF_EX_DOUBLE = 32; // EXスキル連続発動
-const BUFF_BABIED = 33; // オギャり
-const BUFF_MORALE = 34; // 士気
-const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
-const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
-
-const RANGE_FILED = 0; // 場
-const RANGE_ENEMY_UNIT = 1; // 敵単体
-const RANGE_ENEMY_ALL = 2; // 敵全体
-const RANGE_ALLY_UNIT = 3; // 味方単体
-const RANGE_ALLY_FRONT = 4; // 味方前衛
-const RANGE_ALLY_BACK = 5; // 味方後衛
-const RANGE_ALLY_ALL = 6; // 味方全員
-const RANGE_SELF = 7; // 自分
-const RANGE_SELF_OTHER = 8; // 自分以外
-const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
-
 const BUFF_FUNNEL_LIST = [BUFF_FUNNEL_SMALL, BUFF_FUNNEL_LARGE, BUFF_ABILITY_FUNNEL_SMALL, BUFF_ABILITY_FUNNEL_LARGE];
 const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED];
 // 貫通クリティカル
@@ -1270,10 +1221,10 @@ const createSkillOption = (value, turn_data, unit) => {
     let sp_cost = 0;
     const createOptionText = (value) => {
         let text = value.skill_name;
-        if (value.skill_name === "通常攻撃") {
+        if (value.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
             sp_cost = 0;
             text += `(${physical_name[value.attack_physical]}・${element_name[unit.normal_attack_element]})`;
-        } else if (value.skill_name === "追撃") {
+        } else if (value.skill_attribute === ATTRIBUTE_PURSUIT) {
             sp_cost = 0;
             text += `(${physical_name[value.attack_physical]})`;
         } else if (value.attack_id) {
@@ -1899,64 +1850,53 @@ function getSpCost(turn_data, skill_info, unit) {
 
 // 消費SP半減
 function harfSpSkill(turn_data, skill_info, unit_data) {
-    switch (skill_info.skill_id) {
-        case 327: // 姫君の寵愛
-        case 359: // とどけ！ 誓いのしるし
-        case 488: // 花舞う、可憐のフレア
-            // 挑発
-            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE)) {
-                return true;
-            }
-            // 注目
-            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER)) {
-                return true;
-            }
-            break;
-        case 361: // にゃんこ大魔法
-            // 防御ダウン
-            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_DEFENSEDOWN)) {
-                return true;
-            }
-            break;
-        case 381: // 御稲荷神話
-            // 脆弱
-            if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE)) {
-                return true;
-            }
-            break;
-        case 422: // 必滅！ヴェインキック+
-        case 506: // ブラッディ・ダンス+
-        case 508: // そよ風に吹かれて
-        case 509: // リフレッシング・チアーズ！
-            // 初回
-            if (!unit_data.first_use.includes(skill_info.skill_id)) {
-                return true;
-            }
-            break;
-        case 473: // ロリータフルバースト
-        case 494: // 蒼焔ノ螺旋
-        case 516: // 放課後の淡いスリル
-            // 追加ターン
-            if (unit_data.additional_turn) {
-                return true;
-            }
-            break;
-        case 477: // ヌラルジャ
-            // オーバードライブ中
-            if (turn_data.over_drive_max_turn > 0) {
-                return true;
-            }
-            break;
-        case 419: // リミット・インパクト+(31A3人以上)
-            if (checkMember(turn_data.unit_list, "31A") >= 3) {
-                return true;
-            }
-            break;
-        case 531: // 魔炎閃獄門+(31E3人以上)
-            if (checkMember(turn_data.unit_list, "31E") >= 3) {
-                return true;
-            }
-            break;
+    // SP半減
+    if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF)  {
+        switch (skill_info.attribute_conditions) {
+            case CONDITIONS_TARGET_COVER: // 集中・挑発状態
+                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE)) {
+                    return true;
+                }
+                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER)) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_DEFFENCE_DOWN: // 防御ダウン
+                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_DEFENSEDOWN)) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_FRAGILE: // 脆弱
+                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE)) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_SKILL_INIT: // 初回
+                if (!unit_data.first_use.includes(skill_info.skill_id)) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_ADDITIONAL_TURN: // 追加ターン
+                if (unit_data.additional_turn) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_OVER_DRIVE: // オーバードライブ中
+                if (turn_data.over_drive_max_turn > 0) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_31A_OVER_3: // 31A3人以上
+                if (checkMember(turn_data.unit_list, "31A") >= 3) {
+                    return true;
+                }
+                break;
+            case CONDITIONS_31E_OVER_3: // 31E3人以上
+                if (checkMember(turn_data.unit_list, "31E") >= 3) {
+                    return true;
+                }
+                break;
+        }
     }
     return false;
 }

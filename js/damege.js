@@ -1,31 +1,5 @@
 // 貫通クリティカル
 let penetration_attack_list = [84, 135, 137, 156];
-/** 敵リスト*/
-// 異時層
-const KB_ENEMY_CLASS_HARD_LAYER = 1;
-// オーブボス
-const KB_ENEMY_CLASS_ORB_BOSS = 2;
-// 時計塔(N)
-const KB_ENEMY_CLASS_CLOCK_TOWER_NORMAL = 3;
-// 時計塔(H)
-const KB_ENEMY_CLASS_CLOCK_TOWER_HARD = 4;
-// 宝珠の迷宮
-const KB_ENEMY_CLASS_JEWEL_LABYRINTH = 5;
-// スコアアタック
-const KB_ENEMY_CLASS_SCORE_ATTACK = 6;
-// プリズムバトル
-const KB_ENEMY_CLASS_PRISMATIC_BATTLE = 7;
-// 恒星掃戦線
-const KB_ENEMY_CLASS_STELLAR_SWEEP_FRONT = 8;
-// イベント隠しボス
-const KB_ENEMY_CLASS_EVENT_HIDDEN_BOSS = 9;
-// 時の修練場
-const KB_ENEMY_CLASS_TIME_TRAINING = 10;
-// 制圧戦
-const KB_ENEMY_CLASS_CONTROL_BATTLE = 11;
-// 自由入力
-const KB_ENEMY_CLASS_FREE_INPUT = 99;
-
 
 function setEventTrigger() {
     // リセットボタン
@@ -729,12 +703,12 @@ function calcDamage() {
     let morale = Number($("#morale_count").val()) * 5;
     // 夢の泪
     let tears_of_dreams = 0;
-    if ($("#enemy_class").val() == 1) {
+    if ($("#enemy_class").val() == ENEMY_CLASS_HARD_LAYER) {
         tears_of_dreams = Number($("#tears_of_dreams").val()) * tears_of_dreams_list[Number($("#enemy_list").val())];
     }
     // 全能力アップ
     let all_status_up = 0;
-    if ($("#enemy_class").val() == 11) {
+    if ($("#enemy_class").val() == ENEMY_CLASS_CONTROL_BATTLE) {
         all_status_up = Number($("#all_status_up").val());
     }
     // メンバー
@@ -828,7 +802,7 @@ function calcDamage() {
     $("div.footer").show();
 
     // スコア計算
-    if ($("#enemy_class").val() == KB_ENEMY_CLASS_SCORE_ATTACK) {
+    if ($("#enemy_class").val() == ENEMY_CLASS_SCORE_ATTACK) {
         calcScore(critical_detail, grade_sum.grade_rate);
     }
 }
@@ -1269,7 +1243,7 @@ function createBuffList() {
     });
 
     switch (Number($("#enemy_class").val())) {
-        case KB_ENEMY_CLASS_HARD_LAYER:
+        case ENEMY_CLASS_HARD_LAYER:
             $.each(sub_style_list, function (index, value) {
                 if (value) {
                     let chara_id = value.style_info.chara_id;
@@ -1282,7 +1256,7 @@ function createBuffList() {
                 }
             });
             break;
-        case KB_ENEMY_CLASS_CONTROL_BATTLE:
+        case ENEMY_CLASS_CONTROL_BATTLE:
             $.each(support_style_list, function (index, value) {
                 if (value) {
                     let chara_id = value.style_info.chara_id;
@@ -2184,13 +2158,13 @@ function createEnemyList(enemy_class) {
         }
     });
 
-    if (enemy_class == KB_ENEMY_CLASS_SCORE_ATTACK || enemy_class == KB_ENEMY_CLASS_STELLAR_SWEEP_FRONT) {
+    if (enemy_class == ENEMY_CLASS_SCORE_ATTACK || enemy_class == ENEMY_CLASS_STELLAR_SWEEP_FRONT) {
         // 表示を逆順にする
         $("#enemy_list").html($("#enemy_list option").toArray().reverse());
         $("#enemy_list").prop("selectedIndex", 0);
     }
 
-    if (enemy_class == 6) {
+    if (enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
         // スコアタの場合、グレードを表示する。
         $(".score_attack").css("display", "block");
         $("#score_lv").show();
@@ -2200,13 +2174,13 @@ function createEnemyList(enemy_class) {
         $("#score_lv").hide();
         $("#prediction_score").hide();
     }
-    if (enemy_class == KB_ENEMY_CLASS_HARD_LAYER) {
+    if (enemy_class == ENEMY_CLASS_HARD_LAYER) {
         // 異時層の場合、サブパーティを表示する。
         $(".hard_layer").css("display", "block");
     } else {
         $(".hard_layer").css("display", "none");
     }
-    if (enemy_class == KB_ENEMY_CLASS_CONTROL_BATTLE) {
+    if (enemy_class == ENEMY_CLASS_CONTROL_BATTLE) {
         // 制圧戦、バイクバフを表示する。
         $(".bike_buff").css("display", "block");
         $(".bike_parts").val(0);
@@ -2224,7 +2198,7 @@ function createEnemyList(enemy_class) {
         removeSupportMember(0);
         $(".bike_buff").css("display", "none");
     }
-    if (enemy_class == KB_ENEMY_CLASS_FREE_INPUT) {
+    if (enemy_class == ENEMY_CLASS_FREE_INPUT) {
         // 自由入力の場合、入力を解除する
         $("#enemy_save").show();
         $(".enemy_input").attr("readonly", false);
@@ -2271,7 +2245,7 @@ function getGradeSum() {
     if (enemy_info == undefined) {
         return;
     }
-    if (enemy_info.enemy_class != KB_ENEMY_CLASS_SCORE_ATTACK) {
+    if (enemy_info.enemy_class != ENEMY_CLASS_SCORE_ATTACK) {
         // スコアタ以外の場合は、基本値
         return grade_sum;
     }
@@ -2306,14 +2280,14 @@ function setEnemyStatus() {
     }
     // 種別ごとの設定
     switch (enemy_info.enemy_class) {
-        case KB_ENEMY_CLASS_HARD_LAYER:
+        case ENEMY_CLASS_HARD_LAYER:
             if (enemy_info.enemy_class_no == 12 || enemy_info.enemy_class_no == 13) {
                 $("#skull_feather_1st").css("display", "block");
             } else {
                 $("#skull_feather_1st").css("display", "none");
             }
             break;
-        case KB_ENEMY_CLASS_SCORE_ATTACK:
+        case ENEMY_CLASS_SCORE_ATTACK:
             displayScoreAttack(enemy_info);
             break;
     }
