@@ -1,4 +1,4 @@
-
+/** バフ種別 */
 const BUFF_ATTACKUP = 0; // 攻撃力アップ
 const BUFF_ELEMENT_ATTACKUP = 1; // 属性アップ
 const BUFF_MINDEYE = 2; // 心眼
@@ -37,6 +37,7 @@ const BUFF_MORALE = 34; // 士気
 const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
 const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
 
+/** 対象 */
 const RANGE_FILED = 0; // 場
 const RANGE_ENEMY_UNIT = 1; // 敵単体
 const RANGE_ENEMY_ALL = 2; // 敵全体
@@ -48,17 +49,25 @@ const RANGE_SELF = 7; // 自分
 const RANGE_SELF_OTHER = 8; // 自分以外
 const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
 
+/** スキル属性 */
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
 const ATTRIBUTE_PURSUIT = 2; // 追撃
 const ATTRIBUTE_SP_HALF = 11; // SP半減
-const CONDITIONS_TARGET_COVER = 1; // 集中・挑発状態
+/** 条件 */
+const CONDITIONS_FIRST_TURN = 1; // 1ターン目
 const CONDITIONS_SKILL_INIT = 2; // 初回
 const CONDITIONS_ADDITIONAL_TURN = 3; // 追加ターン
 const CONDITIONS_OVER_DRIVE = 4; // オーバードライブ中
+const CONDITIONS_DESTRUCTION_OVER_200 = 5; // 破壊率200%以上
 const CONDITIONS_DEFFENCE_DOWN = 11; // 防御ダウン中
-const CONDITIONS_FRAGILE = 11; // 脆弱中
+const CONDITIONS_FRAGILE = 12; // 脆弱中
+const CONDITIONS_TARGET_COVER = 13; // 集中・挑発状態
+const CONDITIONS_HAS_CHARGE = 21; // チャージ中
 const CONDITIONS_31A_OVER_3 = 31; // 31A3人以上
 const CONDITIONS_31E_OVER_3 = 35; // 31E3人以上
+const CONDITIONS_ENEMY_COUNT_1 = 51; // 敵1体
+const CONDITIONS_ENEMY_COUNT_2 = 52; // 敵2体
+const CONDITIONS_ENEMY_COUNT_3 = 53; // 敵3体
 
 /** 敵リスト*/
 const ENEMY_CLASS_HARD_LAYER = 1; // 異時層

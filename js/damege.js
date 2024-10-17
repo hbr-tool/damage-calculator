@@ -1467,7 +1467,7 @@ function addBuffList(member_info, member_kind) {
 
         let str_buff = buff_kbn[value.buff_kind];
         if (!value.skill_attack1) only_one = undefined;
-        if (value.only_first === 1) only_one = "only_first";
+        if (value.conditions === CONDITIONS_SKILL_INIT) only_one = "only_first";
         let only_chara_id = value.range_area == 7 ? `only_chara_id-${chara_id}` : "public";
         let only_other_id = value.range_area === 8 ? `only_other_chara_id-${chara_id}` : "";
 

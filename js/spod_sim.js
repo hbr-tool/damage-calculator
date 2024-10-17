@@ -732,7 +732,8 @@ function setEventTrigger() {
         $(`.turn${last_turn} select.action_select`).prop("disabled", true);
         $(`.turn${last_turn} .trigger_over_drive`).prop("disabled", true);
         $(".unit_selected").removeClass("unit_selected");
-        let kb_next = $(`.turn${last_turn} select.action_select`).val()
+        let kb_next = $(`.turn${last_turn} select.action_select`).val();
+        now_turn.enemy_count = Number($("#enemy_count").val());;
         let turn_data = deepClone(now_turn);
         startAction(turn_data, last_turn);
         // 次ターンを追加
@@ -1199,7 +1200,6 @@ function proceedTurn(turn_data, kb_next) {
     }
 
     addUnitEvent();
-    turn_data.additional_turn = false;
     turn_list.push(turn_data);
     now_turn = turn_data;
 
@@ -1558,15 +1558,18 @@ function addUnitEvent() {
             div.append(img);
             let label = $("<label>");
             let buff_kind_name = getBuffKindName(buff_info);
-            let turn = buff_info.rest_turn < 0 ? "∞" : buff_info.rest_turn;
+            let buff_text = `${buff_kind_name}<br>${buff_info.buff_name}`;
             switch (buff_info.buff_kind) {
                 case BUFF_MORALE: // 士気
-                    label.html(`${buff_kind_name}<br>${buff_info.buff_name}(Lv${buff_info.lv})`);
+                    buff_text += `(Lv${buff_info.lv})`;
                     break;
                 default:
-                    label.html(`${buff_kind_name}<br>${buff_info.buff_name}(残りターン${turn})`);
+                    if (buff_info.rest_turn > 0) {
+                        buff_text += `(残りターン${buff_info.rest_turn})`;
+                    }
                     break;
             }
+            label.html(buff_text);
             buff_detail.append(div.append(label));
         });
         MicroModal.show('modal_buff_detail_list');
@@ -1650,6 +1653,7 @@ function setBackOptions(select) {
 
 // 行動開始
 function startAction(turn_data, turn_number) {
+    turn_data.additional_turn = false;
     let seq = sortActionSeq(turn_number);
     // 攻撃後に付与されるバフ種
     const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP,
@@ -1666,7 +1670,7 @@ function startAction(turn_data, turn_number) {
                 addBuffUnit(turn_data, buff_info, skill_data.place_no, unit_data);
             }
         }
-        if (skill_info.skill_name == "通常攻撃") {
+        if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
         } else if (skill_info.attack_id) {
             attack_info = getAttackInfo(skill_info.attack_id);
@@ -1698,6 +1702,7 @@ function getOverDrive(turn_number, enemy_count) {
     let seq = sortActionSeq(turn_number);
     let od_plus = 0;
     let temp_turn = deepClone(now_turn);
+    temp_turn.enemy_count = enemy_count;
     $.each(seq, function (index, skill_data) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(temp_turn, skill_data.place_no);
@@ -1739,7 +1744,7 @@ function getOverDrive(turn_number, enemy_count) {
         let funnel_list = unit_data.getfunnelList();
         let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
 
-        if (skill_info.skill_name == "通常攻撃") {
+        if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             if (isResist(physical, unit_data.normal_attack_element, skill_info.attack_id)) {
                 correction = 1 + badies / 100;
                 let hit_od = Math.floor(2.5 * correction * 100) / 100;
@@ -1851,52 +1856,41 @@ function getSpCost(turn_data, skill_info, unit) {
 // 消費SP半減
 function harfSpSkill(turn_data, skill_info, unit_data) {
     // SP半減
-    if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF)  {
-        switch (skill_info.attribute_conditions) {
-            case CONDITIONS_TARGET_COVER: // 集中・挑発状態
-                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE)) {
-                    return true;
-                }
-                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER)) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_DEFFENCE_DOWN: // 防御ダウン
-                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_DEFENSEDOWN)) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_FRAGILE: // 脆弱
-                if (checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE)) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_SKILL_INIT: // 初回
-                if (!unit_data.first_use.includes(skill_info.skill_id)) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_ADDITIONAL_TURN: // 追加ターン
-                if (unit_data.additional_turn) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_OVER_DRIVE: // オーバードライブ中
-                if (turn_data.over_drive_max_turn > 0) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_31A_OVER_3: // 31A3人以上
-                if (checkMember(turn_data.unit_list, "31A") >= 3) {
-                    return true;
-                }
-                break;
-            case CONDITIONS_31E_OVER_3: // 31E3人以上
-                if (checkMember(turn_data.unit_list, "31E") >= 3) {
-                    return true;
-                }
-                break;
+    if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {
+        if (judgmentCondition(skill_info.attribute_conditions, turn_data, unit_data, skill_info.skill_id)) {
+            return true;
         }
+    }
+    return false;
+}
+
+// 条件判定
+function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
+    switch (conditions) {
+        case CONDITIONS_FIRST_TURN: // 1ターン目
+            return turn_data.turn_number == 1;
+        case CONDITIONS_SKILL_INIT: // 初回
+            return !unit_data.first_use.includes(skill_id)
+        case CONDITIONS_ADDITIONAL_TURN: // 追加ターン
+            return turn_data.additional_turn;
+        case CONDITIONS_OVER_DRIVE: // オーバードライブ中
+            return turn_data.over_drive_max_turn > 0;
+        case CONDITIONS_DEFFENCE_DOWN: // 防御ダウン
+            return checkBuffExist(turn_data.enemy_debuff_list, BUFF_DEFENSEDOWN);
+        case CONDITIONS_FRAGILE: // 脆弱
+            return checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE);
+        case CONDITIONS_TARGET_COVER: // 集中・挑発状態
+            return checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE) || checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER);
+        case CONDITIONS_ENEMY_COUNT_1: // 敵1体
+            return turn_data.enemy_count == 1;
+        case CONDITIONS_ENEMY_COUNT_2: // 敵2体
+            return turn_data.enemy_count == 2;
+        case CONDITIONS_ENEMY_COUNT_3: // 敵3体
+            return turn_data.enemy_count == 3;
+        case CONDITIONS_31A_OVER_3: // 31A3人以上
+            return checkMember(turn_data.unit_list, "31A") >= 3;
+        case CONDITIONS_31E_OVER_3: // 31E3人以上
+            return checkMember(turn_data.unit_list, "31E") >= 3;
     }
     return false;
 }
@@ -1906,6 +1900,13 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
     // 対象：場
     if (buff_info.range_area == 0) {
         return;
+    }
+
+    // 条件判定
+    if (buff_info.conditions != null) {
+        if (!judgmentCondition(buff_info.conditions, turn_data, use_unit_data, buff_info.skill_id)) {
+            return;
+        }
     }
 
     // 個別判定
@@ -1930,51 +1931,6 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case 3313: // 春雷(SP回復)
         case 3314: // ファンタズム(SP回復)
             if (use_unit_data.buff_effect_select_type == 0) {
-                return;
-            }
-            break;
-        // 敵1体
-        case 111: // 豪快！パイレーツキャノン
-            if (turn_data.enemy_count != 1) {
-                return;
-            }
-            break;
-        // 敵2体
-        case 112: // 豪快！パイレーツキャノン
-            if (turn_data.enemy_count != 2) {
-                return;
-            }
-            break;
-        // 敵3体
-        case 113: // 豪快！パイレーツキャノン
-            if (turn_data.enemy_count != 3) {
-                return;
-            }
-            break;
-        // 1ターン目のみ
-        case 3315: // スイーツチャージ！
-            if (turn_data.turn_number != 1) {
-                return;
-            }
-            break;
-        // 初回のみ
-        case 39: // ルーイン・イリュージョン(クリダメ)
-        case 40: // ルーイン・イリュージョン(心眼)
-        case 92: // 醒めたる思い(雷属性攻撃アップ)
-        case 99: // 流星+(連撃)
-            if (use_unit_data.first_use.includes(buff_info.skill_id)) {
-                return;
-            }
-            break;
-        // OD中のみ
-        case 76: // フローズン・ワルツ(連撃)
-            if (turn_data.over_drive_max_turn == 0) {
-                return;
-            }
-            break;
-        // 追加ターンのみ
-        case 146: // 蒼焔ノ迷宮(ATTACK)(連撃)
-            if (turn_data.additional_turn) {
                 return;
             }
             break;
@@ -2359,7 +2315,7 @@ function sortActionSeq(turn_number) {
             skill_info: skill_info,
             place_no: index
         };
-        if (skill_info.attack_id || skill_info.skill_name == "通常攻撃") {
+        if (skill_info.attack_id || skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_seq.push(skill_data);
         } else {
             buff_seq.push(skill_data);
