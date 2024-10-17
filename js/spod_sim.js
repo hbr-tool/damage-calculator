@@ -1810,17 +1810,11 @@ function isWeak(physical, element, attack_id) {
 
 // 独自仕様
 function origin(turn_data, skill_info, unit_data) {
+    // 初回判定
+    if (!unit_data.first_use.includes(skill_info.skill_id)) {
+        unit_data.first_use.push(skill_info.skill_id);
+    }
     switch (skill_info.skill_id) {
-        // 初回判定
-        case 335: // ルーイン・イリュージョン
-        case 387: // 流星+
-        case 422: // 必滅！ヴェインキック+
-        case 450: // 醒めたる思い
-        case 506: // ブラッディ・ダンス+
-        case 508: // そよ風に吹かれて
-        case 509: // リフレッシング・チアーズ！
-            unit_data.first_use.push(skill_info.skill_id);
-            break;
         case 177: // エリミネイト・ポッシブル
             let target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === unit_data.buff_target_chara_id);
             target_unit_data[0].next_turn_min_sp = 3;
