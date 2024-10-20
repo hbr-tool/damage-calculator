@@ -10,6 +10,7 @@ let next_display;
 
 const KB_NEXT_ACTION = 1;
 const KB_NEXT_ACTION_OD = 2;
+const KB_NEXT_ADDITIONALTURN = 3;
 
 const KB_ABILIRY_BATTLE_START = 0;
 const KB_ABILIRY_SELF_START = 1;
@@ -73,6 +74,11 @@ class turn_data {
             } else {
                 this.nextTurn();
             }
+        } else if (kb_next == KB_NEXT_ADDITIONALTURN) {
+            // 追加ターン
+            this.unitLoop(function (unit) {
+                unit.unitAdditionalTurnProceed();
+            });
         } else {
             // 行動開始＋OD発動
             this.startOverDrive();
@@ -376,6 +382,22 @@ class unit_data {
     }
     unitOverDriveTurnProceed() {
         this.buffSort();
+        // ターン消費
+        this.specialRestTurn();
+        // OverDriveゲージをSPに加算
+        this.sp += this.over_drive_sp;
+        this.over_drive_sp = 0;
+    }
+
+    unitAdditionalTurnProceed() {
+        if (this.additional_turn) {
+            // ターン消費
+            this.specialRestTurn();
+        }
+    }
+
+    specialRestTurn() {
+        // 追加ターンODのみのターン消費
         for (let i = this.buff_list.length - 1; i >= 0; i--) {
             let buff_info = this.buff_list[i];
             // 星屑の航路/星屑の航路+/バウンシー・ブルーミー
@@ -386,11 +408,17 @@ class unit_data {
                     buff_info.rest_turn -= 1;
                 }
             }
+            // 行動不能
+            if (buff_info.buff_kind == BUFF_RECOIL) {
+                if (buff_info.rest_turn == 1) {
+                    this.buff_list.splice(i, 1);
+                } else {
+                    buff_info.rest_turn -= 1;
+                }
+            }
         }
-        // OverDriveゲージをSPに加算
-        this.sp += this.over_drive_sp;
-        this.over_drive_sp = 0;
     }
+
     buffSort() {
         this.buff_list.sort((a, b) => {
             if (a.buff_kind === b.buff_kind) {
@@ -1071,7 +1099,7 @@ function procBattleStart() {
     turn_init.unit_list = unit_list;
 
     // 戦闘開始アビリティ
-    turn_init.abilityAction(0);
+    turn_init.abilityAction(KB_ABILIRY_BATTLE_START);
 
     // 領域表示
     $("#battle_area").css("visibility", "visible");
@@ -1085,6 +1113,7 @@ function proceedTurn(turn_data, kb_next) {
     last_turn++;
     turn_data.unitSort();
     if (turn_data.additional_turn) {
+        turn_data.turnProceed(KB_NEXT_ADDITIONALTURN);
         turn_data.abilityAction(KB_ABILIRY_ADDITIONALTURN);
     } else {
         turn_data.turnProceed(kb_next);
@@ -1137,7 +1166,7 @@ function proceedTurn(turn_data, kb_next) {
 
         const handleRecoil = () => {
             const recoil = unit.buff_list.filter((obj) => obj.buff_kind == 24);
-            if (recoil.length > 0 || !unit.style || (turn_data.additional_turn && !unit.additional_turn)) {
+            if (recoil.length > 0 || !unit.style || (turn_data.additional_turn && !unit.additional_turn && index <= 2)) {
                 skill_select.css("visibility", "hidden");
             }
         };
@@ -1169,8 +1198,6 @@ function proceedTurn(turn_data, kb_next) {
         handleRecoil();
         chara_div.prepend(skill_select);
         appendToArea();
-
-        unit.additional_turn = false;
     });
 
     const $div = $('<div>').append(
@@ -1179,7 +1206,7 @@ function proceedTurn(turn_data, kb_next) {
             $('<option>').val(KB_NEXT_ACTION_OD).text("行動開始+OD")
         ),
         $('<div>').addClass('flex').css('justify-content', 'flex-end').append(
-            turn_data.over_drive_gauge >= 100 && turn_data.over_drive_max_turn == 0 ? $('<input>').attr({ type: 'checkbox' }).addClass('trigger_over_drive') : null
+            turn_data.over_drive_gauge >= 100 && turn_data.over_drive_max_turn == 0 && !turn_data.additional_turn ? $('<input>').attr({ type: 'checkbox' }).addClass('trigger_over_drive') : null
         ).append(
             $('<input>').attr({ type: 'button', value: '次ターン' }).addClass('turn_button next_turn')
         ).append(
@@ -1219,6 +1246,11 @@ const appendSkillOptions = (skill_select, turn_data, unit) => {
 };
 const createSkillOption = (value, turn_data, unit) => {
     let sp_cost = 0;
+    // 夜醒
+    if (turn_data.additional_turn && value.skill_id == 495) {
+        // 追加ターン中の追加は不可
+        return;
+    }
     const createOptionText = (value) => {
         let text = value.skill_name;
         if (value.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
@@ -1491,9 +1523,21 @@ function addUnitEvent() {
         let clicked_element = $(this);
         let index = $(this).parent().index() * 3 + $(this).index();
         let unit_data = getUnitData(now_turn, index);
-        if (!unit_data || unit_data.blank || now_turn.additional_turn) {
+        if (!unit_data || unit_data.blank) {
             return;
         }
+        // 追加ターンの制約
+        if (now_turn.additional_turn) {
+            // 後衛
+            if (index > 2) {
+                return;
+            }
+            // 追加ターンなし
+            if (!unit_data.additional_turn) {
+                return;
+            }
+        }
+
         // 最初にクリックされた要素かどうかを確認
         if (first_click === null) {
             // 最初にクリックされた要素を記録
@@ -1583,7 +1627,7 @@ function addUnitEvent() {
     $(`.turn${last_turn} .icon_list`).on("click", function (event) {
         let index = $(this).parent().parent().index();
         let unit_data = getUnitData(now_turn, index);
-        if (!unit_data || unit_data.blank || now_turn.additional_turn) {
+        if (!unit_data || unit_data.blank) {
             return;
         }
         showBuffList(event, unit_data.buff_list);
@@ -1653,7 +1697,13 @@ function setBackOptions(select) {
 
 // 行動開始
 function startAction(turn_data, turn_number) {
-    turn_data.additional_turn = false;
+    // 追加ターンフラグ削除
+    if (turn_data.additional_turn) {
+        turn_data.additional_turn = false;
+        turn_data.unitLoop(function (unit) {
+            unit.additional_turn = false;
+        });
+    }
     let seq = sortActionSeq(turn_number);
     // 攻撃後に付与されるバフ種
     const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP,
