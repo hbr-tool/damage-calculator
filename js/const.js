@@ -82,3 +82,6 @@ const ENEMY_CLASS_EVENT_HIDDEN_BOSS = 9; // イベント隠しボス
 const ENEMY_CLASS_TIME_TRAINING = 10; // 時の修練場
 const ENEMY_CLASS_CONTROL_BATTLE = 11; // 制圧戦
 const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
+
+/** 貫通クリティカル */ 
+const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163];

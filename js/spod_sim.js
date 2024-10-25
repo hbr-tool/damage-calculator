@@ -22,8 +22,6 @@ const KB_ABILIRY_OTHER = 6;
 
 const BUFF_FUNNEL_LIST = [BUFF_FUNNEL_SMALL, BUFF_FUNNEL_LARGE, BUFF_ABILITY_FUNNEL_SMALL, BUFF_ABILITY_FUNNEL_LARGE];
 const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED];
-// 貫通クリティカル
-const PENETRATION_ATTACK_LIST = [84, 135, 137, 156];
 
 class turn_data {
     constructor() {
@@ -218,6 +216,7 @@ class turn_data {
                     case 6: // 連撃数アップ
                         buff = new buff_data();
                         buff.buff_kind = ability.effect_size == 40 ? BUFF_ABILITY_FUNNEL_LARGE : BUFF_ABILITY_FUNNEL_SMALL;
+                        buff.buff_name = ability.ability_name;
                         buff.buff_element = 0;
                         buff.effect_size = ability.effect_size == 40 ? 3 : 5;
                         buff.rest_turn = -1;
@@ -277,7 +276,7 @@ class turn_data {
                         buff.buff_kind = BUFF_ARROWCHERRYBLOSSOMS;
                         buff.buff_element = 0;
                         buff.rest_turn = -1;
-                        buff.buff_name = ability.ability_name
+                        buff.buff_name = ability.ability_name;
                         unit.buff_list.push(buff);
                         break;
                     case 8: // チャージ
@@ -285,7 +284,7 @@ class turn_data {
                         buff.buff_kind = BUFF_CHARGE;
                         buff.buff_element = 0;
                         buff.rest_turn = -1;
-                        buff.buff_name = ability.ability_name
+                        buff.buff_name = ability.ability_name;
                         unit.buff_list.push(buff);
                         break;
                 }
