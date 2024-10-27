@@ -2072,7 +2072,16 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             target_list = getTargetList(turn_data, buff_info, place_no, use_unit_data.buff_target_chara_id);
             $.each(target_list, function (index, target_no) {
                 let unit_data = getUnitData(turn_data, target_no);
-                unit_data.sp += buff_info.min_power;
+                let unit_sp = unit_data.sp;
+                unit_sp += buff_info.min_power;
+                let limit_sp = buff_info.max_power;
+                if (unit_sp + unit_data.over_drive_sp - unit_data.sp_cost > limit_sp) {
+                    unit_sp = limit_sp - unit_data.over_drive_sp + unit_data.sp_cost;
+                }
+                if (unit_sp < unit_data.sp) {
+                    unit_sp = unit_data.sp
+                }
+                unit_data.sp = unit_sp;
             });
             break;
         case BUFF_ADDITIONALTURN: // 追加ターン
