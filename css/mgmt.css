@@ -6,14 +6,14 @@ select {
   border: solid 1px #000;
 }
 
+.select_info {
+  margin-left: 10px;
+}
+
 .top_flex {
   display: flex;
 }
-@media screen and (max-width:1024px) {
-  .top_flex {
-    display: block;
-  }
-}
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -23,31 +23,34 @@ td, th {
   font-size: 13px;
 }
 
-
 @media screen and (max-width:1024px) {
+  .container {
+    display: block;
+  }
   .htMiddle {
     font-size: 10px;
   }
 }
-.handsontable th {
+.handsontable th,
+.handsontable th:last-child {
   background-color: #afff60!important;
   border-color: #149f14;
 }
 
-td.limit_0 {
-  background-color: #fff;
+.ht_master:not(.innerBorderTop)~.handsontable thead tr:last-child th {
+  border-bottom-width: 1px;
 }
-td.limit_1 {
-  background-color: #9eff9e;
+
+.handsontable .handsontable.ht_clone_top .wtHider {
+  padding: 0px;
 }
-td.limit_2 {
-  background-color: #9eceff;
+
+.handsontable thead th .relative:has(img) {
+  padding: 0px 1px!important;
 }
-td.limit_3 {
-  background-color: #ffce9e;
-}
-td.limit_4 {
-  background-color: #ffa3a3;
+
+img {
+  margin-bottom: -5px;
 }
 
 tr:has(.underLine) > td {
@@ -69,4 +72,32 @@ td {
 input[type="button"].default {
   font-size: 16px;
   height: 26px;
+}
+
+td.achievement1 {
+  background-color: #dbffdb;
+}
+
+td.achievement2 {
+  background-color: #8effc6;
+}
+
+td.achievement3 {
+  background-color: #99ffcc;
+}
+
+td.achievement4 {
+  background-color: #9eceff;
+}
+
+td.achievement5 {
+  background-color: #FFEB66;
+}
+
+td.achievement6 {
+  background-color: #ffce9e;
+}
+
+td.achievement7 {
+  background-color: #ffa3a3;
 }

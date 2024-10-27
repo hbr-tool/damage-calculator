@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
+
 <head>
   <!-- Searvh Console -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1145880808347586"
@@ -8,7 +9,7 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-N7FD0VTLNH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-N7FD0VTLNH');
   </script>
@@ -35,17 +36,16 @@
   <script src="js/mgmt.js"></script>
   <script>
     let data;
-    let columns;
     loadStorage();
-    $(function(){ 
+    $(function () {
       initSetting();
-      columns = createColumns();
       createGrid();
       // イベント設定
       setEventTrigger();
     });
   </script>
 </head>
+
 <body>
   <main>
     <div class="header"></div>
@@ -69,33 +69,8 @@
                   </select>
                 </div>
                 <div class="top_flex">
-                  <div>
-                    オーブボス表示
-                  </div>
-                  <div>
-                    <select id="orb1" class="orb">
-                      <option value="0">無し</option>
-                      <option value="1" selected >エグゾウォッチャー</option>
-                      <option value="2">レクタス/シニスター</option>
-                      <option value="3">アモン</option>
-                    </select>
-                  </div>
-                  <div>
-                    <select id="orb2" class="orb">
-                      <option value="0">無し</option>
-                      <option value="1">エグゾウォッチャー</option>
-                      <option value="2" selected>レクタス/シニスター</option>
-                      <option value="3">アモン</option>
-                    </select>
-                  </div>
-                  <div>
-                    <select id="orb3" class="orb">
-                      <option value="0">無し</option>
-                      <option value="1">エグゾウォッチャー</option>
-                      <option value="2">レクタス/シニスター</option>
-                      <option value="3">アモン</option>
-                    </select>
-                  </div>
+                  <input type="radio" name="info_select" id="basic" class="select_info" checked><label for="basic">基本情報</label>
+                  <input type="radio" name="info_select" id="badge" class="select_info"><label for="badge">称号バッチ</label>
                 </div>
               </div>
             </div>
@@ -110,7 +85,8 @@
         <div id="grid1"></div>
         <div id="grid2"></div>
       </div>
-  </div>
+    </div>
   </main>
 </body>
+
 </html>
