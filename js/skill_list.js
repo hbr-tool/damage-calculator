@@ -538,7 +538,7 @@
     {"skill_id":537,"skill_name":"コードダクネス","chara_id":2,"style_id":136,"sp_cost":15,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":159,"attack_physical":2,"attack_element":1},
     {"skill_id":537,"skill_name":"コードダクネス","chara_id":2,"style_id":136,"sp_cost":15,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":160,"attack_physical":2,"attack_element":5},
     {"skill_id":538,"skill_name":"ナイトグリント","chara_id":8,"style_id":0,"sp_cost":5,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":2172,"attack_physical":2,"attack_element":0},
-    {"skill_id":539,"skill_name":"ルナティック・クリスタル","chara_id":8,"style_id":137,"sp_cost":13,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":162,"attack_physical":2,"attack_element":1},
+    {"skill_id":539,"skill_name":"ルナティック・クリスタル","chara_id":8,"style_id":137,"sp_cost":13,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":162,"attack_physical":2,"attack_element":4},
     {"skill_id":540,"skill_name":"ローズペタル","chara_id":9,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":541,"skill_name":"ロココ・デストラクション","chara_id":9,"style_id":138,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":11,"attribute_conditions":2,"attack_id":163,"attack_physical":1,"attack_element":0},
     {"skill_id":542,"skill_name":"プライベートレッスン","chara_id":7,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
