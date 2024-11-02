@@ -79,8 +79,8 @@ function getScoreDp(score_lv, max_dp, score_attack, enemy_info) {
     } else {
         if (score_attack.dp_rate) {
             let count1 = score_lv > 110 ? 10 : score_lv - 100;
-            let count2 = score_lv > 120 ? 10 : score_lv - 110;
-            let count3 = score_lv > 130 ? 10 : score_lv - 120;
+            let count2 = score_lv > 120 ? 10 : score_lv < 110 ? 0 : score_lv - 110;
+            let count3 = score_lv > 130 ? 10 : score_lv < 120 ? 0 : score_lv - 120;
             let count4 = score_lv > 130 ? score_lv - 130 : 0;
             let magn = Math.pow(Number(score_attack.dp_rate[0]), count1) * Math.pow(Number(score_attack.dp_rate[1]), count2)
                      * Math.pow(Number(score_attack.dp_rate[2]), count3) * Math.pow(Number(score_attack.dp_rate[3]), count4);
