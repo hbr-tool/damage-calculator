@@ -1,3 +1,13 @@
+/** ロール */
+const ROLE_ATTACKER = 1;
+const ROLE_BREAKER = 2;
+const ROLE_BLASTER = 3;
+const ROLE_HEALER = 4;
+const ROLE_BUFFER = 5;
+const ROLE_DEBUFFER = 6;
+const ROLE_DEFENDER = 7;
+const ROLE_ADMIRAL = 8;
+
 /** バフ種別 */
 const BUFF_ATTACKUP = 0; // 攻撃力アップ
 const BUFF_ELEMENT_ATTACKUP = 1; // 属性アップ
@@ -48,10 +58,17 @@ const RANGE_ALLY_ALL = 6; // 味方全員
 const RANGE_SELF = 7; // 自分
 const RANGE_SELF_OTHER = 8; // 自分以外
 const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
+const RANGE_31C_MEMBER = 33; // 31Cメンバー
+const RANGE_31E_MEMBER = 35; // 31Eメンバー
+const RANGE_MARUYAMA_MEMBER = 41; // 丸山部隊
+
+const CHARA_ID_31E = [25, 26, 27, 28, 29, 30];
+const CHARA_ID_MARUYAMA = [15, 16, 28, 32, 40, 47];
 
 /** スキル属性 */
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
 const ATTRIBUTE_PURSUIT = 2; // 追撃
+const ATTRIBUTE_COMMAND_ACTION = 3; // 指揮行動
 const ATTRIBUTE_SP_HALF = 11; // SP半減
 /** 条件 */
 const CONDITIONS_FIRST_TURN = 1; // 1ターン目

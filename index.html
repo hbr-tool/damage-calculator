@@ -40,6 +40,7 @@
   <script src="js/skill_list.js"></script>
   <script src="js/skill_attack.js"></script>
   <script src="js/skill_buff.js"></script>
+  <script src="js/skill_passive.js"></script>
   <script src="js/ability.js"></script>
   <script src="js/enemy.js"></script>
   <script src="js/grade.js"></script>
@@ -329,6 +330,7 @@
                 <option value="9">イベント隠しボス</option>
                 <option value="10">時の修練場</option>
                 <option value="11">制圧戦</option>
+                <option value="12">セラフ遭遇戦</option>
                 <option value="99">自由入力</option>
               </select>
               <select id="enemy_list">
@@ -1066,8 +1068,7 @@
                 <td class=""><select id="element_field" class="filed element_field element redisplay" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class=""><label class="strengthen strengthen_field display_chara_id-3 hidden"><input
-                      type="checkbox"><span>強化</span></label></td>
+                <td class=""></td>
                 <td class=""></td>
               </tr>
               <tr class="sp_only">
@@ -1104,6 +1105,14 @@
                 <td>全体</td>
                 <td colspan="4" id="ability_all" class="text-left"></td>
               </tr>
+              
+              <tr class="sp_only">
+                <td colspan="5" class="kind">パッシブ</td>
+              </tr>
+              <tr>
+                <td class="kind pc_only">パッシブ</td>
+                <td colspan="5" id="skill_passive" class="text-left"></td>
+              </tr>
             </table>
           </div>
           <div class="mt-1 mx-auto text-left">
@@ -1111,7 +1120,7 @@
             <ul>
               <li>・闘志/厄/ハッキングは、バフ/デバフ効果量に影響を与えません。</li>
               <li>・士気は、バフ/デバフ効果量に影響します。</li>
-              <li>・バフ強化/デバフ強化/桜花の矢によるデバフ強化/フィールド強化は、「強化」ボタンで設定してください。</li>
+              <li>・バフ強化/デバフ強化/桜花の矢によるデバフ強化は、「強化」ボタンで設定してください。</li>
             </ul>
             <div class="mx-auto text-right">
               <a href="https://marshmallow-qa.com/ldboixq5xyndo94" class="text-blue-500 underline">不具合/要望受付フォーム</a>
@@ -1200,6 +1209,7 @@
                 <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
                 <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
                 <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
+                <input type="button" class="narrow role" id="role_8" value="ADMIRAL" data-select="1">
               </div>
               <div class="flex flex-wrap w-[144px] mx-auto">
                 <input type="image" class="rarity" id="rarity_1" src="img/IconRaritySS.webp">

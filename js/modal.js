@@ -187,6 +187,7 @@ function setMember(select_chara_no, style_id, isTrigger) {
         addAttackList(member_info);
         addBuffList(member_info, 0);
         addAbility(member_info);
+        addPassive(member_info);
         $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
     }
 
@@ -297,9 +298,7 @@ function setSubMember(sub_chara_no, style_id) {
     addBuffList(member_info, 1);
     // フィールドのみ追加
     addAbility(member_info);
-    if (member_info.style_info.chara_id != 4) {
-        $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
-    }
+    addPassive(member_info);
 }
 
 // メンバーを外す

@@ -3,7 +3,7 @@
 /* ---------------------------- */
 .container_style {
   border-top: 5px solid #5bc8ac;
-  max-width: 600px;
+  max-width: 690px;
   height: 90%;
   overflow-y: hidden;
 }
@@ -35,7 +35,7 @@
   margin-right: auto;
   padding-top: 10px;
   height: 100%;
-  max-width: 600px;
+  max-width: 690px;
   width: 80vw;
 }
 .modal_inner_headline {
