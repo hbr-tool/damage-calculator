@@ -2304,14 +2304,21 @@ function consumeBuffUnit(unit_data, attack_info, skill_info) {
                 case BUFF_CRITICALDAMAGEUP:	// クリティカルダメージアップ
                     // 通常攻撃でも消費
                     buff_list.splice(i, 1);
-                case BUFF_FUNNEL_SMALL: // 連撃(小)
-                case BUFF_FUNNEL_LARGE: // 連撃(大)
-                case BUFF_ABILITY_FUNNEL_SMALL: // アビリティ連撃(小)
-                case BUFF_ABILITY_FUNNEL_LARGE: // アビリティ連撃(大)
                     // 星屑の航路は消費しない。
                     if (buff_info.skill_id == 67 || buff_info.skill_id == 491) {
                         continue;
                     }
+                    break;
+                case BUFF_FUNNEL_SMALL: // 連撃(小)
+                case BUFF_FUNNEL_LARGE: // 連撃(大)
+                case BUFF_ABILITY_FUNNEL_SMALL: // アビリティ連撃(小)
+                case BUFF_ABILITY_FUNNEL_LARGE: // アビリティ連撃(大)
+                    // 通常攻撃だと消費しない
+                    if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
+                        continue;
+                    }
+                    // 通常攻撃でも消費
+                    buff_list.splice(i, 1);
                     break;
                 case BUFF_EX_DOUBLE:	// EXスキル連続使用
                     // EXスキルでのみ消費
