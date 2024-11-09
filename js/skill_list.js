@@ -550,7 +550,7 @@
     {"skill_id":547,"skill_name":"友縁の剣","chara_id":35,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":548,"skill_name":"ヒーローの心得","chara_id":37,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":549,"skill_name":"慈悲の剣","chara_id":47,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":2,"attack_element":null},
-    {"skill_id":551,"skill_name":"アクセラレーション","chara_id":7,"style_id":0,"sp_cost":9,"skill_active":1,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
+    {"skill_id":551,"skill_name":"アクセラレーション","chara_id":7,"style_id":0,"sp_cost":9,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":552,"skill_name":"鬨","chara_id":7,"style_id":139,"sp_cost":0,"skill_active":1,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":553,"skill_name":"マジェスティック・コール","chara_id":7,"style_id":139,"sp_cost":10,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":554,"skill_name":"リバイバル・ライト","chara_id":10,"style_id":140,"sp_cost":8,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":2,"attack_element":null},
