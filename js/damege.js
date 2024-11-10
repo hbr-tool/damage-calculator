@@ -471,6 +471,10 @@ function setEventTrigger() {
             updateBuffEffectSize($(value));
         });
     });
+    // セラフ遭遇戦敵強さ変更
+    $("input[name=card]").on("change", function (event) {
+        updateSeraphEncounter();
+    });
     // 強ブレイクチェック
     $("#strong_break").on("change", function (event) {
         let enemy_info = getEnemyInfo();
@@ -1616,8 +1620,8 @@ function addAbility(member_info) {
             default:
                 break;
         }
-        // 狂乱の型/五月雨/浄化の喝采/破砕の喝采
-        const APPEND_SELECT_LIST = [6, 7, 407, 408];
+        // 浄化の喝采/破砕の喝采
+        const APPEND_SELECT_LIST = [407, 408];
         if (APPEND_SELECT_LIST.includes(ability_info.ability_id)) {
             // 追加
             var option1 = $('<option>').text("×1").val(1);
@@ -2089,7 +2093,6 @@ function getSumFunnelEffectList() {
         if (ability_info.effect_type == 6) {
             let size = ability_info.effect_size;
             let loop = ability_info.effect_count;
-            loop *= Number($(value).parent().find("select").val());
             for (let i = 0; i < loop; i++) {
                 funnel_list.push(size);
             }
@@ -2340,6 +2343,11 @@ function createEnemyList(enemy_class) {
         removeSupportMember(0);
         $(".bike_buff").css("display", "none");
     }
+    if (enemy_class == ENEMY_CLASS_SERAPH_ENCOUNTER) {
+        $(".randam_card").show();
+    } else {
+        $(".randam_card").hide();
+    }
     if (enemy_class == ENEMY_CLASS_FREE_INPUT) {
         // 自由入力の場合、入力を解除する
         $("#enemy_save").show();
@@ -2463,6 +2471,9 @@ function setEnemyStatus() {
     if (enemy_info.score_attack_no) {
         updateEnemyScoreAttack();
     }
+    if (enemy_info.enemy_class == ENEMY_CLASS_SERAPH_ENCOUNTER) {
+        updateSeraphEncounter();
+    }
     updateEnemyResist();
     // バフ効果量を更新
     $(".variable_effect_size").each(function (index, value) {
@@ -2501,6 +2512,48 @@ function updateEnemyScoreAttack() {
     $("#enemy_stat").val(enemy_stat);
     $("#socre_enemy_unit").val(score_attack.enemy_count);
     $("#enemy_hp").val((enemy_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
+}
+
+// セラフ遭遇戦敵ステータス設定
+function updateSeraphEncounter() {
+    let enemy_info = getEnemyInfo();
+    let checked = $('input[name=card]:checked');
+    let hp_rate = 1;
+    let dp_rate = 1;
+    let status_up = 0;
+    let resist = [0, 0, 0, 0, 0, 0];
+
+    let kind = checked.data("kind");
+    if (kind) {
+        let value = Number(checked.val());
+        switch (kind) {
+            case "status":
+                status_up = value;
+                break;
+            case "dp_rate":
+                dp_rate += value / 100;
+                break;
+            case "hp_rate":
+                hp_rate += value / 100;
+                break;
+        }
+        if (kind.includes("resist")) {
+            let index = Number(kind.split("_")[1]);
+            resist[index] = value;
+        }
+    }
+    let enemy_hp = Number(enemy_info.max_hp);
+    let max_dp_list = enemy_info.max_dp.split(",");
+    for (let i = 0; i < max_dp_list.length; i++) {
+        let enemy_dp = Number(max_dp_list[i]);
+        $("#enemy_dp_" + i).val((enemy_dp * dp_rate).toLocaleString());
+    }
+    let enemy_stat = Number(enemy_info.enemy_stat);
+    $("#enemy_stat").val((enemy_stat + status_up));
+    $("#enemy_hp").val((enemy_hp * hp_rate).toLocaleString());
+    for (let i = 0; i <= 5; i++) {
+        setEnemyElement(`#enemy_element_${i}`, enemy_info[`element_${i}`] - resist[i]);
+    }
 }
 
 // スコアアタック表示

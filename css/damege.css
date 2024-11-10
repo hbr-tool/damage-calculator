@@ -339,9 +339,7 @@ table td.row_element-4,
 table td.row_element-5 {
     display: none;
 }
-label input {
-    display: none;
-}
+
 label.strengthen span {
     color: #333;
     font-size: 14px;
@@ -493,7 +491,7 @@ label[class*="block_chara_id-"] {
 .damage {
     font-weight: bold;
     font-size: 30px;
-    width: 180px;
+    width: 200px;
     height: 30px;
 }
 .min_damage {
@@ -629,6 +627,16 @@ input[type="button"].durability_reflection {
     pointer-events: none; /* マウスイベントを透過させる */
 }
 
+/* 遭遇戦 */
+.card_label {
+    text-align: right;
+    width: 90px;
+    margin-right: 10px;
+}
+
+.card_regist {
+    width: 56px;
+}
 /* バフ一括設定 */
 .container_multi_buff {
     background-color: #fff;
