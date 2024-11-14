@@ -1,5 +1,5 @@
 ﻿let skill_list = [
-    {"skill_id":0,"skill_name":"指揮行動","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":1,"skill_attribute":3,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":-1,"skill_name":"指揮行動","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":1,"skill_attribute":3,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":1,"skill_name":"通常攻撃","chara_id":1,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":1,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":2,"skill_name":"クロス斬り","chara_id":1,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":2110,"attack_physical":1,"attack_element":0},
     {"skill_id":3,"skill_name":"スピニングスラッシュ","chara_id":1,"style_id":0,"sp_cost":7,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":2072,"attack_physical":1,"attack_element":0},
