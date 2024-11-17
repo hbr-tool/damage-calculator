@@ -2557,9 +2557,9 @@ function updateSeraphEncounter() {
     let enemy_stat = Number(enemy_info.enemy_stat);
     $("#enemy_stat").val((enemy_stat + status_up));
     $("#enemy_hp").val((enemy_hp * hp_rate).toLocaleString());
-    for (let i = 0; i <= 5; i++) {
-        setEnemyElement(`#enemy_element_${i}`, enemy_info[`element_${i}`] - resist[i]);
-    }
+    // for (let i = 0; i <= 5; i++) {
+    //     setEnemyElement(`#enemy_element_${i}`, enemy_info[`element_${i}`] - resist[i]);
+    // }
 }
 
 // スコアアタック表示
