@@ -9,14 +9,19 @@ class Member {
         this.style_info = null;
         this.is_select = false;
         this.chara_no = -1;
-        this.str = 0;
-        this.dex = 0;
-        this.con = 0;
-        this.mnd = 0;
-        this.int = 0;
-        this.luk = 0;
-        this.jewel_lv = 0;
-        this.limit_count = 0;
+        this.str = 400;
+        this.dex = 400;
+        this.con = 400;
+        this.mnd = 400;
+        this.int = 400;
+        this.luk = 400;
+        this.jewel_lv = 5;
+        this.limit_count = 2;
+        this.earring = 0;
+        this.bracelet = 1;
+        this.chain = 3;
+        this.init_sp = 1;
+        this.passive_skill_list = [];
     }
 }
 
@@ -149,50 +154,77 @@ function setMember(select_chara_no, style_id, isTrigger) {
     // 画像切り替え
     $('#select_chara_' + select_chara_no).attr("src", "icon/" + style_info.image_url);
 
-    // ステータスを設定
+    // ステータスを読み込む
+    loadStyle(member_info);
+    select_style_list[select_chara_no] = member_info;
+
+    $.each(status_kbn, function (index, value) {
+        if (index == 0) return true;
+        $(`#${value}_${select_chara_no}`).val(member_info[value]);
+    });
+    $(`#limit_${select_chara_no}`).val(member_info.limit_count);
+    $(`#jewel_${select_chara_no}`).val(member_info.jewel_lv);
+    $(`#earring_${select_chara_no}`).val(member_info.earring);
+    $(`#bracelet_${select_chara_no}`).val(member_info.bracelet);
+    $(`#chain_${select_chara_no}`).val(member_info.chain);
+    $(`#init_sp_${select_chara_no}`).val(member_info.init_sp);
+    changeRarity(select_chara_no, style_info.rarity);
+    if (typeof loadMember == "function") {
+        loadMember(member_info, isTrigger);
+    }
+}
+
+// ステータスを保存
+function saveStyle(member_info) {
+    if (member_info === undefined) {
+        return
+    }
+    if (navigator.cookieEnabled) {
+        let style_id = member_info.style_info.style_id;
+        let save_item = [member_info.style_info.rarity,
+        member_info.str, member_info.dex,
+        member_info.con, member_info.mnd,
+        member_info.int, member_info.luk,
+        member_info.limit_count, member_info.jewel_lv,
+        member_info.earring, member_info.bracelet,
+        member_info.chain, member_info.init_sp].join(",");
+        localStorage.setItem(`style_${style_id}`, save_item);
+    }
+}
+
+// ステータスを読み込む
+function loadStyle(member_info) {
+    let style_id = member_info.style_info.style_id;
     let save_item = localStorage.getItem("style_" + style_id);
     if (save_item) {
         let items = save_item.split(",");
         $.each(status_kbn, function (index, value) {
             if (index == 0) return true;
-            $("#" + value + "_" + select_chara_no).val(items[index]);
             member_info[value] = Number(items[index]);
         });
-        $("#limit_" + select_chara_no).val(items[7]);
-        $("#jewel_" + select_chara_no).val(items[8]);
         member_info.limit_count = Number(items[7]);
         member_info.jewel_lv = Number(items[8]);
-    } else {
-        // 初期設定
-        $.each(status_kbn, function (index, value) {
-            let status = 400;
-            localStorage.setItem(value + "_" + style_info.chara_id, status);
-            $("#" + value + "_" + select_chara_no).val(status);
-            member_info[value] = Number(status);
-        });
-        let jewel = 5;
-        localStorage.setItem("jewel_" + style_info.chara_id, jewel);
-        $("#jewel_" + select_chara_no).val(jewel);
-        member_info.jewel_lv = Number(jewel);
-
-        let limit_count = 2;
-        localStorage.setItem("limit_" + style_info.chara_id, limit_count);
-        $("#limit_" + select_chara_no).val(limit_count);
-        member_info.limit_count = Number(limit_count);
+        if (items.length > 9) {
+            member_info.earring = Number(items[9]);
+            member_info.bracelet = Number(items[10]);
+            member_info.chain = Number(items[11]);
+            member_info.init_sp = Number(items[12]);
+        }
     }
-    select_style_list[select_chara_no] = member_info;
-    changeRarity(select_chara_no, style_info.rarity);
-    // スキル・バフ・アビリティを追加
-    if (typeof addAttackList == "function") {
-        addAttackList(member_info);
-        addBuffList(member_info, 0);
-        addAbility(member_info);
-        addPassive(member_info);
-        $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
-    }
+}
 
-    if (isTrigger) {
-        $("#attack_list").trigger("change");
+// パッシブスキルを保存
+function savePassiveSkill(member_info) {
+    let style_id = member_info.style_info.style_id;
+    localStorage.setItem(`passive_${style_id}`, member_info.passive_skill_list.join(","));
+}
+
+// パッシブスキルを読み込む
+function loadPassiveSkill(member_info) {
+    let style_id = member_info.style_info.style_id;
+    let passive_list = localStorage.getItem(`passive_${style_id}`);
+    if (passive_list) {
+        member_info.passive_skill_list = passive_list.split(",").map(Number);
     }
 }
 
@@ -280,18 +312,8 @@ function setSubMember(sub_chara_no, style_id) {
         return false;
     }
 
-    // ステータスを設定
-    let save_item = localStorage.getItem("style_" + style_id);
-    if (save_item) {
-        let items = save_item.split(",");
-        $.each(status_kbn, function (index, value) {
-            if (index == 0) return true;
-            member_info[value] = Number(items[index]);
-        });
-        member_info.limit_count = Number(items[7]);
-        member_info.jewel_lv = Number(items[8]);
-    }
-
+    // ステータスを読み込み
+    loadStyle(member_info);
     sub_style_list[sub_chara_no] = member_info;
 
     // デバフのみを追加

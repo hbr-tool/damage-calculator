@@ -40,6 +40,7 @@
   <script src="js/skill_list.js"></script>
   <script src="js/skill_attack.js"></script>
   <script src="js/skill_buff.js"></script>
+  <script src="js/skill_passive.js"></script>
   <script src="js/enemy.js"></script>
   <script src="js/ability.js"></script>
   <script>
@@ -148,6 +149,7 @@
             <label class="label_status text-xs leading-5 whitespace-nowrap">ブレスレット</label>
             <label class="label_status">チェーン</label>
             <label class="label_status">初期SP</label>
+            <label class="label_status">パッシブ</label>
           </div>
           <div>
             <select id="limit_0" class="limit save"></select>
@@ -155,6 +157,7 @@
             <select id="bracelet_0" class="bracelet save"></select>
             <select id="chain_0" class="chain save"></select>
             <input type="number" id="init_sp_0" class="init_sp save" value="1">
+            <input type="button" id="passive_0" class="passive save" value="設定" data-chara_no="0">
           </div>
           <div>
             <select id="limit_1" class="limit save"></select>
@@ -162,6 +165,7 @@
             <select id="bracelet_1" class="bracelet save"></select>
             <select id="chain_1" class="chain save"></select>
             <input type="number" id="init_sp_1" class="init_sp save" value="1">
+            <input type="button" id="passive_1" class="passive save" value="設定" data-chara_no="1">
           </div>
           <div>
             <select id="limit_2" class="limit save"></select>
@@ -169,6 +173,7 @@
             <select id="bracelet_2" class="bracelet save"></select>
             <select id="chain_2" class="chain save"></select>
             <input type="number" id="init_sp_2" class="init_sp save" value="1">
+            <input type="button" id="passive_2" class="passive save" value="設定" data-chara_no="2">
           </div>
           <div>
             <select id="limit_3" class="limit save"></select>
@@ -176,6 +181,7 @@
             <select id="bracelet_3" class="bracelet save"></select>
             <select id="chain_3" class="chain save"></select>
             <input type="number" id="init_sp_3" class="init_sp save" value="1">
+            <input type="button" id="passive_3" class="passive save" value="設定" data-chara_no="3">
           </div>
           <div>
             <select id="limit_4" class="limit save"></select>
@@ -183,6 +189,7 @@
             <select id="bracelet_4" class="bracelet save"></select>
             <select id="chain_4" class="chain save"></select>
             <input type="number" id="init_sp_4" class="init_sp save" value="1">
+            <input type="button" id="passive_4" class="passive save" value="設定" data-chara_no="4">
           </div>
           <div>
             <select id="limit_5" class="limit save"></select>
@@ -190,6 +197,7 @@
             <select id="bracelet_5" class="bracelet save"></select>
             <select id="chain_5" class="chain save"></select>
             <input type="number" id="init_sp_5" class="init_sp save" value="1">
+            <input type="button" id="passive_5" class="passive save" value="設定" data-chara_no="5">
           </div>
         </div>
       </div>
@@ -339,6 +347,7 @@
                 <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
                 <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
                 <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
+                <input type="button" class="narrow role" id="role_8" value="ADMIRAL" data-select="1">
               </div>
               <div class="flex flex-wrap w-[144px] mx-auto">
                 <input type="image" class="rarity" id="rarity_1" src="img/IconRaritySS.webp">
@@ -542,6 +551,7 @@
               <p>以下のスキル/アビリティは発動条件をシミュレート出来ないため、SPに「＋」として表示しています。</p>
               <p>・吉報：確率30%</p>
               <p>・旺盛：DP101%以上</p>
+              <p>・痛気持ちいぃ～！：被ダメージ</p>
               <img src="img/sp_add.png">
             </div>
             <div class="mt-4">
@@ -573,6 +583,21 @@
             </div>
             <div class="mt-1 mx-auto text-right">
               <a href="https://marshmallow-qa.com/ldboixq5xyndo94" class="text-blue-500 underline">不具合/要望受付フォーム</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal micromodal-slide" id="modal_passive_list" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container container_damage" role="dialog" aria-modal="true"
+          aria-labelledby="passive_list">
+          <div id="passive_list" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
+            <div class="passive_container">
+              <label class="modal_label">パッシブ設定</label>
+              <input type="button" id="passive_setting" href="javascript:void(0)" class="text-center w-20" value="設定">
+            </div>
+            <div id="passive_skill_list">
             </div>
           </div>
         </div>

@@ -73,7 +73,8 @@ img.select_style {
 .earring,
 .bracelet,
 .chain,
-.init_sp {
+.init_sp,
+.passive {
     height: 22px;
     width: 60px;
     margin-left: 3px;
@@ -83,6 +84,10 @@ img.select_style {
     border: #000 1px solid;
 }
 
+.passive {
+    margin-top: 2px;
+    height: 20px;
+}
 .limit:disabled {
     border: solid 1px black;
 }
@@ -110,7 +115,8 @@ img.select_style {
     .earring,
     .bracelet,
     .chain,
-    .init_sp {
+    .init_sp,
+    .passive {
         width: 50px;
     }
 }
@@ -439,7 +445,13 @@ input[type='image'].select_target {
         width: 145px;
     }
 }
-
+/* パッシブ画面 */
+.passive_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1px;
+}
 
 /* モーダル画面*/
 .modal_label {

@@ -496,23 +496,10 @@ function setEventTrigger() {
     });
     // ステータス保存
     $(".save").on("change", function (event) {
-        if (navigator.cookieEnabled) {
-            let id_split = $(this).prop("id").split("_");
-            if (id_split.length > 1) {
-                let chara_no = Number(id_split[1]);
-                if (select_style_list[chara_no] === undefined) {
-                    return
-                }
-                let member_info = select_style_list[chara_no];
-                let style_id = member_info.style_info.style_id;
-                // 新設定
-                let save_item = [member_info.style_info.rarity,
-                member_info.str, member_info.dex,
-                member_info.con, member_info.mnd,
-                member_info.int, member_info.luk,
-                member_info.limit_count, member_info.jewel_lv].join(",");
-                localStorage.setItem("style_" + style_id, save_item);
-            }
+        let id_split = $(this).prop("id").split("_");
+        if (id_split.length > 1) {
+            let chara_no = Number(id_split[1]);
+            saveStyle(select_style_list[chara_no]);
         }
     });
     // 部隊変更ボタンクリック
@@ -630,6 +617,20 @@ function setEventTrigger() {
     $(document).on("change", "input, select", function (event) {
         calcDamage();
     });
+}
+
+// メンバー読み込み時の固有処理
+function loadMember(member_info, isTrigger) {
+    // ダメージ計算ツール
+    addAttackList(member_info);
+    addBuffList(member_info, 0);
+    addAbility(member_info);
+    addPassive(member_info);
+    $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
+
+    if (isTrigger) {
+        $("#attack_list").trigger("change");
+    }
 }
 
 class RestGauge {
@@ -1075,7 +1076,7 @@ function updateBuffEffectSize(option, skill_lv) {
 function getStrengthen(member_info, skill_buff) {
     let strengthen = 0;
     // 攻撃力アップ/属性攻撃力アップ
-    let attack_up = [0, 1];
+    let attack_up = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP];
     if (attack_up.includes(skill_buff.buff_kind)) {
         let ability_list = [member_info.style_info.ability0, member_info.style_info.ability00, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
         // 機転
@@ -1092,7 +1093,8 @@ function getStrengthen(member_info, skill_buff) {
         }
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
-    let defense_down = [3, 4, 19, 20, 21, 22];
+    let defense_down = [BUFF_DEFENSEDOWN, BUFF_ELEMENT_DEFENSEDOWN,
+        BUFF_DEFENSEDP, BUFF_RESISTDOWN, BUFF_ETERNAL_DEFENSEDOWN, BUFF_ELEMENT_ETERNAL_DEFENSEDOWN];
     if (defense_down.includes(skill_buff.buff_kind)) {
         let ability_list = [member_info.style_info.ability0, member_info.style_info.ability00, member_info.style_info.ability1, member_info.style_info.ability3, member_info.style_info.ability5, member_info.style_info.ability10];
         // 侵食
@@ -1568,15 +1570,15 @@ function addAbility(member_info) {
             continue;
         }
         let ability_info = getAbilityInfo(ability_id);
-        if (!is_select && ability_info.ability_target != 6) {
+        if (!is_select && ability_info.range_area != RANGE_FILED) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
         }
         let limit_border = index <= 1 ? 0 : (index === 2 ? 1 : (index === 3 ? 3 : (index === 4 ? 5 : 10)));
         let display = "none";
 
-        if ((ability_info.ability_element === 0 && ability_info.ability_physical == 0)
-            || (select_attack_skill && (select_attack_skill.attack_element === ability_info.ability_element || (select_attack_skill.attack_physical === ability_info.ability_physical)))) {
+        if ((ability_info.element === 0 && ability_info.physical == 0)
+            || (select_attack_skill && (select_attack_skill.attack_element === ability_info.element || (select_attack_skill.attack_physical === ability_info.physical)))) {
             display = "block";
         }
         let target;
@@ -1585,11 +1587,11 @@ function addAbility(member_info) {
         let append = undefined;
         let effect_size = ability_info.effect_size;
 
-        switch (ability_info.ability_target) {
-            case 6: // フィールド
-                addElementField(member_info, ability_info.ability_name, ability_info.effect_size, ability_info.ability_element, 0, 0);
+        switch (ability_info.range_area) {
+            case RANGE_FILED: // フィールド
+                addElementField(member_info, ability_info.ability_name, ability_info.effect_size, ability_info.element, 0, 0);
                 continue;
-            case 1: // 自分
+            case RANGE_SELF: // 自分
                 if (select_attack_skill && select_attack_skill.chara_id !== chara_id) {
                     display = "none"
                 }
@@ -1597,11 +1599,11 @@ function addAbility(member_info) {
                 element_type = "self_element"
                 physical_type = "self_physical"
                 break;
-            case 2: // 前衛
-            case 3: // 後衛
-            case 5:	// 敵
-            case 4:	// 全体
-            case 0: // その他
+            case RANGE_ALLY_FRONT:  // 味方前衛
+            case RANGE_ALLY_BACK: // 味方後衛
+            case RANGE_ALLY_ALL: // 味方全体
+            case RANGE_ENEMY_ALL: // 敵全体
+            case RANGE_OTHER: // その他
                 switch (ability_info.activation_place) {
                     case 1: // 前衛
                         target = "ability_front";
@@ -1637,7 +1639,7 @@ function addAbility(member_info) {
             .data("limit_border", limit_border)
             .data("ability_id", ability_id)
             .data("chara_no", member_info.chara_no)
-            .addClass("ability_element-" + ability_info.ability_element)
+            .addClass("ability_element-" + ability_info.element)
             .addClass("ability")
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
@@ -1650,9 +1652,9 @@ function addAbility(member_info) {
             .text(`${name}: ${ability_info.ability_name} (${ability_info.ability_short_explan})`)
             .addClass("checkbox01");
         let div = $('<div>').append(input).append(label)
-            .addClass(element_type + "-" + ability_info.ability_element)
-            .addClass(physical_type + "-" + ability_info.ability_physical)
-            .addClass(ability_info.ability_target_element == 0 ? "" : `buff_target_element-${ability_info.ability_target_element}`)
+            .addClass(element_type + "-" + ability_info.element)
+            .addClass(physical_type + "-" + ability_info.physical)
+            .addClass(ability_info.target_element == 0 ? "" : `buff_target_element-${ability_info.target_element}`)
             .addClass(target)
             .addClass(chara_id_class)
             .css("display", display);
@@ -1673,13 +1675,14 @@ function addAbility(member_info) {
 function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_id) {
     let disabled = !ability_info.conditions;
     let checked = true;
-    switch (ability_info.ability_target) {
-        case 1:	// 自分
+    let oldChecked = $(input).prop("checked");
+    switch (ability_info.range_area) {
+        case RANGE_SELF:	// 自分
             disabled = limit_count < limit_border || ($(input).hasClass(chara_id) && disabled);
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break
-        case 2:	// 前衛
-        case 3:	// 後衛
+        case RANGE_ALLY_FRONT:	// 味方前衛
+        case RANGE_ALLY_BACK:	// 味方後衛
             // 前衛または後衛かつ、本人以外
             if ((ability_info.activation_place == 1 || ability_info.activation_place == 2) && !$(input).hasClass(chara_id) || !disabled) {
                 disabled = false;
@@ -1688,9 +1691,9 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             }
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break
-        case 4:	// 全体
-        case 5:	// 敵
-        case 0:	// その他
+        case RANGE_ALLY_FRONT:	// 味方全体
+        case RANGE_ALLY_ALL:	// 敵全体
+        case RANGE_OTHER:	// その他
             // 前衛または後衛かつ、本人以外
             if ((ability_info.activation_place == 1 || ability_info.activation_place == 2) && !$(input).hasClass(chara_id) || !disabled) {
                 disabled = false;
@@ -1704,6 +1707,9 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             break;
     }
     $(input).prop("checked", checked).attr("disabled", disabled);
+    if (checked != oldChecked) {
+        $(input).trigger("change");
+    }
 }
 
 // パッシブ追加
@@ -1746,7 +1752,7 @@ function addPassive(member_info) {
         let member_list = [];
         let add_check_class = "";
         let add_div_class = "";
-        switch (passive_info.passive_target) {
+        switch (passive_info.range_area) {
             case RANGE_FILED: // フィールド
                 addElementField(member_info, passive_info.passive_name, effect_size, 0, 0, skill_id);
                 return true;
