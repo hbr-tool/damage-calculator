@@ -5,7 +5,7 @@ function setEventTrigger() {
     });
     // 敵リストイベント
     $("#enemy_class").on("change", function (event) {
-        let enemy_class = $(this).val();
+        let enemy_class = Number($(this).val());
         localStorage.setItem("enemy_class", enemy_class);
         localStorage.setItem("enemy_list", "1");
         createEnemyList(enemy_class);
@@ -360,7 +360,7 @@ function setEventTrigger() {
         });
     });
     // バフ/デバフ強化アビリティ変更
-    $(document).on("change", ".strengthen_ability", function (event) {
+    $(document).on("change", ".strengthen_skill", function (event) {
         let chara_id_class = $(this).parent().attr('class').split(' ').find(className => className.startsWith('chara_id-'));
         // バフ効果量を更新
         $(".variable_effect_size." + chara_id_class).each(function (index, value) {
@@ -1107,13 +1107,17 @@ function getStrengthen(member_info, skill_buff) {
         if (ability_list.includes(504)) {
             strengthen += 10;
         }
-        // モロイウオ(あいな専用)
+        // モロイウオ
         if (ability_list.includes(506) && $("#ability_all243").prop("checked") && skill_buff.sp_cost <= 8) {
             strengthen += 30;
         }
         // 王の眼差し
         if (ability_list.includes(507) && $("#ability_front11").prop("checked")) {
             strengthen += 25;
+        }
+        // 水光のゆらめき(あいな専用)
+        if (member_info.style_info.chara_id == 24 && $("#skill_passive559").prop("checked")) {
+            strengthen += 10;
         }
     }
     return strengthen;
@@ -1644,7 +1648,12 @@ function addAbility(member_info) {
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
         if (ability_id == 505 || ability_id == 506 || ability_id == 507) {
-            input.addClass("strengthen_ability");
+            input.addClass("strengthen_skill");
+            fg_update = true;
+        }
+        // フィールド強化アビリティ
+        if (ability_id == 603) {
+            input.addClass("strengthen_field");
             fg_update = true;
         }
         let label = $('<label>')
@@ -1724,12 +1733,14 @@ function addPassive(member_info) {
         25, // 能力固定上昇
         26, // 能力%上昇
         27, // フィールド強化
+        28, // バフ強化
     ]
     const SUB_TARGET_KIND = [
         7, // フィールド
         25, // 能力固定上昇
         26, // 能力%上昇
         27, // フィールド強化
+        28, // バフ強化
     ]
     let passive_list = skill_list.filter(obj =>
         obj.chara_id === chara_id &&
@@ -1743,10 +1754,9 @@ function addPassive(member_info) {
             return true;
         }
         if (!is_select && !SUB_TARGET_KIND.includes(passive_info.effect_type)) {
-            // 他部隊のアビリティはフィールドのみ許可
+            // 他部隊のアビリティは一部のみ許可
             return true;
         }
-        let target = "skill_passive";
         let effect_size = passive_info.effect_size;
         let target_chara_id_class = "";
         let member_list = [];
@@ -1784,11 +1794,15 @@ function addPassive(member_info) {
                 add_div_class = "passive_all";
                 add_check_class = "strengthen_field";
                 break;
+            case 28: // バフ強化
+                add_div_class = "passive_all";
+                add_check_class = "strengthen_skill";
+                break;
         }
 
         let chara_id_class = "chara_id-" + chara_id;
         let name = (is_select ? "" : "(他部隊)") + getCharaData(chara_id).chara_short_name;
-        let id = target + chara_id + skill_id;
+        let id = `skill_passive${skill_id}`;
         let input = $('<input>').attr("type", "checkbox").attr("id", id)
             .data("effect_size", effect_size)
             .data("skill_id", skill_id)
@@ -1805,7 +1819,7 @@ function addPassive(member_info) {
             .addClass(target_chara_id_class)
             .addClass(add_div_class)
             .addClass(chara_id_class);
-        $("#" + target).append(div);
+        $("#skill_passive").append(div);
     });
 }
 
@@ -2292,7 +2306,6 @@ function getPassiveInfo(skill_id) {
     return filtered_passive.length > 0 ? filtered_passive[0] : undefined;
 }
 
-
 // 敵リスト作成
 function createEnemyList(enemy_class) {
     $("#enemy_list").empty();
@@ -2309,7 +2322,8 @@ function createEnemyList(enemy_class) {
         }
     });
 
-    if (enemy_class == ENEMY_CLASS_SCORE_ATTACK || enemy_class == ENEMY_CLASS_STELLAR_SWEEP_FRONT) {
+    const reverse = [ENEMY_CLASS_SCORE_ATTACK, ENEMY_CLASS_STELLAR_SWEEP_FRONT, ENEMY_CLASS_EVENT_PRISMATIC]
+    if (reverse.includes(enemy_class)) {
         // 表示を逆順にする
         $("#enemy_list").html($("#enemy_list option").toArray().reverse());
         $("#enemy_list").prop("selectedIndex", 0);

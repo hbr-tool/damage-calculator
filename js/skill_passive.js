@@ -9,6 +9,6 @@
     {"skill_id":545,"passive_name":"彩鳳連理","passive_explan":"31Eの隊員の全能力が常時+10","passive_short_explan":"31Eの隊員の全能力が常時+10","effect_type":25,"activation_timing":99,"activation_place":3,"range_area":35,"effect_size":10},
     {"skill_id":546,"passive_name":"行くぞ！丸山部隊","passive_explan":"丸山奏多 豊後弥生 小笠原緋雨 大島四ツ葉 天音巫呼 ヴリティカ・バラクリシュナンの全能力が常時+10","passive_short_explan":"丸山部隊の全能力が常時+10","effect_type":25,"activation_timing":99,"activation_place":0,"range_area":41,"effect_size":10},
     {"skill_id":547,"passive_name":"友縁の剣","passive_explan":"自身の攻撃で敵をブレイクしたとき味方全体のSP+1","passive_short_explan":"","effect_type":12,"activation_timing":99,"activation_place":0,"range_area":6,"effect_size":1},
-    {"skill_id":550,"passive_name":"指揮行動","passive_explan":"1ターンの間 前衛の味方の攻撃力を上げる","passive_short_explan":"1ターンの間 前衛の味方の攻撃力を上げる","effect_type":1,"activation_timing":99,"activation_place":3,"range_area":4,"effect_size":15},
     {"skill_id":552,"passive_name":"鬨","passive_explan":"味方全体のクリティカル率を常時+100%","passive_short_explan":"味方全体のクリティカル率を常時+100%","effect_type":3,"activation_timing":99,"activation_place":3,"range_area":6,"effect_size":100},
+    {"skill_id":559,"passive_name":"水光のゆらめき","passive_explan":"オーバードライブ中 自身がかけた防御力ダウンの効果量+10%","passive_short_explan":"オーバードライブ中 自身がかけた防御力ダウンの効果量+10%","effect_type":28,"activation_timing":99,"activation_place":3,"range_area":6,"effect_size":10},
 ];

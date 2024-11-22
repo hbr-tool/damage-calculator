@@ -129,7 +129,7 @@
       let enemy_class = localStorage.getItem("enemy_class");
       enemy_class = enemy_class ? enemy_class : "1";
       $("#enemy_class").val(enemy_class);
-      createEnemyList(enemy_class);
+      createEnemyList(Number(enemy_class));
       let enemy_list = localStorage.getItem("enemy_list");
       enemy_list = enemy_list ? enemy_list : "1";
       $("#enemy_list").val(enemy_list);
@@ -331,6 +331,7 @@
                 <option value="10">時の修練場</option>
                 <option value="11">制圧戦</option>
                 <option value="12">セラフ遭遇戦</option>
+                <option value="13">イベントプリズム</option>
                 <option value="99">自由入力</option>
               </select>
               <select id="enemy_list">
@@ -934,28 +935,28 @@
                 </td>
               </tr>
               <tr>
-                <td class="type row_element-2 row_element-5" colspan="2">属性防御力DOWN1(永)</td>
-                <td class="row_element-2 row_element-5"><select id="permanent_element_down1"
+                <td class="type row_element-1 row_element-2 row_element-5" colspan="2">属性防御力DOWN1(永)</td>
+                <td class="row_element-1 row_element-2 row_element-5"><select id="permanent_element_down1"
                     class="debuff redisplay permanent_element_down include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-5"><label
+                <td class="row_element-1 row_element-2 row_element-5"><label
                     class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
                       type="checkbox"><span>強化</span></label></td>
-                <td class="row_element-2 row_element-5">
+                <td class="row_element-1 row_element-2 row_element-5">
                   <div class="lv"><select id="element_down1_lv" class="lv_effect"></select></div>
                 </td>
               </tr>
               <tr>
-                <td class="type row_element-2 row_element-5" colspan="2">属性防御力DOWN2(永)</td>
-                <td class="row_element-2 row_element-5"><select id="permanent_element_down2" name="buff"
+                <td class="type row_element-1 row_element-2 row_element-5" colspan="2">属性防御力DOWN2(永)</td>
+                <td class="row_element-1 row_element-2 row_element-5"><select id="permanent_element_down2" name="buff"
                     class="debuff redisplay permanent_element_down include_lv">
                     <option selected value="">無し</option>
                   </select></td>
-                <td class="row_element-2 row_element-5"><label
+                <td class="row_element-1 row_element-2 row_element-5"><label
                     class="strengthen display_chara_id-11 display_chara_id-45 hidden"><input
                       type="checkbox"><span>強化</span></label></td>
-                <td class="row_element-2 row_element-5">
+                <td class="row_element-1 row_element-2 row_element-5">
                   <div class="lv"><select id="element_down2_lv" class="lv_effect"></select></div>
                 </td>
               </tr>
