@@ -1,11 +1,16 @@
-const troop_list = ["31A", "31B", "31C", "31E", "31F"];
-const endless2nd = ["31A", "31B", "31C", "31E"];
-const endless3rd = ["31A", "31B", "31C", "31F"];
+const troop_list = ["31A", "31B", "31C", "31D", "31E", "31F"];
+const showTroopsList = {
+    "0": troop_list,
+    "2": ["31A", "31B", "31C", "31E"],
+    "3": ["31A", "31B", "31C", "31F"],
+    "4": ["31A", "31D", "31E", "31F"],
+} 
 const MAX_TROOPS_ARTS_COUNT = 24;
 const TROOPS_ARTS_COUNT = {
     "31A": 4,
     "31B": 3,
     "31C": 3,
+    "31D": 3,
     "31E": 3,
     "31F": 3,
 }
@@ -68,15 +73,7 @@ function setEventTrigger() {
 
 // 表示部隊リスト取得
 function getShowTroopsList() {
-    let show_list = troop_list;
-    switch ($("#show_arts").val()) {
-        case "2":
-            show_list = endless2nd;
-            break;
-        case "3":
-            show_list = endless3rd;
-            break;
-    }
+    let show_list = showTroopsList[$("#show_arts").val()]
     return show_list
 }
 

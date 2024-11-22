@@ -119,15 +119,13 @@ function setEventTrigger() {
         $("#range_area").text(attack_info.range_area == 1 ? "単体" : "全体");
 
         displayElementRow();
-        displayWeakRow();
-
         $(".redisplay").each(function (index, value) {
             sortEffectSize($(value));
             select2ndSkill($(value));
         });
 
         // 敵情報再設定
-        updateEnemyResist();
+        updateEnemyResistDown();
         createSkillLvList("skill_lv", max_lv, max_lv);
     });
     $("#skill_special_display").on("change", function (event) {
@@ -142,7 +140,7 @@ function setEventTrigger() {
     $("#all_delete").on("click", function (event) {
         $("select[name=buff]").prop("selectedIndex", 0);
         $(".include_lv").trigger("change");
-        updateEnemyResist();
+        updateEnemyResistDown();
     });
     // バフスキル変更
     $(".include_lv").on("change", function (event) {
@@ -187,9 +185,11 @@ function setEventTrigger() {
     });
     // 耐性ダウン変更
     $(".resist_down").on("change", function (event) {
-        updateEnemyResist();
+        updateEnemyResistDown();
     });
     $(".enemy_type_value").on("change", function (event) {
+        setEnemyElement("#" + $(this).prop("id"), $(this).val(), null, null);
+        updatePenetrationResist();
         displayWeakRow();
     });
     // チャージ変更
@@ -542,11 +542,13 @@ function setEventTrigger() {
         enemy_info.enemy_stat = $("#enemy_stat").val();
         enemy_info.max_dp = removeComma($("#enemy_dp_0").val()) + "," + removeComma($("#enemy_dp_1").val()) + "," + removeComma($("#enemy_dp_2").val()) + "," + removeComma($("#enemy_dp_3").val());
         enemy_info.max_hp = removeComma($("#enemy_hp").val());
-        let enemy_info_status_list = ["destruction_limit", "destruction",
-            "physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5",
-        ];
+        let enemy_info_status_list = ["destruction_limit", "destruction"];
         enemy_info_status_list.forEach(value => {
             enemy_info[value] = $("#enemy_" + value).val();
+        });
+        let enemy_info_resist_list = ["physical_1", "physical_2", "physical_3", "element_0", "element_1", "element_2", "element_3", "element_4", "element_5",];
+        enemy_info_resist_list.forEach(value => {
+            enemy_info[value] = $("#enemy_" + value).data("init");
         });
         $("#enemy_list option:selected").text(enemy_name);
         updateEnemyStatus(enemy_class_no, enemy_info);
@@ -1067,8 +1069,8 @@ function updateBuffEffectSize(option, skill_lv) {
     let effect_text = `${chara_name}: ${skill_buff.buff_name} ${Math.floor(text_effect_size * 100) / 100}%`;
     option.text(effect_text).data("effect_size", effect_size).data("select_lv", skill_lv).data("text_effect_size", text_effect_size);;
     // 耐性が変更された場合
-    if (skill_buff.buff_kind == 20) {
-        updateEnemyResist();
+    if (skill_buff.buff_kind == BUFF_RESISTDOWN) {
+        updateEnemyResistDown();
     }
 }
 
@@ -1135,39 +1137,36 @@ function resetEnemyResist() {
     let physical = select_attack_skill.attack_physical;
     let element_physical = enemy_info["physical_" + physical];
     $("#enemy_physical_" + physical).val(Math.floor(element_physical));
-    setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical));
+    setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical), 0, 0);
     let element = select_attack_skill.attack_element;
     let element_element = enemy_info["element_" + element];
     $("#enemy_element_" + element).val(Math.floor(element_element));
-    setEnemyElement("#enemy_element_" + element, Math.floor(element_element));
+    setEnemyElement("#enemy_element_" + element, Math.floor(element_element), 0, 0);
 }
 
 // 敵耐性変更
-function updateEnemyResist() {
+function updateEnemyResistDown() {
     let attack_info = getAttackInfo();
-    let enemy_info = getEnemyInfo();
-    if (attack_info === undefined || enemy_info === undefined) {
+    if (attack_info === undefined) {
         return false
     }
-    let element = attack_info.attack_element;
-    let grade_sum = getGradeSum();
     let resist_down = getSumEffectSize("resist_down");
-    let element_resist = Number(enemy_info["element_" + element]) - grade_sum["element_" + element];
-    // 耐性打ち消し
-    if (resist_down > 0 && element_resist >= 0) {
-        if (element_resist <= 100) {
-            element_resist = 100 + resist_down;
-        } else {
-            element_resist += resist_down;
-        }
-    }
     // 表示変更
-    $("#enemy_element_" + element).val(Math.floor(element_resist));
-    setEnemyElement("#enemy_element_" + element, Math.floor(element_resist));
+    setEnemyElement(`#enemy_element_${attack_info.attack_element}`, null, null, Math.floor(resist_down));
+    // 貫通クリティカル
+    updatePenetrationResist();
+    // 弱点行
+    displayWeakRow();
+}
+
+// 貫通クリティカル耐性変更
+function updatePenetrationResist() {
+    let attack_info = getAttackInfo();
+    if (attack_info === undefined) {
+        return false
+    }
     // 貫通クリティカル
     if (PENETRATION_ATTACK_LIST.includes(attack_info.attack_id)) {
-        $("#enemy_element_0").val(100);
-        setEnemyElement("#enemy_element_0", 100);
         let physical = attack_info.attack_physical;
         let week_value = 100;
         switch (attack_info.attack_id) {
@@ -1183,10 +1182,11 @@ function updateEnemyResist() {
             default:
                 break;
         }
-        $(`#enemy_physical_${physical}`).val(week_value);
-        setEnemyElement(`#enemy_physical_${physical}`, week_value);
+        let element_init = Number($("#enemy_element_0").data("init")) || 0;
+        let physical_init = Number($(`#enemy_physical_${physical}`).data("init")) || 0;
+        setEnemyElement("#enemy_element_0", null, 100 - element_init, null);
+        setEnemyElement(`#enemy_physical_${physical}`, null, week_value - physical_init, null);
     }
-    displayWeakRow();
 }
 
 // 属性行設定
@@ -1408,7 +1408,7 @@ function setBuffList() {
         });
     });
     $(".include_lv").trigger("change");
-    updateEnemyResist();
+    updateEnemyResistDown();
     MicroModal.close('modal_select_buff');
 }
 
@@ -2382,15 +2382,13 @@ function getEnemyInfo() {
 
 // グレード情報更新
 function updateGrade() {
-    let enemy_info = getEnemyInfo();
     let grade_sum = getGradeSum();
     for (let i = 1; i <= 3; i++) {
-        setEnemyElement("#enemy_physical_" + i, enemy_info["physical_" + i] - grade_sum["physical_" + i]);
+        setEnemyElement("#enemy_physical_" + i, null, - grade_sum["physical_" + i], null);
     }
     for (let i = 0; i <= 5; i++) {
-        setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i] - grade_sum["element_" + i]);
+        setEnemyElement("#enemy_element_" + i, null, - grade_sum["element_" + i], null);
     }
-    updateEnemyResist();
     updateEnemyScoreAttack();
 }
 
@@ -2454,10 +2452,10 @@ function setEnemyStatus() {
     $("#enemy_destruction_rate").val(Number(enemy_info.destruction_limit) + strong_break);
     $("#enemy_destruction").val(Number(enemy_info.destruction));
     for (let i = 1; i <= 3; i++) {
-        setEnemyElement("#enemy_physical_" + i, enemy_info["physical_" + i]);
+        setEnemyElement("#enemy_physical_" + i, enemy_info["physical_" + i], 0, 0);
     }
     for (let i = 0; i <= 5; i++) {
-        setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i]);
+        setEnemyElement("#enemy_element_" + i, enemy_info["element_" + i], 0, 0);
     }
     $("#enemy_hp").val(Number(enemy_info.max_hp).toLocaleString());
     setHpGarge(100);
@@ -2480,7 +2478,6 @@ function setEnemyStatus() {
     if (enemy_info.enemy_class == ENEMY_CLASS_SERAPH_ENCOUNTER) {
         updateSeraphEncounter();
     }
-    updateEnemyResist();
     // バフ効果量を更新
     $(".variable_effect_size").each(function (index, value) {
         updateBuffEffectSize($(value));
@@ -2491,7 +2488,7 @@ function setEnemyStatus() {
         select2ndSkill($(value));
     });
     // 耐性変更時用に再実行
-    updateEnemyResist();
+    updateEnemyResistDown();
 }
 
 // 敵ステータス更新
@@ -2638,7 +2635,22 @@ function getDamageBonus(damage, num, score_attack) {
 }
 
 // 敵耐性設定
-function setEnemyElement(id, val) {
+function setEnemyElement(id, init, content, resist_down) {
+    init = init ?? $(id).data("init");
+    $(id).data("init", init);
+    content = content ?? $(id).data("content");
+    $(id).data("content", content);
+    resist_down = resist_down ?? $(id).data("resist_down");
+    $(id).data("resist_down", resist_down);
+
+    init = Number(init) || 0;
+    content = Number(content) || 0;
+    resist_down = Number(resist_down) || 0;
+
+    if (resist_down > 0 && init < 100) {
+        init = 100;
+    }
+    let val = init + content + resist_down;
     $(id).val(val);
     $(id).removeClass("enemy_resist");
     $(id).removeClass("enemy_weak");
