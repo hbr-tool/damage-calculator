@@ -1502,24 +1502,20 @@ function updateTurn(selector, turn_data) {
     setOverDrive();
     turn_data.unitLoop(function (unit) {
         let target_skill = selector.find(".unit_skill")[unit.place_no];
-        // ODで消費SP変更
+        // スキル更新
+        let select_index = $(target_skill).prop("selectedIndex");
         let skill_id = Number($(target_skill).val());
-        switch (skill_id) {
-            case 477: // ヌラルジャ
-                // スキル更新
-                let select_index = $(target_skill).prop("selectedIndex");
-                $(target_skill).html("");
-                appendSkillOptions($(target_skill), turn_data, unit)
-                if (unit.place_no < 3) {
-                    setFrontOptions($(target_skill));
-                } else {
-                    setBackOptions($(target_skill));
-                }
-                $(target_skill).prop("selectedIndex", select_index);
-                let skill_info = getSkillData(skill_id);
-                unit.sp_cost = getSpCost(turn_data, skill_info, unit);
-                break;
+        $(target_skill).html("");
+        appendSkillOptions($(target_skill), turn_data, unit)
+        if (unit.place_no < 3) {
+            setFrontOptions($(target_skill));
+        } else {
+            setBackOptions($(target_skill));
         }
+        $(target_skill).prop("selectedIndex", select_index);
+        let skill_info = getSkillData(skill_id);
+        unit.sp_cost = getSpCost(turn_data, skill_info, unit);
+
         // SP更新
         let target_sp = selector.find(".unit_sp")[unit.place_no];
         updateSp(unit, target_sp)
@@ -2122,6 +2118,13 @@ function getSpCost(turn_data, skill_info, unit) {
         }
         // 疾駆
         if (checkAbilityExist(unit.ability_other, 1515)) {
+            sp_cost_down = 2;
+        }
+    }
+    // オーバードライブ中
+    if (turn_data.over_drive_max_turn > 0) {
+        // 獅子に鰭
+        if (checkAbilityExist(unit.ability_other, 1521)) {
             sp_cost_down = 2;
         }
     }
