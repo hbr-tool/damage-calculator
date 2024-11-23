@@ -1,3 +1,6 @@
+// 使用不可スタイル
+const NOT_USE_STYLE = [141];
+
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
 let last_turn;
@@ -823,6 +826,15 @@ function setEventTrigger() {
     });
     // 戦闘開始ボタンクリック
     $(".battle_start").on("click", function (event) {
+        for (let i = 0; i < select_style_list.length; i++) {
+            let style = select_style_list[i]?.style_info;
+            if (NOT_USE_STYLE.includes(style?.style_id)) {
+                let chara_data = getCharaData(style.chara_id);
+                alert(`[${style.style_name}]${chara_data.chara_name}は現在使用できません。`);
+                return;
+            }
+        };
+
         if ($("#is_overwrite").prop("checked")) {
             if ($("#battle_area").css("visibility") !== "hidden" && !confirm("現在の結果が消えますが、よろしいですか？")) {
                 return;
