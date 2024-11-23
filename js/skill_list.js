@@ -543,7 +543,7 @@
     {"skill_id":540,"skill_name":"ローズペタル","chara_id":9,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":541,"skill_name":"ロココ・デストラクション","chara_id":9,"style_id":138,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":11,"attribute_conditions":2,"attack_id":163,"attack_physical":1,"attack_element":0},
     {"skill_id":542,"skill_name":"プライベートレッスン","chara_id":7,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
-    {"skill_id":543,"skill_name":"トリック・カノン+","chara_id":10,"style_id":0,"sp_cost":13,"skill_active":0,"skill_kind":2,"skill_attribute":0,"attribute_conditions":0,"attack_id":161,"attack_physical":2,"attack_element":3},
+    {"skill_id":543,"skill_name":"トリック・カノン+","chara_id":10,"style_id":0,"sp_cost":11,"skill_active":0,"skill_kind":2,"skill_attribute":0,"attribute_conditions":0,"attack_id":161,"attack_physical":2,"attack_element":3},
     {"skill_id":544,"skill_name":"影のサポーター","chara_id":18,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":2,"attack_element":null},
     {"skill_id":545,"skill_name":"彩鳳連理","chara_id":25,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":3,"attack_element":null},
     {"skill_id":546,"skill_name":"行くぞ！丸山部隊","chara_id":32,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":5,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":2,"attack_element":null},

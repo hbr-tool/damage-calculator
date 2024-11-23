@@ -34,9 +34,11 @@ function setEventTrigger() {
             if (select_attack_skill.attack_element !== 0 && (attack_info === undefined || select_attack_skill.attack_element !== attack_info.attack_element)) {
                 toggleItemVisibility(`.buff_element-${select_attack_skill.attack_element}`, false);
                 toggleItemVisibility(`.row_element-${select_attack_skill.attack_element}`, false);
+                $(`.buff_element-${select_attack_skill.attack_element} > input:not(':disabled')`).prop("checked", false);
             }
             if (attack_info === undefined || select_attack_skill.attack_physical !== attack_info.attack_physical) {
                 toggleItemVisibility(`.buff_physical-${select_attack_skill.attack_physical}`, false);
+                $(`.buff_physical-${select_attack_skill.attack_physical} > input:not(':disabled')`).prop("checked", false);
             }
             // キャラ、スタイル専用非表示
             $(".skill_unique").hide();
@@ -231,7 +233,7 @@ function setEventTrigger() {
         select_style_list[chara_no].limit_count = limit_count;
         let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
         // アビリティのチェックボックスを更新
-        $("input[type=checkbox]." + chara_id_class).each(function (index, value) {
+        $("input[type=checkbox].ability." + chara_id_class).each(function (index, value) {
             let ability_id = $(value).data("ability_id");
             let ability_info = getAbilityInfo(ability_id);
             let limit_border = Number($(value).data("limit_border"));
@@ -385,8 +387,7 @@ function setEventTrigger() {
     });
     // 前衛が3人以上の場合
     $(document).on("change", "#ability_front input", function (event) {
-        let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
-        if ($("#ability_front input:checked:not(." + chara_id_class + ")").length > 2) {
+        if (checkFrontAbility() > 2) {
             alert("前衛は攻撃キャラクターを除いた2人まで設定できます。");
             $(this).prop("checked", false);
             return;
@@ -394,7 +395,10 @@ function setEventTrigger() {
     });
     // 後衛が3人以上の場合
     $(document).on("change", "#ability_back input", function (event) {
-        if ($("#ability_back input:checked").length > 2) {
+        let back = $(`#ability_back input:checked`).filter(function () {
+            return $(this).parent().css("display") !== "none";
+        });
+        if (back.length > 3) {
             alert("後衛は3人まで設定できます。");
             $(this).prop("checked", false);
             return;
@@ -1700,9 +1704,9 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             }
             checked = limit_count >= limit_border && $(input).hasClass(chara_id);
             break
-        case RANGE_ALLY_FRONT:	// 味方全体
-        case RANGE_ALLY_ALL:	// 敵全体
-        case RANGE_OTHER:	// その他
+        case RANGE_ALLY_ALL:	// 味方全体
+        case RANGE_ENEMY_ALL:	// 敵全体
+        case RANGE_OTHER:	    // その他
             // 前衛または後衛かつ、本人以外
             if ((ability_info.activation_place == 1 || ability_info.activation_place == 2) && !$(input).hasClass(chara_id) || !disabled) {
                 disabled = false;
@@ -1715,11 +1719,36 @@ function setAbilityCheck(input, ability_info, limit_border, limit_count, chara_i
             }
             break;
     }
+    // 非表示かつチェックされている場合はチェック解除
+    if ($(input).parent().css("display") == "none" && checked && !disabled) {
+        checked = false;
+    }
+    // 新規にチェック付けて良いか
+    if (!oldChecked && checked && !disabled) {
+        switch (ability_info.activation_place) {
+            case 1:	// 前衛
+                checked = checkFrontAbility() < 2;
+                break;
+            case 2:	// 後衛
+                // 現在チェックする必要が無い
+                break;
+        }
+    }
+
     $(input).prop("checked", checked).attr("disabled", disabled);
     if (checked != oldChecked) {
         $(input).trigger("change");
     }
 }
+// 前衛人数チェック
+function checkFrontAbility() {
+    let chara_id_class = "chara_id-" + select_attack_skill.chara_id;
+    let front = $(`#ability_front input:checked:not('.${chara_id_class}')`).filter(function () {
+        return $(this).parent().css("display") !== "none";
+    });
+    return front.length;
+}
+
 
 // パッシブ追加
 function addPassive(member_info) {
