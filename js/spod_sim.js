@@ -1514,7 +1514,11 @@ function updateTurn(selector, turn_data) {
         }
         $(target_skill).prop("selectedIndex", select_index);
         let skill_info = getSkillData(skill_id);
-        unit.sp_cost = getSpCost(turn_data, skill_info, unit);
+        if (skill_info) {
+            unit.sp_cost = getSpCost(turn_data, skill_info, unit);
+        } else {
+            unit.sp_cost = 0;
+        }
 
         // SP更新
         let target_sp = selector.find(".unit_sp")[unit.place_no];
