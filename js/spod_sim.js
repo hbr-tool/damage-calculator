@@ -1260,6 +1260,9 @@ function procBattleStart() {
             });
             unit.style.passive_skill_list.forEach(skill_id => {
                 let passive_info = getPassiveInfo(skill_id);
+                if (!passive_info) {
+                    return;
+                }
                 switch (passive_info.activation_timing) {
                     case ABILIRY_BATTLE_START: // 戦闘開始時
                         unit.ability_battle_start.push(passive_info);
