@@ -1532,19 +1532,20 @@ function updateTurn(selector, turn_data) {
 // ターンボタン表示設定
 function setTurnButton() {
     // 最後の要素のみ表示
-    $('.next_turn:last').show();
-    $('.next_turn:not(:last)').hide();
     if (next_display == "1") {
         // 最初の要素を非表示、以降の要素を表示
+        $('.next_turn:first').show();
+        $('.next_turn:not(:first)').hide();
         $('.return_turn:first').hide();
-        $('.return_turn:gt(0)').show();
+        $('.return_turn:not(:first)').show();
     } else {
         // 最後の要素を非表示、以前の要素を表示
+        $('.next_turn:last').show();
+        $('.next_turn:not(:last)').hide();
         $('.return_turn:last').hide();
         $('.return_turn:not(:last)').show();
     }
 }
-
 // バフアイコンリスト
 function createBuffIconList(buff_list, loop_limit, chara_index) {
     let div = $("<div>").addClass("scroll-container");
