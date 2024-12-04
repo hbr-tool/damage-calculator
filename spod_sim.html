@@ -231,23 +231,23 @@
         <div class="resist_area mx-auto mt-2">
           <div class="grid grid-cols-9">
             <div class="slash"><input type="image" class="enemy_type_icon" src="img/slash.webp"><input type="text"
-                id="enemy_physical_1" class="enemy_type_value enemy_input" ></div>
+                id="enemy_physical_1" class="enemy_type_value enemy_input"></div>
             <div class="stab"><input type="image" class="enemy_type_icon" src="img/stab.webp"><input type="text"
-                id="enemy_physical_2" class="enemy_type_value enemy_input" ></div>
+                id="enemy_physical_2" class="enemy_type_value enemy_input"></div>
             <div class="strike"><input type="image" class="enemy_type_icon" src="img/strike.webp"><input type="text"
-                id="enemy_physical_3" class="enemy_type_value enemy_input" ></div>
+                id="enemy_physical_3" class="enemy_type_value enemy_input"></div>
             <div class="none"><input type="image" class="enemy_type_icon" src="img/none.webp"><input type="text"
-                id="enemy_element_0" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_0" class="enemy_type_value enemy_input"></div>
             <div class="fire"><input type="image" class="enemy_type_icon" src="img/fire.webp"><input type="text"
-                id="enemy_element_1" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_1" class="enemy_type_value enemy_input"></div>
             <div class="ice"><input type="image" class="enemy_type_icon" src="img/ice.webp"><input type="text"
-                id="enemy_element_2" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_2" class="enemy_type_value enemy_input"></div>
             <div class="thunder"><input type="image" class="enemy_type_icon" src="img/thunder.webp"><input type="text"
-                id="enemy_element_3" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_3" class="enemy_type_value enemy_input"></div>
             <div class="light"><input type="image" class="enemy_type_icon" src="img/light.webp"><input type="text"
-                id="enemy_element_4" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_4" class="enemy_type_value enemy_input"></div>
             <div class="dark"><input type="image" class="enemy_type_icon" src="img/dark.webp"><input type="text"
-                id="enemy_element_5" class="enemy_type_value enemy_input" ></div>
+                id="enemy_element_5" class="enemy_type_value enemy_input"></div>
           </div>
         </div>
       </div>
@@ -255,9 +255,21 @@
         <ui>
           <li>
             <label>バトル開始時</label>
-            OverDriveGauge<input type="number" max="300" min="0" step="0.01" class="step_od_gauge w-[70px]" value="0"
-              id="init_over_drive">
-            SP＋<input type="number" max="20" min="0" step="1" class="step_sp" value="0" id="init_sp_add">
+            <div class="ml-4">
+              フィールド<select id="init_field">
+                <option value="0" selected>無し</option>
+                <option value="1">火</option>
+                <option value="2">氷</option>
+                <option value="3">雷</option>
+                <option value="4">光</option>
+                <option value="5">闇</option>
+                <option value="6">稲穂</option>
+                <option value="7">砂嵐</option>
+              </select>
+              OverDriveGauge<input type="number" max="300" min="0" step="0.01" class="step_od_gauge w-[70px]" value="0"
+                id="init_over_drive">
+              SP＋<input type="number" max="20" min="0" step="1" class="step_sp" value="0" id="init_sp_add">
+            </div>
           </li>
           <li>
             <label>毎ターン</label>
@@ -590,8 +602,7 @@
     </div>
     <div class="modal micromodal-slide" id="modal_passive_list" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="passive_list">
+        <div class="modal__container container_damage" role="dialog" aria-modal="true" aria-labelledby="passive_list">
           <div id="passive_list" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
             <div class="passive_container">
               <label class="modal_label">パッシブ設定</label>

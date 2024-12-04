@@ -1756,20 +1756,20 @@ function addPassive(member_info) {
     let is_select = member_info.is_select;
 
     const TARGET_KIND = [
-        1, // 攻撃力アップ
-        3, // クリティカル率アップ
-        7, // フィールド
-        25, // 能力固定上昇
-        26, // 能力%上昇
-        27, // フィールド強化
-        28, // バフ強化
+        EFFECT_ATTACKUP, // 攻撃力アップ
+        EFFECT_CRITICAL_UP, // クリティカル率アップ
+        EFFECT_FIELD_DEPLOYMENT, // フィールド展開
+        EFFECT_STATUSUP_VALUE, // 能力固定上昇
+        EFFECT_STATUSUP_RATE, // 能力%上昇
+        EFFECT_FIELD_STRENGTHEN, // フィールド強化
+        EFFECT_BUFF_STRENGTHEN, // バフ強化
     ]
     const SUB_TARGET_KIND = [
-        7, // フィールド
-        25, // 能力固定上昇
-        26, // 能力%上昇
-        27, // フィールド強化
-        28, // バフ強化
+        EFFECT_FIELD_DEPLOYMENT, // フィールド展開
+        EFFECT_STATUSUP_VALUE, // 能力固定上昇
+        EFFECT_STATUSUP_RATE, // 能力%上昇
+        EFFECT_FIELD_STRENGTHEN, // フィールド強化
+        EFFECT_BUFF_STRENGTHEN, // バフ強化
     ]
     let passive_list = skill_list.filter(obj =>
         obj.chara_id === chara_id &&
@@ -1814,16 +1814,16 @@ function addPassive(member_info) {
             target_chara_id_class += (is_select ? " passive_chara_id-" : " passive_sub_chara_id-") + value;
         });
         switch (passive_info.effect_type) {
-            case 25: // 能力固定上昇
-            case 26: // 能力%上昇
+            case EFFECT_STATUSUP_VALUE: // 能力固定上昇
+            case EFFECT_STATUSUP_RATE: // 能力%上昇
                 add_div_class = "passive_all";
                 add_check_class = "strengthen_status";
                 break;
-            case 27: // フィールド強化
+            case EFFECT_FIELD_STRENGTHEN: // フィールド強化
                 add_div_class = "passive_all";
                 add_check_class = "strengthen_field";
                 break;
-            case 28: // バフ強化
+            case EFFECT_BUFF_STRENGTHEN: // バフ強化
                 add_div_class = "passive_all";
                 add_check_class = "strengthen_skill";
                 break;

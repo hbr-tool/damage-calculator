@@ -47,6 +47,45 @@ const BUFF_MORALE = 34; // 士気
 const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
 const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
 
+/** アビリティ/パッシブ効果 */
+
+const EFFECT_ATTACKUP = 1; // 攻撃力アップ
+const EFFECT_DEFFENCEDOWN = 2; // 防御力ダウン
+const EFFECT_CRITICAL_UP = 3; // クリティカル率アップ
+const EFFECT_CRITICAL_DAMAGE_UP = 4; // クリティカルダメージアップ
+const EFFECT_DAMAGERATEUP = 5; // 破壊率上昇量アップ
+const EFFECT_FUNNEL = 6; // 連撃数アップ
+const EFFECT_FIELD_DEPLOYMENT = 7; // フィールド展開
+const EFFECT_CHARGE = 8; // チャージ
+const EFFECT_DEFFENCEUP = 11; // 防御力アップ
+const EFFECT_HEALSP = 12; // SP回復
+const EFFECT_HEALDP = 13; // DP回復
+const EFFECT_OVERDRIVEPOINTUP = 14; // ODアップ
+const EFFECT_COST_SP_DOWN = 15; // 消費SPダウン
+const EFFECT_MORALE = 16; // 士気
+const EFFECT_BREAK_GUARD = 20; // ブレイクガード
+const EFFECT_STUN = 21; // スタン
+const EFFECT_MISFORTUNE = 22; // 厄
+const EFFECT_ARROWCHERRYBLOSSOMS = 23; // 桜花の矢
+const EFFECT_SHADOW_CLONE = 24; // 影分身
+const EFFECT_STATUSUP_VALUE = 25; // 能力上昇(固定)
+const EFFECT_STATUSUP_RATE = 26; // 能力上昇(%)
+const EFFECT_FIELD_STRENGTHEN = 27; // フィールド強化
+const EFFECT_BUFF_STRENGTHEN = 28; // バフ強化
+const EFFECT_TOKEN_UP = 30; // トークンアップ
+const EFFECT_TOKEN_ATTACKUP = 31; // トークン1つにつき攻撃力アップ
+const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき 防御力アップ
+
+/** フィールド */
+const FIELD_NORMAL = 0; // 通常
+const FIELD_FIRE = 1; // 火
+const FIELD_ICE = 2; // 氷
+const FIELD_THUNDER = 3; // 雷
+const FIELD_LIGHT = 4; // 光
+const FIELD_DARK = 5; // 闇
+const FIELD_RICE = 6; // 稲穂
+const FIELD_SANDSTORM = 7; // 砂嵐
+
 /** 対象 */
 const RANGE_FILED = 0; // 場
 const RANGE_ENEMY_UNIT = 1; // 敵単体
@@ -71,7 +110,9 @@ const CHARA_ID_MARUYAMA = [15, 16, 28, 32, 40, 47];
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
 const ATTRIBUTE_PURSUIT = 2; // 追撃
 const ATTRIBUTE_COMMAND_ACTION = 3; // 指揮行動
-const ATTRIBUTE_SP_HALF = 11; // SP半減
+const ATTRIBUTE_SP_HALF = 11; // SP消費半減
+const ATTRIBUTE_SP_ZERO = 12; // SP消費0
+
 /** 条件 */
 const CONDITIONS_FIRST_TURN = 1; // 1ターン目
 const CONDITIONS_SKILL_INIT = 2; // 初回
@@ -84,6 +125,7 @@ const CONDITIONS_TARGET_COVER = 13; // 集中・挑発状態
 const CONDITIONS_HAS_CHARGE = 21; // チャージ中
 const CONDITIONS_31A_OVER_3 = 31; // 31A3人以上
 const CONDITIONS_31E_OVER_3 = 35; // 31E3人以上
+const CONDITIONS_FIELD_NOT_FIRE = 41; // 火属性以外フィールド
 const CONDITIONS_ENEMY_COUNT_1 = 51; // 敵1体
 const CONDITIONS_ENEMY_COUNT_2 = 52; // 敵2体
 const CONDITIONS_ENEMY_COUNT_3 = 53; // 敵3体

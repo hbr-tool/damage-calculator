@@ -297,6 +297,7 @@ img.select_style {
 .turn_number {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: -3px;
 }
 
 .left {
@@ -414,8 +415,13 @@ img.unit_buff {
     width: 72px;
 }
 
+.enemy_count {
+    line-height: 21px;
+    font-size: 14px;
+}
+
 .enemy_icon_list {
-    width: 120px;
+    width: 150px;
 }
 
 input[type='image'].select_target {

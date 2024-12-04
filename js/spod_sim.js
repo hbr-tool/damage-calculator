@@ -1,5 +1,8 @@
 // 使用不可スタイル
-const NOT_USE_STYLE = [141];
+const NOT_USE_STYLE = [];
+
+// 謎の処理順序
+const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
 
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
@@ -26,35 +29,18 @@ const ABILIRY_RECEIVE_DAMAGE = 7;
 const ABILIRY_EX_SKILL_USE = 8;
 const ABILIRY_OTHER = 99;
 
-const EFFECT_ATTACKUP = 1; // 攻撃力アップ
-const EFFECT_DEFFENCEDOWN = 2; // 防御力ダウン
-const EFFECT_CRITICAL_UP = 3; // クリティカル率アップ
-const EFFECT_CRITICAL_DAMAGE_UP = 4; // クリティカルダメージアップ
-const EFFECT_DAMAGERATEUP = 5; // 破壊率上昇量アップ
-const EFFECT_FUNNEL = 6; // 連撃数アップ
-const EFFECT_FIELD = 7; // フィールド展開
-const EFFECT_CHARGE = 8; // チャージ
-const EFFECT_DEFFENCEUP = 11; // 防御力アップ
-const EFFECT_HEALSP = 12; // SP回復
-const EFFECT_HEALDP = 13; // DP回復
-const EFFECT_OVERDRIVEPOINTUP = 14; // ODアップ
-const EFFECT_COST_SP_DOWN = 15; // 消費SPダウン
-const EFFECT_MORALE = 16; // 士気
-const EFFECT_BREAK_GUARD = 20; // ブレイクガード
-const EFFECT_STUN = 21; // スタン
-const EFFECT_MISFORTUNE = 22; // 厄
-const EFFECT_ARROWCHERRYBLOSSOMS = 23; // 桜花の矢
-const EFFECT_SHADOW_CLONE = 24; // 影分身
-const EFFECT_STATUSUP_VALUE = 25; // 能力上昇(固定)
-const EFFECT_STATUSUP_RATE = 26; // 能力上昇(%)
-const EFFECT_FIELD_ = 27; // フィールド強化
-const EFFECT_TOKEN_UP = 30; // トークンアップ
-const EFFECT_TOKEN_ATTACKUP = 31; // トークン1つにつき攻撃力アップ
-const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき 防御力アップ
-
 const BUFF_FUNNEL_LIST = [BUFF_FUNNEL_SMALL, BUFF_FUNNEL_LARGE, BUFF_ABILITY_FUNNEL_SMALL, BUFF_ABILITY_FUNNEL_LARGE];
 const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED];
-
+const FIELD_LIST = {
+    [FIELD_NORMAL]: "無し",
+    [FIELD_FIRE]: "火",
+    [FIELD_ICE]: "氷",
+    [FIELD_THUNDER]: "雷",
+    [FIELD_LIGHT]: "光",
+    [FIELD_DARK]: "闇",
+    [FIELD_RICE]: "稲穂",
+    [FIELD_SANDSTORM]: "砂嵐"
+}
 class turn_data {
     constructor() {
         this.turn_number = 0;
@@ -74,10 +60,22 @@ class turn_data {
         this.step_over_drive_down = 0;
         this.step_sp_down = 0;
         this.sp_cost_down = 0;
+        this.field = 0;
+        this.field_turn = 0;
     }
 
     unitLoop(func) {
         $.each(this.unit_list, function (index, unit) {
+            if (!unit.blank) {
+                func(unit);
+            }
+        });
+    }
+
+    unitOrderLoop(func) {
+        const self = this;
+        ACTION_ORDER.forEach(function (index) {
+            let unit = self.unit_list[index];
             if (!unit.blank) {
                 func(unit);
             }
@@ -196,7 +194,7 @@ class turn_data {
     }
     abilityAction(action_kbn) {
         const self = this;
-        this.unitLoop(function (unit) {
+        this.unitOrderLoop(function (unit) {
             let action_list = [];
             switch (action_kbn) {
                 case ABILIRY_BATTLE_START: // 戦闘開始時
@@ -241,8 +239,15 @@ class turn_data {
                 }
                 let target_list = getTargetList(self, ability.range_area, ability.target_element, unit.place_no, null);
                 let buff;
+                switch (ability.conditions) {
+                    case "火属性フィールド":
+                        if (self.field != FIELD_FIRE) {
+                            return;
+                        }
+                        break;
+                }
                 switch (ability.effect_type) {
-                    case 6: // 連撃数アップ
+                    case EFFECT_FUNNEL: // 連撃数アップ
                         buff = new buff_data();
                         buff.buff_kind = ability.effect_size == 40 ? BUFF_ABILITY_FUNNEL_LARGE : BUFF_ABILITY_FUNNEL_SMALL;
                         buff.buff_name = ability.ability_name;
@@ -251,7 +256,7 @@ class turn_data {
                         buff.rest_turn = -1;
                         unit.buff_list.push(buff);
                         break;
-                    case 12: // SP回復
+                    case EFFECT_HEALSP: // SP回復
                         $.each(target_list, function (index, target_no) {
                             let unit_data = getUnitData(self, target_no);
                             if (unit_data.sp < 20) {
@@ -309,10 +314,13 @@ class turn_data {
                             }
                         });
                         break;
-                    case 14: // ODアップ
+                    case EFFECT_OVERDRIVEPOINTUP: // ODアップ
                         self.over_drive_gauge += ability.effect_size;
+                        if (self.over_drive_gauge > 300) {
+                            self.over_drive_gauge = 300;
+                        }
                         break;
-                    case 23: // 桜花の矢
+                    case EFFECT_ARROWCHERRYBLOSSOMS: // 桜花の矢
                         buff = new buff_data();
                         buff.buff_kind = BUFF_ARROWCHERRYBLOSSOMS;
                         buff.buff_element = 0;
@@ -320,13 +328,21 @@ class turn_data {
                         buff.buff_name = ability.ability_name;
                         unit.buff_list.push(buff);
                         break;
-                    case 8: // チャージ
+                    case EFFECT_CHARGE: // チャージ
                         buff = new buff_data();
                         buff.buff_kind = BUFF_CHARGE;
                         buff.buff_element = 0;
                         buff.rest_turn = -1;
                         buff.buff_name = ability.ability_name;
                         unit.buff_list.push(buff);
+                        break;
+                    case EFFECT_FIELD_DEPLOYMENT: // フィールド
+                        if (ability.element) {
+                            self.field = ability.element;
+                        } else if (ability.skill_id == 525) {
+                            // いつの日かここで
+                            self.field = FIELD_RICE;
+                        }
                         break;
                 }
             });
@@ -338,6 +354,14 @@ class turn_data {
 function checkAbilityExist(ability_list, ability_id) {
     let exist_list = ability_list.filter(function (ability_info) {
         return ability_info.ability_id == ability_id;
+    });
+    return exist_list.length > 0;
+}
+
+// パッシブ存在チェック
+function checkPassiveExist(passive_list, skill_id) {
+    let exist_list = passive_list.filter(function (value) {
+        return value == skill_id;
     });
     return exist_list.length > 0;
 }
@@ -1300,6 +1324,10 @@ function procBattleStart() {
     });
 
     // 初期設定を読み込み
+    turn_init.field = Number($("#init_field").val());
+    if (turn_init.field > 0) {
+        turn_init.field_turn = -1;
+    }
     turn_init.over_drive_gauge = Number($("#init_over_drive").val());
     turn_init.front_sp_add = Number($("#front_sp_add").val());
     turn_init.back_sp_add = Number($("#back_sp_add").val());
@@ -1342,10 +1370,15 @@ function proceedTurn(turn_data, kb_next) {
     let turn_number = $('<div>').text(turn_data.getTurnNumber()).addClass("turn_number");
     let enemy = $('<div>').addClass("left flex").append(
         $('<img>').attr("src", "icon/BtnEventBattleActive.webp").addClass("enemy_icon"),
-        $("<select>").attr("id", `enemy_count_turn${last_turn}`).append(
-            ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`${i + 1}体`))
-        ).val(turn_data.enemy_count).addClass("enemy_count"),
-        createBuffIconList(turn_data.enemy_debuff_list, 4, 7).addClass("enemy_icon_list")
+        $("<div>").append(
+            $("<select>").attr("id", `enemy_count_turn${last_turn}`).append(
+                ...Array.from({ length: 3 }, (_, i) => $("<option>").val(i + 1).text(`${i + 1}体`))
+            ).val(turn_data.enemy_count).addClass("enemy_count"),
+            $("<label>").text("場").addClass("ml-2"),
+            $("<select>").attr("id", `field_turn${last_turn}`).append(
+                Object.keys(FIELD_LIST).map(field => $("<option>").val(field).text(FIELD_LIST[field]))
+            ).val(turn_data.field).addClass("enemy_count"),
+            createBuffIconList(turn_data.enemy_debuff_list, 6, 1, 7).addClass("enemy_icon_list"))
     );
     let over_drive = createOverDriveGauge(turn_data.over_drive_gauge);
 
@@ -1385,7 +1418,7 @@ function proceedTurn(turn_data, kb_next) {
 
         const appendBuffList = () => {
             if (unit.buff_list.length > 0) {
-                unit_div.append(createBuffIconList(unit.buff_list, 3, index).addClass("icon_list"));
+                unit_div.append(createBuffIconList(unit.buff_list, 3, 2, index).addClass("icon_list"));
             }
         };
 
@@ -1546,8 +1579,9 @@ function setTurnButton() {
         $('.return_turn:not(:last)').show();
     }
 }
+
 // バフアイコンリスト
-function createBuffIconList(buff_list, loop_limit, chara_index) {
+function createBuffIconList(buff_list, loop_limit, loop_step, chara_index) {
     let div = $("<div>").addClass("scroll-container");
     let inner = $("<div>").addClass("scroll-content");
     $.each(buff_list, function (index, buff_info) {
@@ -1557,7 +1591,7 @@ function createBuffIconList(buff_list, loop_limit, chara_index) {
     });
 
     let unit_buffs = inner.find(".unit_buff");
-    if (unit_buffs.length > loop_limit * 2) {
+    if (unit_buffs.length > loop_limit * loop_step) {
         inner.addClass('scroll');
 
         // アイコンの数によってアニメーションの速度を調整
@@ -1933,6 +1967,15 @@ function startAction(turn_data, turn_number) {
             unit.additional_turn = false;
         });
     }
+    // フィールド判定
+    let old_field = turn_data.field;
+    let select_field = $(`#field_turn${turn_number}`).val();
+    turn_data.field = select_field;
+    if (old_field != select_field) {
+        // 変更があった場合はフィールドターンをリセット
+        turn_data.field_turn = 0;
+    }
+
     let seq = sortActionSeq(turn_number);
     // 攻撃後に付与されるバフ種
     const ATTACK_AFTER_LIST = [BUFF_ATTACKUP, BUFF_ELEMENT_ATTACKUP, BUFF_CRITICALRATEUP, BUFF_CRITICALDAMAGEUP, BUFF_ELEMENT_CRITICALRATEUP,
@@ -1979,6 +2022,12 @@ function startAction(turn_data, turn_number) {
     if (turn_data.over_drive_gauge > 300) {
         turn_data.over_drive_gauge = 300;
     }
+    // 残りフィールドターン
+    if (turn_data.field_turn > 1 && !turn_data.additional_turn) {
+        turn_data.field_turn--;
+    } else if (turn_data.field_turn == 1) {
+        turn_data.field = 0;
+    }
 }
 
 // OD上昇量取得
@@ -2008,6 +2057,12 @@ function getOverDrive(turn_number, enemy_count) {
         buff_list.forEach(function (buff_info) {
             // OD増加
             if (buff_info.buff_kind == BUFF_OVERDRIVEPOINTUP) {
+                // 条件判定
+                if (buff_info.conditions != null) {
+                    if (!judgmentCondition(buff_info.conditions, temp_turn, unit_data, buff_info.skill_id)) {
+                        return true;
+                    }
+                }
                 // 哀のスノードロップBREAKなし
                 if (buff_info.buff_id == 123 && unit_data.buff_effect_select_type == 0) {
                     return true;
@@ -2112,7 +2167,10 @@ function getSpCost(turn_data, skill_info, unit) {
     let sp_cost = skill_info.sp_cost;
     let sp_cost_down = turn_data.sp_cost_down
     if (harfSpSkill(turn_data, skill_info, unit)) {
-        sp_cost = Math.ceil(sp_cost / 2)
+        sp_cost = Math.ceil(sp_cost / 2);
+    }
+    if (ZeroSpSkill(turn_data, skill_info, unit)) {
+        sp_cost = 0;
     }
     // 追加ターン
     if (turn_data.additional_turn) {
@@ -2142,8 +2200,19 @@ function getSpCost(turn_data, skill_info, unit) {
 
 // 消費SP半減
 function harfSpSkill(turn_data, skill_info, unit_data) {
-    // SP半減
+    // SP消費半減
     if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {
+        if (judgmentCondition(skill_info.attribute_conditions, turn_data, unit_data, skill_info.skill_id)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 消費SP0
+function ZeroSpSkill(turn_data, skill_info, unit_data) {
+    // SP消費0
+    if (skill_info.skill_attribute == ATTRIBUTE_SP_ZERO) {
         if (judgmentCondition(skill_info.attribute_conditions, turn_data, unit_data, skill_info.skill_id)) {
             return true;
         }
@@ -2178,17 +2247,22 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return checkMember(turn_data.unit_list, "31A") >= 3;
         case CONDITIONS_31E_OVER_3: // 31E3人以上
             return checkMember(turn_data.unit_list, "31E") >= 3;
+        case CONDITIONS_FIELD_NOT_FIRE: // 火属性フィールド以外
+            return turn_data.field != FIELD_FIRE && turn_data.field != FIELD_NORMAL;
     }
     return false;
 }
 
+function getFieldElement(turn_data) {
+    let field_element = Number(turn_data.field);
+    if (field_element == FIELD_RICE || field_element == FIELD_SANDSTORM) {
+        field_element = 0;
+    }
+    return field_element;
+}
+
 // バフを追加
 function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
-    // 対象：場
-    if (buff_info.range_area == 0) {
-        return;
-    }
-
     // 条件判定
     if (buff_info.conditions != null) {
         if (!judgmentCondition(buff_info.conditions, turn_data, use_unit_data, buff_info.skill_id)) {
@@ -2222,6 +2296,15 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             }
             break;
     }
+    switch (buff_info.skill_id) {
+        case 557: // 極彩色
+            let field_element = getFieldElement(turn_data);
+            if (buff_info.buff_element != field_element) {
+                return;
+            }
+            break;
+    }
+
     let target_list;
     // 対象策定
     switch (buff_info.buff_kind) {
@@ -2335,6 +2418,22 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 unit_data.additional_turn = true;
             });
             turn_data.additional_turn = true;
+            break;
+        case BUFF_FIELD: // フィールド
+            turn_data.field = buff_info.buff_element;
+            let field_turn = buff_info.effect_count;
+            if (field_turn > 0) {
+                // 天長地久
+                if (checkAbilityExist(use_unit_data.ability_other, 603)) {
+                    field_turn = 0;
+                }
+                // メディテーション
+                if (checkPassiveExist(use_unit_data.style.passive_skill_list, 501)) {
+                    field_turn = 0;
+                }
+            }
+            turn_data.field_turn = field_turn;
+            break;
         default:
             break;
     }
