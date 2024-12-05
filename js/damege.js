@@ -767,8 +767,8 @@ function calcDamage() {
         dp_rate = dp_rate < 60 ? 60 : dp_rate;
         skill_unique_rate += (dp_rate - 100) / 200
     }
-    // 花舞う、可憐のフレア
-    if (attack_info.attack_id == 136) {
+    // 花舞う、可憐のフレア/プレゼント・フォー・ユー
+    if (attack_info.attack_id == 136 || attack_info.attack_id == 166) {
         let dp_rate = Number($("#skill_unique_dp_rate").val());
         dp_rate = dp_rate > 100 ? 100 : dp_rate;
         skill_unique_rate += (100 - dp_rate) / 100 * 75 / 100;

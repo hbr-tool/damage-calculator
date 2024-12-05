@@ -2237,6 +2237,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE);
         case CONDITIONS_TARGET_COVER: // 集中・挑発状態
             return checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE) || checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER);
+        case CONDITIONS_HAS_CHARGE: // チャージ
+            return checkBuffExist(unit_data.buff_list, BUFF_CHARGE);
         case CONDITIONS_ENEMY_COUNT_1: // 敵1体
             return turn_data.enemy_count == 1;
         case CONDITIONS_ENEMY_COUNT_2: // 敵2体
