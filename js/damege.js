@@ -1145,11 +1145,11 @@ function resetEnemyResist() {
     let physical = select_attack_skill.attack_physical;
     let element_physical = enemy_info["physical_" + physical];
     $("#enemy_physical_" + physical).val(Math.floor(element_physical));
-    setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical), 0, 0);
+    setEnemyElement("#enemy_physical_" + physical, Math.floor(element_physical), null, null);
     let element = select_attack_skill.attack_element;
     let element_element = enemy_info["element_" + element];
     $("#enemy_element_" + element).val(Math.floor(element_element));
-    setEnemyElement("#enemy_element_" + element, Math.floor(element_element), 0, 0);
+    setEnemyElement("#enemy_element_" + element, Math.floor(element_element), null, null);
 }
 
 // 敵耐性変更
@@ -2432,6 +2432,7 @@ function updateGrade() {
     for (let i = 0; i <= 5; i++) {
         setEnemyElement("#enemy_element_" + i, null, - grade_sum["element_" + i], null);
     }
+    displayWeakRow();
     updateEnemyScoreAttack();
 }
 
