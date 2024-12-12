@@ -1,0 +1,44 @@
+.enemy_weak {
+  font-weight: bold;
+  color: red!important;
+}
+.enemy_resist {
+  font-weight: bold;
+  color: blue!important;
+}
+
+#grid_area {
+  width: 1200px;
+}
+th {
+  font-size: 14px;
+}
+td {
+  font-size: 13px;
+}
+
+.handsontable th,
+.handsontable th:last-child {
+  background-color: #afff60!important;
+  border-color: #149f14;
+}
+
+.ht_master:not(.innerBorderTop)~.handsontable thead tr:last-child th {
+  border-bottom-width: 1px;
+}
+
+.handsontable .handsontable.ht_clone_top .wtHider {
+  padding: 0px;
+}
+
+.handsontable thead th .relative:has(img) {
+  padding: 0px 1px!important;
+}
+
+.handsontable .htDimmed {
+  color: #000;
+}
+
+td {
+  white-space: nowrap;
+}

@@ -29,8 +29,8 @@ const ABILIRY_RECEIVE_DAMAGE = 7;
 const ABILIRY_EX_SKILL_USE = 8;
 const ABILIRY_OTHER = 99;
 
-const BUFF_FUNNEL_LIST = [BUFF_FUNNEL_SMALL, BUFF_FUNNEL_LARGE, BUFF_ABILITY_FUNNEL_SMALL, BUFF_ABILITY_FUNNEL_LARGE];
-const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED];
+const BUFF_FUNNEL_LIST = [BUFF_FUNNEL, BUFF_ABILITY_FUNNEL];
+const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED, BUFF_DIVA_BLESS];
 const FIELD_LIST = {
     [FIELD_NORMAL]: "無し",
     [FIELD_FIRE]: "火",
@@ -245,14 +245,20 @@ class turn_data {
                             return;
                         }
                         break;
+                    case "歌姫の加護":
+                        if (!checkBuffExist(unit.buff_list, BUFF_DIVA_BLESS)) {
+                            return;
+                        };
+                        break;
                 }
                 switch (ability.effect_type) {
                     case EFFECT_FUNNEL: // 連撃数アップ
                         buff = new buff_data();
-                        buff.buff_kind = ability.effect_size == 40 ? BUFF_ABILITY_FUNNEL_LARGE : BUFF_ABILITY_FUNNEL_SMALL;
+                        buff.buff_kind = BUFF_ABILITY_FUNNEL;
                         buff.buff_name = ability.ability_name;
                         buff.buff_element = 0;
-                        buff.effect_size = ability.effect_size == 40 ? 3 : 5;
+                        buff.effect_count = ability.effect_count;
+                        buff.effect_size = ability.effect_size;
                         buff.rest_turn = -1;
                         unit.buff_list.push(buff);
                         break;
@@ -370,6 +376,15 @@ function checkPassiveExist(passive_list, skill_id) {
 function checkBuffExist(buff_list, buff_kind) {
     let exist_list = buff_list.filter(function (buff_info) {
         return buff_info.buff_kind == buff_kind;
+    });
+    return exist_list.length > 0;
+}
+
+
+// バフ存在チェック
+function checkBuffIdExist(buff_list, buff_id) {
+    let exist_list = buff_list.filter(function (buff_info) {
+        return buff_info.buff_id == buff_id;
     });
     return exist_list.length > 0;
 }
@@ -530,25 +545,14 @@ class unit_data {
         });
         let ability_count = 0;
         $.each(funnel_list, function (index, buff_info) {
-            let effect_size;
-            let effect_count;
-            let effect_unit;
-            if (buff_info.buff_kind == BUFF_FUNNEL_SMALL || buff_info.buff_kind == BUFF_ABILITY_FUNNEL_SMALL) {
-                effect_count = buff_info.effect_size;
-                effect_unit = 10
-            } else {
-                effect_count = buff_info.effect_size;
-                effect_unit = 40
-            }
-            if (buff_info.buff_kind == BUFF_ABILITY_FUNNEL_LARGE || buff_info.buff_kind == BUFF_ABILITY_FUNNEL_SMALL) {
-                ability_count++
-            }
-            effect_size = effect_unit * effect_unit;
-            ret.push({ "effect_count": effect_count, "effect_unit": effect_unit, "effect_size": effect_size });
+            let effect_size = buff_info.effect_size;
+            let effect_count = buff_info.effect_count;
+            let effect_sum = effect_size * effect_count;
+            ret.push({ "effect_count": effect_count, "effect_size": effect_size, "effect_sum": effect_sum });
         });
-        // effect_sizeで降順にソート
+        // effect_sumで降順にソート
         ret.sort(function (a, b) {
-            return b.effect_size - a.effect_size;
+            return b.effect_sum - a.effect_sum;
         });
 
         let consume = 2;
@@ -1672,13 +1676,9 @@ function getBuffIconImg(buff_info) {
         case BUFF_MISFORTUNE: // 厄
             src += "IconMisfortune";
             break;
-        case BUFF_FUNNEL_SMALL: // 連撃(小)
-        case BUFF_ABILITY_FUNNEL_SMALL: // アビリティ連撃(小)
-            src += "IconFunnelS";
-            break;
-        case BUFF_FUNNEL_LARGE: // 連撃(大)
-        case BUFF_ABILITY_FUNNEL_LARGE: // アビリティ連撃(大)
-            src += "IconFunnelL";
+        case BUFF_FUNNEL: // 連撃
+        case BUFF_ABILITY_FUNNEL: // アビリティ連撃
+            src += "IconFunnel";
             break;
         case BUFF_DEFENSEDP: // DP防御ダウン
             src += "IconBuffDefenseDP";
@@ -1719,6 +1719,9 @@ function getBuffIconImg(buff_info) {
             break;
         case BUFF_MORALE: // 士気
             src += "IconMorale";
+            break;
+        case BUFF_DIVA_BLESS: // 歌姫の加護
+            src += "IconDivaBress";
             break;
     }
     if (buff_info.buff_element != 0) {
@@ -2194,6 +2197,13 @@ function getSpCost(turn_data, skill_info, unit) {
             sp_cost_down = 2;
         }
     }
+    // 歌姫の加護
+    if (checkBuffExist(unit.buff_list, BUFF_DIVA_BLESS)) {
+        // 絶唱
+        if (checkAbilityExist(unit.ability_other, 1522)) {
+            sp_cost_down = 2;
+        }
+    }
     sp_cost -= sp_cost_down;
     return sp_cost < 0 ? 0 : sp_cost;
 }
@@ -2251,8 +2261,12 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return checkMember(turn_data.unit_list, "31E") >= 3;
         case CONDITIONS_FIELD_NOT_FIRE: // 火属性フィールド以外
             return turn_data.field != FIELD_FIRE && turn_data.field != FIELD_NORMAL;
+        case CONDITIONS_DIVA_BLESS: // 歌姫の加護
+            return checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
+        case CONDITIONS_NOT_DIVA_BLESS: // 歌姫の加護以外
+            return !checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
     }
-    return false;
+    return true;
 }
 
 function getFieldElement(turn_data) {
@@ -2319,8 +2333,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_ELEMENT_CRITICALDAMAGEUP:	// 属性クリティカルダメージアップ
         case BUFF_CHARGE: // チャージ
         case BUFF_DAMAGERATEUP: // 破壊率アップ
-        case BUFF_FUNNEL_SMALL: // 連撃(小)
-        case BUFF_FUNNEL_LARGE: // 連撃(大)
+        case BUFF_FUNNEL: // 連撃
         case BUFF_RECOIL: // 行動不能
         case BUFF_GIVEATTACKBUFFUP: // バフ強化
         case BUFF_GIVEDEBUFFUP: // デバフ強化
@@ -2328,6 +2341,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_ETERNAL_OARH: // 永遠なる誓い
         case BUFF_EX_DOUBLE: // EXスキル連続使用
         case BUFF_BABIED: // オギャり
+        case BUFF_DIVA_BLESS: // 歌姫の加護
             // バフ追加
             target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
             if (buff_info.buff_kind == BUFF_ATTACKUP || buff_info.buff_kind == BUFF_ELEMENT_ATTACKUP) {
@@ -2344,6 +2358,25 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 // 単一バフ
                 if (SINGLE_BUFF_LIST.includes(buff_info.buff_kind)) {
                     if (checkBuffExist(unit_data.buff_list, buff_info.buff_kind)) {
+                        if (buff_info.effect_count > 0) {
+                            // 残ターン更新
+                            let filter_list = unit_data.buff_list.filter(function (buff) {
+                                return buff.buff_kind == buff_info.buff_kind;
+                            })
+                            filter_list[0].rest_turn = buff_info.effect_count;
+                        }
+                        return true;
+                    }
+                }
+                if (ALONE_ACTIVATION_BUFF_LIST.includes(buff_info.buff_id)) {
+                    if (checkBuffIdExist(unit_data.buff_list, buff_info.buff_id)) {
+                        if (buff_info.effect_count > 0) {
+                            // 残ターン更新
+                            let filter_list = unit_data.buff_list.filter(function (buff) {
+                                return buff.buff_id == buff_info.buff_id;
+                            })
+                            filter_list[0].rest_turn = buff_info.effect_count;
+                        }
                         return true;
                     }
                 }
@@ -2445,33 +2478,22 @@ function createBuffData(buff_info, use_unit_data) {
     let buff = new buff_data();
     buff.buff_kind = buff_info.buff_kind;
     buff.buff_element = buff_info.buff_element;
-    buff.effect_size = buff_info.max_power;
+    buff.effect_size = buff_info.effect_size;
+    buff.effect_count = buff_info.effect_count;
     buff.buff_name = buff_info.buff_name
     buff.skill_id = buff_info.skill_id;
+    buff.buff_id = buff_info.buff_id;
+    buff.rest_turn = buff_info.effect_count == 0 ? -1 : buff_info.effect_count;
     switch (buff_info.buff_kind) {
         case BUFF_DEFENSEDOWN: // 防御力ダウン
         case BUFF_ELEMENT_DEFENSEDOWN: // 属性防御力ダウン
         case BUFF_FRAGILE: // 脆弱
         case BUFF_DEFENSEDP: // DP防御力ダウン 
-        case BUFF_RECOIL: // 行動不能
-            buff.rest_turn = buff_info.effect_count;
             // ダブルリフト
             if (checkAbilityExist(use_unit_data.ability_other, 1516)) {
                 buff.rest_turn++;
             }
             break;
-        case BUFF_PROVOKE: // 挑発
-        case BUFF_COVER: // 注目
-            buff.rest_turn = buff_info.max_power;
-            break;
-        default:
-            buff.rest_turn = -1;
-            break;
-    }
-
-    // 星屑とバウンシー・ブルーミーのみ特殊仕様
-    if (buff_info.skill_id == 67 || buff_info.skill_id == 491 || buff_info.skill_id == 523) {
-        buff.rest_turn = 3;
     }
     return buff;
 }
@@ -2488,6 +2510,13 @@ function consumeBuffUnit(unit_data, attack_info, skill_info) {
     for (let i = buff_list.length - 1; i >= 0; i--) {
         buff_info = buff_list[i];
         const countWithFilter = consume_kind.filter(buff_kind => buff_kind === buff_info.buff_kind).length;
+        if (buff_info.rest_turn > 0) {
+            // 残ターンバフは現状単独発動のみ
+            for (j = 0; j < consume_count; j++) {
+                consume_kind.push(buff_info.buff_kind);
+            }
+            continue;
+        }
         // 同一バフは制限
         if (countWithFilter < consume_count) {
             switch (buff_info.buff_kind) {
@@ -2527,10 +2556,8 @@ function consumeBuffUnit(unit_data, attack_info, skill_info) {
                         continue;
                     }
                     break;
-                case BUFF_FUNNEL_SMALL: // 連撃(小)
-                case BUFF_FUNNEL_LARGE: // 連撃(大)
-                case BUFF_ABILITY_FUNNEL_SMALL: // アビリティ連撃(小)
-                case BUFF_ABILITY_FUNNEL_LARGE: // アビリティ連撃(大)
+                case BUFF_FUNNEL: // 連撃
+                case BUFF_ABILITY_FUNNEL: // アビリティ連撃
                     // 通常攻撃だと消費しない
                     if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
                         continue;
@@ -2596,13 +2623,22 @@ function getBuffKindName(buff_info) {
         case BUFF_MISFORTUNE: // 厄
             buff_kind_name += "厄";
             break;
-        case BUFF_FUNNEL_SMALL: // 連撃(小)
-        case BUFF_ABILITY_FUNNEL_SMALL: // アビリティ連撃(小)
-            buff_kind_name += "連撃(小)";
-            break;
-        case BUFF_FUNNEL_LARGE: // 連撃(大)
-        case BUFF_ABILITY_FUNNEL_LARGE: // アビリティ連撃(大)
-            buff_kind_name += "連撃(大)";
+        case BUFF_FUNNEL: // 連撃
+        case BUFF_ABILITY_FUNNEL: // アビリティ連撃
+            switch (buff_info.effect_size) {
+                case 10:
+                    buff_kind_name += "連撃(小)";
+                    break
+                case 20:
+                    buff_kind_name += "連撃(中)";
+                    break
+                case 40:
+                    buff_kind_name += "連撃(大)";
+                    break
+                case 80:
+                    buff_kind_name += "連撃(特大)";
+                    break
+            }
             break;
         case BUFF_DEFENSEDP: // DP防御力ダウン
             buff_kind_name += "DP防御力ダウン";
@@ -2643,6 +2679,9 @@ function getBuffKindName(buff_info) {
             break;
         case BUFF_MORALE: // 士気
             buff_kind_name += "士気";
+            break;
+        case BUFF_DIVA_BLESS: // 歌姫の加護
+            buff_kind_name += "歌姫の加護";
             break;
         default:
             break;

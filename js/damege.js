@@ -149,10 +149,11 @@ function setEventTrigger() {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
         $(".status_" + id).removeClass("status_" + id);
+        let option = $(this).find("option:selected");
+        setAloneActivation($(option));
         if (selected_index === 0) {
             resetSkillLv(id);
         } else {
-            let option = $(this).find("option:selected");
             if (isOnlyBuff(option)) {
                 if (!confirm(option.text() + "は\r\n通常、複数付与出来ませんが、設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
@@ -161,12 +162,6 @@ function setEventTrigger() {
             }
             if (isOnlyUse(option)) {
                 if (!confirm(option.text() + "は\r\n通常、他スキルに設定出来ませんが、設定してよろしいですか？")) {
-                    $(this).prop("selectedIndex", 0);
-                    return;
-                }
-            }
-            if (isSameBuff($(option))) {
-                if (!confirm(option.text() + "は\r\n同一スキルが既に設定されています。設定してよろしいですか？")) {
                     $(this).prop("selectedIndex", 0);
                     return;
                 }
@@ -1382,7 +1377,12 @@ function setBuffList() {
                 // 最大数設定済み
                 let skill_id_class = "skill_id-" + $(option).data("skill_id");
                 let class_name = $(option).parent().attr("id").replace(/[0-9]/g, '');
-                if ($("." + class_name + " option." + skill_id_class + ":selected").length >= count) {
+                let buff_count = $("." + class_name + " option." + skill_id_class + ":selected").length;
+                if (buff_count >= count) {
+                    return true;
+                }
+                // 単独発動は1つまで
+                if (ALONE_ACTIVATION_BUFF_LIST.includes(buff_id) && buff_count > 0) {
                     return true;
                 }
 
@@ -1395,15 +1395,12 @@ function setBuffList() {
                     $(option).prop("selected", false);
                     return true;
                 }
-                if (isSameBuff($(option))) {
-                    $(option).prop("selected", false);
-                    return true;
-                }
                 if (isOtherOnlyUse($(option))) {
                     $(option).prop("selected", false);
                     return true;
                 }
 
+                setAloneActivation($(option));
                 let select_lv = $(option).data("select_lv");
                 let max_lv = $(option).data("max_lv");
                 createSkillLvList(select_id + "_lv", max_lv, select_lv);
@@ -1478,8 +1475,7 @@ function addBuffList(member_info, member_kind) {
             case BUFF_MINDEYE: // 心眼
             case BUFF_CRITICALRATEUP: // クリ率
             case BUFF_CRITICALDAMAGEUP: // クリダメ
-            case BUFF_FUNNEL_SMALL: // 連撃(小)
-            case BUFF_FUNNEL_LARGE: // 連撃(大)
+            case BUFF_FUNNEL: // 連撃
                 only_one = "only_one";
                 break;
             case BUFF_DEFENSEDOWN: // 防御ダウン
@@ -1631,13 +1627,13 @@ function addAbility(member_info) {
                 break;
         }
         // 浄化の喝采/破砕の喝采
-        const APPEND_SELECT_LIST = [407, 408];
-        if (APPEND_SELECT_LIST.includes(ability_info.ability_id)) {
-            // 追加
-            var option1 = $('<option>').text("×1").val(1);
-            var option2 = $('<option>').text("×2").val(2);
-            append = $('<select>').append(option1).append(option2).addClass("ability_select");
-        }
+        // const APPEND_SELECT_LIST = [407, 408];
+        // if (APPEND_SELECT_LIST.includes(ability_info.ability_id)) {
+        //     // 追加
+        //     var option1 = $('<option>').text("×1").val(1);
+        //     var option2 = $('<option>').text("×2").val(2);
+        //     append = $('<select>').append(option1).append(option2).addClass("ability_select");
+        // }
         let name = (is_select ? "" : "(他部隊)") + getCharaData(chara_id).chara_short_name;
         let fg_update = false;
         let id = target + chara_id + index;
@@ -1672,9 +1668,9 @@ function addAbility(member_info) {
             .addClass(chara_id_class)
             .css("display", display);
         $("#" + target).append(div);
-        if (append !== undefined) {
-            $(div).append(append);
-        }
+        // if (append !== undefined) {
+        //     $(div).append(append);
+        // }
         if (fg_update) {
             // バフ効果量を更新
             $(".variable_effect_size." + chara_id_class).each(function (index, value) {
@@ -1878,9 +1874,8 @@ function getEffectSize(buff_kind, buff_id, member_info, skill_lv) {
         case BUFF_ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
             effect_size = getDebuffEffectSize(buff_id, member_info, skill_lv);
             break;
-        case BUFF_FUNNEL_SMALL: // 連撃(小)
-        case BUFF_FUNNEL_LARGE: // 連撃(大)
-            effect_size = getFunnelEffectSize(buff_id, member_info, skill_lv);
+        case BUFF_FUNNEL: // 連撃
+            effect_size = getFunnelEffectSize(buff_id, member_info);
             break;
         default:
             break;
@@ -1904,6 +1899,9 @@ function select2ndSkill(select) {
         return;
     }
     select.prop("selectedIndex", 0);
+    if (select.prop("disabled")) {
+        return;
+    }
     $(".status_" + id).removeClass("status_" + id);
     for (let i = 1; i < select.find("option").length; i++) {
         let option = select.find("option")[i];
@@ -1923,10 +1921,6 @@ function select2ndSkill(select) {
                 $(option).prop("selected", false);
                 continue;
             }
-            if (isSameBuff($(option))) {
-                $(option).prop("selected", false);
-                continue;
-            }
             if (isOtherOnlyUse($(option))) {
                 $(option).prop("selected", false);
                 continue;
@@ -1935,6 +1929,7 @@ function select2ndSkill(select) {
                 // アビリティ
                 break;
             }
+            setAloneActivation($(option));
             let select_lv = $(option).data("select_lv");
             let max_lv = $(option).data("max_lv");
             createSkillLvList(select.attr("id") + "_lv", max_lv, select_lv);
@@ -2000,17 +1995,20 @@ function isOtherOnlyUse(option) {
     return false;
 }
 
-// 複数設定出来ないバフで扱いは同一のもの
-function isSameBuff(option) {
-    let convert_skill_id = { "4": "133", "133": "4" };
-    if (option.hasClass("only_first")) {
-        let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
-        let buff_id = "buff_id-" + convert_skill_id[option.val()];
-        if ($("." + class_name + " option." + buff_id + ":selected").length > 0) {
-            return true;
-        }
+// 単独発動設定
+function setAloneActivation(option) {
+    let skill_id = Number(option.val());
+    let id = option.parent().attr("id");
+    let partner_id = id.endsWith('1') ? id.slice(0, -1) + '2' : id.slice(0, -1) + '1';
+    // 他スキルを使用不可にする。
+    if (ALONE_ACTIVATION_BUFF_LIST.includes(skill_id)) {
+        $(`#${partner_id}`).prop("disabled", true);
+        $(`#${partner_id}`).prop("selectedIndex", 0);
+        $(`#${partner_id}`).find("option").first().text("使用不可");
+    } else {
+        $(`#${partner_id}`).prop("disabled", false);
+        $(`#${partner_id}`).find("option").first().text("無し");
     }
-    return false;
 }
 
 // 選択バフのステータスを着色
@@ -2079,7 +2077,7 @@ function getSumBuffEffectSize() {
     // スキルバフ合計
     let sum_buff = getSumEffectSize("buff");
     // 攻撃力アップアビリティ
-    sum_buff += getSumAbilityEffectSize(1);
+    sum_buff += getSumAbilityEffectSize(EFFECT_ATTACKUP);
     // 属性リング(0%-10%)
     if (select_attack_skill.attack_element != 0) {
         sum_buff += Number($("#elememt_ring option:selected").val());
@@ -2125,10 +2123,7 @@ function getSumFunnelEffectList() {
         }
         let buff_info = getBuffIdToBuff(Number($(selected).val()));
         let loop = buff_info.max_power;
-        let size = 10;
-        if (buff_info.buff_kind == 17) {
-            size = 40;
-        }
+        let size = buff_info.effect_size;
         for (let i = 0; i < loop; i++) {
             funnel_list.push(size);
         }
@@ -2266,6 +2261,12 @@ function getCriticalBuff() {
 // アビリティ効果量合計取得
 function getSumAbilityEffectSize(effect_type, is_select, chara_id) {
     let ability_effect_size = 0;
+    let sum_none_effect_size = 0;
+    let sum_physical_effect_size = 0;
+    let sum_element_effect_size = 0;
+    let activation_none_effect_size = 0;
+    let activation_physical_effect_size = 0;
+    let activation_element_effect_size = 0;
     $("input[type=checkbox].ability:checked").each(function (index, value) {
         if ($(value).parent().css("display") === "none") {
             return true;
@@ -2286,8 +2287,26 @@ function getSumAbilityEffectSize(effect_type, is_select, chara_id) {
         if ($(value).parent().find("select").length > 0) {
             effect_size *= Number($(value).parent().find("select").val());
         }
-        ability_effect_size += effect_size;
+        if (ALONE_ACTIVATION_ABILITY_LIST.includes(ability_id)) {
+            if (ability_info.element != 0) {
+                activation_element_effect_size = Math.max(activation_element_effect_size, effect_size);
+            } else if (ability_info.physical != 0) {
+                activation_physical_effect_size = Math.max(activation_physical_effect_size, effect_size);
+            } else {
+                activation_none_effect_size = Math.max(activation_none_effect_size, effect_size);
+            }
+        } else {
+            if (ability_info.element != 0) {
+                sum_element_effect_size += effect_size;
+            } else if (ability_info.physical != 0) {
+                sum_physical_effect_size += effect_size;
+            } else {
+                sum_none_effect_size += effect_size;
+            }
+        }
     });
+    ability_effect_size += Math.max(activation_none_effect_size, sum_none_effect_size)
+        + Math.max(activation_physical_effect_size, sum_physical_effect_size) + Math.max(activation_element_effect_size, sum_element_effect_size);
     $("input[type=checkbox].passive:checked").each(function (index, value) {
         let select = $(value).parent();
         if (select.css("display") === "none") {
@@ -2342,8 +2361,10 @@ function createEnemyList(enemy_class) {
         if (value.enemy_class == enemy_class) {
             var option = $('<option>')
                 .val(value.enemy_class_no);
-            if (enemy_class == 6) {
-                option.text(`#${value.score_attack_no} ${value.enemy_name}`)
+            if (enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
+                option.text(`#${value.sub_no} ${value.enemy_name}`)
+            } else if(enemy_class == ENEMY_CLASS_CLOCK_TOWER_NORMAL || enemy_class == ENEMY_CLASS_CLOCK_TOWER_HARD){
+                option.text(`(${value.sub_no}F) ${value.enemy_name}`)
             } else {
                 option.text(value.enemy_name);
             }
@@ -2638,7 +2659,7 @@ function calcScore(detail, grade_magn) {
     let is_break = $("#no_break_bonus_check").prop("checked");
     let turn_count = $("#turn_count").val();
     let enemy_info = getEnemyInfo();
-    let score_attack = getScoreAttack(enemy_info.score_attack_no);
+    let score_attack = getScoreAttack(enemy_info.sub_no);
     let num = score_lv - 100;
     let no_break_value = is_break ? no_break_bonus[num] : 0;
     let damage_bonus_avg = getDamageBonus(detail.avg_damage, num, score_attack);
@@ -2901,16 +2922,9 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
 }
 
 // 連撃効果量
-function getFunnelEffectSize(buff_id, member_info, skill_lv) {
+function getFunnelEffectSize(buff_id, member_info) {
     let buff_info = getBuffIdToBuff(buff_id)
-    let funnel_power;
-    if (buff_info.buff_kind == 16) {
-        // 連撃(小)
-        funnel_power = 10;
-    } else {
-        // 連撃(大)
-        funnel_power = 40;
-    }
+    let funnel_power = buff_info.effect_size;
     let effect_size;
     let min_power = buff_info.min_power;
     let max_power = buff_info.max_power;

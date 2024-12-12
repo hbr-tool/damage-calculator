@@ -25,8 +25,7 @@ const BUFF_DAMAGERATEUP = 12; // 破壊率アップ
 const BUFF_OVERDRIVEPOINTUP = 13; // OD増加
 const BUFF_FIGHTINGSPIRIT = 14; // 闘志
 const BUFF_MISFORTUNE = 15; // 厄
-const BUFF_FUNNEL_SMALL = 16; // 連撃(小)
-const BUFF_FUNNEL_LARGE = 17; // 連撃(大)
+const BUFF_FUNNEL = 16; // 連撃
 const BUFF_STRONG_BREAK = 18; // 強ブレイク
 const BUFF_DEFENSEDP = 19; // DP防御ダウン
 const BUFF_RESISTDOWN = 20; // 耐性ダウン
@@ -44,11 +43,11 @@ const BUFF_ETERNAL_OARH = 31; // 永遠なる誓い
 const BUFF_EX_DOUBLE = 32; // EXスキル連続発動
 const BUFF_BABIED = 33; // オギャり
 const BUFF_MORALE = 34; // 士気
-const BUFF_ABILITY_FUNNEL_SMALL = 116; // アビリティ連撃(小)
-const BUFF_ABILITY_FUNNEL_LARGE = 117; // アビリティ連撃(大)
+const BUFF_HACKING = 35; // ハッキング
+const BUFF_DIVA_BLESS = 36; // 歌姫の加護
+const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
 
 /** アビリティ/パッシブ効果 */
-
 const EFFECT_ATTACKUP = 1; // 攻撃力アップ
 const EFFECT_DEFFENCEDOWN = 2; // 防御力ダウン
 const EFFECT_CRITICAL_UP = 3; // クリティカル率アップ
@@ -126,6 +125,8 @@ const CONDITIONS_HAS_CHARGE = 21; // チャージ中
 const CONDITIONS_31A_OVER_3 = 31; // 31A3人以上
 const CONDITIONS_31E_OVER_3 = 35; // 31E3人以上
 const CONDITIONS_FIELD_NOT_FIRE = 41; // 火属性以外フィールド
+const CONDITIONS_DIVA_BLESS = 42; // 歌姫の加護
+const CONDITIONS_NOT_DIVA_BLESS = 43; // 歌姫の加護以外
 const CONDITIONS_ENEMY_COUNT_1 = 51; // 敵1体
 const CONDITIONS_ENEMY_COUNT_2 = 52; // 敵2体
 const CONDITIONS_ENEMY_COUNT_3 = 53; // 敵3体
@@ -148,3 +149,7 @@ const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
 
 /** 貫通クリティカル */ 
 const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163];
+/** 単独発動バフ */
+const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 2606, 2607];
+/** 単独発動アビリティ */
+const ALONE_ACTIVATION_ABILITY_LIST = [407, 408];
