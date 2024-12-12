@@ -2459,7 +2459,7 @@ function updateGrade() {
 
 // グレード情報取得
 function getGradeSum() {
-    let grade_sum = $.extend(true, {}, grade_list.filter((obj) => obj.sub_no == 0)[0]);
+    let grade_sum = $.extend(true, {}, grade_list.filter((obj) => obj.score_attack_no == 0)[0]);
     let enemy_info = getEnemyInfo();
     if (enemy_info == undefined) {
         return;
