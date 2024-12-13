@@ -2383,7 +2383,8 @@ function createEnemyList(enemy_class) {
         // スコアタの場合、グレードを表示する。
         $(".score_attack").css("display", "block");
         $("#score_lv").show();
-        $("#prediction_score").show();
+        // $("#prediction_score").show();
+        $("#prediction_score").hide();
     } else {
         $(".score_attack").css("display", "none");
         $("#score_lv").hide();
@@ -2537,7 +2538,7 @@ function setEnemyStatus() {
         setDpGarge(i, 0);
     }
     $(".row_dp").css("display", "none");
-    if (enemy_info.sub_no) {
+    if (enemy_info.enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
         updateEnemyScoreAttack();
     }
     if (enemy_info.enemy_class == ENEMY_CLASS_SERAPH_ENCOUNTER) {
