@@ -1181,7 +1181,7 @@ function createEnemyList(enemy_class) {
             var option = $('<option>')
                 .val(value.enemy_class_no);
             if (enemy_class == 6) {
-                option.text(`#${value.score_attack_no} ${value.enemy_name}`)
+                option.text(`#${value.sub_no} ${value.enemy_name}`)
             } else {
                 option.text(value.enemy_name);
             }
@@ -2400,7 +2400,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                     unit_data.buff_list.push(buff);
                 }
                 if (buff.lv < 10) {
-                    buff.lv += buff_info.effect_count;
+                    buff.lv += buff_info.effect_size;
                 }
             });
             break;
