@@ -538,7 +538,7 @@ class unit_data {
         }
         return 0;
     }
-    getfunnelList() {
+    getFunnelList() {
         let ret = [];
         let funnel_list = this.buff_list.filter(function (buff_info) {
             return BUFF_FUNNEL_LIST.includes(buff_info.buff_kind);
@@ -546,7 +546,7 @@ class unit_data {
         let ability_count = 0;
         $.each(funnel_list, function (index, buff_info) {
             let effect_size = buff_info.effect_size;
-            let effect_count = buff_info.effect_count;
+            let effect_count = buff_info.max_power;
             let effect_sum = effect_size * effect_count;
             ret.push({ "effect_count": effect_count, "effect_size": effect_size, "effect_sum": effect_sum });
         });
@@ -634,6 +634,8 @@ class buff_data {
         this.effect_size = 0;
         this.buff_kind = 0;
         this.skill_id = -1;
+        this.buff_id = -1;
+        this.max_power = 0;
         this.buff_name = null;
         this.lv = 0;
     }
@@ -2083,7 +2085,7 @@ function getOverDrive(turn_number, enemy_count) {
                 addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data);
             }
         });
-        let funnel_list = unit_data.getfunnelList();
+        let funnel_list = unit_data.getFunnelList();
         let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
 
         if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
@@ -2483,6 +2485,7 @@ function createBuffData(buff_info, use_unit_data) {
     buff.buff_name = buff_info.buff_name
     buff.skill_id = buff_info.skill_id;
     buff.buff_id = buff_info.buff_id;
+    buff.max_power = buff_info.max_power;
     buff.rest_turn = buff_info.effect_count == 0 ? -1 : buff_info.effect_count;
     switch (buff_info.buff_kind) {
         case BUFF_DEFENSEDOWN: // 防御力ダウン
