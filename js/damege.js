@@ -2305,8 +2305,9 @@ function getSumAbilityEffectSize(effect_type, is_select, chara_id) {
             }
         }
     });
-    ability_effect_size += Math.max(activation_none_effect_size, sum_none_effect_size)
-        + Math.max(activation_physical_effect_size, sum_physical_effect_size) + Math.max(activation_element_effect_size, sum_element_effect_size);
+    ability_effect_size += activation_none_effect_size + sum_none_effect_size
+        + activation_physical_effect_size + sum_physical_effect_size
+        + activation_element_effect_size + sum_element_effect_size;
     $("input[type=checkbox].passive:checked").each(function (index, value) {
         let select = $(value).parent();
         if (select.css("display") === "none") {
@@ -2383,8 +2384,7 @@ function createEnemyList(enemy_class) {
         // スコアタの場合、グレードを表示する。
         $(".score_attack").css("display", "block");
         $("#score_lv").show();
-        // $("#prediction_score").show();
-        $("#prediction_score").hide();
+        $("#prediction_score").show();
     } else {
         $(".score_attack").css("display", "none");
         $("#score_lv").hide();
@@ -2474,7 +2474,7 @@ function getGradeSum() {
     $("." + checked_id + ":checked").each(function (index, value) {
         let grade_no = Number($(value).data("grade_no"));
         let half = Number(checked_id.match(/\d+/g));
-        grade_list.filter((obj) => obj.sub_no == enemy_info.sub_no && obj.half == half && obj.grade_no == grade_no).forEach(value => {
+        grade_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no && obj.half == half && obj.grade_no == grade_no).forEach(value => {
             grade_sum["grade_rate"] += value["grade_rate"];
             if (value.grade_none == 1) {
                 return true;
