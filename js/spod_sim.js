@@ -1,8 +1,10 @@
 // 使用不可スタイル
 const NOT_USE_STYLE = [];
-
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
+// 残ターン消費バフ
+// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば
+const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568];
 
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
@@ -468,6 +470,7 @@ class unit_data {
         this.specialRestTurn();
         // OverDriveゲージをSPに加算
         this.sp += this.over_drive_sp;
+        if (this.sp > 99) this.sp = 99;
         this.over_drive_sp = 0;
     }
 
@@ -482,8 +485,8 @@ class unit_data {
         // 追加ターンODのみのターン消費
         for (let i = this.buff_list.length - 1; i >= 0; i--) {
             let buff_info = this.buff_list[i];
-            // 星屑の航路/星屑の航路+/バウンシー・ブルーミー
-            if (buff_info.skill_id == 67 || buff_info.skill_id == 491 || buff_info.skill_id == 523) {
+            // ターン消費バフ
+            if (REST_TURN_COST_BUFF.includes(buff_info.skill_id)) {
                 if (buff_info.rest_turn == 1) {
                     this.buff_list.splice(i, 1);
                 } else {
@@ -514,6 +517,10 @@ class unit_data {
             this.sp = 0;
             this.over_drive_sp = 0;
         } else {
+            // OD上限突破
+            if (this.sp + this.over_drive_sp > 99) {
+                this.sp = 99 - this.over_drive_sp;
+            }
             this.sp -= this.sp_cost;
         }
         this.sp_cost = 0;
@@ -524,7 +531,9 @@ class unit_data {
         if (this.sp_cost == 99) {
             unit_sp = 0;
         } else {
-            unit_sp = this.sp + this.over_drive_sp - this.sp_cost;
+            unit_sp = this.sp + this.over_drive_sp;
+            if (unit_sp > 99) unit_sp = 99;
+            unit_sp -= this.sp_cost;
         }
         return unit_sp + (this.add_sp > 0 ? ("+" + this.add_sp) : "");;
     }
@@ -1154,7 +1163,9 @@ function selectUnitSkill(select) {
 
 // SP更新
 function updateSp(unit_data, target) {
-    let unit_sp = unit_data.sp + unit_data.over_drive_sp - unit_data.sp_cost;
+    let unit_sp = unit_data.sp + unit_data.over_drive_sp;
+    if (unit_sp > 99) unit_sp = 99;
+    unit_sp -= unit_data.sp_cost;
     if (unit_data.sp_cost == 99) {
         unit_sp = 0;
     }
