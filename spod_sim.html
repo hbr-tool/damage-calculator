@@ -75,7 +75,7 @@
       // スタイルリスト読み込み
       select_troops = select_troops ? select_troops : 0;
       $("#troops_btn_" + select_troops).addClass("selected_troops");
-      loadTroopsList(select_troops);
+      loadTroopsList(select_style_list, select_troops);
 
       // 敵情報設定
       let enemy_class = localStorage.getItem("enemy_class");
@@ -556,9 +556,9 @@
               <p>行動後にゲージが100％以上ある場合、「行動開始+OD」が追加されます。</p>
               <br>
               <p>SPとODに関連するスキル、アビリティのデータは追加してありますが、現在、以下のスキル、アビリティに制約がかかっています。</p>
-              <p>■アビリティ</p>
               <p>・怪盗乱麻：SP上昇効果なし</p>
               <p>・激動：SP上昇効果なし</p>
+              <p>・友縁の剣：SP上昇効果なし</p>
               <p>・福音：常に発動します(OD上昇10%)</p>
               <p>・究極のスリル：常に発動します(OD上昇10%)</p>
               <p>以下のスキル/アビリティは発動条件をシミュレート出来ないため、SPに「＋」として表示しています。</p>
