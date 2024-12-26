@@ -45,6 +45,7 @@ const BUFF_BABIED = 33; // オギャり
 const BUFF_MORALE = 34; // 士気
 const BUFF_HACKING = 35; // ハッキング
 const BUFF_DIVA_BLESS = 36; // 歌姫の加護
+const BUFF_SHREDDING = 37; // 速弾き
 const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
 
 /** アビリティ/パッシブ効果 */
@@ -150,6 +151,6 @@ const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
 /** 貫通クリティカル */ 
 const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163];
 /** 単独発動バフ */
-const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 2606, 2607];
+const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 2606, 2607, 1033, 1113];
 /** 単独発動アビリティ */
 const ALONE_ACTIVATION_ABILITY_LIST = [407, 408];

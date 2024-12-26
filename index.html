@@ -81,8 +81,6 @@
     const BIKE_PARTS_LIST = ["無し(その他)", "攻撃＋", "クリティカル率＋", "チャージ", "敵防御ダウン", "攻撃＋＋", "心眼(改)", "クリティカル率ダメージ＋", "連撃＋", "破壊率＋", 
                             "攻撃＋改", "クリティカル率＋改", "敵防御ダウン改", "攻撃＋＋改", "クリティカル率ダメージ＋改", "連撃＋改", "破壊率＋改"];
     $(function () {
-      // スタイルリスト作成
-      createStyleList();
       // モーダル系イベント追加
       addModalEvent();
 
@@ -141,7 +139,7 @@
       // スタイルリスト読み込み
       select_troops = select_troops ? select_troops : 0;
       $("#troops_btn_" + select_troops).addClass("selected_troops");
-      loadTroopsList(select_troops);
+      loadTroopsList(select_style_list, select_troops);
 
       // MicroModal初期化
       MicroModal.init({

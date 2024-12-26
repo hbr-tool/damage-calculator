@@ -1,7 +1,3 @@
-let select_troops = localStorage.getItem('select_troops');
-let select_style_list = Array(6).fill(undefined);
-let sub_style_list = Array(6).fill(undefined);
-let support_style_list = Array(6).fill(undefined);
 let status_kbn = ["", "str", "dex", "con", "mnd", "int", "luk"];
 
 class Member {
@@ -46,6 +42,9 @@ function createStyleList() {
 
 // モーダル系イベント
 function addModalEvent() {
+    // スタイルリスト作成
+    createStyleList();
+
     // モーダルを開く
     $('.showmodal').on('click', function () {
         chara_no = $(this).data("chara_no");
@@ -109,16 +108,20 @@ function addModalEvent() {
         }
     });
 
+    /** 部隊変更共通部 */
     // スタイルを選択
     $('img.select_style_list').on('click', function () {
-        setMember(chara_no, $(this).data("style_id"), true)
+        setMember(select_style_list, chara_no, $(this).data("style_id"), true)
         closeModel();
     });
-
+    // リセットボタン
+    $("#style_reset_btn").on("click", function (event) {
+        styleReset(select_style_list, true);
+    });
     // メンバーを外す
     $('.remove_btn').on('click', function () {
         localStorage.removeItem(`troops_${select_troops}_${chara_no}`);
-        removeMember(chara_no, true);
+        removeMember(select_style_list, chara_no, true);
         closeModel();
     });
 }
@@ -130,18 +133,20 @@ function closeModel() {
 }
 
 // メンバーを設定する。
-function setMember(select_chara_no, style_id, isTrigger) {
+function setMember(select_list, select_chara_no, style_id, isTrigger) {
     let style_info = style_list.find((obj) => obj.style_id === style_id);
 
     // 同一のキャラIDは不許可
-    for (let i = 0; i < select_style_list.length; i++) {
-        if (i !== select_chara_no && select_style_list[i]?.style_info.chara_id === style_info.chara_id) {
+    for (let i = 0; i < select_list.length; i++) {
+        if (i !== select_chara_no && select_list[i]?.style_info.chara_id === style_info.chara_id) {
             alert("同一キャラクターは複数選択できません");
             return false;
         }
     }
     // メンバーの情報を削除
-    removeMember(select_chara_no, isTrigger);
+    if (typeof removeMember == "function") {
+        removeMember(select_list, select_chara_no, isTrigger);
+    }
 
     // メンバー情報作成
     let member_info = new Member();
@@ -151,26 +156,13 @@ function setMember(select_chara_no, style_id, isTrigger) {
 
     localStorage.setItem(`troops_${select_troops}_${select_chara_no}`, style_id);
 
-    // 画像切り替え
-    $('#select_chara_' + select_chara_no).attr("src", "icon/" + style_info.image_url);
-
     // ステータスを読み込む
     loadStyle(member_info);
-    select_style_list[select_chara_no] = member_info;
+    select_list[select_chara_no] = member_info;
 
-    $.each(status_kbn, function (index, value) {
-        if (index == 0) return true;
-        $(`#${value}_${select_chara_no}`).val(member_info[value]);
-    });
-    $(`#limit_${select_chara_no}`).val(member_info.limit_count);
-    $(`#jewel_${select_chara_no}`).val(member_info.jewel_lv);
-    $(`#earring_${select_chara_no}`).val(member_info.earring);
-    $(`#bracelet_${select_chara_no}`).val(member_info.bracelet);
-    $(`#chain_${select_chara_no}`).val(member_info.chain);
-    $(`#init_sp_${select_chara_no}`).val(member_info.init_sp);
     changeRarity(select_chara_no, style_info.rarity);
     if (typeof loadMember == "function") {
-        loadMember(member_info, isTrigger);
+        loadMember(select_chara_no, member_info, isTrigger);
     }
 }
 
@@ -228,46 +220,63 @@ function loadPassiveSkill(member_info) {
     }
 }
 
-// メンバーを外す
-function removeMember(select_chara_no, isTrigger) {
-    if (select_style_list[select_chara_no] === undefined) {
-        return;
-    }
-    // 入れ替えスタイルのスキルを削除
-    let chara_id = select_style_list[select_chara_no].style_info.chara_id;
-    let chara_id_class = ".chara_id-" + chara_id;
-    let parent = $(".include_lv " + chara_id_class + ":selected").parent();
-    $.each(parent, function (index, value) {
-        // 暫定的にdisplay:none追加
-        $(value).find(chara_id_class).css("display", "none");
-        select2ndSkill($("#" + $(value).prop("id")));
-    });
-    // 該当メンバーのスキル削除
-    $(chara_id_class).remove();
-    $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
-    $(".display_chara_id-" + chara_id + " input").prop("checked", false);
-    $(".display_chara_id-" + chara_id + " input").trigger("change");
-    select_style_list[select_chara_no] = undefined;
-    // 消費SP初期化
-    $('#sp_cost_' + select_chara_no).text(0);
-    // 画像初期化
-    $('#select_chara_' + select_chara_no).attr("src", "img/plus.png");
-    if (isTrigger) {
-        $("#attack_list").trigger("change");
-    }
-}
-
 // 部隊リストの呼び出し
-function loadTroopsList(troops_no) {
+function loadTroopsList(select_list, troops_no) {
     for (let i = 0; i < 6; i++) {
         const style_id = localStorage.getItem(`troops_${troops_no}_${i}`);
         if (style_id !== null) {
-            setMember(i, Number(style_id), false);
+            setMember(select_list, i, Number(style_id), false);
         }
     }
     $("#attack_list").trigger("change");
 }
 
+/** 部隊変更共通部 */
+// スタイルリセット
+function styleReset(select_list, isLocalStorageReset) {
+    $.each(select_list, function (index, value) {
+        if (index > 5) {
+            return false;
+        }
+        if (value) {
+            // メンバーの情報を削除
+            if (typeof removeMember == "function") {
+                removeMember(select_list, index, false);
+            }
+            select_list[index] = undefined;
+            if (isLocalStorageReset) {
+                localStorage.removeItem(`troops_${select_troops}_${index}`);
+            }
+        }
+    });
+    $("#attack_list").trigger("change");
+}
+
+// レアリティ対応
+function changeRarity(select_chara_no, rarity) {
+    $("#limit_" + select_chara_no).prop("disabled", false);
+    if (rarity == 1) {
+        $("#jewel_" + select_chara_no).prop("disabled", false);
+        $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'none');
+        $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'none');
+    } else {
+        $("#limit_" + select_chara_no).prop("disabled", true);
+        if (rarity == 2) {
+            $("#jewel_" + select_chara_no).prop("disabled", false);
+            $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'block');
+            $('#limit_' + select_chara_no).val(10);
+            select_style_list[select_chara_no].limit_count = 10;
+        } else {
+            $("#jewel_" + select_chara_no).val(0);
+            $("#jewel_" + select_chara_no).prop("disabled", true);
+            $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'block');
+            $('#limit_' + select_chara_no).val(20);
+            select_style_list[select_chara_no].limit_count = 20;
+        }
+    }
+}
+
+/** ダメージ計算ツール */
 // サブ部隊リストの呼び出し
 function loadSubTroopsList(troops_no) {
     // 既存のメンバーの情報を削除
@@ -371,44 +380,4 @@ function removeSupportMember(support_chara_no) {
     $(".display_chara_id-" + chara_id + " input").prop("checked", false);
     $(".display_chara_id-" + chara_id + " input").trigger("change");
     support_style_list[support_chara_no] = undefined;
-}
-
-// スタイルリセット
-function styleReset(isLocalStorageReset) {
-    $.each(select_style_list, function (index, value) {
-        if (index > 5) {
-            return false;
-        }
-        if (value) {
-            removeMember(index, false);
-            if (isLocalStorageReset) {
-                localStorage.removeItem(`troops_${select_troops}_${index}`);
-            }
-        }
-    });
-    $("#attack_list").trigger("change");
-}
-
-// レアリティ対応
-function changeRarity(select_chara_no, rarity) {
-    $("#limit_" + select_chara_no).prop("disabled", false);
-    if (rarity == 1) {
-        $("#jewel_" + select_chara_no).prop("disabled", false);
-        $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'none');
-        $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'none');
-    } else {
-        $("#limit_" + select_chara_no).prop("disabled", true);
-        if (rarity == 2) {
-            $("#jewel_" + select_chara_no).prop("disabled", false);
-            $('#limit_' + select_chara_no + ' option[value="10"]').css('display', 'block');
-            $('#limit_' + select_chara_no).val(10);
-            select_style_list[select_chara_no].limit_count = 10;
-        } else {
-            $("#jewel_" + select_chara_no).val(0);
-            $("#jewel_" + select_chara_no).prop("disabled", true);
-            $('#limit_' + select_chara_no + ' option[value="20"]').css('display', 'block');
-            $('#limit_' + select_chara_no).val(20);
-            select_style_list[select_chara_no].limit_count = 20;
-        }
-    }
 }

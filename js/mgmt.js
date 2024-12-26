@@ -17,12 +17,12 @@ function setEventTrigger() {
         }
         let width = getWidth(columns);
         if ($("#display_columns").val() == 1) {
-            hot1.updateSettings({ columns: columns, width: width });
-            hot1.loadData(getData(isBadge));
+            hot1.updateSettings({ columns: columns, width: width + 20 });
+            hot1.loadData(getData());
         } else {
             hot1.updateSettings({ columns: columns, width: width });
             hot2.updateSettings({ columns: columns, width: width });
-            hot1.loadData(getData1(isBadge));
+            hot1.loadData(getData1());
         }
         updateWidthSetting(width);
         saveInitDispaly();
@@ -43,9 +43,9 @@ function setEventTrigger() {
 
             data = replaceCharaData(jsondata)
             if ($("#display_columns").val() == 1) {
-                hot1.loadData(getData(isBadge));
+                hot1.loadData(getData());
             } else {
-                hot1.loadData(getData1(isBadge));
+                hot1.loadData(getData1());
                 hot2.loadData(getData2());
             }
             saveStorage();
@@ -81,11 +81,11 @@ function createGrid() {
     }
     let width = getWidth(columns);
     if ($("#display_columns").val() == 1) {
-        let dataAll = getData(isBadge);
+        let dataAll = getData();
         if (hot1) {
             hot1.loadData(dataAll);
         } else {
-            hot1 = new Handsontable(grid1, getGridOptions(dataAll, width, columns));
+            hot1 = new Handsontable(grid1, getGridOptions(dataAll, width + 20, columns));
         }
         if (hot2) {
             hot2.destroy();
@@ -95,7 +95,7 @@ function createGrid() {
         $("#grid_area").addClass("grid-cols-1")
         $("#grid_area").removeClass("grid-cols-2");
     } else {
-        let data1 = getData1(isBadge);
+        let data1 = getData1();
         let data2 = getData2();
         if (hot1) {
             hot1.loadData(data1);
@@ -122,13 +122,11 @@ function updateWidthSetting(width) {
 
 // データ取得
 function getData(isBadge) {
-    return data.filter(function (item) {
-        return (item["chara_id"] <= 48 || !isBadge);
-    });
+    return data;
 }
 function getData1(isBadge) {
     return data.filter(function (item) {
-        return item["chara_id"] <= 24 || (!isBadge && 48 < item["chara_id"]);
+        return item["chara_id"] <= 24 || 48 < item["chara_id"];
     });
 }
 function getData2() {
@@ -367,7 +365,7 @@ let baseColumns = [
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
             let chara_id = Number(rowData["chara_id"]);
-            if (chara_id < 100 && chara_id % 6 == 0 || chara_id == 104) {
+            if ((chara_id < 100 && chara_id % 6 == 0) || chara_id == 107) {
                 $(td).addClass("underLine");
             }
         },
@@ -705,7 +703,7 @@ function getTitleColumns() {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 let rowData = instance.getSourceData()[row];
                 let chara_id = Number(rowData["chara_id"]);
-                if (chara_id < 100 && chara_id % 6 == 0 || chara_id == 104) {
+                if ((chara_id < 100 && chara_id % 6 == 0) || chara_id == 107) {
                     $(td).addClass("underLine");
                 }
             },

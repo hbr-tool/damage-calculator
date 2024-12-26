@@ -53,7 +53,7 @@ function updateHeight() {
 }
 
 function getWidth(columns) {
-    return columns.reduce((acc, column) => acc + column.width, 0) + 5;
+    return columns.reduce((acc, column) => acc + column.width, 0) + 25;
 }
 
 function createGrid() {
@@ -180,6 +180,15 @@ function getGridOptions(data, width, columns) {
         afterCreateRow: function (index, amount) {
             data.splice(index, amount)
         },
+        afterOnCellMouseDown: (event, coords, TD) => {
+            console.log('Cell clicked:', coords, 'Element:', TD);
+            if (coords.row >= 0 && coords.col >= 0) {
+                const columnDefinition = columns[coords.col];
+                if (columnDefinition.data.includes("formation")) {
+                    MicroModal.show('modal_style_section');
+                }
+            }
+        },
         mergeCells: createMergeCells(data),
     }
 }
@@ -253,7 +262,7 @@ let columns = [
     },
     {
         data: "physical_1",
-        title: "斬",
+        title: "<img src='img/slash.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -262,7 +271,7 @@ let columns = [
     },
     {
         data: "physical_2",
-        title: "突",
+        title: "<img src='img/stab.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -271,7 +280,7 @@ let columns = [
     },
     {
         data: "physical_3",
-        title: "打",
+        title: "<img src='img/strike.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -280,7 +289,7 @@ let columns = [
     },
     {
         data: "element_0",
-        title: "無",
+        title: "<img src='img/none.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -289,7 +298,7 @@ let columns = [
     },
     {
         data: "element_1",
-        title: "火",
+        title: "<img src='img/fire.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -298,7 +307,7 @@ let columns = [
     },
     {
         data: "element_2",
-        title: "氷",
+        title: "<img src='img/ice.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -307,7 +316,7 @@ let columns = [
     },
     {
         data: "element_3",
-        title: "雷",
+        title: "<img src='img/thunder.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -316,7 +325,7 @@ let columns = [
     },
     {
         data: "element_4",
-        title: "光",
+        title: "<img src='img/light.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -325,7 +334,7 @@ let columns = [
     },
     {
         data: "element_5",
-        title: "闇",
+        title: "<img src='img/dark.webp'>",
         className: "htCenter",
         type: "numeric",
         renderer: resistRenderer,
@@ -341,11 +350,58 @@ let columns = [
         width: 50,
     },
     {
-        data: "formation",
+        data: "formation_0",
         title: "編成",
-        className: "htCenter",
-        type: "numeric",
+        className: "formation",
+        renderer: formationRenderer,
         readOnly: true,
-        width: 200,
+        width: 48,
+    },
+    {
+        data: "formation_1",
+        title: "編成",
+        className: "formation",
+        renderer: formationRenderer,
+        readOnly: true,
+        width: 48,
+    },
+    {
+        data: "formation_2",
+        title: "編成",
+        className: "formation",
+        renderer: formationRenderer,
+        readOnly: true,
+        width: 48,
+    },
+    {
+        data: "formation_3",
+        title: "編成",
+        className: "formation",
+        renderer: formationRenderer,
+        readOnly: true,
+        width: 48,
+    },
+    {
+        data: "formation_4",
+        title: "編成",
+        className: "formation",
+        renderer: formationRenderer,
+        readOnly: true,
+        width: 48,
+    },
+    {
+        data: "formation_5",
+        title: "編成",
+        className: "formation",
+        renderer: formationRenderer,
+        readOnly: true,
+        width: 48,
     },
 ];
+
+function formationRenderer(instance, td, row, column, prop, value, cellProperties) {
+    Handsontable.renderers.TextRenderer.apply(this, arguments);
+    let html = ""
+    html += "<img class='style' src='img/plus.png'></img>"
+    $(td).html(html);
+}

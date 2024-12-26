@@ -22,14 +22,22 @@
   .modal_layer_mask {
     height: 150vh;
   }
+
   .container_style {
     height: calc(100svh - 100px);
   }
 }
+
 .modal_section {
   background: #fff;
   height: 100%;
 }
+
+.micromodal-slide {
+  position: relative;
+  z-index: 1050;
+}
+
 .modal_inner {
   margin-left: auto;
   margin-right: auto;
@@ -38,6 +46,7 @@
   max-width: 690px;
   width: 80vw;
 }
+
 .modal_inner_headline {
   text-align: center;
   font-size: 24px;
@@ -57,6 +66,7 @@ input.role {
   border-radius: 10vh;
   margin: 2px;
 }
+
 input.role:hover {
   background: #b1b1f5;
 }
@@ -68,7 +78,7 @@ hr.line {
   border: none;
   margin-top: 5px;
   margin-bottom: 5px;
-}  
+}
 
 .troops {
   font-size: 24px;
@@ -76,6 +86,7 @@ hr.line {
   margin-top: 5px;
   display: flex;
 }
+
 .narrow_area {
   grid-template-columns: repeat(8, minmax(0, 1fr));
 }
@@ -83,19 +94,23 @@ hr.line {
 .select_style_list {
   cursor: pointer;
 }
+
 @media screen and (max-width: 768px) {
   .select_style_list {
     width: 48px;
     height: 48px;
   }
+
   .emblem {
     width: 48px;
     height: 48px;
   }
+
   input[type='image'].narrow {
     width: 32px;
     height: 32px;
   }
+
   input.remove_btn {
     width: 50px;
     height: 40px;
@@ -103,40 +118,49 @@ hr.line {
     font-size: 1rem;
     border-radius: 100vh;
   }
+
   input.role {
     width: 60px;
     font-size: 10px;
     border-radius: 8vh;
   }
+
   .narrow_element {
     width: 300px;
   }
+
   .rarity {
     width: 32px;
     height: 32px;
   }
 }
+
 @media screen and (min-width:768px) {
   .select_style_list {
     width: 64px;
     height: 64px;
   }
+
   .emblem {
     width: 64px;
     height: 64px;
   }
+
   input[type='image'].narrow {
     width: 48px;
     height: 48px;
   }
+
   input.remove_btn {
     width: 100px;
     font-size: 20px;
     border-radius: 100vh;
-  }  
+  }
+
   .narrow_element {
     width: 480px;
   }
+
   .rarity {
     width: 48px;
     height: 48px;

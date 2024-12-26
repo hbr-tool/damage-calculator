@@ -1,8 +1,9 @@
+let select_troops = localStorage.getItem('select_troops');
+let select_style_list = Array(6).fill(undefined);
+let sub_style_list = Array(6).fill(undefined);
+let support_style_list = Array(6).fill(undefined);
+
 function setEventTrigger() {
-    // リセットボタン
-    $("#style_reset_btn").on("click", function (event) {
-        styleReset(true);
-    });
     // 敵リストイベント
     $("#enemy_class").on("change", function (event) {
         let enemy_class = Number($(this).val());
@@ -512,10 +513,10 @@ function setEventTrigger() {
 
         $(".selected_troops").removeClass("selected_troops");
         $(this).addClass("selected_troops");
-        styleReset(false);
+        styleReset(select_style_list, false);
         select_troops = $(this).val();
         localStorage.setItem('select_troops', select_troops);
-        loadTroopsList(select_troops);
+        loadTroopsList(select_style_list, select_troops);
     });
     // サブパーティ変更
     $("#sub_troops").on("change", function (event) {
@@ -621,14 +622,52 @@ function setEventTrigger() {
 }
 
 // メンバー読み込み時の固有処理
-function loadMember(member_info, isTrigger) {
-    // ダメージ計算ツール
+function loadMember(select_chara_no, member_info, isTrigger) {
+    $.each(status_kbn, function (index, value) {
+        if (index == 0) return true;
+        $(`#${value}_${select_chara_no}`).val(member_info[value]);
+    });
+    $(`#limit_${select_chara_no}`).val(member_info.limit_count);
+    $(`#jewel_${select_chara_no}`).val(member_info.jewel_lv);
+
     addAttackList(member_info);
     addBuffList(member_info, 0);
     addAbility(member_info);
     addPassive(member_info);
     $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
+    // 画像切り替え
+    $('#select_chara_' + select_chara_no).attr("src", "icon/" + member_info.style_info.image_url);
 
+    if (isTrigger) {
+        $("#attack_list").trigger("change");
+    }
+}
+
+// メンバーを外す
+function removeMember(select_list, select_chara_no, isTrigger) {
+    if (select_list[select_chara_no] === undefined) {
+        return;
+    }
+    // 入れ替えスタイルのスキルを削除
+    let chara_id = select_list[select_chara_no].style_info.chara_id;
+    let chara_id_class = ".chara_id-" + chara_id;
+    let parent = $(".include_lv " + chara_id_class + ":selected").parent();
+    $.each(parent, function (index, value) {
+        // 暫定的にdisplay:none追加
+        $(value).find(chara_id_class).css("display", "none");
+        let select = $("#" + $(value).prop("id"));
+        select2ndSkill(select);
+        setAloneActivation(select.find("option:selected"));
+    });
+    // 該当メンバーのスキル削除
+    $(chara_id_class).remove();
+    $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
+    $(".display_chara_id-" + chara_id + " input").prop("checked", false);
+    $(".display_chara_id-" + chara_id + " input").trigger("change");
+    // 消費SP初期化
+    $('#sp_cost_' + select_chara_no).text(0);
+    // 画像初期化
+    $('#select_chara_' + select_chara_no).attr("src", "img/plus.png");
     if (isTrigger) {
         $("#attack_list").trigger("change");
     }

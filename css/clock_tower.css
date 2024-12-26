@@ -42,3 +42,12 @@ td {
 td {
   white-space: nowrap;
 }
+
+td.formation {
+  padding: 0px!important;
+}
+.style {
+  width: 46px;
+  height: 46px;
+}
+
