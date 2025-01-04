@@ -1282,10 +1282,11 @@ function procBattleStart() {
                 (obj.style_id === member_info.style_info.style_id || obj.style_id === 0) &&
                 obj.skill_active == 0
             ).map(obj => {
-                if (obj.chara_id === 0) {
-                    obj.attack_physical = physical;
+                const copiedObj = JSON.parse(JSON.stringify(obj));
+                if (copiedObj.chara_id === 0) {
+                    copiedObj.attack_physical = physical;
                 }
-                return obj;
+                return copiedObj;
             });
             ["0", "00", "1", "3", "5", "10"].forEach(num => {
                 if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {

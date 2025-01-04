@@ -589,7 +589,7 @@ function getExp(rowData) {
                 { threshold: 5, exp: 500 },
                 { threshold: 8, exp: 500 },
                 { threshold: 10, exp: 500 },
-                { threshold: 15, exp: 500 },
+                { threshold: 15, exp: 1000 },
             ]
         },
         {
@@ -679,8 +679,132 @@ function getExp(rowData) {
         },
     ];
 
+    // 経験値の増分データ
+    let expDataAB = [
+        {
+            value: rowData["lv"],
+            increments: [
+                { threshold: 100, exp: 100 },
+                { threshold: 110, exp: 100 },
+                { threshold: 120, exp: 300 },
+                { threshold: 130, exp: 500 },
+            ]
+        },
+        {
+            value: rowData["rein"],
+            increments: [
+                { threshold: 1, exp: 200 },
+                { threshold: 5, exp: 300 },
+                { threshold: 10, exp: 500 },
+                { threshold: 15, exp: 500 },
+                { threshold: 20, exp: 500 },
+            ]
+        },
+        {
+            value: rowData["orb_count"],
+            increments: [
+                { threshold: 1, exp: 200 },
+                { threshold: 3, exp: 300 },
+                { threshold: 5, exp: 500 },
+                { threshold: 8, exp: 500 },
+                { threshold: 10, exp: 500 },
+                { threshold: 15, exp: 1000 },
+            ]
+        },
+        {
+            value: rowData["score_attack"],
+            increments: [
+                { threshold: 100000, exp: 100 },
+                { threshold: 200000, exp: 100 },
+                { threshold: 400000, exp: 200 },
+                { threshold: 600000, exp: 300 },
+                { threshold: 800000, exp: 500 },
+                { threshold: 1000000, exp: 1000 }
+            ]
+        },
+        {
+            value: rowData["battle_count"],
+            increments: [
+                { threshold: 10, exp: 100 },
+                { threshold: 100, exp: 200 },
+                { threshold: 1000, exp: 500 },
+                { threshold: 5000, exp: 1000 },
+                { threshold: 10000, exp: 2000 }
+            ]
+        },
+        {
+            value: rowData["dungeon_count"],
+            increments: [
+                { threshold: 5, exp: 100 },
+                { threshold: 50, exp: 200 },
+                { threshold: 100, exp: 500 },
+                { threshold: 250, exp: 1000 },
+                { threshold: 500, exp: 2000 }
+            ]
+        },
+        {
+            value: rowData["deathSlag"],
+            increments: [
+                { threshold: 1, exp: 200 },
+            ]
+        },
+        {
+            value: rowData["rotaryMoll"],
+            increments: [
+                { threshold: 1, exp: 300 },
+            ]
+        },
+        {
+            value: rowData["redCrimson"],
+            increments: [
+                { threshold: 1, exp: 300 },
+            ]
+        },
+        {
+            value: rowData["filler"],
+            increments: [
+                { threshold: 1, exp: 500 },
+            ]
+        },
+        {
+            value: rowData["flatHand3rd"],
+            increments: [
+                { threshold: 1, exp: 500 },
+            ]
+        },
+        {
+            value: rowData["ultimateFiller"],
+            increments: [
+                { threshold: 1, exp: 800 },
+            ]
+        },
+        {
+            value: rowData["flatHand4th"],
+            increments: [
+                { threshold: 1, exp: 800 },
+            ]
+        },
+        {
+            value: rowData["dessertDendron"],
+            increments: [
+                { threshold: 1, exp: 1000 },
+            ]
+        },
+        {
+            value: rowData["skullFeather"],
+            increments: [
+                { threshold: 1, exp: 1000 },
+            ]
+        },
+    ];
+
     // 各データに対して経験値を計算
-    expData.forEach(data => applyExpIncrements(data.value, data.increments));
+    let chara_id = Number(rowData["chara_id"]);
+    if (chara_id < 100) {
+        expData.forEach(data => applyExpIncrements(data.value, data.increments));
+    } else {
+        expDataAB.forEach(data => applyExpIncrements(data.value, data.increments));
+    }
     return exp;
 }
 
@@ -783,6 +907,12 @@ function getTitleColumns() {
             data: "limit_count",
             className: "htCenter rightLine",
             renderer: function (instance, td, row, column, prop, value, cellProperties) {
+                let rowData = instance.getSourceData()[row];
+                let chara_id = Number(rowData["chara_id"]);
+                if (chara_id > 100) {
+                    value = "-";
+                    cellProperties.readOnly = true;
+                }
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 if (value >= 4) {
                     $(td).addClass("achievement7");
