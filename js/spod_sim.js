@@ -5,8 +5,8 @@ const NOT_USE_STYLE = [];
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
 // 残ターン消費バフ
-// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば
-const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568];
+// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば/チャーミングボイス/かき鳴らせキラーチューン/ジャムセッション
+const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568, 573, 575, 577];
 
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
