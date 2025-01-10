@@ -46,6 +46,7 @@ const BUFF_MORALE = 34; // 士気
 const BUFF_HACKING = 35; // ハッキング
 const BUFF_DIVA_BLESS = 36; // 歌姫の加護
 const BUFF_SHREDDING = 37; // 速弾き
+const BUFF_NAGATIVE = 38; // ネガティブ
 const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
 
 /** アビリティ/パッシブ効果 */
@@ -75,6 +76,7 @@ const EFFECT_BUFF_STRENGTHEN = 28; // バフ強化
 const EFFECT_TOKEN_UP = 30; // トークンアップ
 const EFFECT_TOKEN_ATTACKUP = 31; // トークン1つにつき攻撃力アップ
 const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき 防御力アップ
+const EFFECT_NEGATIVE = 51; // ネガティブ
 
 /** フィールド */
 const FIELD_NORMAL = 0; // 通常
@@ -122,6 +124,7 @@ const CONDITIONS_DESTRUCTION_OVER_200 = 5; // 破壊率200%以上
 const CONDITIONS_BREAK = 6; // ブレイク時
 const CONDITIONS_PERCENTAGE_30 = 7; // 確率30%
 const CONDITIONS_DOWN_TURN = 8; // ダウンターン
+const CONDITIONS_BUFF_DISPEL = 9; // バフ解除
 const CONDITIONS_DEFFENCE_DOWN = 11; // 防御ダウン中
 const CONDITIONS_FRAGILE = 12; // 脆弱中
 const CONDITIONS_TARGET_COVER = 13; // 集中・挑発状態
@@ -157,4 +160,4 @@ const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163];
 /** 単独発動バフ */
 const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 2606, 2607, 1033, 1113];
 /** 単独発動アビリティ */
-const ALONE_ACTIVATION_ABILITY_LIST = [407, 408];
+const ALONE_ACTIVATION_ABILITY_LIST = [12, 407, 408];
