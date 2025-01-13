@@ -2594,8 +2594,10 @@ function createBuffData(buff_info, use_unit_data) {
 function consumeBuffUnit(unit_data, attack_info, skill_info) {
     let consume_kind = [];
     let consume_count = 2
-    // 連撃消費
-    unit_data.getFunnelList();
+    if (skill_info.attack_id) {
+        // 連撃消費
+        unit_data.getFunnelList();
+    }
     // バフ消費
     let buff_list = unit_data.buff_list;
     for (let i = buff_list.length - 1; i >= 0; i--) {
