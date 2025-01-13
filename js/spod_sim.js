@@ -1302,6 +1302,7 @@ function procBattleStart() {
             ).map(obj => {
                 const copiedObj = JSON.parse(JSON.stringify(obj));
                 if (copiedObj.chara_id === 0) {
+                    copiedObj.chara_id === member_info.style_info.chara_id;
                     copiedObj.attack_physical = physical;
                 }
                 return copiedObj;
@@ -1546,7 +1547,7 @@ function proceedTurn(turn_data, kb_next) {
 
 // スキルセット作成
 const appendSkillOptions = (skill_select, turn_data, unit) => {
-    skill_select.append($('<option>').text("なし").val(0).addClass("back").data("sp_cost", 0));
+    // skill_select.append($('<option>').text("なし").val(0).addClass("back").data("sp_cost", 0));
     $.each(unit.skill_list, function (index, value) {
         skill_select.append(createSkillOption(value, turn_data, unit));
     });
@@ -1566,6 +1567,7 @@ const createSkillOption = (value, turn_data, unit) => {
     if (value.skill_attribute === ATTRIBUTE_COMMAND_ACTION && unit.style.style_info.role != ROLE_ADMIRAL) {
         return;
     }
+    let place = "front"
     const createOptionText = (value) => {
         let text = value.skill_name;
         if (value.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
@@ -1575,7 +1577,13 @@ const createSkillOption = (value, turn_data, unit) => {
             sp_cost = 0;
         } else if (value.skill_attribute === ATTRIBUTE_PURSUIT) {
             sp_cost = 0;
+            place = "back";
             text += `(${physical_name[value.attack_physical]})`;
+        } else if (value.skill_attribute === ATTRIBUTE_NOT_ACTION) {
+            sp_cost = 0;
+            if (value.skill_id == 2) {
+                place = "back";
+            }
         } else if (value.attack_id) {
             sp_cost = getSpCost(turn_data, value, unit);
             text += `(${physical_name[value.attack_physical]}・${element_name[value.attack_element]}/${sp_cost})`;
@@ -1589,7 +1597,8 @@ const createSkillOption = (value, turn_data, unit) => {
         .text(createOptionText(value))
         .val(value.skill_id)
         .data("sp_cost", sp_cost)
-        .addClass(value.skill_name === "追撃" ? "back" : "front");
+        .data("chara_id", unit.style.style_info.chara_id)
+        .addClass(place);
 };
 
 // ターン表示更新
@@ -2204,8 +2213,7 @@ function getOverDrive(turn_number, enemy_count) {
             return true;
         }
         if ($(element).text().startsWith("追撃")) {
-            let skill_info = getSkillData(skill_id);
-            let chara_data = getCharaData(skill_info.chara_id);
+            let chara_data = getCharaData($(element).data("chara_id"));
             od_plus += chara_data.pursuit * 2.5;
         }
     });
@@ -2359,6 +2367,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
         case CONDITIONS_NOT_DIVA_BLESS: // 歌姫の加護以外
             return !checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
+        case CONDITIONS_NOT_NEGATIVE: // ネガティブ以外
+            return !checkBuffExist(unit_data.buff_list, BUFF_NAGATIVE);
     }
     return true;
 }

@@ -112,6 +112,7 @@ const CHARA_ID_MARUYAMA = [15, 16, 28, 32, 40, 47];
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
 const ATTRIBUTE_PURSUIT = 2; // 追撃
 const ATTRIBUTE_COMMAND_ACTION = 3; // 指揮行動
+const ATTRIBUTE_NOT_ACTION = 4; // 行動無し
 const ATTRIBUTE_SP_HALF = 11; // SP消費半減
 const ATTRIBUTE_SP_ZERO = 12; // SP消費0
 
@@ -135,6 +136,8 @@ const CONDITIONS_31E_OVER_3 = 35; // 31E3人以上
 const CONDITIONS_FIELD_NOT_FIRE = 41; // 火属性以外フィールド
 const CONDITIONS_DIVA_BLESS = 42; // 歌姫の加護
 const CONDITIONS_NOT_DIVA_BLESS = 43; // 歌姫の加護以外
+const CONDITIONS_NOT_NEGATIVE = 44; // ネガティブ以外
+
 const CONDITIONS_ENEMY_COUNT_1 = 51; // 敵1体
 const CONDITIONS_ENEMY_COUNT_2 = 52; // 敵2体
 const CONDITIONS_ENEMY_COUNT_3 = 53; // 敵3体
