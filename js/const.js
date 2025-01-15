@@ -47,6 +47,8 @@ const BUFF_HACKING = 35; // ハッキング
 const BUFF_DIVA_BLESS = 36; // 歌姫の加護
 const BUFF_SHREDDING = 37; // 速弾き
 const BUFF_NAGATIVE = 38; // ネガティブ
+const BUFF_DISPEL = 90; // ディスペル
+
 const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
 
 /** アビリティ/パッシブ効果 */

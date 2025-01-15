@@ -2557,6 +2557,15 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             }
             turn_data.field_turn = field_turn;
             break;
+        case BUFF_DISPEL: // ディスペル
+            target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
+            $.each(target_list, function (index, target_no) {
+                let unit_data = getUnitData(turn_data, target_no);
+                unit_data.buff_list = unit_data.buff_list.filter(function (buff_info) {
+                    return buff_info.buff_kind != BUFF_RECOIL && buff_info.buff_kind != BUFF_NAGATIVE;
+                });
+            });
+            break;
         default:
             break;
     }
