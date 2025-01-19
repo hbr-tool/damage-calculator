@@ -513,7 +513,7 @@ class unit_data {
                     };
                     break;
                 case "SP0以下":
-                    if (this.sp > 0) {
+                    if (self.sp > 0) {
                         return;
                     }
                     break;
