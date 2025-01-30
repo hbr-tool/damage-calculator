@@ -30,6 +30,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hello-pangea/dnd@17.0.0/dist/dnd.min.js"></script>
+  <script type="text/babel" src="js/component/modal_style_section.js"></script>
+  <script type="text/babel" src="js/component/style_list.js"></script>
+  <script type="text/babel" src="js/component/damage/chara_status.js"></script>
   <script src="js/header.js"></script>
   <script src="js/common.js"></script>
   <script src="js/const.js"></script>
@@ -81,25 +88,6 @@
     const BIKE_PARTS_LIST = ["無し(その他)", "攻撃＋", "クリティカル率＋", "チャージ", "敵防御ダウン", "攻撃＋＋", "心眼(改)", "クリティカル率ダメージ＋", "連撃＋", "破壊率＋", 
                             "攻撃＋改", "クリティカル率＋改", "敵防御ダウン改", "攻撃＋＋改", "クリティカル率ダメージ＋改", "連撃＋改", "破壊率＋改"];
     $(function () {
-      // モーダル系イベント追加
-      addModalEvent();
-
-      $("input[type='number']").prop("step", 1);
-      $(".status").prop("max", 999);
-      $(".status").prop("min", 1);
-
-      $(".limit").each(function (index, value) {
-        for (let i = 0; i <= 4; i++) $(value).append($('<option>').text(i).val(i))
-        $(value).prop("selectedIndex", 2);
-      });
-      $(".limit").append($('<option>').text(10).val(10).css("display", "none"));
-      $(".limit").append($('<option>').text(20).val(20).css("display", "none"));
-
-      $(".jewel").each(function (index, value) {
-        for (let i = 0; i <= 5; i++) $(value).append($('<option>').text(i).val(i))
-        $(value).prop("selectedIndex", 5);
-      });
-
       // スコアタレベル
       var selectOptions = '';
       BIKE_PARTS_LIST.forEach(function (value, index) {
@@ -159,109 +147,7 @@
     <div class="frame w-screen pt-3 overflow-y-scroll border-b" style="visibility: hidden;">
       <div class="display_area mx-auto">
         <div class="status_area mx-auto">
-          <div id="char_list" class="grid grid-cols-7 text-center gap-y-px gap-x-0">
-            <label class="mt-3 mb-3 small_font">部隊選択</label>
-            <div class="col-span-6 flex">
-              <input type="button" id="troops_btn_0" class="troops_btn" value="0">
-              <input type="button" id="troops_btn_1" class="troops_btn" value="1">
-              <input type="button" id="troops_btn_2" class="troops_btn" value="2">
-              <input type="button" id="troops_btn_3" class="troops_btn" value="3">
-              <input type="button" id="troops_btn_4" class="troops_btn" value="4">
-              <input type="button" id="troops_btn_5" class="troops_btn" value="5">
-              <input type="button" id="troops_btn_6" class="troops_btn" value="6">
-              <input type="button" id="troops_btn_7" class="troops_btn" value="7">
-              <input type="button" id="troops_btn_8" class="troops_btn" value="8">
-            </div>
-            <div class="mt-2">
-              <div>
-                <label class="small_font">スタイル</label>
-                <input type="button" id="style_reset_btn" value="リセット">
-              </div>
-            </div>
-            <img class="showmodal select_style" id="select_chara_0" src="img/plus.png" data-chara_no="0">
-            <img class="showmodal select_style" id="select_chara_1" src="img/plus.png" data-chara_no="1">
-            <img class="showmodal select_style" id="select_chara_2" src="img/plus.png" data-chara_no="2">
-            <img class="showmodal select_style" id="select_chara_3" src="img/plus.png" data-chara_no="3">
-            <img class="showmodal select_style" id="select_chara_4" src="img/plus.png" data-chara_no="4">
-            <img class="showmodal select_style" id="select_chara_5" src="img/plus.png" data-chara_no="5">
-            <div>
-              <label class="label_status">限界突破</label>
-              <label class="label_status">力</label>
-              <label class="label_status">器用さ</label>
-              <label class="label_status">体力</label>
-              <label class="label_status">精神</label>
-              <label class="label_status">知性</label>
-              <label class="label_status">運</label>
-              <label class="label_status">宝珠Lv</label>
-              <label class="label_status">消費SP</label>
-            </div>
-            <div>
-              <select id="limit_0" class="limit save"></select>
-              <input type="number" id="str_0" class="status save" value="400">
-              <input type="number" id="dex_0" class="status save" value="400">
-              <input type="number" id="con_0" class="status save" value="400">
-              <input type="number" id="mnd_0" class="status save" value="400">
-              <input type="number" id="int_0" class="status effect_size save" value="400">
-              <input type="number" id="luk_0" class="status effect_size save" value="400">
-              <select id="jewel_0" class="jewel save"></select>
-              <label id="sp_cost_0">0</label>
-            </div>
-            <div>
-              <select id="limit_1" class="limit save"></select>
-              <input type="number" id="str_1" class="status save" value="400">
-              <input type="number" id="dex_1" class="status save" value="400">
-              <input type="number" id="con_1" class="status save" value="400">
-              <input type="number" id="mnd_1" class="status save" value="400">
-              <input type="number" id="int_1" class="status effect_size save" value="400">
-              <input type="number" id="luk_1" class="status effect_size save" value="400">
-              <select id="jewel_1" class="jewel save"></select>
-              <label id="sp_cost_1">0</label>
-            </div>
-            <div>
-              <select id="limit_2" class="limit save"></select>
-              <input type="number" id="str_2" class="status save" value="400">
-              <input type="number" id="dex_2" class="status save" value="400">
-              <input type="number" id="con_2" class="status save" value="400">
-              <input type="number" id="mnd_2" class="status save" value="400">
-              <input type="number" id="int_2" class="status effect_size save" value="400">
-              <input type="number" id="luk_2" class="status effect_size save" value="400">
-              <select id="jewel_2" class="jewel save"></select>
-              <label id="sp_cost_2">0</label>
-            </div>
-            <div>
-              <select id="limit_3" class="limit save"></select>
-              <input type="number" id="str_3" class="status save" value="400">
-              <input type="number" id="dex_3" class="status save" value="400">
-              <input type="number" id="con_3" class="status save" value="400">
-              <input type="number" id="mnd_3" class="status save" value="400">
-              <input type="number" id="int_3" class="status effect_size save" value="400">
-              <input type="number" id="luk_3" class="status effect_size save" value="400">
-              <select id="jewel_3" class="jewel save"></select>
-              <label id="sp_cost_3">0</label>
-            </div>
-            <div>
-              <select id="limit_4" class="limit save"></select>
-              <input type="number" id="str_4" class="status save" value="400">
-              <input type="number" id="dex_4" class="status save" value="400">
-              <input type="number" id="con_4" class="status save" value="400">
-              <input type="number" id="mnd_4" class="status save" value="400">
-              <input type="number" id="int_4" class="status effect_size save" value="400">
-              <input type="number" id="luk_4" class="status effect_size save" value="400">
-              <select id="jewel_4" class="jewel save"></select>
-              <label id="sp_cost_4">0</label>
-            </div>
-            <div>
-              <select id="limit_5" class="limit save"></select>
-              <input type="number" id="str_5" class="status save" value="400">
-              <input type="number" id="dex_5" class="status save" value="400">
-              <input type="number" id="con_5" class="status save" value="400">
-              <input type="number" id="mnd_5" class="status save" value="400">
-              <input type="number" id="int_5" class="status effect_size save" value="400">
-              <input type="number" id="luk_5" class="status effect_size save" value="400">
-              <select id="jewel_5" class="jewel save"></select>
-              <label id="sp_cost_5">0</label>
-            </div>
-          </div>
+          <div id="chara_status" class="grid grid-cols-7 text-center gap-y-px gap-x-0"></div>
           <div class="attack_area surround_area mx-auto mt-2 adjust_width">
             <label class="area_title">攻 撃</label>
             <div class="flex">
@@ -1213,157 +1099,7 @@
     <div class="modal micromodal-slide" id="modal_style_section" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         <div class="modal__container container_style" role="dialog" aria-modal="true" aria-labelledby="modal_section">
-          <div class="modal_section">
-            <div class="modal_inner">
-              <div class="modal_inner_headline">
-                <div class="flex leading-10">
-                  <div class="mx-auto pl-16">スタイル選択</div>
-                  <input type="button" id="calc" href="javascript:void(0)" class="remove_btn text-center mr-2"
-                    value="外す">
-                </div>
-              </div>
-              <hr class="line" />
-              <div class="narrow_element flex mx-auto">
-                <input type="image" class="narrow physical" id="physical_1" src="img/slash.webp" data-select="1">
-                <input type="image" class="narrow physical" id="physical_2" src="img/stab.webp" data-select="1">
-                <input type="image" class="narrow physical" id="physical_3" src="img/strike.webp" data-select="1">
-                <div class="w-12"></div>
-                <input type="image" class="narrow element" id="element_0" src="img/none.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_1" src="img/fire.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_2" src="img/ice.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_3" src="img/thunder.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_4" src="img/light.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_5" src="img/dark.webp" data-select="1">
-              </div>
-              <div class="flex flex-wrap ml-2">
-                <input type="button" class="narrow role" id="role_1" value="ATTACKER" data-select="1">
-                <input type="button" class="narrow role" id="role_2" value="BREAKER" data-select="1">
-                <input type="button" class="narrow role" id="role_3" value="BLASTER" data-select="1">
-                <input type="button" class="narrow role" id="role_4" value="HEALER" data-select="1">
-                <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
-                <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
-                <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
-                <input type="button" class="narrow role" id="role_8" value="ADMIRAL" data-select="1">
-              </div>
-              <div class="flex flex-wrap w-[144px] mx-auto">
-                <input type="image" class="rarity" id="rarity_1" src="img/IconRaritySS.webp">
-                <input type="image" class="rarity opacity-30" id="rarity_2" src="img/IconRarityS.webp">
-                <input type="image" class="rarity opacity-30" id="rarity_3" src="img/IconRarityA.webp">
-              </div>
-              <div class="search_result_area">
-                <div id="rank_ss">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_1_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_1_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_1_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_1_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_1_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_1_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_1_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_1_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/angelbeats.webp">
-                    <div id="sytle_list_1_AB" class="flex flex-wrap  troops_AB"></div>
-                  </div>
-                </div>
-                <div id="rank_s" class="hidden">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_2_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_2_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_2_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_2_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_2_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_2_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_2_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_2_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/angelbeats.webp">
-                    <div id="sytle_list_2_AB" class="flex flex-wrap  troops_AB"></div>
-                  </div>
-                </div>
-                <div id="rank_a" class="hidden">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_3_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_3_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_3_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_3_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_3_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_3_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_3_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_3_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="modal_section" class="modal_section"></div>
         </div>
       </div>
     </div>
