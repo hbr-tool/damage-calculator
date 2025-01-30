@@ -10,7 +10,7 @@
 
 .container_damage {
   background-color: #fff;
-  padding: 30px;
+  padding: 20px;
   max-width: 500px;
   max-height: calc(100svh - 50px);
   border-radius: 20px;
@@ -91,14 +91,26 @@ hr.line {
   grid-template-columns: repeat(8, minmax(0, 1fr));
 }
 
+.translucent {
+  opacity: 0.3;
+}
+
 .select_style_list {
   cursor: pointer;
+}
+
+.rearity_area {
+  width: 144px;
 }
 
 @media screen and (max-width: 768px) {
   .select_style_list {
     width: 48px;
     height: 48px;
+  }
+
+  .rearity_area {
+    width: 96px;
   }
 
   .emblem {

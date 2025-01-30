@@ -2,6 +2,7 @@
 div.frame {
     height: calc(100svh - 180px);
 }
+
 div.footer {
     position: fixed;
     left: 0px;
@@ -10,46 +11,57 @@ div.footer {
     height: calc(110px + env(safe-area-inset-bottom));
     transition: height 0.3s ease;
 }
+
 .display_area {
     width: 1085px;
     display: flex;
     font-size: 0.875rem;
 }
+
 .adjust_width {
     width: 450px;
 }
+
 @media screen and (max-width: 768px) {
     div.frame {
         height: calc(100svh - 150px);
     }
+
     div.footer {
         height: calc(80px + env(safe-area-inset-bottom));
     }
+
     .display_area {
         width: 100svw;
-        min-width: 375px;
+        min-width: 400px;
         display: block;
         font-size: small;
     }
+
     .adjust_width {
         width: 100%;
         max-width: 400px;
         min-width: 375px;
     }
 }
+
 :disabled {
     border-color: #FFF;
 }
+
 input[type="number"] {
     text-align: center;
     border: solid 1px #000;
 }
+
 input[type="number"]:read-only {
     border: none;
 }
+
 input[type="text"]:not(:read-only) {
     border: solid 1px #000;
 }
+
 select {
     border: solid 1px #000;
     height: 21px;
@@ -67,17 +79,17 @@ input.troops_btn {
     justify-content: center;
     align-items: center;
     margin-left: 5px;
-    box-shadow:0 6px 0 0 #005400;
+    box-shadow: 0 6px 0 0 #005400;
     transform: translateY(-6px);
 }
 
 input.troops_btn:hover {
-    box-shadow:0 2px 0 0 #005400;
+    box-shadow: 0 2px 0 0 #005400;
     transform: translateY(-2px);
 }
 
 input.troops_btn.selected_troops {
-    box-shadow:0 2px 0 0 #005400;
+    box-shadow: 0 2px 0 0 #005400;
     transform: translateY(-2px);
 }
 
@@ -94,19 +106,23 @@ input.troops_btn.selected_troops {
     font-weight: bold;
     margin-left: 5px;
 }
+
 .status_area {
     width: 482px;
 }
+
 img.select_style {
     width: 64px;
     height: 64px;
     margin-left: 4px;
 }
+
 img.sub_style {
     width: 40px;
     height: 40px;
     margin-left: 2px;
 }
+
 .label_status {
     line-height: 22px;
     display: block;
@@ -120,30 +136,35 @@ img.sub_style {
     margin-left: 3px;
     text-align: center;
 }
+
 .limit:disabled,
 .jewel:disabled {
-    border:solid 1px black ;
+    border: solid 1px black;
 }
+
 @media screen and (max-width: 482px) {
     .status_area {
-        width: 100%;
-        min-width: 375px;
+        width: 400px;
     }
+
     .label_status {
         line-height: 21px;
         display: block;
     }
+
     img.select_style {
-        width: 48px;
-        height: 48px;
+        width: 53px;
+        height: 53px;
         margin-left: 4px;
     }
+
     .status,
     .limit,
     .jewel {
         width: 50px;
     }
 }
+
 /* 攻撃技 */
 #attack_list {
     width: 60%;
@@ -151,7 +172,7 @@ img.sub_style {
 }
 
 #attack_physical,
-#attack_element  {
+#attack_element {
     margin-top: -1px;
 }
 
@@ -170,33 +191,44 @@ img.sub_style {
 .enemy_label {
     width: 80px;
 }
+
 #enemy_select_label {
-    width: 50px;;
+    width: 50px;
+    ;
 }
+
 #enemy_class {
-    width: 120px;;
+    width: 120px;
+    ;
 }
+
 #enemy_list {
     min-width: 100px;
     max-width: 260px;
 }
+
 #enemy_list.short {
     min-width: 150px;
     width: 150px;
 }
+
 .surround_area {
     border: solid gray 2px;
     border-radius: 20px;
     padding: 5px;
 
 }
+
 @media screen and (max-width: 430px) {
     .enemy_label {
         width: 70px;
     }
+
     #enemy_class {
-        width: 110px;;
+        width: 110px;
+        ;
     }
+
     #enemy_list {
         max-width: 240px;
     }
@@ -206,10 +238,12 @@ img.sub_style {
     font-weight: bold;
     color: red;
 }
+
 .enemy_resist {
     font-weight: bold;
     color: blue;
 }
+
 .enemy_type_icon {
     width: 32px;
     height: 32px;
@@ -217,12 +251,14 @@ img.sub_style {
     margin-left: 5px;
     margin-bottom: -8px;
 }
+
 .enemy_type_value {
     text-align: center;
     width: 32px;
     background-color: rgba(0, 0, 0, 0);
     margin-left: 5px;
 }
+
 .selected {
     border-radius: 10px;
     background-color: #ffff00;
@@ -240,10 +276,12 @@ input[type="button"]#enemy_save {
 #enemy_destruction {
     width: 48px;
 }
+
 .dp_gauge {
     height: 22px;
     display: flex;
 }
+
 .dp_range,
 .hp_range {
     -webkit-appearance: none;
@@ -255,16 +293,19 @@ input[type="button"]#enemy_save {
     margin-left: 5px;
     margin-top: 6px;
 }
+
 .resist_area {
     width: 95%;
 }
-@media screen and (max-width: 430px) {
-#enemy_stat,
-#enemy_destruction_limit,
-#enemy_destruction_rate,
-#enemy_destruction {
-        width: 40px;
+
+@media screen and (max-width: 768px) {
+    #enemy_stat,
+    #enemy_destruction_limit,
+    #enemy_destruction_rate,
+    #enemy_destruction {
+        width: 35px;
     }
+
     .dp_range,
     .hp_range {
         width: 100px;
@@ -289,6 +330,7 @@ input[type="range"].result_display::-ms-thumb {
     text-align: right;
     border: 0px;
 }
+
 /* 予測スコア */
 .prediction {
     display: inline-block;
@@ -296,21 +338,26 @@ input[type="range"].result_display::-ms-thumb {
     font-size: 16px;
     white-space: nowrap;
 }
+
 .prediction_value {
     width: 80px;
     font-size: 16px;
 }
+
 .prediction_shift {
     margin-left: -23px;
     width: 223px;
     white-space: nowrap;
 }
+
 .prediction_none {
     width: 130px;
 }
+
 .label_damage_bonus {
     margin-top: -3px;
 }
+
 select#socre_enemy_unit {
     height: 24px;
 }
@@ -320,6 +367,7 @@ select#socre_enemy_unit {
     width: 75px;
     margin-top: 2px;
 }
+
 table tr {
     line-height: 16px;
 }
@@ -332,6 +380,7 @@ table td {
 table td.kind {
     background-color: #CCC;
 }
+
 table td.row_element-1,
 table td.row_element-2,
 table td.row_element-3,
@@ -348,7 +397,8 @@ label.strengthen span {
     padding: 1px 1px 1px 1px;
     user-select: none;
 }
-label.strengthen input:checked + span {
+
+label.strengthen input:checked+span {
     color: #FFF;
     background: #149f14;
     border-color: #149f14;
@@ -372,52 +422,67 @@ select.filed {
 .buff_area {
     width: 615px;
 }
+
 .title_column {
     width: 65px;
 }
+
 .type1_column {
     width: 70px;
 }
+
 .type2_column {
     width: 90px;
 }
+
 .skill_name_column {
     width: 273px;
 }
+
 .reinforce_column {
     width: 37px;
 }
+
 .skill_lv_column {
     width: 62px;
     max-width: 62px;
 }
+
 .sp_only {
     display: none;
 }
+
 @media screen and (max-width: 615px) {
     #all_delete {
         margin-left: 0px;
     }
+
     .buff_area {
         min-width: 365px;
         width: 95%;
         font-size: small;
     }
+
     .title_column {
         width: 10%;
     }
+
     .type1_column {
         width: 10%;
     }
+
     .type2_column {
         width: 16.25%;
     }
+
     .skill_name_column {
         width: calc(63.5% - 97px);
     }
+
     .pc_only {
-        display: none!important;
+        display: none !important;
     }
+
     tr.sp_only {
         display: table-row;
     }
@@ -427,51 +492,22 @@ div.lv {
     display: none;
     white-space: nowrap;
 }
+
 div.lv::before {
     content: "Lv";
 }
-div.lv select{
+
+div.lv select {
     text-align: center;
     height: 21px;
 }
 
 label[class*="block_chara_id-"] {
-    display: block!important;
+    display: block !important;
 }
 
 /* ステータスの色　*/
-.status_attack_skill,
-.status_power_up1,
-.status_power_up2,
-.status_element_up1,
-.status_element_up2,
-.status_mindeye1,
-.status_mindeye2,
-.status_funnel1,
-.status_funnel2,
-.status_defense_down1,
-.status_defense_down2,
-.status_dp_defense_down1,
-.status_dp_defense_down2,
-.status_element_down1,
-.status_element_down2,
-.status_fragile1,
-.status_fragile2,
-.status_critical_up1,
-.status_critical_up2,
-.status_critical_damege1,
-.status_critical_damege2,
-.status_critical_element1,
-.status_critical_element2,
-.status_critical_damege_element1,
-.status_critical_damege_element2,
-.status_permanent_defense_down1,
-.status_permanent_defense_down2,
-.status_permanent_element_down1,
-.status_permanent_element_down2,
-.status_resist_down1,
-.status_resist_down2,
-.status_charge {
+.status_active {
     background-color: rgba(255, 0, 0, 0.3)
 }
 
@@ -484,21 +520,25 @@ label[class*="block_chara_id-"] {
     margin-top: -15px;
     width: 560px;
 }
+
 .damage_label {
     font-weight: bold;
     font-size: 18px;
 }
+
 .damage {
     font-weight: bold;
     font-size: 30px;
     width: 200px;
     height: 30px;
 }
+
 .min_damage {
     font-weight: bold;
     font-size: 16px;
     width: 100px;
 }
+
 .damage-flex {
     width: 280px;
 }
@@ -512,11 +552,12 @@ label[class*="block_chara_id-"] {
     border-radius: 10rem;
     border: 1px solid black;
     padding-right: 3px;
-    text-shadow: 
-        -1px -1px 0 #ffffff,  
-         1px -1px 0 #ffffff,
-        -1px  1px 0 #ffffff,
-         1px  1px 0 #ffffff; /* テキストに白色の影を追加 */
+    text-shadow:
+        -1px -1px 0 #ffffff,
+        1px -1px 0 #ffffff,
+        -1px 1px 0 #ffffff,
+        1px 1px 0 #ffffff;
+    /* テキストに白色の影を追加 */
 }
 
 .magnification {
@@ -524,6 +565,7 @@ label[class*="block_chara_id-"] {
     width: 140px;
     font-size: 14px;
 }
+
 .magnification_value {
     width: 100px;
     font-size: 14px;
@@ -544,24 +586,29 @@ input[type="button"].durability_reflection {
         width: 360px;
         font-size: 12px;
     }
+
     .damage_label {
         font-weight: bold;
         font-size: 14px;
     }
+
     .damage {
         font-weight: bold;
         font-size: 20px;
         width: 120px;
         height: 20px;
     }
+
     .min_damage {
         font-weight: bold;
         font-size: 12px;
         width: 70px;
     }
+
     .damage-flex {
         width: 180px;
     }
+
     #critical_rate.damage_label {
         font-size: 12px;
     }
@@ -583,31 +630,48 @@ input[type="button"].durability_reflection {
 .score_attack {
     width: 90%;
 }
+
 #score_turn {
     margin-left: 20px;
 }
-#half_tab > input[type="radio"] { display: none; }
-#half_tab > label {
+
+#half_tab>input[type="radio"] {
+    display: none;
+}
+
+#half_tab>label {
     margin-top: 10px;
     display: inline-block;
     background-color: #eee;
     padding: 0.1rem 2rem;
     border-radius: 0.5rem 0.5rem 0 0;
 }
-#half_tab > input[type="radio"]:checked + label {
+
+#half_tab>input[type="radio"]:checked+label {
     color: #fff;
     background-color: #333;
 }
-#half_tab > div {
+
+#half_tab>div {
     display: none;
     border: 1px solid #333;
     padding: 0.5rem;
 }
-#half_tab_1:checked ~ #half_content_1 { display: block; }
-#half_tab_2:checked ~ #half_content_2 { display: block; }
-#half_tab_3:checked ~ #half_content_3 { display: block; }
+
+#half_tab_1:checked~#half_content_1 {
+    display: block;
+}
+
+#half_tab_2:checked~#half_content_2 {
+    display: block;
+}
+
+#half_tab_3:checked~#half_content_3 {
+    display: block;
+}
+
 @media screen and (max-width: 430px) {
-    #half_tab > label {
+    #half_tab>label {
         padding: 0.1rem 1rem;
     }
 }
@@ -616,6 +680,7 @@ input[type="button"].durability_reflection {
 .ban_style {
     position: relative;
 }
+
 .ban_style::after {
     content: "";
     position: absolute;
@@ -623,8 +688,10 @@ input[type="button"].durability_reflection {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(128, 0, 0, 0.5); /* 黒色の半透明レイヤー */
-    pointer-events: none; /* マウスイベントを透過させる */
+    background-color: rgba(128, 0, 0, 0.5);
+    /* 黒色の半透明レイヤー */
+    pointer-events: none;
+    /* マウスイベントを透過させる */
 }
 
 /* 遭遇戦 */
@@ -637,6 +704,7 @@ input[type="button"].durability_reflection {
 .card_regist {
     width: 65px;
 }
+
 /* バフ一括設定 */
 .container_multi_buff {
     background-color: #fff;
@@ -655,12 +723,14 @@ input[type="button"].durability_reflection {
     font-weight: bold;
     margin-top: -10px;
 }
+
 #bulk_buff_setting {
     width: 50px;
     height: 28px;
     font-size: 18px;
     font-weight: normal;
 }
+
 span.chara_name {
     font-weight: bold;
     font-size: 20px;
@@ -669,7 +739,8 @@ span.chara_name {
 .buff_container {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* 縦方向の中央揃え */
+    align-items: center;
+    /* 縦方向の中央揃え */
     padding: 1px;
 }
 
@@ -685,6 +756,7 @@ span.chara_name {
     border: 0;
     overflow: hidden;
 }
+
 .multi-way-choice label {
     background-color: #f0f0f0;
     color: #999;
@@ -695,16 +767,20 @@ span.chara_name {
     margin-right: -1px;
     border: 1px solid rgba(0, 0, 0, 0.4);
 }
+
 .multi-way-choice:hover {
     cursor: pointer;
 }
-.multi-way-choice input:checked + label {
+
+.multi-way-choice input:checked+label {
     background-color: #6af;
-    color:#222;
+    color: #222;
 }
+
 .multi-way-choice label:first-of-type {
     border-radius: 5px 0 0 5px;
 }
+
 .multi-way-choice label:last-of-type {
     border-radius: 0 5px 5px 0;
 }

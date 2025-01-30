@@ -2,6 +2,8 @@ let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 let sub_style_list = Array(6).fill(undefined);
 let support_style_list = Array(6).fill(undefined);
+let ref_status_list = {};
+let chara_sp_list = [];
 
 function setEventTrigger() {
     // 敵リストイベント
@@ -98,9 +100,14 @@ function setEventTrigger() {
         }
 
         // 該当ステータスに着色
+        let list = [];
         for (let i = 1; i <= 3; i++) {
-            $("#" + status_kbn[attack_info["ref_status_" + i]] + "_" + chara_no).addClass("status_attack_skill");
+            if (status_kbn[attack_info["ref_status_" + i]]) {
+                list.push(status_kbn[attack_info["ref_status_" + i]] + attack_info.chara_id);
+            }
         }
+        ref_status_list["status_attack"] = list;
+
         $("input[type=checkbox].ability").each(function (index, value) {
             let ability_id = $(value).data("ability_id");
             let chara_no = $(value).data("chara_no");
@@ -149,7 +156,7 @@ function setEventTrigger() {
     $(".include_lv").on("change", function (event) {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
-        $(".status_" + id).removeClass("status_" + id);
+        ref_status_list["status_" + id] = [];
         let option = $(this).find("option:selected");
         setAloneActivation($(option));
         if (selected_index === 0) {
@@ -194,7 +201,7 @@ function setEventTrigger() {
     $("#charge").on("change", function (event) {
         let selected_index = $(this).prop("selectedIndex");
         let id = $(this).prop("id");
-        $(".status_" + id).removeClass("status_" + id);
+        ref_status_list["status_" + id] = [];
         if (selected_index !== 0) {
             let option = $(this).find("option").eq(selected_index);
             setStatusToBuff(option, id);
@@ -218,61 +225,6 @@ function setEventTrigger() {
                 $("#" + $(value).parent().attr("id") + "_lv").prop("selectedIndex", skill_lv - 1);
             }
         });
-    });
-    // 限界突破変更
-    $(".limit").on("change", function (event) {
-        let limit_count = Number($(this).val());
-        let chara_no = $(this).attr("id").replace("limit_", "");
-        if (select_style_list[chara_no] === undefined) {
-            return;
-        }
-        select_style_list[chara_no].limit_count = limit_count;
-        let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
-        // アビリティのチェックボックスを更新
-        $("input[type=checkbox].ability." + chara_id_class).each(function (index, value) {
-            let ability_id = $(value).data("ability_id");
-            let ability_info = getAbilityInfo(ability_id);
-            let limit_border = Number($(value).data("limit_border"));
-            if (select_attack_skill !== undefined) {
-                let attack_chara_id = "chara_id-" + select_attack_skill.chara_id;
-                setAbilityCheck(value, ability_info, limit_border, limit_count, attack_chara_id);
-            }
-        });
-        // バフ効果量を更新
-        $(".variable_effect_size." + chara_id_class).each(function (index, value) {
-            updateBuffEffectSize($(value));
-        });
-        // アビリティ項目の表示設定
-        setAbilityDisplay(select_style_list[chara_no].limit_count, chara_id_class);
-    });
-    // 宝珠レベル変更
-    $(".jewel").on("change", function (event) {
-        let chara_no = $(this).attr("id").replace(/[^0-9]/g, '');
-        if (select_style_list[chara_no] === undefined) {
-            return;
-        }
-        select_style_list[chara_no].jewel_lv = Number($(this).val());
-        let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
-        // バフ効果量を更新
-        $(".variable_effect_size." + chara_id_class).each(function (index, value) {
-            updateBuffEffectSize($(value));
-        });
-    });
-    // ステータス変更
-    $(".status").on("change", function (event) {
-        let chara_no = $(this).attr("id").replace(/[^0-9]/g, '');
-        if (select_style_list[chara_no] === undefined) {
-            return;
-        }
-        let status_kbn = $(this).prop("id").split("_")[0];
-        select_style_list[chara_no][status_kbn] = Number($(this).val());
-        let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
-        if ($(this).hasClass("effect_size")) {
-            // バフ効果量を更新
-            $(".variable_effect_size." + chara_id_class).each(function (index, value) {
-                updateBuffEffectSize($(value));
-            });
-        }
     });
     // 入力制限
     $(".limit_number").on("change", function (event) {
@@ -494,30 +446,6 @@ function setEventTrigger() {
     $("input[name=rule_tab]").on("change", function (event) {
         updateGrade();
     });
-    // ステータス保存
-    $(".save").on("change", function (event) {
-        let id_split = $(this).prop("id").split("_");
-        if (id_split.length > 1) {
-            let chara_no = Number(id_split[1]);
-            saveStyle(select_style_list[chara_no]);
-        }
-    });
-    // 部隊変更ボタンクリック
-    $(".troops_btn").on("click", function (event) {
-        if ($(this).hasClass("selected_troops")) {
-            return;
-        }
-        // サブ部隊初期化
-        $("#sub_troops").val(-1);
-        loadSubTroopsList(-1);
-
-        $(".selected_troops").removeClass("selected_troops");
-        $(this).addClass("selected_troops");
-        styleReset(select_style_list, false);
-        select_troops = $(this).val();
-        localStorage.setItem('select_troops', select_troops);
-        loadTroopsList(select_style_list, select_troops);
-    });
     // サブパーティ変更
     $("#sub_troops").on("change", function (event) {
         loadSubTroopsList($(this).val());
@@ -620,23 +548,59 @@ function setEventTrigger() {
         calcDamage();
     });
 }
+// 限界突破変更
+function updateLimitCount(chara_no, limit_count) {
+    if (select_style_list[chara_no] === undefined) {
+        return;
+    }
+    let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
+    // アビリティのチェックボックスを更新
+    $("input[type=checkbox].ability." + chara_id_class).each(function (index, value) {
+        let ability_id = $(value).data("ability_id");
+        let ability_info = getAbilityInfo(ability_id);
+        let limit_border = Number($(value).data("limit_border"));
+        if (select_attack_skill !== undefined) {
+            let attack_chara_id = "chara_id-" + select_attack_skill.chara_id;
+            setAbilityCheck(value, ability_info, limit_border, limit_count, attack_chara_id);
+        }
+    });
+    // バフ効果量を更新
+    $(".variable_effect_size." + chara_id_class).each(function (index, value) {
+        updateBuffEffectSize($(value));
+    });
+    // アビリティ項目の表示設定
+    setAbilityDisplay(select_style_list[chara_no].limit_count, chara_id_class);
+};
+// 宝珠レベル変更
+function updateJewelLv(chara_no) {
+    if (select_style_list[chara_no] === undefined) {
+        return;
+    }
+    let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
+    // バフ効果量を更新
+    $(".variable_effect_size." + chara_id_class).each(function (index, value) {
+        updateBuffEffectSize($(value));
+    });
+};
+// ステータス変更
+function updateStatus(chara_no) {
+    if (select_style_list[chara_no] === undefined) {
+        return;
+    }
+    let chara_id_class = "chara_id-" + select_style_list[chara_no].style_info.chara_id;
+    // バフ効果量を更新
+    $(".variable_effect_size." + chara_id_class).each(function (index, value) {
+        updateBuffEffectSize($(value));
+    });
+};
 
 // メンバー読み込み時の固有処理
 function loadMember(select_chara_no, member_info, isTrigger) {
-    $.each(status_kbn, function (index, value) {
-        if (index == 0) return true;
-        $(`#${value}_${select_chara_no}`).val(member_info[value]);
-    });
-    $(`#limit_${select_chara_no}`).val(member_info.limit_count);
-    $(`#jewel_${select_chara_no}`).val(member_info.jewel_lv);
 
     addAttackList(member_info);
     addBuffList(member_info, 0);
     addAbility(member_info);
     addPassive(member_info);
-    $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
-    // 画像切り替え
-    $('#select_chara_' + select_chara_no).attr("src", "icon/" + member_info.style_info.image_url);
 
     if (isTrigger) {
         $("#attack_list").trigger("change");
@@ -867,6 +831,10 @@ function calcDamage() {
     if ($("#enemy_class").val() == ENEMY_CLASS_SCORE_ATTACK) {
         calcScore(critical_detail, grade_sum.grade_rate);
     }
+    // メンバー情報更新
+    if (typeof updateMember == "function") {
+        updateMember();
+    }
 }
 
 // 倍率表示
@@ -1008,6 +976,7 @@ function getChainEffectSize(type) {
 
 // 消費SP計算
 function getSpCost() {
+    chara_sp_list = {};
     // SP消費量計算
     for (let i = 0; i < select_style_list.length; i++) {
         if (select_style_list[i] === undefined) {
@@ -1052,7 +1021,7 @@ function getSpCost() {
             });
             sp_cost += single_sp_cost * max_count;
         });
-        $("#sp_cost_" + i).text(sp_cost);
+        chara_sp_list[select_style_list[i].style_info.chara_id] = sp_cost
     }
 }
 
@@ -1400,7 +1369,7 @@ function setBuffList() {
             return $(this).parent().is('span');
         });
         let select_id = $(select).attr("id");
-        $(".status_" + select_id).removeClass("status_" + select_id);
+        ref_status_list["status_" + select_id] = [];
         visible_options.each(function (index, option) {
             let buff_id = Number($(option).val());
             let buff_info = getBuffIdToBuff(buff_id);
@@ -1613,7 +1582,7 @@ function addAbility(member_info) {
             continue;
         }
         let ability_info = getAbilityInfo(ability_id);
-        if (!is_select && ability_info.range_area != RANGE_FILED) {
+        if (!is_select && ability_info.range_area != RANGE_FIELD) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
         }
@@ -1631,7 +1600,7 @@ function addAbility(member_info) {
         let effect_size = ability_info.effect_size;
 
         switch (ability_info.range_area) {
-            case RANGE_FILED: // フィールド
+            case RANGE_FIELD: // フィールド
                 addElementField(member_info, ability_info.ability_name, ability_info.effect_size, ability_info.element, 0, 0);
                 continue;
             case RANGE_SELF: // 自分
@@ -1827,7 +1796,7 @@ function addPassive(member_info) {
         let add_check_class = "";
         let add_div_class = "";
         switch (passive_info.range_area) {
-            case RANGE_FILED: // フィールド
+            case RANGE_FIELD: // フィールド
                 addElementField(member_info, passive_info.passive_name, effect_size, 0, 0, skill_id);
                 return true;
             case RANGE_ALLY_ALL: // 全員
@@ -1933,7 +1902,7 @@ function select2ndSkill(select) {
         }
         if (select.prop("selectedIndex") == 0) {
             resetSkillLv(id);
-            $(".status_" + id).removeClass("status_" + id);
+            ref_status_list["status_" + id] = [];
         }
         return;
     }
@@ -1941,7 +1910,7 @@ function select2ndSkill(select) {
     if (select.prop("disabled")) {
         return;
     }
-    $(".status_" + id).removeClass("status_" + id);
+    ref_status_list["status_" + id] = [];
     for (let i = 1; i < select.find("option").length; i++) {
         let option = select.find("option")[i];
         if ($(option).css("display") !== "none") {
@@ -2058,9 +2027,15 @@ function setStatusToBuff(option, id) {
     }
     let buff = getBuffIdToBuff(Number($(option).val()));
     if (buff !== undefined) {
-        let chara_no = $(option).data("chara_no");
-        $("#" + status_kbn[buff.ref_status_1] + "_" + chara_no).addClass("status_" + id);
-        $("#" + status_kbn[buff.ref_status_2] + "_" + chara_no).addClass("status_" + id);
+        let chara_id = $(option).data("chara_id");
+        let list = [];
+        if (status_kbn[buff.ref_status_1]) {
+            list.push(status_kbn[buff.ref_status_1] + chara_id);
+        }
+        if (status_kbn[buff.ref_status_2]) {
+            list.push(status_kbn[buff.ref_status_2] + chara_id);
+        }
+        ref_status_list["status_" + id] = list;
     }
 }
 
@@ -2403,7 +2378,7 @@ function createEnemyList(enemy_class) {
                 .val(value.enemy_class_no);
             if (enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
                 option.text(`#${value.sub_no} ${value.enemy_name}`)
-            } else if(enemy_class == ENEMY_CLASS_CLOCK_TOWER_NORMAL || enemy_class == ENEMY_CLASS_CLOCK_TOWER_HARD){
+            } else if (enemy_class == ENEMY_CLASS_CLOCK_TOWER_NORMAL || enemy_class == ENEMY_CLASS_CLOCK_TOWER_HARD) {
                 option.text(`(${value.sub_no}F) ${value.enemy_name}`)
             } else {
                 option.text(value.enemy_name);

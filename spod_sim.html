@@ -30,6 +30,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hello-pangea/dnd@17.0.0/dist/dnd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
   <script src="js/header.js"></script>
   <script src="js/common.js"></script>
   <script src="js/const.js"></script>
@@ -43,57 +48,30 @@
   <script src="js/skill_passive.js"></script>
   <script src="js/enemy.js"></script>
   <script src="js/ability.js"></script>
+  <script type="text/babel" src="js/component/modal_style_section.js"></script>
+  <script type="text/babel" src="js/component/style_list.js"></script>
+  <script type="text/babel" src="js/component/enemy_list.js"></script>
+  <script type="text/babel" src="js/component/spod/chara_setting.js"></script>
+  <script type="text/babel" src="js/component/spod/enemy_area.js"></script>
+  <script type="text/babel" src="js/component/spod/detail_setting.js"></script>
+  <script type="text/babel" src="js/component/spod/setting_area.js"></script>
+  <script type="text/babel" src="js/component/spod/battle_area.js"></script>
+  <script type="text/babel" src="js/component/spod/turn_data.js"></script>
+  <script type="text/babel" src="js/component/spod/over_drive_gauge.js"></script>
+  <script type="text/babel" src="js/component/spod/modal_explanation.js"></script>
+  <script type="text/babel" src="js/component/spod/modal_target_selection.js"></script>
+  <script type="text/babel" src="js/component/spod/modal_effcet_selection.js"></script>
+  <script type="text/babel" src="js/component/spod/modal_buff_detail_list.js"></script>
+  <script type="text/babel" src="js/component/spod/modal_skill_select_list.js"></script>
+  <script type="text/babel" src="js/component/spod/unit_component.js"></script>
+  <script type="text/babel" src="js/component/spod/buff_icon_component.js"></script>
   <script>
     let chara_no = -1;
     $(function () {
-      // モーダル系イベント追加
-      addModalEvent();
-
-      for (let i = 0; i <= 4; i++) {
-        $(".limit").append($('<option>').text(i).val(i));
-      }
-      $(".limit").prop("selectedIndex", 2);
-      $(".limit").append($('<option>').text(10).val(10).css("display", "none"));
-      $(".limit").append($('<option>').text(20).val(20).css("display", "none"));
-      $(".earring").append($('<option>').text("無し").val(0));
-      [10, 12, 15].forEach(effect_size => {
-        $(".earring").append($('<option>').text(`${effect_size}%`).val(effect_size));
-      });
-      $(".earring").val(0);
-      for (let i = 0; i <= 3; i++) {
-        let option = $('<option>').text("SP+" + i).val(i);
-        $(".chain").append(option);
-      }
-      $(".chain").val(3);
-      ["無し", "火撃", "氷撃", "雷撃", "光撃", "闇撃"].forEach((element, index) => {
-        $(".bracelet").append($('<option>').text(element).val(index));
-      });
-      $(".bracelet").val(1);
-
       // スタイルリスト読み込み
       select_troops = select_troops ? select_troops : 0;
-      $("#troops_btn_" + select_troops).addClass("selected_troops");
       loadTroopsList(select_style_list, select_troops);
-
-      // 敵情報設定
-      let enemy_class = localStorage.getItem("enemy_class");
-      enemy_class = enemy_class ? enemy_class : "1";
-      $("#enemy_class").val(enemy_class);
-      createEnemyList(enemy_class);
-      let enemy_list = localStorage.getItem("enemy_list");
-      enemy_list = enemy_list ? enemy_list : "1";
-      $("#enemy_list").val(enemy_list);
-      setEnemyStatus();
-
-      // ソート順
-      let next_display = localStorage.getItem("next_display");
-      next_display = next_display ? next_display : "1";
-      $("#next_display").val(next_display);
-      // 上書き確認
-      let is_overwrite = localStorage.getItem("is_overwrite");
-      is_overwrite = is_overwrite ? is_overwrite : "true";
-      $("#is_overwrite").prop("checked", is_overwrite === "true");
-
+      
       // イベント設定
       setEventTrigger();
 
@@ -104,7 +82,6 @@
         awaitOpenAnimation: true,
         awaitCloseAnimation: true
       });
-      let handleModalResult = null;
     });
 
   </script>
@@ -114,512 +91,45 @@
   <main>
     <div class="header"></div>
     <div class="frame w-screen pt-3 overflow-y-scroll border-b">
-      <div class="display_area mx-auto">
-        <input type="button" data-micromodal-trigger="modal_explanation" role="button" value="注意事項" class="w-20">
-        <div id="char_list" class="grid grid-cols-7 text-center gap-y-px gap-x-0">
-          <label class="mt-3 mb-3 small_font">部隊選択</label>
-          <div class="col-span-6 flex">
-            <input type="button" id="troops_btn_0" class="troops_btn" value="0">
-            <input type="button" id="troops_btn_1" class="troops_btn" value="1">
-            <input type="button" id="troops_btn_2" class="troops_btn" value="2">
-            <input type="button" id="troops_btn_3" class="troops_btn" value="3">
-            <input type="button" id="troops_btn_4" class="troops_btn" value="4">
-            <input type="button" id="troops_btn_5" class="troops_btn" value="5">
-            <input type="button" id="troops_btn_6" class="troops_btn" value="6">
-            <input type="button" id="troops_btn_7" class="troops_btn" value="7">
-            <input type="button" id="troops_btn_8" class="troops_btn" value="8">
-          </div>
-          <div class="mt-2">
-            <div>
-              <label class="small_font">スタイル</label>
-              <input type="button" id="style_reset_btn" value="リセット">
-            </div>
-          </div>
-          <img class="showmodal select_style" id="select_chara_0" src="img/plus.png" data-chara_no="0">
-          <img class="showmodal select_style" id="select_chara_1" src="img/plus.png" data-chara_no="1">
-          <img class="showmodal select_style" id="select_chara_2" src="img/plus.png" data-chara_no="2">
-          <img class="showmodal select_style" id="select_chara_3" src="img/plus.png" data-chara_no="3">
-          <img class="showmodal select_style" id="select_chara_4" src="img/plus.png" data-chara_no="4">
-          <img class="showmodal select_style" id="select_chara_5" src="img/plus.png" data-chara_no="5">
-          <div>
-            <label class="label_status">限界突破</label>
-            <label class="label_status text-xs leading-6 whitespace-nowrap">ドライブピアス</label>
-            <label class="label_status text-xs leading-5 whitespace-nowrap">ブレスレット</label>
-            <label class="label_status">チェーン</label>
-            <label class="label_status">初期SP</label>
-            <label class="label_status">パッシブ</label>
-          </div>
-          <div>
-            <select id="limit_0" class="limit save"></select>
-            <select id="earring_0" class="earring save"></select>
-            <select id="bracelet_0" class="bracelet save"></select>
-            <select id="chain_0" class="chain save"></select>
-            <input type="number" id="init_sp_0" class="init_sp save" value="1">
-            <input type="button" id="passive_0" class="passive save" value="設定" data-chara_no="0">
-          </div>
-          <div>
-            <select id="limit_1" class="limit save"></select>
-            <select id="earring_1" class="earring save"></select>
-            <select id="bracelet_1" class="bracelet save"></select>
-            <select id="chain_1" class="chain save"></select>
-            <input type="number" id="init_sp_1" class="init_sp save" value="1">
-            <input type="button" id="passive_1" class="passive save" value="設定" data-chara_no="1">
-          </div>
-          <div>
-            <select id="limit_2" class="limit save"></select>
-            <select id="earring_2" class="earring save"></select>
-            <select id="bracelet_2" class="bracelet save"></select>
-            <select id="chain_2" class="chain save"></select>
-            <input type="number" id="init_sp_2" class="init_sp save" value="1">
-            <input type="button" id="passive_2" class="passive save" value="設定" data-chara_no="2">
-          </div>
-          <div>
-            <select id="limit_3" class="limit save"></select>
-            <select id="earring_3" class="earring save"></select>
-            <select id="bracelet_3" class="bracelet save"></select>
-            <select id="chain_3" class="chain save"></select>
-            <input type="number" id="init_sp_3" class="init_sp save" value="1">
-            <input type="button" id="passive_3" class="passive save" value="設定" data-chara_no="3">
-          </div>
-          <div>
-            <select id="limit_4" class="limit save"></select>
-            <select id="earring_4" class="earring save"></select>
-            <select id="bracelet_4" class="bracelet save"></select>
-            <select id="chain_4" class="chain save"></select>
-            <input type="number" id="init_sp_4" class="init_sp save" value="1">
-            <input type="button" id="passive_4" class="passive save" value="設定" data-chara_no="4">
-          </div>
-          <div>
-            <select id="limit_5" class="limit save"></select>
-            <select id="earring_5" class="earring save"></select>
-            <select id="bracelet_5" class="bracelet save"></select>
-            <select id="chain_5" class="chain save"></select>
-            <input type="number" id="init_sp_5" class="init_sp save" value="1">
-            <input type="button" id="passive_5" class="passive save" value="設定" data-chara_no="5">
-          </div>
-        </div>
-      </div>
-      <div class="surround_area mx-auto mt-2 adjust_width">
-        <div>
-          <label class="area_title">敵情報</label>
-          <div id="enemy_select">
-            <select id="enemy_class">
-              <option value="1">異時層</option>
-              <option value="2">オーブボス</option>
-              <option value="3">時計塔(N)</option>
-              <option value="4">時計塔(H)</option>
-              <option value="5">宝珠の迷宮</option>
-              <option value="6">スコアアタック</option>
-              <option value="7">プリズムバトル</option>
-              <option value="8">恒星掃戦線</option>
-              <option value="9">イベント隠しボス</option>
-              <option value="10">時の修練場</option>
-              <option value="11">制圧戦</option>
-              <option value="12">セラフ遭遇戦</option>
-            </select>
-            <select id="enemy_list">
-            </select>
-            <select id="enemy_count">
-              <option value="1">1体</option>
-              <option value="2">2体</option>
-              <option value="3">3体</option>
-            </select>
-          </div>
-        </div>
-        <div class="resist_area mx-auto mt-2">
-          <div class="grid grid-cols-9">
-            <div class="slash"><input type="image" class="enemy_type_icon" src="img/slash.webp"><input type="text"
-                id="enemy_physical_1" class="enemy_type_value enemy_input"></div>
-            <div class="stab"><input type="image" class="enemy_type_icon" src="img/stab.webp"><input type="text"
-                id="enemy_physical_2" class="enemy_type_value enemy_input"></div>
-            <div class="strike"><input type="image" class="enemy_type_icon" src="img/strike.webp"><input type="text"
-                id="enemy_physical_3" class="enemy_type_value enemy_input"></div>
-            <div class="none"><input type="image" class="enemy_type_icon" src="img/none.webp"><input type="text"
-                id="enemy_element_0" class="enemy_type_value enemy_input"></div>
-            <div class="fire"><input type="image" class="enemy_type_icon" src="img/fire.webp"><input type="text"
-                id="enemy_element_1" class="enemy_type_value enemy_input"></div>
-            <div class="ice"><input type="image" class="enemy_type_icon" src="img/ice.webp"><input type="text"
-                id="enemy_element_2" class="enemy_type_value enemy_input"></div>
-            <div class="thunder"><input type="image" class="enemy_type_icon" src="img/thunder.webp"><input type="text"
-                id="enemy_element_3" class="enemy_type_value enemy_input"></div>
-            <div class="light"><input type="image" class="enemy_type_icon" src="img/light.webp"><input type="text"
-                id="enemy_element_4" class="enemy_type_value enemy_input"></div>
-            <div class="dark"><input type="image" class="enemy_type_icon" src="img/dark.webp"><input type="text"
-                id="enemy_element_5" class="enemy_type_value enemy_input"></div>
-          </div>
-        </div>
-      </div>
-      <div class="setup_area mx-auto mt-2 w-[400px] text-sm">
-        <ui>
-          <li>
-            <label>バトル開始時</label>
-            <div class="ml-4">
-              フィールド<select id="init_field">
-                <option value="0" selected>無し</option>
-                <option value="1">火</option>
-                <option value="2">氷</option>
-                <option value="3">雷</option>
-                <option value="4">光</option>
-                <option value="5">闇</option>
-                <option value="6">稲穂</option>
-                <option value="7">砂嵐</option>
-              </select>
-              OverDriveGauge<input type="number" max="300" min="0" step="0.01" class="step_od_gauge w-[70px]" value="0"
-                id="init_over_drive">
-              SP＋<input type="number" max="20" min="0" step="1" class="step_sp" value="0" id="init_sp_add">
-            </div>
-          </li>
-          <li>
-            <label>毎ターン</label>
-            前衛のSP+
-            <select class="step_sp" id="front_sp_add">
-              <option value="0" selected>0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-            後衛のSP+
-            <select class="step_sp" id="back_sp_add">
-              <option value="0" selected>0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </li>
-          <li>
-            <select class="h-[25px]" id="step_turn">
-              <option value="1" selected>1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-            ターンごとに OverDriveGauge
-            <select class="step_od_gauge w-[60px]" id="step_over_drive_down">
-              <option value="0" selected>0%</option>
-              <option value="-5">-5%</option>
-              <option value="-10">-10%</option>
-              <option value="-15">-15%</option>
-            </select>
-            SP
-            <select class="step_sp" id="step_sp_down">
-              <option value="0" selected>0</option>
-              <option value="-1">-1</option>
-              <option value="-2">-2</option>
-              <option value="-3">-3</option>
-            </select>
-          </li>
-        </ui>
-      </div>
-      <div class="mx-auto w-[380px] mt-2 text-sm">
-        次のターンを
-        <select id="next_display" class="h-[22px]">
-          <option value="1">上に表示</option>
-          <option value="2">下に表示</option>
-        </select>
-        <input type="checkbox" id="is_overwrite"><label class="checkbox01 text-sm" for="is_overwrite">上書き確認</label>
-        <input type="button" class="battle_start" value="戦闘開始">
-      </div>
-      <div id="battle_area" style="visibility: hidden;">
-
-      </div>
+      <div id="setting_area">読み込み中</div>
+      <div id="battle_area"></div>
     </div>
     <div class="modal micromodal-slide" id="modal_style_section" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         <div class="modal__container container_style" role="dialog" aria-modal="true" aria-labelledby="modal_section">
-          <div class="modal_section">
-            <div class="modal_inner">
-              <div class="modal_inner_headline">
-                <div class="flex leading-10">
-                  <div class="mx-auto pl-16">スタイル選択</div>
-                  <input type="button" id="calc" href="javascript:void(0)" class="remove_btn text-center mr-2"
-                    value="外す">
-                </div>
-              </div>
-              <hr class="line" />
-              <div class="narrow_element flex mx-auto">
-                <input type="image" class="narrow physical" id="physical_1" src="img/slash.webp" data-select="1">
-                <input type="image" class="narrow physical" id="physical_2" src="img/stab.webp" data-select="1">
-                <input type="image" class="narrow physical" id="physical_3" src="img/strike.webp" data-select="1">
-                <div class="w-12"></div>
-                <input type="image" class="narrow element" id="element_0" src="img/none.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_1" src="img/fire.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_2" src="img/ice.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_3" src="img/thunder.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_4" src="img/light.webp" data-select="1">
-                <input type="image" class="narrow element" id="element_5" src="img/dark.webp" data-select="1">
-              </div>
-              <div class="flex flex-wrap ml-2">
-                <input type="button" class="narrow role" id="role_1" value="ATTACKER" data-select="1">
-                <input type="button" class="narrow role" id="role_2" value="BREAKER" data-select="1">
-                <input type="button" class="narrow role" id="role_3" value="BLASTER" data-select="1">
-                <input type="button" class="narrow role" id="role_4" value="HEALER" data-select="1">
-                <input type="button" class="narrow role" id="role_5" value="BUFFER" data-select="1">
-                <input type="button" class="narrow role" id="role_6" value="DEBUFFER" data-select="1">
-                <input type="button" class="narrow role" id="role_7" value="DEFENDER" data-select="1">
-                <input type="button" class="narrow role" id="role_8" value="ADMIRAL" data-select="1">
-              </div>
-              <div class="flex flex-wrap w-[144px] mx-auto">
-                <input type="image" class="rarity" id="rarity_1" src="img/IconRaritySS.webp">
-                <input type="image" class="rarity opacity-30" id="rarity_2" src="img/IconRarityS.webp">
-                <input type="image" class="rarity opacity-30" id="rarity_3" src="img/IconRarityA.webp">
-              </div>
-              <div class="search_result_area">
-                <div id="rank_ss">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_1_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_1_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_1_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_1_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_1_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_1_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_1_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_1_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/angelbeats.webp">
-                    <div id="sytle_list_1_AB" class="flex flex-wrap  troops_AB"></div>
-                  </div>
-                </div>
-                <div id="rank_s" class="hidden">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_2_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_2_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_2_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_2_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_2_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_2_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_2_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_2_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/angelbeats.webp">
-                    <div id="sytle_list_2_AB" class="flex flex-wrap  troops_AB"></div>
-                  </div>
-                </div>
-                <div id="rank_a" class="hidden">
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31a.webp">
-                    <div id="sytle_list_3_31A" class="flex flex-wrap troops_31A"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31b.webp">
-                    <div id="sytle_list_3_31B" class="flex flex-wrap troops_31B"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31c.webp">
-                    <div id="sytle_list_3_31C" class="flex flex-wrap troops_31C"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31d.webp">
-                    <div id="sytle_list_3_31D" class="flex flex-wrap troops_31D"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31e.webp">
-                    <div id="sytle_list_3_31E" class="flex flex-wrap troops_31E"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31f.webp">
-                    <div id="sytle_list_3_31F" class="flex flex-wrap troops_31F"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp31x.webp">
-                    <div id="sytle_list_3_31X" class="flex flex-wrap troops_31X"></div>
-                  </div>
-                  <div class="troops">
-                    <input type="image" class="emblem" src="img/DioramaStamp30g.webp">
-                    <div id="sytle_list_3_30G" class="flex flex-wrap troops_30G"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div id="modal_section" class="modal_section"></div>
         </div>
       </div>
     </div>
-    <div class="modal micromodal-slide" id="modal_select_target" aria-hidden="true">
+    <div class="modal micromodal-slide" id="modal_target_selection" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true" aria-labelledby="select_target">
-          <div id="select_target" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
-            <div>
-              <label class="modal_label">対象選択</label>
-            </div>
-            <div class="troops">
-              <input type="image" class="select_target" id="select_target0">
-              <input type="image" class="select_target" id="select_target1">
-              <input type="image" class="select_target" id="select_target2">
-              <input type="image" class="select_target" id="select_target3">
-              <input type="image" class="select_target" id="select_target4">
-              <input type="image" class="select_target" id="select_target5">
-            </div>
-          </div>
+        <div class="modal__container container_damage" role="dialog" aria-modal="true"
+          aria-labelledby="target_selection">
+          <div id="target_selection" aria-hidden="true" className="modal text-left min-w-[300px] mx-auto"></div>
         </div>
       </div>
     </div>
-    <div class="modal micromodal-slide" id="modal_select_effect" aria-hidden="true">
+    <div class="modal micromodal-slide" id="modal_effect_selection" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true" aria-labelledby="select_effect">
-          <div id="select_effect" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
-            <div class="mb-4">
-              <label class="modal_label">効果選択</label>
-            </div>
-            <div id="effect_type1" class="select_effect">
-              <input type="button" class="effect_button" value="攻撃力低下(50%)" data-value="0">
-              <input type="button" class="effect_button" value="防御力低下(50%)" data-value="1">
-            </div>
-            <div id="effect_type2" class="select_effect">
-              <input type="button" class="effect_button" value="破壊率200%未満" data-value="0">
-              <input type="button" class="effect_button" value="破壊率200%以上" data-value="1">
-            </div>
-            <div id="effect_type3" class="select_effect">
-              <input type="button" class="effect_button" value="BREAKなし" data-value="0">
-              <input type="button" class="effect_button" value="BREAKあり" data-value="1">
-            </div>
-            <div id="effect_type4" class="select_effect">
-              <input type="button" class="effect_button" value="SP回復なし" data-value="0">
-              <input type="button" class="effect_button" value="SP回復(30%)" data-value="1">
-            </div>
-            <div id="effect_type5" class="select_effect">
-              <input type="button" class="effect_button" value="影分身なし" data-value="0">
-              <input type="button" class="effect_button" value="影分身あり" data-value="1">
-            </div>
-            <div id="effect_type6" class="select_effect">
-              <input type="button" class="effect_button" value="ダウンターンなし" data-value="0">
-              <input type="button" class="effect_button" value="ダウンターンあり" data-value="1">
-            </div>
-            <div id="effect_type7" class="select_effect">
-              <input type="button" class="effect_button" value="バフ解除なし" data-value="0">
-              <input type="button" class="effect_button" value="バフ解除あり" data-value="1">
-            </div>
-          </div>
+        <div class="modal__container container_damage" role="dialog" aria-modal="true"
+          aria-labelledby="effect_selection">
+          <div id="effect_selection" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
         </div>
       </div>
     </div>
     <div class="modal micromodal-slide" id="modal_explanation" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="modal_explanation">
-          <div id="modal_explanation" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
-            <div class="mb-4">
-              <label class="modal_label">注意事項</label>
-            </div>
-            <div>
-              <p>本ツールはヘブバンのSP、ODのシミュレーションツールです。</p>
-              <br>
-              <p><b>操作方法</b></p>
-              <p><b>1.スタイル選択</b></p>
-              <p>クリック(タップ)でスタイル選択画面でスタイルを選択します。</p>
-              <p>選択したスタイルは、ドラッグ(スワイプ)で入れ替え出来ます。</p>
-              <p><b>2.戦闘開始</b></p>
-              <p>初期設定を行ったら戦闘開始ボタンで開始します。</p>
-              <p>キャラクター同士の入れ替えは、スタイルを選択して入れ替えます（ゲーム内準拠）</p>
-              <p><b>3.オーバードライブ</b></p>
-              <p>オーバードライブゲージが100%以上ある場合は、「OD発動」ボタンが追加されます。</p>
-              <p>行動後にゲージが100％以上ある場合、「行動開始+OD」が追加されます。</p>
-              <br>
-              <p>SPとODに関連するスキル、アビリティのデータは追加してありますが、現在、以下のスキル、アビリティに制約がかかっています。</p>
-              <p>・怪盗乱麻：SP上昇効果なし</p>
-              <p>・激動：SP上昇効果なし</p>
-              <p>・友縁の剣：SP上昇効果なし</p>
-              <p>・福音：常に発動します(OD上昇10%)</p>
-              <p>・究極のスリル：常に発動します(OD上昇10%)</p>
-              <p>以下のスキル/アビリティは発動条件をシミュレート出来ないため、SPに「＋」として表示しています。</p>
-              <p>・吉報：確率30%</p>
-              <p>・旺盛：DP101%以上</p>
-              <p>・痛気持ちいぃ～！：被ダメージ</p>
-              <img src="img/sp_add.png">
-            </div>
-            <div class="mt-4">
-              <p>補助機能として、以下のデバフの表示を行っています。</p>
-              <h4>■味方</h4>
-              <p>・攻撃力上昇/属性攻撃力上昇</p>
-              <p>・心眼</p>
-              <p>・クリティカル率/属性クリティカル率アップ</p>
-              <p>・クリティカルダメージ/属性クリティカルダメージアップ</p>
-              <p>・チャージ</p>
-              <p>・連撃</p>
-              <p>・行動不能</p>
-              <p>・(全体)挑発</p>
-              <p>・バフ/デバフ強化</p>
-              <p>・桜花の矢</p>
-              <p>・永遠の誓い</p>
-              <p>・EXスキル連続使用</p>
-              <p>・オギャり</p>
-              <p>・士気</p>
-              <p>・歌姫の加護</p>
-              <p>・速弾き</p>
-              <h4>■敵</h4>
-              <p>・DP防御力/防御力/属性防御力ダウン</p>
-              <p>・脆弱</p>
-              <p>・耐性ダウン</p>
-              <p>・永続防御力/永続属性防御力ダウン</p>
-              <h4>■アビリティ</h4>
-              <p>・狂乱の型</p>
-              <p>・五月雨</p>
-              <p>・徒桜の一矢</p>
-            </div>
-            <div class="mt-1 mx-auto text-right">
-              <a href="https://marshmallow-qa.com/ldboixq5xyndo94" class="text-blue-500 underline">不具合/要望受付フォーム</a>
-            </div>
-          </div>
+          aria-labelledby="explanation">
+          <div id="explanation" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2"></div>
         </div>
       </div>
     </div>
-    <div class="modal micromodal-slide" id="modal_passive_list" aria-hidden="true">
+    <div class="modal micromodal-slide" id="modal_skill_select_list" aria-hidden="true">
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true" aria-labelledby="passive_list">
-          <div id="passive_list" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
-            <div class="passive_container">
-              <label class="modal_label">パッシブ設定</label>
-              <input type="button" id="passive_setting" href="javascript:void(0)" class="text-center w-20" value="設定">
-            </div>
-            <div id="passive_skill_list">
-            </div>
-          </div>
+        <div class="modal__container container_damage" role="dialog" aria-modal="true"
+          aria-labelledby="skill_select_list">
+          <div id="skill_select_list" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
         </div>
       </div>
     </div>
@@ -627,13 +137,7 @@
       <div class="modal__overlay" tabindex="-1" data-micromodal-close>
         <div class="modal__container container_damage" role="dialog" aria-modal="true"
           aria-labelledby="buff_detail_list">
-          <div id="buff_detail_list" aria-hidden="true" class="modal text-left w-[380px] mx-auto mt-2">
-            <div class="mb-4">
-              <label class="modal_label">バフ一覧</label>
-            </div>
-            <div id="buff_detail">
-            </div>
-          </div>
+          <div id="buff_detail_list" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
         </div>
       </div>
     </div>

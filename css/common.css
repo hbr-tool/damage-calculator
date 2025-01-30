@@ -88,3 +88,38 @@ input[type=checkbox]:checked:disabled + .checkbox01:after {
 input[type=checkbox]:disabled + .checkbox01 {
 	cursor: default;
 }
+
+input[type=checkbox].switch {
+    display: block;
+}
+input[type="checkbox"].switch {
+    --size: 20px;
+    --scale: 0.8;
+
+    appearance: none;
+    cursor: pointer;
+    margin: 2px 0px 0px 0px;
+    height: var(--size);
+    aspect-ratio: 2;
+    border-radius: var(--size);
+    background-color: #444444;
+
+    &::before {
+        content: "";
+        display: block;
+        height: var(--size);
+        aspect-ratio: 1;
+        border-radius: var(--size);
+        background-color: #FFFFFF;
+        transform: scale(var(--scale));
+        transition: 0.2s;
+    }
+
+    &:checked {
+        background-color: #24B441;
+
+        &::before {
+            transform: translateX(var(--size)) scale(var(--scale));
+        }
+    }
+}

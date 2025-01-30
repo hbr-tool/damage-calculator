@@ -351,7 +351,7 @@
     {"skill_id":450,"skill_name":"醒めたる思い","chara_id":13,"style_id":109,"sp_cost":15,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":117,"attack_physical":1,"attack_element":3},
     {"skill_id":451,"skill_name":"炯眼の構え","chara_id":1,"style_id":0,"sp_cost":5,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":null,"attack_physical":1,"attack_element":null},
     {"skill_id":452,"skill_name":"黒曜のオーバーロード","chara_id":1,"style_id":110,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":122,"attack_physical":1,"attack_element":1},
-    {"skill_id":453,"skill_name":"黒曜のオーバーロード","chara_id":1,"style_id":110,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":124,"attack_physical":1,"attack_element":5},
+    {"skill_id":452,"skill_name":"黒曜のオーバーロード","chara_id":1,"style_id":110,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":0,"attribute_conditions":0,"attack_id":124,"attack_physical":1,"attack_element":5},
     {"skill_id":454,"skill_name":"星火燎原+","chara_id":1,"style_id":0,"sp_cost":14,"skill_active":0,"skill_kind":2,"skill_attribute":0,"attribute_conditions":0,"attack_id":118,"attack_physical":1,"attack_element":1},
     {"skill_id":455,"skill_name":"絶対零度+","chara_id":13,"style_id":0,"sp_cost":14,"skill_active":0,"skill_kind":2,"skill_attribute":0,"attribute_conditions":0,"attack_id":120,"attack_physical":1,"attack_element":2},
     {"skill_id":456,"skill_name":"シャインテラー","chara_id":14,"style_id":0,"sp_cost":8,"skill_active":0,"skill_kind":0,"skill_attribute":0,"attribute_conditions":0,"attack_id":2080,"attack_physical":3,"attack_element":4},

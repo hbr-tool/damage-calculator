@@ -91,7 +91,7 @@ const FIELD_RICE = 6; // 稲穂
 const FIELD_SANDSTORM = 7; // 砂嵐
 
 /** 対象 */
-const RANGE_FILED = 0; // 場
+const RANGE_FIELD = 0; // 場
 const RANGE_ENEMY_UNIT = 1; // 敵単体
 const RANGE_ENEMY_ALL = 2; // 敵全体
 const RANGE_ALLY_UNIT = 3; // 味方単体

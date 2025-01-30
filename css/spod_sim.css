@@ -1,18 +1,23 @@
 /* 全体 */
 div.frame {
     height: calc(100svh - 60px);
-}
-
-.display_area {
-    width: 450px;
-    font-size: 0.875rem;
+    display: flex;
+    justify-content: center;
+    /* 水平方向中央 */
+    margin: auto;
+    overflow-y: hidden;
 }
 
 .adjust_width {
     width: 450px;
 }
 
-@media screen and (max-width: 768px) {}
+@media screen and (max-width: 768px) {
+    div.frame {
+        display: block;
+        overflow-y: scroll;
+    }
+}
 
 select {
     border: solid 1px #000;
@@ -50,6 +55,11 @@ input.troops_btn.selected_troops {
 }
 
 /* ステータスエリア */
+.unit_setting_area {
+    width: 450px;
+    font-size: 0.875rem;
+}
+
 #char_list {
     width: 482px;
 }
@@ -57,11 +67,13 @@ input.troops_btn.selected_troops {
 img.select_style {
     width: 64px;
     height: 64px;
-    margin-left: 4px;
+    margin-left: 2px;
+    cursor: pointer;
 }
 
 .dragging {
-    opacity: 0.5; /* ドラッグ中は半透明に */
+    opacity: 0.5;
+    /* ドラッグ中は半透明に */
 }
 
 .label_status {
@@ -80,6 +92,7 @@ img.select_style {
     margin-left: 3px;
     text-align: center;
 }
+
 .init_sp {
     border: #000 1px solid;
 }
@@ -88,12 +101,25 @@ img.select_style {
     margin-top: 2px;
     height: 20px;
 }
+
 .limit:disabled {
     border: solid 1px black;
 }
 
+#enemy_select_count {
+    border: none;
+    opacity: 1;
+}
+
+.area_title {
+    font-weight: bold;
+    margin-left: 5px;
+    font-size: 14px;
+}
+
 @media screen and (max-width: 482px) {
-    .display_area {
+    .unit_setting_area {
+        margin: auto;
         width: 400px;
     }
 
@@ -106,11 +132,13 @@ img.select_style {
         max-width: 400px;
         min-width: 375px;
     }
+
     img.select_style {
-        width: 48px;
-        height: 48px;
+        width: 53px;
+        height: 53px;
         margin-left: 4px;
     }
+
     .limit,
     .earring,
     .bracelet,
@@ -140,6 +168,7 @@ img.select_style {
 
 #enemy_select {
     margin-left: 1rem;
+    font-size: 14px;
 }
 
 #enemy_class {
@@ -175,16 +204,11 @@ img.select_style {
     margin-left: 5px;
 }
 
-.enemy_input {
-    border: #000 solid 1px;
-}
-
-
 @media screen and (max-width: 482px) {
     #enemy_class {
         max-width: 100px;
     }
-    
+
     #enemy_list {
         max-width: 200px;
     }
@@ -210,8 +234,27 @@ img.select_style {
 
 /* バトルエリア */
 #battle_area {
-    width: 1400px;
-    margin: 5px auto 20px auto;
+    height: 97%;
+    overflow-y: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#battle_display {
+    background-color: #fff;
+}
+
+.show_mode {
+    width: 1280px;
+}
+
+.hide_mode {
+    width: 1590px;
+}
+
+#btnDownload {
+    font-size: 14px;
+    width: 120px;
 }
 
 .turn_button {
@@ -223,7 +266,7 @@ img.select_style {
 }
 
 .trigger_over_drive {
-    display: flex!important;
+    display: flex !important;
     font-size: 14px;
     border: none;
     cursor: pointer;
@@ -260,15 +303,18 @@ img.select_style {
 .remaek_text {
     margin: 5px 5px 0px 5px;
     border: solid 1px;
-    width: 360px;
+    width: 240px;
     height: 60px;
     resize: none;
 }
 
-@media screen and (max-width: 768px) {
-    #battle_area {
+@media screen and (max-width: 1400px) {
+    .show_mode {
         width: 400px;
-        margin: auto;
+    }
+
+    .hide_mode {
+        width: 400px;
     }
 
     .turn {
@@ -278,24 +324,34 @@ img.select_style {
     .party_member {
         display: block;
     }
-    
+
     .remaek_text {
+        width: 375px;
         height: 25px;
     }
 
     .turn_button {
+        width: 360px;
         width: 80px;
     }
 }
+@media screen and (max-width: 768px) {
+    .show_mode,
+    .hide_mode {
+        margin: auto;
+    }
+}
 
-.header_area {
-    width: 375px;
+.turn_header_area {
+    width: 100%;
+}
+
+.turn_header_top {
     display: flex;
     justify-content: space-between;
 }
 
 .turn_number {
-    font-size: 18px;
     font-weight: bold;
     margin-bottom: -3px;
 }
@@ -309,8 +365,8 @@ img.select_style {
 }
 
 .enemy_icon {
-    width: 30px;
-    height: 30px;
+    width: 23px;
+    height: 23px;
 }
 
 .enemy_count {
@@ -330,13 +386,12 @@ img.select_style {
 .od_number {
     width: 48px;
     height: 48px;
-    margin-top: -48px;
     margin-left: 11px;
 }
 
 .od_text {
-    padding-top: 11px;
-    font-size: 14px;
+    padding-top: 5px;
+    font-size: 13px;
 }
 
 .od_minus {
@@ -348,14 +403,48 @@ img.select_style {
     background-color: #FF0;
 }
 
-.front_area .unit_skill {
-    font-size: 12px;
+.show_mode .front_area .unit_skill {
     width: 125px;
 }
 
-.back_area .unit_skill {
-    font-size: 12px;
+.show_mode .back_area .unit_skill {
     width: 72px;
+}
+
+.hide_mode .unit_skill {
+    width: 150px;
+}
+
+.show_mode .icon_list {
+    width: 72px;
+    overflow: hidden;
+}
+
+.hide_mode .icon_list {
+    width: 96px;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 1400px) {
+    .hide_mode .front_area .unit_skill {
+        width: 125px;
+    }
+
+    .hide_mode .back_area .unit_skill {
+        width: 72px;
+    }
+
+    .hide_mode .icon_list {
+        width: 72px;
+        overflow: hidden;
+    }
+    .back_area .icon_list {
+        display: none;
+    }
+}
+
+.unit_skill {
+    font-size: 12px;
 }
 
 .action_select {
@@ -389,10 +478,6 @@ img.select_style {
     height: 72px;
 }
 
-.front_area .unit_sp {
-    /* margin-right: 60px; */
-}
-
 .back_area .unit_sp {
     margin-right: 8px;
 }
@@ -407,27 +492,15 @@ img.unit_buff {
     height: 24px;
 }
 
-.back_area .icon_list {
-    display: none;
-}
-
-.icon_list {
-    width: 72px;
-}
-
 .enemy_count {
     line-height: 21px;
     font-size: 14px;
 }
 
 .enemy_icon_list {
-    width: 150px;
-}
-
-input[type='image'].select_target {
-    width: 64px;
-    height: 64px;
-    margin-left: 1px;
+    width: 290px;
+    margin-left: 5px;
+    margin-top: -1px;
 }
 
 .hidden-option {
@@ -451,8 +524,9 @@ input[type='image'].select_target {
         width: 145px;
     }
 }
-/* パッシブ画面 */
-.passive_container {
+
+/* スキル画面 */
+.skill_select_container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -465,11 +539,20 @@ input[type='image'].select_target {
     font-weight: bold;
 }
 
-.select_effect {
-    display: none;
+/* 閉じるボタンのスタイル */
+.modal-close {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    transition: transform 0.2s, color 0.2s;
 }
 
-.select_effect.active {
+.select_effect {
     display: block;
     text-align: center;
 }
@@ -477,6 +560,7 @@ input[type='image'].select_target {
 .effect_button {
     width: 150px;
     font-size: 16px;
+    margin: 2px;
 }
 
 .icon_buff_detail {
