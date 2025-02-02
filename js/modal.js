@@ -54,7 +54,7 @@ function setMember(select_list, select_chara_no, style_id, isTrigger) {
     localStorage.setItem(`troops_${select_troops}_${select_chara_no}`, style_id);
 
     // ステータスを読み込む
-    loadStyle(member_info);
+    loadStyle(member_info, style_info);
     select_list[select_chara_no] = member_info;
 
     if (typeof updateMember == "function") {
@@ -85,7 +85,7 @@ function saveStyle(member_info) {
 }
 
 // ステータスを読み込む
-function loadStyle(member_info) {
+function loadStyle(member_info, style_info) {
     let style_id = member_info.style_info.style_id;
     let save_item = localStorage.getItem("style_" + style_id);
     if (save_item) {
@@ -102,6 +102,11 @@ function loadStyle(member_info) {
             member_info.chain = Number(items[11]);
             member_info.init_sp = Number(items[12]);
         }
+    }
+    if (style_info.rarity == 2) {
+        member_info.limit_count = 10;
+    } else if (style_info.rarity == 3) {
+        member_info.limit_count = 20;
     }
 }
 
@@ -183,7 +188,7 @@ function setSubMember(sub_chara_no, style_id) {
     }
 
     // ステータスを読み込み
-    loadStyle(member_info);
+    loadStyle(member_info, style_info);
     sub_style_list[sub_chara_no] = member_info;
 
     // デバフのみを追加

@@ -134,7 +134,6 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode }) =
                 // 前衛と後衛の交換
                 if (place_no <= 2 && 3 <= old_place_no) {
                     old_unit.select_skill_id = old_unit.init_skill_id;
-                    new_unit.select_skill_id = 0;
                     new_unit.sp_cost = 0;
                     new_unit.buff_effect_select_type = null;
                     new_unit.buff_target_chara_id = null;
