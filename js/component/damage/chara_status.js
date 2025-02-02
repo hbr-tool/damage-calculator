@@ -24,6 +24,7 @@ const CharaStatus = () => {
         status = status > 1000 ? 999 : status;
         saveStatus(chara_no, item, status);
         updateStatus(chara_no);
+        select_style_list[chara_no][item] = status;
         setSelectStyle([...select_style_list]);
     }
 
