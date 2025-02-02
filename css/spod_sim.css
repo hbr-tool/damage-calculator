@@ -335,7 +335,9 @@ img.select_style {
         width: 80px;
     }
 }
+
 @media screen and (max-width: 768px) {
+
     .show_mode,
     .hide_mode {
         margin: auto;
@@ -438,6 +440,7 @@ img.select_style {
         width: 72px;
         overflow: hidden;
     }
+
     .back_area .icon_list {
         display: none;
     }
@@ -570,4 +573,28 @@ img.unit_buff {
 
 .detail_line_height {
     line-height: 1.2;
+}
+
+/* save&load */
+#btnSave,
+#btnLoad {
+    font-size: 14px;
+    width: 60px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+ul.save_load {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul.save_load li {
+    width: 100%;
+    padding: 8px;
+    margin: 3px 0;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    cursor: pointer;
+    user-select: none;
 }

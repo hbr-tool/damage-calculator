@@ -335,11 +335,11 @@ function setEventTrigger() {
     });
     // 前衛が3人以上の場合
     $(document).on("change", "#ability_front input", function (event) {
-        if (checkFrontAbility() > 2) {
-            alert("前衛は攻撃キャラクターを除いた2人まで設定できます。");
-            $(this).prop("checked", false);
-            return;
-        }
+        // if (checkFrontAbility() > 2) {
+        //     alert("前衛は攻撃キャラクターを除いた2人まで設定できます。");
+        //     $(this).prop("checked", false);
+        //     return;
+        // }
     });
     // 後衛が3人以上の場合
     $(document).on("change", "#ability_back input", function (event) {
@@ -719,6 +719,7 @@ function calcDamage() {
     // メンバー
     let chara_no = $("#attack_list option:selected").data("chara_no");
     let member_info = select_style_list[chara_no];
+    let chara_id = member_info.style_info.chara_id;
 
     // 闘志
     let fightingspirit = $("#fightingspirit").prop("checked") ? 20 : 0;
@@ -739,7 +740,7 @@ function calcDamage() {
         all_status_up = Number($("#all_status_up").val());
     }
     // パッシブ(能力固定上昇)
-    let passive_status_up = getSumAbilityEffectSize(25, true, member_info.style_info.chara_id);
+    let passive_status_up = getSumAbilityEffectSize(25, true, chara_id);
     // 闘志or士気
     let stat_up = (morale > fightingspirit ? morale : fightingspirit) + tears_of_dreams + all_status_up + passive_status_up;
     // 厄orハッキング
@@ -750,7 +751,7 @@ function calcDamage() {
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
     let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
-    let token = getSumTokenEffectSize();
+    let token = getSumTokenEffectSize(chara_id);
     let element_field = getSumEffectSize("element_field") / 100 + 1;
     let weak_physical = $("#enemy_physical_" + attack_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + attack_info.attack_element).val() / 100;
@@ -1119,8 +1120,12 @@ function getStrengthen(member_info, skill_buff) {
             strengthen += 30;
         }
         // 王の眼差し
-        if (ability_list.includes(507) && $("#ability_front11").prop("checked")) {
+        if (ability_list.includes(507) && $("#ability_all11").prop("checked")) {
             strengthen += 25;
+        }
+        // 思考加速
+        if (ability_list.includes(508) && $("#ability_all190").prop("checked")) {
+            strengthen += 15;
         }
         // 水光のゆらめき(あいな専用)
         if (member_info.style_info.chara_id == 24 && $("#skill_passive559").prop("checked")) {
@@ -1188,6 +1193,7 @@ function updatePenetrationResist() {
             case 137: // トゥルーペネトレーター+
             case 156: // バブルデストロイヤー
             case 163: // ロココ・デストラクション
+            case 95: // 三日月宗近+
                 week_value += 300;
                 break;
             default:
@@ -1650,12 +1656,13 @@ function addAbility(member_info) {
             .data("effect_size", effect_size)
             .data("limit_border", limit_border)
             .data("ability_id", ability_id)
+            .data("chara_id", chara_id)
             .data("chara_no", member_info.chara_no)
             .addClass("ability_element-" + ability_info.element)
             .addClass("ability")
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
-        if (ability_id == 505 || ability_id == 506 || ability_id == 507) {
+        if (ability_id == 505 || ability_id == 506 || ability_id == 507 || ability_id == 508) {
             input.addClass("strengthen_skill");
             fg_update = true;
         }
@@ -2102,8 +2109,7 @@ function getSumBuffEffectSize() {
     }
     sum_buff += getChainEffectSize("skill");
     // トークン
-    let token_count = Number($("#token_count").val());
-    sum_buff += token_count * getSumAbilityEffectSize(31);
+    sum_buff += getSumTokenAbilirySize(EFFECT_TOKEN_ATTACKUP);
     // 士気
     sum_buff += Number($("#morale_count").val()) * 5;
     // 永遠なる誓い
@@ -2164,13 +2170,33 @@ function getSumFunnelEffectList() {
 }
 
 // トークン効果量
-function getSumTokenEffectSize(buff_id, chara_no, skill_lv) {
+function getSumTokenEffectSize(chara_id) {
     // トークン
-    let token_count = Number($("#token_count").val());
+    let token_count = Number($(`#token_${chara_id}`).val());
     if (select_attack_skill.token_power_up == 1) {
         return 1 + token_count * 16 / 100;
     }
     return 1;
+}
+
+// トークンアビリティ取得
+function getSumTokenAbilirySize(effect_type) {
+    let sum = 0;
+    $("input[type=checkbox].ability:checked").each(function (index, value) {
+        if ($(value).parent().css("display") === "none") {
+            return true;
+        }
+        let ability_info = getAbilityInfo(Number($(value).data("ability_id")));
+        if (ability_info.effect_type == effect_type) {
+            let size = ability_info.effect_size;
+            let chara_id = Number($(value).data("chara_id"));
+            let token_count = Number($(`#token_${chara_id}`).val());
+            if (!isNaN(token_count)) {
+                sum += token_count * size;
+            }
+        }
+    });
+    return sum;
 }
 
 // 制圧戦のバイクパーツ取得
@@ -2349,6 +2375,7 @@ function getDestructionEffectSize(hit_count) {
     let grade_sum = getGradeSum();
     destruction_effect_size += getSumEffectSize("destruction_rete_up");
     destruction_effect_size += getSumAbilityEffectSize(5);
+    destruction_effect_size += getSumTokenAbilirySize(EFFECT_TOKEN_DAMAGERATEUP)
     destruction_effect_size += getEarringEffectSize("blast", 10 - hit_count);
     destruction_effect_size += getChainEffectSize("blast");
     // 制圧戦

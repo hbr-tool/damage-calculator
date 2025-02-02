@@ -130,7 +130,8 @@ img.sub_style {
 
 .status,
 .limit,
-.jewel {
+.jewel,
+.token {
     height: 22px;
     width: 60px;
     margin-left: 3px;

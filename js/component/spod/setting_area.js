@@ -40,24 +40,18 @@ const SettingAreaComponent = ({ }) => {
                 return;
             }
         }
-        // 初期化
-        turn_list = [];
-        user_operation_list = [];
-        battle_enemy_info = getEnemyInfo();
-        for (let i = 1; i <= 3; i++) {
-            battle_enemy_info[`physical_${i}`] = Number($(`#enemy_physical_${i}`).val());
-        }
-        for (let i = 0; i <= 5; i++) {
-            battle_enemy_info[`element_${i}`] = Number($(`#enemy_element_${i}`).val());
-        }
         procBattleStart();
     };
+
+    const [modalIsOpen, setModalIsOpen] = React.useState(false);
+    const openModal = () => setModalIsOpen(true);
+    const closeModal = () => setModalIsOpen(false);
 
     return (
         <div className="top_area">
             <div className="unit_setting_area">
-                <input className="w-20" defaultValue="注意事項" role="button" type="button" 
-                    onClick={() => {MicroModal.show('modal_explanation'); }} />
+                <input className="w-20" defaultValue="注意事項" role="button" type="button"
+                    onClick={openModal} />
                 <CharaSettingComponent />
             </div>
             <div>
@@ -65,11 +59,21 @@ const SettingAreaComponent = ({ }) => {
                 <DetailSettingComponent />
             </div>
             <div className="flex justify-center mt-2 text-sm">
-                <input id="is_overwrite" type="checkbox" onChange={(e) => {changeOverwrite(e)}} defaultChecked={is_overwrite} />
+                <input id="is_overwrite" type="checkbox" onChange={(e) => { changeOverwrite(e) }} defaultChecked={is_overwrite} />
                 <label className="checkbox01 text-sm" htmlFor="is_overwrite">
                     上書き確認
                 </label>
                 <input className="battle_start" defaultValue="戦闘開始" type="button" onClick={startBattle} />
+            </div>
+            <div>
+                <ReactModal
+                    isOpen={modalIsOpen}
+                    onRequestClose={closeModal}
+                    className={"modal-content modal-wide " + (modalIsOpen ? "modal-content-open" : "")}
+                    overlayClassName={"modal-overlay " + (modalIsOpen ? "modal-overlay-open" : "")}
+                >
+                    <Explanation />
+                </ReactModal>
             </div>
         </div>
     )

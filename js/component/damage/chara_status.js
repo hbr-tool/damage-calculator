@@ -144,6 +144,7 @@ const CharaStatus = () => {
                 <label className="label_status">知性</label>
                 <label className="label_status">運</label>
                 <label className="label_status">宝珠Lv</label>
+                <label className="label_status">トークン</label>
                 <label className="label_status">消費SP</label>
             </div>
             {select_style_list.map((value, index) => {
@@ -197,6 +198,11 @@ const CharaStatus = () => {
                         <select className="jewel" value={jewel} onChange={(e) => { changeJewelLv(index, e.target.value) }}>
                             {Array.from({length: 6 }, (_, i) => (
                                 <option value={i} key={`jewel_${i}`}>{i}</option>
+                            ))}
+                        </select>
+                        <select className="token" defaultValue="0" id={`token_${chara_id}`}>
+                            {Array.from({length: 11 }, (_, i) => (
+                                <option value={i} key={`token_${i}`}>{i}</option>
                             ))}
                         </select>
                         <label id={`sp_cost_${index}`}>{sp_cost}</label>

@@ -210,21 +210,6 @@ function loadStorage() {
     data = replaceCharaData(jsondata)
 }
 
-// 文字列を圧縮
-function compressString(inputString) {
-    const compressedData = pako.deflate(inputString);
-    const compressedString = btoa(String.fromCharCode.apply(null, compressedData));
-    return compressedString;
-}
-
-// 圧縮された文字列を解凍
-function decompressString(compressedString) {
-    const compressedDataBuffer = new Uint8Array(atob(compressedString).split('').map(function (c) { return c.charCodeAt(0); }));
-    const decompressedData = pako.inflate(compressedDataBuffer);
-    const decompressedString = new TextDecoder().decode(decompressedData);
-    return decompressedString;
-}
-
 // ダウンロード
 function downloadStringAsFile(content, filename) {
     const blob = new Blob([content], { type: 'text/plain' });

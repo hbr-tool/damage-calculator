@@ -1,12 +1,12 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [];
+const NOT_USE_STYLE = [36, 150];
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
 // 残ターン消費バフ
-// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば/チャーミングボイス/かき鳴らせキラーチューン/ジャムセッション
-const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568, 573, 575, 577];
+// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば/チャーミングボイス/かき鳴らせキラーチューン/ジャムセッション/蒼星のイリデッセンス
+const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568, 573, 575, 577, 586];
 
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
@@ -148,7 +148,7 @@ class turn_data {
             field: null,
             enemy_count: null,
             select_skill: this.unit_list.map(function (unit) {
-                return unit.blank ? {} : {skill_id: unit.init_skill_id};
+                return unit.blank ? {} : { skill_id: unit.init_skill_id };
             }),
             place_style: this.unit_list.map(function (unit) {
                 return unit.blank ? 0 : unit.style.style_info.style_id;
@@ -156,11 +156,11 @@ class turn_data {
             trigger_over_drive: false,
             selected_place_no: -1,
             kb_action: KB_NEXT_ACTION,
-            finish_action : this.finish_action,
-            end_drive_trigger_count : this.end_drive_trigger_count,
-            turn_number : this.turn_number,
-            additional_count : this.additional_count,
-            over_drive_number : this.over_drive_number,
+            finish_action: this.finish_action,
+            end_drive_trigger_count: this.end_drive_trigger_count,
+            turn_number: this.turn_number,
+            additional_count: this.additional_count,
+            over_drive_number: this.over_drive_number,
         }
     }
 
@@ -217,6 +217,7 @@ class turn_data {
         this.unitLoop(function (unit) {
             unit.over_drive_sp = sp_list[over_drive_level];
         });
+        this.abilityAction(ABILIRY_OD_START);
         this.trigger_over_drive = true;
     }
     removeOverDrive() {
@@ -567,6 +568,12 @@ class unit_data {
                     buff.rest_turn = -1;
                     self.buff_list.push(buff);
                     break;
+                case EFFECT_OVERDRIVE_SP: // ODSPアップ
+                    $.each(target_list, function (index, target_no) {
+                        let unit_data = getUnitData(turn_data, target_no);
+                        unit_data.over_drive_sp += ability.effect_size;
+                    });
+                    break;
                 case EFFECT_HEALSP: // SP回復
                     $.each(target_list, function (index, target_no) {
                         let unit_data = getUnitData(turn_data, target_no);
@@ -706,12 +713,35 @@ class buff_data {
     }
 }
 
-function setEventTrigger() {
-
-}
-
 /* 戦闘開始処理 */
 function procBattleStart() {
+    // 戦闘データ初期化
+    cleanBattleData();
+    // 初期データ作成
+    let turn_init = getInitBattleData();
+    // バトルエリアリフレッシュ
+    startBattle();
+    // ターンを進める
+    proceedTurn(turn_init, true);
+}
+
+// 戦闘データ初期化
+function cleanBattleData() {
+    // 初期化
+    turn_list = [];
+    user_operation_list = [];
+    battle_enemy_info = getEnemyInfo();
+    for (let i = 1; i <= 3; i++) {
+        battle_enemy_info[`physical_${i}`] = Number($(`#enemy_physical_${i}`).val());
+    }
+    for (let i = 0; i <= 5; i++) {
+        battle_enemy_info[`element_${i}`] = Number($(`#enemy_element_${i}`).val());
+    }
+}
+
+// 戦闘初期データ作成
+function getInitBattleData() {
+    // 初期データ作成
     let turn_init = new turn_data();
     let unit_list = [];
 
@@ -850,13 +880,9 @@ function procBattleStart() {
     // 戦闘開始アビリティ
     turn_init.abilityAction(ABILIRY_BATTLE_START);
     turn_init.setUserOperation();
-    // バトルエリアリフレッシュ
-    startBattle();
 
-    // ターンを進める
-    proceedTurn(turn_init, true);
+    return turn_init;
 }
-
 
 // メンバー読み込み時の固有処理
 function loadMember(select_chara_no, member_info) {
@@ -919,6 +945,115 @@ function returnTurn(seq_turn) {
 
     // 画面反映
     updateTurnList(seq_last_turn);
+}
+
+// スキルデータ更新
+const skillUpdate = (turn_data, skill_id, place_no) => {
+    const unit = turn_data.unit_list.filter(unit => unit.place_no === place_no)[0];
+    unit.select_skill_id = skill_id;
+    if (skill_id !== 0) {
+        unit.sp_cost = getSpCost(turn_data, getSkillData(skill_id), unit);
+    } else {
+        unit.sp_cost = 0;
+    }
+}
+
+// ターンデータ再生成
+const recreateTurnData = (turn_data, last_turn_operation) => {
+    // ユーザ操作リストのチェック
+    user_operation_list.forEach((item) => {
+        item.used = compereUserOperation(item, turn_data) <= 0;
+    })
+
+    while (compereUserOperation(turn_data.user_operation, last_turn_operation) < 0) {
+        // 現ターン処理
+        turn_data = deepClone(turn_data);
+        startAction(turn_data);
+        proceedTurn(turn_data, false);
+        // ユーザ操作の更新
+        updateUserOperation(turn_data);
+        // ユーザ操作をターンに反映
+        reflectUserOperation(turn_data);
+    }
+    // ユーザ操作リストの削除
+    user_operation_list = user_operation_list.filter((item) => item.used)
+    updateTurnList(turn_list);
+}
+
+// ユーザ操作の取得
+const updateUserOperation = (turn_data) => {
+    let filtered = user_operation_list.filter((item) =>
+        compereUserOperation(item, turn_data) == 0
+    );
+    let user_operation = turn_data.user_operation;
+    if (filtered.length === 0) {
+        turn_data.user_operation.kb_action = KB_NEXT_ACTION;
+        user_operation_list.push(turn_data.user_operation);
+        // 表示確認用
+        user_operation_list.sort((a, b) => compereUserOperation(a, b));
+    } else {
+        user_operation = filtered[0];
+        turn_data.user_operation = user_operation;
+    }
+    user_operation.used = true;
+}
+
+// ユーザ操作をターンに反映
+const reflectUserOperation = (turn_data) => {
+    // 配置変更
+    turn_data.unit_list.forEach((unit) => {
+        if (unit.blank) return;
+        let operation_place_no = turn_data.user_operation.place_style.findIndex((item) =>
+            item === unit.style.style_info.style_id);
+        if (turn_data.additional_turn) {
+            if (operation_place_no != unit.place_no) {
+                turn_data.user_operation.select_skill[unit.place_no].skill_id = unit.init_skill_id;
+                turn_data.user_operation.place_style[unit.place_no] = unit.style.style_info.style_id;
+            }
+            return;
+        }
+        unit.place_no = operation_place_no;
+    })
+    // オーバードライブ発動
+    if (turn_data.user_operation.trigger_over_drive && turn_data.over_drive_gauge > 100) {
+        turn_data.startOverDrive();
+    }
+    // スキル設定
+    turn_data.unit_list.forEach((unit) => {
+        if (unit.blank) return;
+        const skill = turn_data.user_operation.select_skill[unit.place_no];
+        unit.buff_target_chara_id = skill.buff_target_chara_id;
+        unit.buff_effect_select_type = skill.buff_effect_select_type;
+        skillUpdate(turn_data, turn_data.user_operation.select_skill[unit.place_no].skill_id, unit.place_no);
+    })
+    // OD再計算
+    turn_data.add_over_drive_gauge = getOverDrive(turn_data);
+    // 行動反映
+    if (turn_data.over_drive_gauge < 100) {
+        turn_data.user_operation.kb_action = KB_NEXT_ACTION;
+    }
+    // OD発動反映
+    turn_data.trigger_over_drive = turn_data.user_operation.trigger_over_drive;
+}
+
+// ユーザ操作の比較
+const compereUserOperation = (comp1, comp2) => {
+    if (comp1.turn_number !== comp2.turn_number) {
+        return comp1.turn_number - comp2.turn_number;
+    }
+    if (comp1.finish_action !== comp2.finish_action) {
+        return comp1.finish_action - comp2.finish_action;
+    }
+    if (comp1.end_drive_trigger_count !== comp2.end_drive_trigger_count) {
+        return comp1.end_drive_trigger_count - comp2.end_drive_trigger_count;
+    }
+    if (comp1.over_drive_number !== comp2.over_drive_number) {
+        return comp1.over_drive_number - comp2.over_drive_number;
+    }
+    if (comp1.additional_count !== comp2.additional_count) {
+        return comp1.additional_count - comp2.additional_count;
+    }
+    return 0;
 }
 
 // バフアイコン取得
@@ -1309,6 +1444,10 @@ function getSpCost(turn_data, skill_info, unit) {
     if (turn_data.over_drive_max_turn > 0) {
         // 獅子に鰭
         if (checkAbilityExist(unit.ability_other, 1521)) {
+            sp_cost_down = 2;
+        }
+        // 飛躍
+        if (checkAbilityExist(unit.ability_other, 1525)) {
             sp_cost_down = 2;
         }
     }

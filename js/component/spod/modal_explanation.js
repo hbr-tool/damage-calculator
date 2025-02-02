@@ -81,7 +81,3 @@ const Explanation = () => {
         </>
     )
 };
-$(function () {
-    const rootElement = document.getElementById('explanation');
-    ReactDOM.createRoot(rootElement).render(<Explanation />);
-});

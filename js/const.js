@@ -60,6 +60,7 @@ const EFFECT_DAMAGERATEUP = 5; // 破壊率上昇量アップ
 const EFFECT_FUNNEL = 6; // 連撃数アップ
 const EFFECT_FIELD_DEPLOYMENT = 7; // フィールド展開
 const EFFECT_CHARGE = 8; // チャージ
+const EFFECT_OVERDRIVE_SP = 9; // ODSPアップ
 const EFFECT_DEFFENCEUP = 11; // 防御力アップ
 const EFFECT_HEALSP = 12; // SP回復
 const EFFECT_HEALDP = 13; // DP回復
@@ -77,7 +78,8 @@ const EFFECT_FIELD_STRENGTHEN = 27; // フィールド強化
 const EFFECT_BUFF_STRENGTHEN = 28; // バフ強化
 const EFFECT_TOKEN_UP = 30; // トークンアップ
 const EFFECT_TOKEN_ATTACKUP = 31; // トークン1つにつき攻撃力アップ
-const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき 防御力アップ
+const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき防御力アップ
+const EFFECT_TOKEN_DAMAGERATEUP = 33; // トークン1つにつき破壊率アップ
 const EFFECT_NEGATIVE = 51; // ネガティブ
 
 /** フィールド */
@@ -133,6 +135,8 @@ const CONDITIONS_FRAGILE = 12; // 脆弱中
 const CONDITIONS_TARGET_COVER = 13; // 集中・挑発状態
 const CONDITIONS_HAS_CHARGE = 21; // チャージ中
 const CONDITIONS_HAS_SHADOW = 22; // 影分身中
+const CONDITIONS_HAS_DODGE = 23; // 回避状態
+const CONDITIONS_TOKEN_OVER_4 = 24; // トークン4つ以上
 const CONDITIONS_31A_OVER_3 = 31; // 31A3人以上
 const CONDITIONS_31E_OVER_3 = 35; // 31E3人以上
 const CONDITIONS_FIELD_NOT_FIRE = 41; // 火属性以外フィールド
@@ -161,8 +165,8 @@ const ENEMY_CLASS_EVENT_PRISMATIC = 13; // イベントプリズム
 const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
 
 /** 貫通クリティカル */ 
-const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163];
+const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95];
 /** 単独発動バフ */
-const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 2606, 2607, 1033, 1113];
+const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 216, 217, 2606, 2607, 1033, 1113];
 /** 単独発動アビリティ */
 const ALONE_ACTIVATION_ABILITY_LIST = [12, 407, 408];

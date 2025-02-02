@@ -1,3 +1,50 @@
+/* モーダル本体のアニメーション */
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 90%;
+  overflow-y: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-wide {
+  min-width: 340px;
+  width: 50%;
+}
+
+.modal-narrwow {
+  min-width: 340px;
+  max-width: 500px
+}
+
+/* モーダルが開いたとき */
+.modal-content-open {
+  opacity: 1;
+}
+
+/* オーバーレイ（背景） */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(123, 123, 123, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-overlay-open {
+  opacity: 1;
+}
+
 /**************************\
   Basic Modal Styles
 \**************************/
