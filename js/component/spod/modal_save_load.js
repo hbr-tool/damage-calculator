@@ -13,6 +13,7 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             }
             let compress = compressString(JSON.stringify(save_data));
             localStorage.setItem(`sim_data_${i}`, compress);
+            handleClose();
         } else if (mode == "load") {
             let jsonstr = localStorage.getItem(`sim_data_${i}`);
             let save_data = []
