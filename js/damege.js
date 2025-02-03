@@ -1158,6 +1158,8 @@ function resetEnemyResist() {
     let element_element = enemy_info["element_" + element];
     $("#enemy_element_" + element).val(Math.floor(element_element));
     setEnemyElement("#enemy_element_" + element, Math.floor(element_element), null, null);
+    // 貫通クリティカル
+    updatePenetrationResist();
 }
 
 // 敵耐性変更
@@ -1181,9 +1183,9 @@ function updatePenetrationResist() {
     if (attack_info === undefined) {
         return false
     }
+    let physical = attack_info.attack_physical;
     // 貫通クリティカル
     if (PENETRATION_ATTACK_LIST.includes(attack_info.attack_id)) {
-        let physical = attack_info.attack_physical;
         let week_value = 100;
         switch (attack_info.attack_id) {
             case 135: // 華麗なるファントム・シーフ
@@ -1203,6 +1205,9 @@ function updatePenetrationResist() {
         let physical_init = Number($(`#enemy_physical_${physical}`).data("init")) || 0;
         setEnemyElement("#enemy_element_0", null, 100 - element_init, null);
         setEnemyElement(`#enemy_physical_${physical}`, null, week_value - physical_init, null);
+    } else {
+        setEnemyElement("#enemy_element_0", null, 0, null);
+        setEnemyElement(`#enemy_physical_${physical}`, null, 0, null);
     }
 }
 
