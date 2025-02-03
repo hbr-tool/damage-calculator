@@ -1195,8 +1195,10 @@ function updatePenetrationResist() {
             case 137: // トゥルーペネトレーター+
             case 156: // バブルデストロイヤー
             case 163: // ロココ・デストラクション
-            case 95: // 三日月宗近+
                 week_value += 300;
+                break;
+            case 95: // 三日月宗近+
+                week_value += 200;
                 break;
             default:
                 break;
