@@ -782,7 +782,11 @@ function getInitBattleData() {
                 obj.skill_active == 1 &&
                 !member_info.exclusion_skill_list.includes(obj.skill_id)
             )
-            unit.init_skill_id = 1;
+            if (unit.style.style_info.role == ROLE_ADMIRAL) {
+                unit.init_skill_id = 4; // 指揮行動
+            } else {
+                unit.init_skill_id = 1; // 通常攻撃
+            }
             ["0", "00", "1", "3", "5", "10"].forEach(num => {
                 if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {
                     let ability_info = getAbilityInfo(member_info.style_info[`ability${num}`]);

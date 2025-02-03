@@ -7,6 +7,8 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode }) =
     // 再描画
     const reRender = (user_operation, is_next_influence) => {
         isNextInfluence.current = is_next_influence;
+        // OD再計算
+        turn.add_over_drive_gauge = getOverDrive(turn);
         setTurnData({ ...turnData, user_operation: user_operation });
     }
 
@@ -215,7 +217,8 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode }) =
                     <div>
                         <select className="action_select" value={turnData.user_operation.kb_action} onChange={(e) => chengeAction(e)}>
                             <option value={KB_NEXT_ACTION}>行動開始</option>
-                            {turn.over_drive_gauge >= 100 ? <option value={KB_NEXT_ACTION_OD}>行動開始+OD</option> : null}
+                            {turn.over_drive_gauge + turn.add_over_drive_gauge >= 100 &&
+                                turn.over_drive_max_turn == 0 ? <option value={KB_NEXT_ACTION_OD}>行動開始+OD</option> : null}
                         </select>
                         <div
                             className="flex"
