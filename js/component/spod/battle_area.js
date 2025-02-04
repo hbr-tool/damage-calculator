@@ -5,6 +5,9 @@ const BattleAreaComponent = () => {
 
     const [hideMode, setHideMode] = React.useState(false);
 
+    const [isCapturing, setIsCapturing] = React.useState(false);  // キャプチャ中の状態を管理
+    const elementRef = React.useRef(null); // キャプチャ対象の要素参照
+
     window.startBattle = () => {
         setKey(key + 1);
     }
@@ -13,15 +16,18 @@ const BattleAreaComponent = () => {
     };
 
     const clickDownload = () => {
-        const element = document.getElementById("battle_display");
-        domtoimage.toPng(element)
-            .then(dataUrl => {
-                const link = document.createElement("a");
-                link.href = dataUrl;
-                link.download = "capture.png";
-                link.click();
-            })
-            .catch(error => console.error("Error capturing image", error));
+        setIsCapturing(true); // キャプチャ前に表示切替
+        setTimeout(() => {
+            domtoimage.toPng(elementRef.current)
+                .then(dataUrl => {
+                    const link = document.createElement("a");
+                    link.href = dataUrl;
+                    link.download = "capture.png";
+                    link.click();
+                })
+                .catch(error => console.error("Error capturing image", error))
+                .finally(() => setIsCapturing(false)); // キャプチャ後に元に戻す
+        }, 100);  // DOMの更新が反映されるまで少し待つ
     }
 
     const changeHideMode = (e) => {
@@ -62,9 +68,9 @@ const BattleAreaComponent = () => {
                             <input type="button" id="btnDownload" value="画像として保存" onClick={clickDownload} />
                         </div>
                     </div>
-                    <div id="battle_display" className="text-left">
+                    <div id="battle_display" className="text-left" ref={elementRef}>
                         {turn_list.map((turn, index) => {
-                            return <TurnDataComponent turn={turn} index={index} key={`turn${index}-${key}`} is_last_turn={seq_last_turn == index} hideMode={hideMode} />
+                            return <TurnDataComponent turn={turn} index={index} key={`turn${index}-${key}`} is_last_turn={seq_last_turn == index} hideMode={hideMode} isCapturing={isCapturing}/>
                         })}
                     </div>
                 </div>

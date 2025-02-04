@@ -148,7 +148,10 @@ class turn_data {
             field: null,
             enemy_count: null,
             select_skill: this.unit_list.map(function (unit) {
-                return unit.blank ? {} : { skill_id: unit.init_skill_id };
+                if (unit.blank) {
+                    return null;
+                }
+                return { skill_id: (unit.place_no < 3 ? unit.init_skill_id : SKILL_NONE) };
             }),
             place_style: this.unit_list.map(function (unit) {
                 return unit.blank ? 0 : unit.style.style_info.style_id;
@@ -328,7 +331,7 @@ class unit_data {
         if (this.place_no < 3 && (!additional_turn || this.additional_turn)) {
             this.select_skill_id = this.init_skill_id;
         } else {
-            this.select_skill_id = 0;
+            this.select_skill_id = SKILL_NONE;
         }
     }
     unitTurnProceed(turn_data) {

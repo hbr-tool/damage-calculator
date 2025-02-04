@@ -12,7 +12,7 @@ const UnitSp = ({ unit }) => {
     return <div className={className}>{unit_sp + (unit.add_sp > 0 ? ("+" + unit.add_sp) : "")}</div>;
 }
 
-const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, trigger_over_drive, chengeSkill }) => {
+const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, trigger_over_drive, chengeSkill, isCapturing }) => {
     let skill_list = unit.skill_list
     if (place_no < 3) {
         skill_list = skill_list.filter(skill => {
@@ -52,7 +52,7 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
     let not_action = (recoil.length > 0 || !unit.style || (turn.additional_turn && !unit.additional_turn && place_no <= 2))
     let className = "unit_skill " + (not_action ? "invisible" : "");
     return (<select className={className} onChange={(e) => handleChangeSkill(Number(e.target.value), place_no)} value={unit.select_skill_id} >
-        {skill_list.map(skill => {
+        {skill_list.filter((obj) => obj.skill_id == unit.select_skill_id || !isCapturing).map(skill => {
             let text = skill.skill_name;
             let sp_cost = 0;
             if (skill.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
@@ -78,10 +78,11 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
 }, (prevProps, nextProps) => {
     return prevProps.turn === nextProps.turn && prevProps.unit === nextProps.unit
         && prevProps.place_no === nextProps.place_no && prevProps.select_skill_id === nextProps.select_skill_id
-        && prevProps.trigger_over_drive === nextProps.trigger_over_drive;
+        && prevProps.trigger_over_drive === nextProps.trigger_over_drive
+        && prevProps.isCapturing === nextProps.isCapturing;
 });
 
-const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeSelectUnit, hideMode }) => {
+const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeSelectUnit, hideMode, isCapturing }) => {
     const filterUnit = turn.unit_list.filter(unit => unit.place_no === place_no);
     if (filterUnit.size === 0) {
         return null;
@@ -97,15 +98,13 @@ const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeS
     };
 
     let loop_limit = 3;
-    let icon_width = 72;
     if (hideMode) {
         loop_limit = 4;
-        icon_width = 96;
     }
     let className = "unit_select " + (place_no == selected_place_no ? "unit_selected" : "");
     return (
         <div className={className} onClick={(e) => { handleSelectUnit(e, place_no) }}>
-            <UnitSkillSelect turn={turn} unit={unit} place_no={place_no} chengeSkill={chengeSkill} select_skill_id={unit.select_skill_id} trigger_over_drive={turn.trigger_over_drive}/>
+            <UnitSkillSelect turn={turn} unit={unit} place_no={place_no} chengeSkill={chengeSkill} select_skill_id={unit.select_skill_id} trigger_over_drive={turn.trigger_over_drive} isCapturing={isCapturing} />
             <div className="flex">
                 <div>
                     <img className="unit_style" src={icon} />

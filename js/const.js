@@ -164,6 +164,12 @@ const ENEMY_CLASS_SERAPH_ENCOUNTER = 12; // セラフ遭遇戦
 const ENEMY_CLASS_EVENT_PRISMATIC = 13; // イベントプリズム
 const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
 
+/** 汎用スキル */
+const SKILL_NORMAL_ATTACK = 1; // 通常攻撃
+const SKILL_NONE = 2; // 無し
+const SKILL_PURSUIT = 3; // 追撃
+const SKILL_COMMAND_ACTION = 4; // 指揮行動
+
 /** 貫通クリティカル */ 
 const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95];
 /** 単独発動バフ */
