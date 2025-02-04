@@ -601,6 +601,7 @@ function loadMember(select_chara_no, member_info, isTrigger) {
     addBuffList(member_info, 0);
     addAbility(member_info);
     addPassive(member_info);
+    $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
 
     if (isTrigger) {
         $("#attack_list").trigger("change");
