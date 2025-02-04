@@ -935,9 +935,7 @@ function initTurn(turn_data) {
     } else {
         let kb_action = turn_data.user_operation.kb_action;
         turn_data.turnProceed(kb_action);
-        if (kb_action == KB_NEXT_ACTION_OD) {
-            turn_data.abilityAction(ABILIRY_OD_START);
-        } else {
+        if (kb_action == KB_NEXT_ACTION) {
             turn_data.abilityAction(ABILIRY_ACTION_START);
         }
     }
