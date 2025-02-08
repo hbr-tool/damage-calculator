@@ -2039,7 +2039,16 @@ const sortActionSeq = (turn_data) => {
     turn_data.unit_list.forEach((unit, index) => {
         let skill_id = unit.select_skill_id;
         let place_no = unit.place_no;
+        // 前衛以外
         if (skill_id == 0 || 3 <= place_no) {
+            return true;
+        }
+        // 追加ターン以外
+        if (turn_data.additional_turn && !unit.additional_turn) {
+            return true;
+        }
+        // 行動不能
+        if (checkBuffExist(unit.buff_list, BUFF_RECOIL)) {
             return true;
         }
         let skill_info = getSkillData(skill_id);
