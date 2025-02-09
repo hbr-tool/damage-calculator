@@ -1,6 +1,6 @@
 const UnitSp = ({ unit }) => {
     let unit_sp;
-    if (unit.sp_cost == 99) {
+    if (unit.sp_cost >= 90) {
         unit_sp = 0;
     } else {
         unit_sp = unit.sp + unit.over_drive_sp;
