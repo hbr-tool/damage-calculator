@@ -126,12 +126,12 @@ function getData(isBadge) {
 }
 function getData1(isBadge) {
     return data.filter(function (item) {
-        return item["chara_id"] <= 24 || 48 < item["chara_id"];
+        return item["chara_id"] <= 24 || 100 < item["chara_id"];
     });
 }
 function getData2() {
     return data.filter(function (item) {
-        return item["chara_id"] > 24 && item["chara_id"] <= 48;
+        return item["chara_id"] > 24 && item["chara_id"] <= 99;
     });
 }
 
@@ -139,7 +139,7 @@ function getData2() {
 function replaceCharaData(jsondata) {
     let edited_chara_data = JSON.parse(JSON.stringify(chara_data.filter(function (chara) {
         // chara_idが500以上のものを排除
-        return chara.chara_id < 500;
+        return chara.chara_id < 500 && chara.chara_id != 92 && chara.chara_id != 93;
     })));
 
     // chara_dataのループを行う
@@ -350,7 +350,7 @@ let baseColumns = [
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
             let chara_id = Number(rowData["chara_id"]);
-            if ((chara_id < 100 && chara_id % 6 == 0) || chara_id == 107) {
+            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 ||chara_id == 93 ||chara_id == 107) {
                 $(td).addClass("underLine");
             }
         },
@@ -812,8 +812,8 @@ function getTitleColumns() {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 let rowData = instance.getSourceData()[row];
                 let chara_id = Number(rowData["chara_id"]);
-                if ((chara_id < 100 && chara_id % 6 == 0) || chara_id == 107) {
-                    $(td).addClass("underLine");
+                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 ||chara_id == 93 ||chara_id == 107) {
+                        $(td).addClass("underLine");
                 }
             },
             width: 35,

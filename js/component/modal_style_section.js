@@ -10,12 +10,12 @@ const StyleSelectComponent = () => {
     });
     const PHYSICAL_LIST = { "1": "slash", "2": "stab", "3": "strike" };
     const ELEMENT_LIST = { "0": "none", "1": "fire", "2": "ice", "3": "thunder", "4": "light", "5": "dark" };
-    const ROLE_LIST = { "1": "ATTACKER", "2": "BREAKER", "3": "BLASTER", "4": "HEALER", "5": "BUFFER", "6": "DEBUFFER", "7": "DEFENDER", "8": "ADMIRAL" };
+    const ROLE_LIST = { "1": "ATTACKER", "2": "BREAKER", "3": "BLASTER", "4": "HEALER", "5": "BUFFER", "6": "DEBUFFER", "7": "DEFENDER", "8": "ADMIRAL", "9": "RIDER" };
     const RARITY_LIST = { "1": "IconRaritySS", "2": "IconRarityS", "3": "IconRarityA" };
     const TROOP_LIST = {
         "31A": "DioramaStamp31a", "31B": "DioramaStamp31b", "31C": "DioramaStamp31c",
         "31D": "DioramaStamp31d", "31E": "DioramaStamp31e", "31F": "DioramaStamp31f", "31X": "DioramaStamp31x",
-        "30G": "DioramaStamp30g", "AB!": "angelbeats"
+        "SRP": "seraphIcon", "30G": "DioramaStamp30g", "AB!": "angelbeats" 
     };
 
     // 外すボタン
@@ -84,7 +84,7 @@ const StyleSelectComponent = () => {
                     />)
                 })}
             </div>
-            <div className="flex flex-wrap ml-2">
+            <div className="flex flex-wrap justify-center">
                 {Object.keys(ROLE_LIST).map(key => {
                     let opacity = (narrowStyle.role == null || key == narrowStyle.role) ? "" : "translucent";
                     let className = `role ${opacity}`

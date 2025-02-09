@@ -1102,6 +1102,10 @@ function getStrengthen(member_info, skill_buff) {
         if (ability_list.includes(505) && $("#ability_all463").prop("checked")) {
             strengthen += 30;
         }
+        // 自慢のフロートバイク
+        if (ability_list.includes(509) && $("#ability_all910").prop("checked")) {
+            strengthen += 25;
+        }
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
     let defense_down = [BUFF_DEFENSEDOWN, BUFF_ELEMENT_DEFENSEDOWN,
@@ -1199,6 +1203,7 @@ function updatePenetrationResist() {
                 week_value += 300;
                 break;
             case 95: // 三日月宗近+
+            case 2179: // ネオンバースト
                 week_value += 200;
                 break;
             default:
@@ -1670,7 +1675,7 @@ function addAbility(member_info) {
             .addClass("ability")
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
-        if (ability_id == 505 || ability_id == 506 || ability_id == 507 || ability_id == 508) {
+        if (ability_id == 505 || ability_id == 506 || ability_id == 507 || ability_id == 508 || ability_id == 509) {
             input.addClass("strengthen_skill");
             fg_update = true;
         }

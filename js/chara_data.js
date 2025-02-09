@@ -47,6 +47,9 @@ let chara_data = [
     {"chara_id":46,"chara_name":"菅原千恵","chara_short_name":"菅原","troops":"30G","physical":3,"pursuit":3},
     {"chara_id":47,"chara_name":"小笠原緋雨","chara_short_name":"緋雨","troops":"30G","physical":2,"pursuit":1},
     {"chara_id":48,"chara_name":"蔵里見","chara_short_name":"蔵","troops":"30G","physical":1,"pursuit":4},
+    {"chara_id":91,"chara_name":"七瀬七海","chara_short_name":"七海","troops":"SRP","physical":2,"pursuit":1},
+    {"chara_id":92,"chara_name":"手塚咲","chara_short_name":"手塚","troops":"SRP","physical":0,"pursuit":0},
+    {"chara_id":93,"chara_name":"浅見真紀子","chara_short_name":"浅見","troops":"SRP","physical":0,"pursuit":0},
     {"chara_id":101,"chara_name":"立華かなで","chara_short_name":"かなで","troops":"AB!","physical":1,"pursuit":2},
     {"chara_id":102,"chara_name":"仲村ゆり","chara_short_name":"ゆり","troops":"AB!","physical":2,"pursuit":1},
     {"chara_id":103,"chara_name":"入江みゆき","chara_short_name":"みゆき","troops":"AB!","physical":3,"pursuit":3},
@@ -54,5 +57,5 @@ let chara_data = [
     {"chara_id":105,"chara_name":"関根しおり","chara_short_name":"しおり","troops":"AB!","physical":1,"pursuit":4},
     {"chara_id":106,"chara_name":"芳岡ユイ","chara_short_name":"ユイ","troops":"AB!","physical":1,"pursuit":4},
     {"chara_id":107,"chara_name":"岩沢雅美","chara_short_name":"岩沢","troops":"AB!","physical":2,"pursuit":3},
-    {"chara_id":501,"chara_name":"七瀬七海","chara_short_name":"七海","troops":"HEA","physical":0,"pursuit":0},    
+    {"chara_id":501,"chara_name":"七瀬七海","chara_short_name":"七海","troops":"HEA","physical":0,"pursuit":0},     
 ];

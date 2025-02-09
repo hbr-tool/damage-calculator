@@ -3,7 +3,7 @@
 /* ---------------------------- */
 .container_style {
   border-top: 5px solid #5bc8ac;
-  max-width: 690px;
+  max-width: 800px;
   height: 90%;
   overflow-y: hidden;
 }
@@ -43,7 +43,7 @@
   margin-right: auto;
   padding-top: 10px;
   height: 100%;
-  max-width: 690px;
+  max-width: 800px;
   width: 80vw;
 }
 

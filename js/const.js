@@ -81,6 +81,7 @@ const EFFECT_TOKEN_ATTACKUP = 31; // トークン1つにつき攻撃力アップ
 const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき防御力アップ
 const EFFECT_TOKEN_DAMAGERATEUP = 33; // トークン1つにつき破壊率アップ
 const EFFECT_NEGATIVE = 51; // ネガティブ
+const EFFECT_HEALEP = 52; // EP回復
 
 /** フィールド */
 const FIELD_NORMAL = 0; // 通常
@@ -171,8 +172,8 @@ const SKILL_PURSUIT = 3; // 追撃
 const SKILL_COMMAND_ACTION = 4; // 指揮行動
 
 /** 貫通クリティカル */ 
-const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95];
+const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95, 2179];
 /** 単独発動バフ */
-const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 216, 217, 2606, 2607, 1033, 1113];
+const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 216, 217, 221, 222, 2606, 2607, 1033, 1034, 1113];
 /** 単独発動アビリティ */
 const ALONE_ACTIVATION_ABILITY_LIST = [12, 407, 408];
