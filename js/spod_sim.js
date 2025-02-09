@@ -415,7 +415,7 @@ class unit_data {
         });
     }
     payCost() {
-        if (this.sp_cost == 99) {
+        if (this.sp_cost >= 90) {
             this.sp = 0;
             this.over_drive_sp = 0;
         } else {
