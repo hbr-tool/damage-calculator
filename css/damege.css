@@ -195,22 +195,17 @@ img.sub_style {
 
 #enemy_select_label {
     width: 50px;
-    ;
 }
 
 #enemy_class {
+    margin-left: 10px;
     width: 120px;
     ;
 }
 
 #enemy_list {
-    min-width: 100px;
-    max-width: 260px;
-}
-
-#enemy_list.short {
     min-width: 150px;
-    width: 150px;
+    max-width: 240px;
 }
 
 .surround_area {
@@ -225,13 +220,8 @@ img.sub_style {
         width: 70px;
     }
 
-    #enemy_class {
-        width: 110px;
-        ;
-    }
-
     #enemy_list {
-        max-width: 240px;
+        max-width: 190px;
     }
 }
 
@@ -300,6 +290,7 @@ input[type="button"]#enemy_save {
 }
 
 @media screen and (max-width: 768px) {
+
     #enemy_stat,
     #enemy_destruction_limit,
     #enemy_destruction_rate,
@@ -654,21 +645,8 @@ input[type="button"].durability_reflection {
 }
 
 #half_tab>div {
-    display: none;
     border: 1px solid #333;
     padding: 0.5rem;
-}
-
-#half_tab_1:checked~#half_content_1 {
-    display: block;
-}
-
-#half_tab_2:checked~#half_content_2 {
-    display: block;
-}
-
-#half_tab_3:checked~#half_content_3 {
-    display: block;
 }
 
 @media screen and (max-width: 430px) {

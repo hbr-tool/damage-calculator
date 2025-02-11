@@ -37,6 +37,11 @@
   <script type="text/babel" src="js/component/modal_style_section.js"></script>
   <script type="text/babel" src="js/component/style_list.js"></script>
   <script type="text/babel" src="js/component/damage/chara_status.js"></script>
+  <script type="text/babel" src="js/component/damage/content_area.js"></script>
+  <script type="text/babel" src="js/component/damage/score_setting.js"></script>
+  <script type="text/babel" src="js/component/damage/bike_parts.js"></script>
+  <script type="text/babel" src="js/component/damage/hard_layer.js"></script>
+  <script type="text/babel" src="js/component/enemy_list.js"></script>
   <script src="js/header.js"></script>
   <script src="js/common.js"></script>
   <script src="js/const.js"></script>
@@ -55,7 +60,6 @@
   <script>
     var chara_no = -1;
     var type_physical = ["", "slash", "stab", "strike"];
-    let tears_of_dreams_list = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20];
     var type_element = ["none", "fire", "ice", "thunder", "light", "dark"];
     var select_attack_skill;
     var open_damage_detail;
@@ -85,25 +89,7 @@
       "permanent_element_down",
     ];
     const DP_GAUGE_COUNT = 4;
-    const BIKE_PARTS_LIST = ["無し(その他)", "攻撃＋", "クリティカル率＋", "チャージ", "敵防御ダウン", "攻撃＋＋", "心眼(改)", "クリティカル率ダメージ＋", "連撃＋", "破壊率＋", 
-                            "攻撃＋改", "クリティカル率＋改", "敵防御ダウン改", "攻撃＋＋改", "クリティカル率ダメージ＋改", "連撃＋改", "破壊率＋改"];
     $(function () {
-      // スコアタレベル
-      var selectOptions = '';
-      BIKE_PARTS_LIST.forEach(function (value, index) {
-        selectOptions += '<option value="' + index + '">' + value + '</option>';
-      });
-      $('#bike_parts_1').html(selectOptions);
-      $('#bike_parts_2').html(selectOptions);
-      $('#bike_parts_3').html(selectOptions);
-
-      // スコアタレベル
-      var selectOptions = '';
-      for (var i = 140; i >= 101; i--) {
-        selectOptions += '<option value="' + i + '">' + i + '</option>';
-      }
-      $('#score_lv').html(selectOptions);
-
       // 自由入力取得
       for (let i = 0; i < 10; i++) {
         let free_enemy = localStorage.getItem("free_enemy_" + i);
@@ -111,15 +97,6 @@
           updateEnemyStatus(i, JSON.parse(free_enemy));
         }
       }
-      // 敵情報設定
-      let enemy_class = localStorage.getItem("enemy_class");
-      enemy_class = enemy_class ? enemy_class : "1";
-      $("#enemy_class").val(enemy_class);
-      createEnemyList(Number(enemy_class));
-      let enemy_list = localStorage.getItem("enemy_list");
-      enemy_list = enemy_list ? enemy_list : "1";
-      $("#enemy_list").val(enemy_list);
-      setEnemyStatus();
 
       // イベント設定
       setEventTrigger();
@@ -164,7 +141,8 @@
                   for="skill_special_display">EXスキル以外を非表示にする</label>
               </div>
               <!-- バーチカルフォース/パドマ・ナーチュナー/花舞う、可憐のフレア/プレゼント・フォー・ユー専用 -->
-              <div class="skill_unique attack_attack_id-115 attack_attack_id-2167 attack_attack_id-136 attack_attack_id-166 hidden">
+              <div
+                class="skill_unique attack_attack_id-115 attack_attack_id-2167 attack_attack_id-136 attack_attack_id-166 hidden">
                 <div class="flex">
                   自身のDP
                   <div class="dp_gauge">
@@ -199,174 +177,7 @@
               </div>
             </div>
           </div>
-          <div class="enemy_select adjust_width mx-auto mt-2">
-            <div>
-              <label id="enemy_select_label">敵選択</label>
-              <select id="enemy_class">
-                <option value="1">異時層</option>
-                <option value="2">オーブボス</option>
-                <option value="3">時計塔(N)</option>
-                <option value="4">時計塔(H)</option>
-                <option value="5">宝珠の迷宮</option>
-                <option value="6">スコアアタック</option>
-                <option value="7">プリズムバトル</option>
-                <option value="8">恒星掃戦線</option>
-                <option value="9">イベント隠しボス</option>
-                <option value="10">時の修練場</option>
-                <option value="11">制圧戦</option>
-                <option value="12">セラフ遭遇戦</option>
-                <option value="13">イベントプリズム</option>
-                <option value="99">自由入力</option>
-              </select>
-              <select id="enemy_list">
-              </select>
-              <input id="enemy_save" type="button" value="保存" hidden>
-              <select id="score_lv" hidden></select>
-            </div>
-          </div>
-          <div class="score_attack mx-auto">
-            <div id="half_tab">
-              <input type="radio" name="rule_tab" id="half_tab_1" checked>
-              <label for="half_tab_1" id="label_half_tab_1">1週目</label>
-              <input type="radio" name="rule_tab" id="half_tab_2">
-              <label for="half_tab_2" id="label_half_tab_2">2週目</label>
-              <input type="radio" name="rule_tab" id="half_tab_3">
-              <label for="half_tab_3" id="label_half_tab_3">3週目</label>
-              <span id="score_turn">
-                ターン数
-                <select id="turn_count" class="text-right w-12">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                  <option value="13">13</option>
-                  <option value="14">14</option>
-                  <option value="15">15</option>
-                  <option value="16">16</option>
-                  <option value="17">17</option>
-                  <option value="18">18</option>
-                  <option value="19">19</option>
-                  <option value="20">20</option>
-                  <option value="21">21</option>
-                  <option value="22">22</option>
-                  <option value="23">23</option>
-                  <option value="24">24</option>
-                  <option value="25">25</option>
-                  <option value="26">26</option>
-                  <option value="27">27</option>
-                  <option value="28">28</option>
-                  <option value="29">29</option>
-                  <option value="30">30</option>
-                </select>
-              </span>
-              <div id="half_content_1"></div>
-              <div id="half_content_2"></div>
-              <div id="half_content_3"></div>
-            </div>
-          </div>
-          <div class="hard_layer adjust_width">
-            <div class="flex ml-0 mt-2">
-              <label class="mt-3">他部隊選択</label>
-              <select id="sub_troops" class="mt-3">
-                <option value="-1" selected>なし</option>
-                <option value="0">部隊0</option>
-                <option value="1">部隊1</option>
-                <option value="2">部隊2</option>
-                <option value="3">部隊3</option>
-                <option value="4">部隊4</option>
-                <option value="5">部隊5</option>
-                <option value="6">部隊6</option>
-                <option value="7">部隊7</option>
-                <option value="8">部隊8</option>
-              </select>
-              <div id="sub_chara_container_0"><img class="sub_style" id="sub_chara_0" src="img/cross.png"
-                  data-chara_no="0"></div>
-              <div id="sub_chara_container_1"><img class="sub_style" id="sub_chara_1" src="img/cross.png"
-                  data-chara_no="1"></div>
-              <div id="sub_chara_container_2"><img class="sub_style" id="sub_chara_2" src="img/cross.png"
-                  data-chara_no="2"></div>
-              <div id="sub_chara_container_3"><img class="sub_style" id="sub_chara_3" src="img/cross.png"
-                  data-chara_no="3"></div>
-              <div id="sub_chara_container_4"><img class="sub_style" id="sub_chara_4" src="img/cross.png"
-                  data-chara_no="4"></div>
-              <div id="sub_chara_container_5"><img class="sub_style" id="sub_chara_5" src="img/cross.png"
-                  data-chara_no="5"></div>
-            </div>
-            <div>
-              <div class="flex ml-6 leading-6">
-                夢の泪
-                <select id="tears_of_dreams" type="number" value="0" class="ml-2 w-12 text-center h-6">
-                  <option value="0" selected>0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-                <div id="skull_feather_1st" class="ml-2 hidden">
-                  防御力アップ×
-                  <input type="number" id="skull_feather_1st_defense" class="text-center h-6" min="0" max="20"
-                    value="0">
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bike_buff adjust_width mx-auto">
-            <div class="mt-2">
-              メンバーの全能力＋
-              <input type="number" min="0" max="286" step="1" id="all_status_up" value="0" class="limit_number">
-            </div>
-            <div class="mt-1">
-              <sapn>バイクパーツ</sapn>
-              <select id="bike_parts_1" class="bike_parts w-24">
-              </select>
-              <select id="bike_parts_2" class="bike_parts w-24">
-              </select>
-              <select id="bike_parts_3" class="bike_parts w-24">
-              </select>
-            </div>
-          </div>
-          <div class="randam_card adjust_width mx-auto">
-            <div class="mt-1 flex">
-              <div class="w-24 mr-1 font-bold">ランダムカード</div>
-              <input type="radio" name="card" class="w-3" id="card_none" value="0" checked><label for="card_none" class="w-20">無し/その他</label>
-            </div>
-            <div class="flex">
-              <div class="card_label">敵ステータス</div>
-              <input type="radio" name="card" class="w-3" id="status_30" value="30" data-kind="status"><label for="status_30" class="w-8">+30</label>
-              <input type="radio" name="card" class="w-3" id="status_50" value="50" data-kind="status"><label for="status_50" class="w-8">+50</label>
-              <input type="radio" name="card" class="w-3" id="status_60" value="60" data-kind="status"><label for="status_60" class="w-8">+60</label>
-              <input type="radio" name="card" class="w-3" id="status_70" value="70" data-kind="status"><label for="status_70" class="w-8">+70</label>
-              <input type="radio" name="card" class="w-3" id="status_100" value="100" data-kind="status"><label for="status_100" class="w-10">+100</label>
-            </div>
-            <div class="flex">
-              <div class="card_label">D  P</div>
-              <input type="radio" name="card" class="w-3" id="dp_rate_50" value="50" data-kind="dp_rate"><label for="dp_rate_50" class="w-12">+50%</label>
-              <input type="radio" name="card" class="w-3" id="dp_rate_60" value="60" data-kind="dp_rate"><label for="dp_rate_60" class="w-12">+60%</label>
-              <input type="radio" name="card" class="w-3" id="dp_rate_100" value="100" data-kind="dp_rate"><label for="dp_rate_100" class="w-14">+100%</label>
-              <input type="radio" name="card" class="w-3" id="dp_rate_120" value="120" data-kind="dp_rate"><label for="dp_rate_120" class="w-14">+120%</label>
-            </div>
-            <div class="flex">
-              <div class="card_label">H  P</div>
-              <input type="radio" name="card" class="w-3" id="hp_rate_50" value="50" data-kind="hp_rate"><label for="hp_rate_50" class="w-12">+50%</label>
-              <input type="radio" name="card" class="w-3" id="hp_rate_60" value="60" data-kind="hp_rate"><label for="hp_rate_60" class="w-12">+60%</label>
-              <input type="radio" name="card" class="w-3" id="hp_rate_100" value="100" data-kind="hp_rate"><label for="hp_rate_100" class="w-14">+100%</label>
-              <input type="radio" name="card" class="w-3" id="hp_rate_120" value="120" data-kind="hp_rate"><label for="hp_rate_120" class="w-14">+120%</label>
-            </div>
-            <!-- <div class="flex">
-              <div class="card_label">耐性</div>
-              <input type="radio" name="card" class="w-3" id="resist_1_100" value="-100" data-kind="resist_1"><label for="resist_1_100" class="card_regist">火-100%</label>
-              <input type="radio" name="card" class="w-3" id="resist_5_100" value="-100" data-kind="resist_5"><label for="resist_5_100" class="card_regist">闇-100%</label>
-            </div> -->
-        </div>
+          <div id="contents_area" class="surround_area adjust_width mx-auto mt-2"></div>
           <div class="enemy_status surround_area mx-auto mt-2 adjust_width">
             <label class="area_title">敵情報</label>
             <div class="flex">
@@ -516,7 +327,7 @@
                 for="hacking">ハッキング</label>
             </div>
           </div>
-          <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
+          <!-- <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
             <label class="area_title">予測スコア</label>
             <div class="mx-auto w-[330px] mt-2">
               <div>
@@ -572,7 +383,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="buff_area text-right mx-auto">
           <div class="flex justify-between items-center w-full">
@@ -1008,7 +819,7 @@
                 <td>全体</td>
                 <td colspan="4" id="ability_all" class="text-left"></td>
               </tr>
-              
+
               <tr class="sp_only">
                 <td colspan="5" class="kind">パッシブ</td>
               </tr>
