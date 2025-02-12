@@ -41,6 +41,7 @@
   <script type="text/babel" src="js/component/damage/score_setting.js"></script>
   <script type="text/babel" src="js/component/damage/bike_parts.js"></script>
   <script type="text/babel" src="js/component/damage/hard_layer.js"></script>
+  <script type="text/babel" src="js/component/damage/prediction_score.js"></script>
   <script type="text/babel" src="js/component/enemy_list.js"></script>
   <script src="js/header.js"></script>
   <script src="js/common.js"></script>
@@ -56,6 +57,7 @@
   <script src="js/ability.js"></script>
   <script src="js/enemy.js"></script>
   <script src="js/grade.js"></script>
+  <script src="js/bonus.js"></script>
   <script src="js/score_data.js"></script>
   <script>
     var chara_no = -1;
@@ -327,63 +329,7 @@
                 for="hacking">ハッキング</label>
             </div>
           </div>
-          <!-- <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width">
-            <label class="area_title">予測スコア</label>
-            <div class="mx-auto w-[330px] mt-2">
-              <div>
-                <div class="prediction">難易度スコア</div>
-                <input type="text" id="lv_score" class="text-center prediction_value" readonly>
-              </div>
-              <div>
-                <div class="prediction prediction_shift">
-                  <input type="checkbox" id="no_break_bonus_check" checked>
-                  <label class="checkbox01" for="no_break_bonus_check">ノーブレイクボーナス</label>
-                </div>
-                <input type="text" id="no_break_bonus" class="text-center prediction_value" readonly>
-              </div>
-              <div>
-                <div class="prediction">
-                  <label class="label_damage_bonus">
-                    最大ダメージボーナス
-                  </label>
-                  <select id="socre_enemy_unit">
-                    <option value="1">1体</option>
-                    <option value="2">2体</option>
-                    <option value="3">3体</option>
-                  </select>
-                </div>
-                <input type="text" id="damage_bonus_avg" class="text-center prediction_value" readonly>
-                <div class="flex items-center">
-                  <div class="prediction_none"></div>
-                  <div class="mt-1">（</div>
-                  <input type="text" id="damage_bonus_min" class="text-center prediction_value" readonly>
-                  <div class="mt-1">～</div>
-                  <input type="text" id="damage_bonus_max" class="text-center prediction_value" readonly>
-                  <div class="mt-1">）</div>
-                </div>
-              </div>
-              <div>
-                <div class="prediction">ターン数</div>
-                <input type="text" id="turn_bonus" class="text-center prediction_value" readonly>
-              </div>
-              <div>
-                <div class="prediction">グレードボーナス</div>
-                <input type="text" id="grade_bonus" class="text-center prediction_value" readonly>
-              </div>
-              <div class="font-bold">
-                <div class="prediction mt-1">最終スコア</div>
-                <input type="text" id="summary_score_avg" class="text-center prediction_value" readonly>
-                <div class="flex">
-                  <div class="prediction_none"></div>
-                  <div class="mt-1">（</div>
-                  <input type="text" id="summary_score_min" class="text-center prediction_value" readonly>
-                  <div class="mt-1">～</div>
-                  <input type="text" id="summary_score_max" class="text-center prediction_value" readonly>
-                  <div class="mt-1">）</div>
-                </div>
-              </div>
-            </div>
-          </div> -->
+          <div id="prediction_score" class="surround_area mx-auto my-2 adjust_width"></div>
         </div>
         <div class="buff_area text-right mx-auto">
           <div class="flex justify-between items-center w-full">

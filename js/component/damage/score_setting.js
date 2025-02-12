@@ -5,9 +5,16 @@ const ScoreSettingComponent = ({ enemy_info }) => {
         return null;
     }
     let filtered_grade = grade_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no);
+    let filtered_bonus = bonus_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no);
     const uniqueHalf = [...new Set(filtered_grade.map(item => item.half))];
 
     let half_grade = filtered_grade.filter((obj) => obj.half == selectHalf);
+
+    // タブ変更
+    const handleTabChange = (half) => {
+        setSelectHalf(half)
+        setEnemyStatus(enemy_info);
+    }
 
     // レベル変更
     const handleScoreChange = () => {
@@ -19,12 +26,54 @@ const ScoreSettingComponent = ({ enemy_info }) => {
         setEnemyStatus(enemy_info);
     }
 
+
+    const getImg = (conditions) => {
+        let img = "img/";
+        switch (conditions) {
+            case "physical_1":
+                img += "slash.webp";
+                break;
+            case "physical_2":
+                img += "stab.webp";
+                break;
+            case "physical_3":
+                img += "strike.webp";
+                break;
+            case "element_1":
+                img += "fire.webp";
+                break;
+            case "element_2":
+                img += "ice.webp";
+                break;
+            case "element_3":
+                img += "thunder.webp";
+                break;
+            case "element_4":
+                img += "light.webp";
+                break;
+            case "element_5":
+                img += "dark.webp";
+                break;
+        }
+        return img;
+    }
+
+    const getStr = (bonus) => {
+        let str = "";
+        switch (bonus.effect_kind) {
+            case "STAT_UP":
+                str += "全能力+";
+        }
+        str += bonus.effect_size;
+        return str;
+    }
+
     return (
         <div className="score_attack mx-auto">
             <div id="half_tab">
                 {uniqueHalf.map((half, index) => (
                     <React.Fragment key={half}>
-                        <input defaultChecked={index === 0} id={`half_tab_${half}`} name="rule_tab" type="radio" onChange={() => setSelectHalf(half)}/>
+                        <input defaultChecked={index === 0} id={`half_tab_${half}`} name="rule_tab" type="radio" onChange={() => handleTabChange(half)} />
                         <label htmlFor={`half_tab_${half}`} id={`half_tab_${half}`}>
                             {half}週目
                         </label>
@@ -49,13 +98,24 @@ const ScoreSettingComponent = ({ enemy_info }) => {
                 </span>
                 <div>
                     {half_grade.map((grade, index) => (
-                        <div key={`grade_${index}`}>
-                            <input className={`half_check half_tab_${index + 1}`} type="checkbox" id={`half_grade${index}`}
-                             data-grade_no={grade.grade_no}
-                             onChange={() => handleGradeChange()}/>
+                        <div key={`grade_${selectHalf}_${index}`}>
+                            <input className={`half_check half_tab_${selectHalf}`} type="checkbox" id={`half_grade${index}`}
+                                data-grade_no={grade.grade_no}
+                                onChange={() => handleGradeChange()} />
                             <label className="checkbox01" htmlFor={`half_grade${index}`}>
                                 {grade.grade_name}(グレード:{grade.grade_rate})
                             </label>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div class="mt-1">
+                <label>ボーナス</label>
+                <div class="flex flex-wrap">
+                    {filtered_bonus.map((bonus, index) => (
+                        <div class="flex items-center" key={`bunus_${index}`}>
+                            <img class="ml-1" src={getImg(bonus.conditions)} style={{ width: 20, height: 20 }} />
+                            <label class="">{getStr(bonus)}</label>
                         </div>
                     ))}
                 </div>
