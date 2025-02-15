@@ -2465,7 +2465,7 @@ function judgeConditions(conditions) {
 }
 
 // 敵ステータス設定
-function setEnemyStatus(enemy_info) {
+function setEnemyStatus(enemy_info, isUpdate) {
     // 種別ごとの設定
     // switch (enemy_info.enemy_class) {
     //     case ENEMY_CLASS_HARD_LAYER:
@@ -2526,11 +2526,13 @@ function setEnemyStatus(enemy_info) {
     $(".variable_effect_size").each(function (index, value) {
         updateBuffEffectSize($(value));
     });
-    // 再ソート
-    $(".redisplay").each(function (index, value) {
-        sortEffectSize($(value));
-        select2ndSkill($(value));
-    });
+    if (isUpdate) {
+        // 再ソート
+        $(".redisplay").each(function (index, value) {
+            sortEffectSize($(value));
+            select2ndSkill($(value));
+        });
+    }
     // 耐性変更時用に再実行
     updateEnemyResistDown();
 

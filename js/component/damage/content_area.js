@@ -25,7 +25,7 @@ const ContentsAreaComponent = ({ }) => {
 
     React.useEffect(() => {
         // 再描画時に呼び出す
-        setEnemyStatus(enemy_info);
+        setEnemyStatus(enemy_info, true);
     }, [enemyInfo]);
 
     return (

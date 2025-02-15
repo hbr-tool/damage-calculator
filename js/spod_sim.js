@@ -1695,8 +1695,8 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                 let unit_sp = unit_data.sp;
                 unit_sp += buff_info.min_power;
                 let limit_sp = buff_info.max_power;
-                if (unit_sp + unit_data.over_drive_sp - unit_data.sp_cost > limit_sp) {
-                    unit_sp = limit_sp - unit_data.over_drive_sp + unit_data.sp_cost;
+                if (unit_sp + unit_data.over_drive_sp > limit_sp) {
+                    unit_sp = limit_sp - unit_data.over_drive_sp;
                 }
                 if (unit_sp < unit_data.sp) {
                     unit_sp = unit_data.sp
@@ -2062,6 +2062,8 @@ const sortActionSeq = (turn_data) => {
             buff_seq.push(skill_data);
         }
     });
+    attack_seq.sort((a, b) => a.place_no - b.place_no);
+    buff_seq.sort((a, b) => a.place_no - b.place_no);
     // バフとアタックの順序を結合
     return buff_seq.concat(attack_seq);
 }

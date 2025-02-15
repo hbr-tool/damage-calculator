@@ -13,17 +13,17 @@ const ScoreSettingComponent = ({ enemy_info }) => {
     // タブ変更
     const handleTabChange = (half) => {
         setSelectHalf(half)
-        setEnemyStatus(enemy_info);
+        setEnemyStatus(enemy_info, false);
     }
 
     // レベル変更
     const handleScoreChange = () => {
-        setEnemyStatus(enemy_info);
+        setEnemyStatus(enemy_info, false);
     }
 
     // グレード変更
     const handleGradeChange = () => {
-        setEnemyStatus(enemy_info);
+        setEnemyStatus(enemy_info, false);
     }
 
 
@@ -109,13 +109,13 @@ const ScoreSettingComponent = ({ enemy_info }) => {
                     ))}
                 </div>
             </div>
-            <div class="mt-1">
+            <div className="mt-1">
                 <label>ボーナス</label>
-                <div class="flex flex-wrap">
+                <div className="flex flex-wrap">
                     {filtered_bonus.map((bonus, index) => (
-                        <div class="flex items-center" key={`bunus_${index}`}>
-                            <img class="ml-1" src={getImg(bonus.conditions)} style={{ width: 20, height: 20 }} />
-                            <label class="">{getStr(bonus)}</label>
+                        <div className="flex items-center" key={`bunus_${index}`}>
+                            <img className="ml-1" src={getImg(bonus.conditions)} style={{ width: 20, height: 20 }} />
+                            <label className="">{getStr(bonus)}</label>
                         </div>
                     ))}
                 </div>
