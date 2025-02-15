@@ -2187,7 +2187,7 @@ function getCriticalRate(member_info) {
     critical_rate -= grade_sum.critical;
     critical_rate = critical_rate < 0 ? 0 : critical_rate;
     // 永遠なる誓い
-    critical_rate += $("#eternal_vows").prop("checked") ? 15 : 0;
+    critical_rate += $("#eternal_vows").prop("checked") ? 50 : 0;
     // 制圧戦
     critical_rate += getBikePartsEffectSize("critical_rate");
     return critical_rate > 100 ? 100 : critical_rate;
@@ -2198,8 +2198,6 @@ function getCriticalBuff() {
     let critical_buff = 50;
     critical_buff += getSumEffectSize("critical_buff");
     critical_buff += getSumAbilityEffectSize(4);
-    // 星空の航路+
-    critical_buff += $("option.skill_id-491:selected").length * 30;
     // 制圧戦
     critical_buff += getBikePartsEffectSize("critical_buff");
     return 1 + critical_buff / 100;
