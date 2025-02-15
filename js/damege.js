@@ -2948,23 +2948,27 @@ function getScoreAttackBonus(kind, member_info) {
     let element2 = member_info.style_info.element2;
     let physical = getCharaData(member_info.style_info.chara_id).physical;
     let enemy_info = getEnemyInfo();
-    let effect_sum = 0;
+    let effect_max = 0;
     bonus_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no && obj.effect_kind == kind).forEach((obj) => {
         let conditions = obj.conditions.split("_");
         switch (conditions[0]) {
             case "element":
                 if (conditions[1] == element || conditions[1] == element2) {
-                    effect_sum += obj.effect_size;
+                    if (effect_max < obj.effect_size) {
+                        effect_max = obj.effect_size;
+                    }
                 }
                 break;
             case "physical":
                 if (conditions[1] == physical) {
-                    effect_sum += obj.effect_size;
+                    if (effect_max < obj.effect_size) {
+                        effect_max = obj.effect_size;
+                    }
                 }
                 break;
         }
     })
-    return effect_sum;
+    return effect_max;
 }
 
 // DPゲージ設定
