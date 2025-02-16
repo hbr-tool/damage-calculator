@@ -175,7 +175,7 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
             turn_list = turn_list.slice(0, index + 1);
             let turn_data = turn_list[index];
 
-            recreateTurnData(turn_data, last_turn_operation);
+            recreateTurnData(turn_data, last_turn_operation, false);
         }
     }, [turnData, index]);
 

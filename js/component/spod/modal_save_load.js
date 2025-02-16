@@ -51,7 +51,7 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
                 // 最終ターンの情報
                 const last_turn_operation = user_operation_list[user_operation_list.length - 1];
                 // ターンデータ再生成
-                recreateTurnData(turn_init, last_turn_operation)
+                recreateTurnData(turn_init, last_turn_operation, true);
             }
         }
     };
