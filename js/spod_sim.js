@@ -1224,7 +1224,8 @@ function startAction(turn_data) {
     $.each(seq, function (index, skill_data) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(turn_data, skill_data.place_no);
-        let attack_info;
+        // SP消費してから行動
+        unit_data.payCost();
 
         let buff_list = getBuffInfo(skill_info.skill_id);
         for (let i = 0; i < buff_list.length; i++) {
@@ -1233,6 +1234,7 @@ function startAction(turn_data) {
                 addBuffUnit(turn_data, buff_info, skill_data.place_no, unit_data);
             }
         }
+        let attack_info;
         if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
         } else if (skill_info.attack_id) {
@@ -1270,7 +1272,6 @@ function startAction(turn_data) {
             }
         }
         origin(turn_data, skill_info, unit_data);
-        unit_data.payCost();
     });
 
     turn_data.over_drive_gauge += turn_data.add_over_drive_gauge;

@@ -81,6 +81,12 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
 
     return (
         <div>
+            <p>■保存されるもの</p>
+            <p>・スタイル/スタイルごとの設定(限界突破数/装備/スキル/初期SP)</p>
+            <p>・各ターンのキャラクターの配置、行動</p>
+            <p>■保存されないもの</p>
+            <p>・選択した敵</p>
+            <p>・詳細設定</p>
             <ul className="save_load">
                 {save.map((item, index) => (
                     <li key={index} onClick={() => handleClick(index, mode)}>{item}</li>
