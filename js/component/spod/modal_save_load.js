@@ -1,8 +1,12 @@
 const SaveLoadComponent = ({ mode, handleClose }) => {
+    const NONE = "無し"
 
-    const handleClick = (i) => {
+    const handleClick = (i, name) => {
         if (mode == "save") {
-            let data_name = window.prompt("保存名称を入力してください", "データ" + (i + 1));
+            if (name == NONE) {
+                name = "データ" + (i + 1);
+            }
+            let data_name = window.prompt("保存名称を入力してください", name);
             if (data_name === null) {
                 return;
             }
@@ -27,13 +31,17 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
                 save_data = JSON.parse(decompress);
                 // 部隊情報上書き
                 save_data.unit_data_list.forEach((unit_data, index) => {
-                    setMember(select_style_list, index, unit_data.style_id, false);
-                    select_style_list[index].limit_count = unit_data.limit_count;
-                    select_style_list[index].earring = unit_data.earring;
-                    select_style_list[index].bracelet = unit_data.bracelet;
-                    select_style_list[index].chain = unit_data.chain;
-                    select_style_list[index].init_sp = unit_data.init_sp;
-                    select_style_list[index].exclusion_skill_list  = unit_data.exclusion_skill_list ;
+                    if (unit_data) {
+                        setMember(select_style_list, index, unit_data.style_id, false);
+                        select_style_list[index].limit_count = unit_data.limit_count;
+                        select_style_list[index].earring = unit_data.earring;
+                        select_style_list[index].bracelet = unit_data.bracelet;
+                        select_style_list[index].chain = unit_data.chain;
+                        select_style_list[index].init_sp = unit_data.init_sp;
+                        select_style_list[index].exclusion_skill_list = unit_data.exclusion_skill_list;
+                    } else {
+                        select_style_list[index] = undefined;
+                    }
                 })
                 // 戦闘データ初期化
                 cleanBattleData();
@@ -47,7 +55,7 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             }
         }
     };
-    
+
     // メンバー情報からユニットデータに変換
     function convertUnitDataList() {
         return select_style_list.map((style) => {
@@ -65,16 +73,23 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
         })
     }
 
-    let save = [];
-    for (let i = 0; i < 10; i++) {
+    const loadStorage = (i) => {
         let item = localStorage.getItem(`sim_data_${i}`);
         if (item) {
             let decompress = decompressString(item)
-            let save_data = JSON.parse(decompress);
-            save.push(save_data.data_name);
+            return JSON.parse(decompress);
+        }
+        return null;
+    }
+
+    let save = [];
+    for (let i = 0; i < 10; i++) {
+        let load_data = loadStorage(i);
+        if (load_data) {
+            save.push(load_data.data_name);
         } else {
             if (mode == "save") {
-                save.push("無し");
+                save.push(NONE);
             }
         }
     }
@@ -89,7 +104,7 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             <p>・詳細設定</p>
             <ul className="save_load">
                 {save.map((item, index) => (
-                    <li key={index} onClick={() => handleClick(index, mode)}>{item}</li>
+                    <li key={index} onClick={() => handleClick(index, item)}>{item}</li>
                 ))}
             </ul>
         </div>

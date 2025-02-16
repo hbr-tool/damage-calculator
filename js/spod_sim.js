@@ -262,8 +262,8 @@ function checkAbilityExist(ability_list, ability_id) {
 
 // パッシブ存在チェック
 function checkPassiveExist(passive_list, skill_id) {
-    let exist_list = passive_list.filter(function (value) {
-        return value == skill_id;
+    let exist_list = passive_list.filter(function (passive) {
+        return passive.skill_id == skill_id;
     });
     return exist_list.length > 0;
 }
@@ -828,8 +828,8 @@ function getInitBattleData() {
                     }
                 }
             });
-            unit.style.passive_skill_list.forEach(skill_id => {
-                let passive_info = getPassiveInfo(skill_id);
+            unit.passive_skill_list.forEach(skill => {
+                let passive_info = getPassiveInfo(skill.skill_id);
                 if (!passive_info) {
                     return;
                 }
@@ -1722,7 +1722,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                     field_turn = 0;
                 }
                 // メディテーション
-                if (checkPassiveExist(use_unit_data.style.passive_skill_list, 501)) {
+                if (checkPassiveExist(use_unit_data.passive_skill_list, 501)) {
                     field_turn = 0;
                 }
             }
