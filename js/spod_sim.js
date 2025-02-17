@@ -1036,7 +1036,7 @@ const reflectUserOperation = (turn_data, isLoadMode) => {
     // OD再計算
     turn_data.add_over_drive_gauge = getOverDrive(turn_data);
     // 行動反映
-    if (turn_data.over_drive_gauge < 100) {
+    if (turn_data.over_drive_gauge + turn_data.add_over_drive_gauge < 100) {
         turn_data.user_operation.kb_action = KB_NEXT_ACTION;
     }
     // OD発動反映
