@@ -110,7 +110,7 @@ const ScoreSettingComponent = ({ enemy_info }) => {
                 </div>
             </div>
             <div className="mt-1">
-                <label>ボーナス</label>
+                <label>ボーナス(ステータスは自動的に加算されます)</label>
                 <div className="flex flex-wrap">
                     {filtered_bonus.map((bonus, index) => (
                         <div className="flex items-center" key={`bunus_${index}`}>

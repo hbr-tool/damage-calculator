@@ -819,7 +819,7 @@ function getInitBattleData() {
                             unit.ability_receive_damage.push(ability_info);
                             break;
                         case ABILIRY_OTHER: // その他
-                            if (ability_info.ability_id == 1520) {
+                            if (ability_info.ability_id == 510) {
                                 // 蒼天
                                 turn_init.sp_cost_down = ability_info.effect_size;
                             }
