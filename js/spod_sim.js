@@ -217,8 +217,10 @@ class turn_data {
         this.add_over_drive_gauge = 0;
 
         let sp_list = [0, 5, 12, 20];
+        let self = this;
         this.unitLoop(function (unit) {
             unit.over_drive_sp = sp_list[over_drive_level];
+            unit.sp_cost = getSpCost(self, getSkillData(unit.select_skill_id), unit);
         });
         this.abilityAction(ABILIRY_OD_START);
         this.trigger_over_drive = true;
@@ -229,8 +231,10 @@ class turn_data {
         this.over_drive_gauge = this.start_over_drive_gauge;
         this.add_over_drive_gauge = 0;
 
+        let self = this;
         this.unitLoop(function (unit) {
             unit.over_drive_sp = 0;
+            unit.sp_cost = getSpCost(self, getSkillData(unit.select_skill_id), unit);
         });
         this.trigger_over_drive = false;
     }
@@ -415,16 +419,11 @@ class unit_data {
         });
     }
     payCost() {
-        if (this.sp_cost >= 90) {
-            this.sp = 0;
-            this.over_drive_sp = 0;
-        } else {
-            // OD上限突破
-            if (this.sp + this.over_drive_sp > 99) {
-                this.sp = 99 - this.over_drive_sp;
-            }
-            this.sp -= this.sp_cost;
+        // OD上限突破
+        if (this.sp + this.over_drive_sp > 99) {
+            this.sp = 99 - this.over_drive_sp;
         }
+        this.sp -= this.sp_cost;
         this.sp_cost = 0;
     }
 
@@ -1248,7 +1247,7 @@ function startAction(turn_data) {
         }
 
         // EXスキル使用
-        if (skill_info.skill_kind == 1 || skill_info.skill_kind == 2) {
+        if (skill_info.skill_kind == KIND_EX_GENERATE || skill_info.skill_kind == KIND_EX_EXCLUSIVE) {
             // アビリティ
             unit_data.abilityAction(turn_data, ABILIRY_EX_SKILL_USE);
             // EXスキル連続使用
@@ -1390,7 +1389,7 @@ const getOverDrive = (turn) => {
                 unit_od_plus += attack_info.hit_count * hit_od * enemy_target;
                 unit_od_plus += funnel_list.length * hit_od * enemy_target;
                 // EXスキル連続使用
-                if (checkBuffExist(unit_data.buff_list, BUFF_EX_DOUBLE)) {
+                if (checkBuffExist(unit_data.buff_list, BUFF_EX_DOUBLE) && (skill_info.skill_kind == KIND_EX_GENERATE || skill_info.skill_kind == KIND_EX_EXCLUSIVE)) {
                     buff_list.forEach(function (buff_info) {
                         // 連撃のみ処理
                         if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind)) {
@@ -1471,6 +1470,11 @@ function getSpCost(turn_data, skill_info, unit) {
         const count = unit.use_skill_list.filter(value => value === 578).length;
         sp_cost = 8 + 4 * count;
         sp_cost = sp_cost > 20 ? 20 : sp_cost;
+    }
+    // SP全消費
+    if (sp_cost == 99) {
+        sp_cost = unit.sp + unit.over_drive_sp;
+        sp_cost_down = 0;
     }
     sp_cost -= sp_cost_down;
     return sp_cost < 0 ? 0 : sp_cost;

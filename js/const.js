@@ -165,6 +165,14 @@ const ENEMY_CLASS_SERAPH_ENCOUNTER = 12; // セラフ遭遇戦
 const ENEMY_CLASS_EVENT_PRISMATIC = 13; // イベントプリズム
 const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
 
+/** スキル種類 */
+const KIND_PURPOSE = 0; // 汎用
+const KIND_EX_GENERATE = 1; // EX(ジェネライズ)
+const KIND_EX_EXCLUSIVE = 2; // EX(専用)
+const KIND_MASTER = 5; // マスター
+const KIND_ORB = 7; // オーブ
+const KIND_OTHER = 9; // その他
+
 /** 汎用スキル */
 const SKILL_NORMAL_ATTACK = 1; // 通常攻撃
 const SKILL_NONE = 2; // 無し

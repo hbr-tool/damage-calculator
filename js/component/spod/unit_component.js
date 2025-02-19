@@ -44,14 +44,10 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
         })
     }
 
-    const handleChangeSkill = (value, place_no) => {
-        chengeSkill(value, place_no);
-    };
-
     const recoil = unit.buff_list.filter((obj) => obj.buff_kind == BUFF_RECOIL);
     let not_action = (recoil.length > 0 || !unit.style || (turn.additional_turn && !unit.additional_turn && place_no <= 2))
     let className = "unit_skill " + (not_action ? "invisible" : "");
-    return (<select className={className} onChange={(e) => handleChangeSkill(Number(e.target.value), place_no)} value={unit.select_skill_id} >
+    return (<select className={className} onChange={(e) => chengeSkill(Number(e.target.value), place_no)} value={unit.select_skill_id} >
         {skill_list.filter((obj) => obj.skill_id == unit.select_skill_id || !isCapturing).map(skill => {
             let text = skill.skill_name;
             let sp_cost = 0;
@@ -92,18 +88,13 @@ const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeS
     if (unit?.style?.style_info?.image_url) {
         icon = "icon/" + unit.style.style_info.image_url;
     }
-
-    const handleSelectUnit = (value, place_no) => {
-        chengeSelectUnit(value, place_no);
-    };
-
     let loop_limit = 3;
     if (hideMode) {
         loop_limit = 4;
     }
     let className = "unit_select " + (place_no == selected_place_no ? "unit_selected" : "");
     return (
-        <div className={className} onClick={(e) => { handleSelectUnit(e, place_no) }}>
+        <div className={className} onClick={(e) => { chengeSelectUnit(e, place_no) }}>
             <UnitSkillSelect turn={turn} unit={unit} place_no={place_no} chengeSkill={chengeSkill} select_skill_id={unit.select_skill_id} trigger_over_drive={turn.trigger_over_drive} isCapturing={isCapturing} />
             <div className="flex">
                 <div>
