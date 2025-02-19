@@ -122,19 +122,18 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                     new_unit.place_no = old_place_no;
                     old_unit.place_no = place_no;
                 }
-                // 前衛と後衛の交換
                 if (place_no <= 2 && 3 <= old_place_no) {
-                    excahngeUnit(new_unit, old_unit);
-                    select_skill[place_no] = { skill_id: SKILL_NONE };
+                    // 前衛と後衛の交換
+                    exchangeUnit(new_unit, old_unit, select_skill);
+                } else if (3 <= place_no && old_place_no <= 2) {
+                    // 後衛と前衛の交換
+                    exchangeUnit(old_unit, new_unit, select_skill);
+                } else {
+                    // 前衛同士/後衛同士
+                    const tmp_skill = select_skill[place_no];
+                    select_skill[place_no] = select_skill[old_place_no]
+                    select_skill[old_place_no] = tmp_skill;
                 }
-                // 後衛と前衛の交換
-                if (3 <= place_no && old_place_no <= 2) {
-                    excahngeUnit(old_unit, new_unit);
-                    select_skill[old_place_no] = { skill_id: SKILL_NONE };
-                }
-                const tmp_skill = select_skill[place_no];
-                select_skill[place_no] = select_skill[old_place_no]
-                select_skill[old_place_no] = tmp_skill;
 
                 const tmp_style = place_style[place_no];
                 place_style[place_no] = place_style[old_place_no]
@@ -148,12 +147,14 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
     })
 
     // 前衛後衛ユニット交換
-    const excahngeUnit = ((old_front, old_back) => {
+    const exchangeUnit = ((old_front, old_back, select_skill) => {
         old_front.select_skill_id = SKILL_NONE;
         old_front.sp_cost = 0;
         old_front.buff_effect_select_type = null;
         old_front.buff_target_chara_id = null;
         old_back.select_skill_id = old_back.init_skill_id;
+        select_skill[old_front.place_no] = { skill_id: SKILL_NONE };
+        select_skill[old_back.place_no] = { skill_id: old_back.init_skill_id };
     })
 
     // 次ターン
@@ -190,12 +191,12 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                             <div>
                                 <select className="enemy_count" value={turn.enemy_count} onChange={(e) => chengeEnemyCount(e)}>
                                     {[1, 2, 3].filter(value => value == turn.enemy_count || !isCapturing)
-                                    .map(enemy_count => <option value={enemy_count} key={`enemy_count${enemy_count}`}>{`${enemy_count}体`}</option>)}
+                                        .map(enemy_count => <option value={enemy_count} key={`enemy_count${enemy_count}`}>{`${enemy_count}体`}</option>)}
                                 </select>
                                 <label className="ml-1">場</label>
                                 <select className="enemy_count" value={turn.field} onChange={(e) => chengeField(e)}>
                                     {Object.keys(FIELD_LIST).filter(value => value == turn.field || !isCapturing)
-                                    .map(field => <option value={field} key={`field${field}`}>{FIELD_LIST[field]}</option>)}
+                                        .map(field => <option value={field} key={`field${field}`}>{FIELD_LIST[field]}</option>)}
                                 </select>
                             </div>
                         </div>
@@ -208,20 +209,20 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                 <div className="flex front_area">
                     {[0, 1, 2].map(place_no =>
                         <UnitComponent turn={turn} key={`unit${place_no}`} place_no={place_no} selected_place_no={turnData.user_operation.selected_place_no}
-                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing}/>
+                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing} />
                     )}
                 </div>
                 <div className="flex back_area">
                     {[3, 4, 5].map(place_no =>
                         <UnitComponent turn={turn} key={`unit${place_no}`} place_no={place_no} selected_place_no={turnData.user_operation.selected_place_no}
-                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing}/>
+                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing} />
                     )}
                     <div>
                         <select className="action_select" value={turnData.user_operation.kb_action} onChange={(e) => chengeAction(e)}>
-                            {turnData.user_operation.kb_action == KB_NEXT_ACTION || !isCapturing ? 
+                            {turnData.user_operation.kb_action == KB_NEXT_ACTION || !isCapturing ?
                                 <option value={KB_NEXT_ACTION}>行動開始</option> : null}
                             {turnData.user_operation.kb_action == KB_NEXT_ACTION_OD ||
-                                (turn.over_drive_gauge + turn.add_over_drive_gauge >= 100 && turn.over_drive_max_turn == 0) ? 
+                                (turn.over_drive_gauge + turn.add_over_drive_gauge >= 100 && turn.over_drive_max_turn == 0) ?
                                 <option value={KB_NEXT_ACTION_OD}>行動開始+OD</option> : null}
                         </select>
                         <div
