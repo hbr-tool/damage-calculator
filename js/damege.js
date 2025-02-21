@@ -618,20 +618,9 @@ function calcDamage() {
 
     // 士気
     let morale = Number($("#morale_count").val()) * 5;
-    // 夢の泪
-    let tears_of_dreams = 0;
-    if ($("#enemy_class").val() == ENEMY_CLASS_HARD_LAYER) {
-        tears_of_dreams = Number($("#tears_of_dreams").val());
-    }
-    // 全能力アップ
-    let all_status_up = 0;
-    if ($("#enemy_class").val() == ENEMY_CLASS_CONTROL_BATTLE) {
-        all_status_up = Number($("#all_status_up").val());
-    }
-    // パッシブ(能力固定上昇)
-    let passive_status_up = getSumAbilityEffectSize(25, true, chara_id);
+    let stat_up = getStatUp(member_info)
     // 闘志or士気
-    let stat_up = (morale > fightingspirit ? morale : fightingspirit) + tears_of_dreams + all_status_up + passive_status_up;
+    stat_up += (morale > fightingspirit ? morale : fightingspirit);
     // 厄orハッキング
     let stat_down = hacking || misfortune;
 
@@ -1307,7 +1296,7 @@ function setBuffList() {
                     return true;
                 }
                 // 単独発動は1つまで
-                if (ALONE_ACTIVATION_BUFF_LIST.includes(buff_id) && buff_count > 0) {
+                if (isAloneActivation(buff_info) && buff_count > 0) {
                     return true;
                 }
 
@@ -1429,6 +1418,7 @@ function addBuffList(member_info, member_kind) {
             .data("select_lv", value.max_lv)
             .data("max_lv", value.max_lv)
             .data("skill_id", value.skill_id)
+            .data("buff_id", value.buff_id)
             .data("chara_id", chara_id)
             .css("display", "none")
             .addClass("buff_element-" + buff_element)
@@ -1919,11 +1909,12 @@ function isOtherOnlyUse(option) {
 
 // 単独発動設定
 function setAloneActivation(option) {
-    let skill_id = Number(option.val());
+    let buff_id = option.data("buff_id");
     let id = option.parent().attr("id");
     let partner_id = id.endsWith('1') ? id.slice(0, -1) + '2' : id.slice(0, -1) + '1';
+    let buff_info = getBuffIdToBuff(buff_id);
     // 他スキルを使用不可にする。
-    if (ALONE_ACTIVATION_BUFF_LIST.includes(skill_id)) {
+    if (buff_info && isAloneActivation(buff_info)) {
         $(`#${partner_id}`).prop("disabled", true);
         $(`#${partner_id}`).prop("selectedIndex", 0);
         $(`#${partner_id}`).find("option").first().text("使用不可");
@@ -1931,6 +1922,14 @@ function setAloneActivation(option) {
         $(`#${partner_id}`).prop("disabled", false);
         $(`#${partner_id}`).find("option").first().text("無し");
     }
+}
+
+// 単独発動判定
+function isAloneActivation(buff_info) {
+    if (ALONE_ACTIVATION_BUFF_KIND.includes(buff_info.buff_kind)) {
+        return buff_info.effect_count > 0;
+    }
+    return false;
 }
 
 // 選択バフのステータスを着色
@@ -2311,9 +2310,9 @@ function getPassiveInfo(skill_id) {
 
 // キャラIDからメンバー情報取得
 function getCharaIdToMember(chara_id) {
-    const filtered_member = (style_list) =>  {
+    const filtered_member = (style_list) => {
         const filter_list = style_list.filter((obj) => obj?.style_info?.chara_id == chara_id);
-        return  filter_list.length > 0 ? filter_list[0] : undefined;
+        return filter_list.length > 0 ? filter_list[0] : undefined;
     }
     let member;
     member = filtered_member(select_style_list)
@@ -2589,6 +2588,10 @@ function updateEnemyScoreAttack(enemy_info) {
     $("#enemy_stat").val(enemy_stat);
     $("#socre_enemy_unit").val(score_attack.enemy_count);
     $("#enemy_hp").val((enemy_hp * (1 + grade_sum["hp_rate"] / 100)).toLocaleString());
+    if (grade_sum["destruction_limit"]) {
+        $("#enemy_destruction_limit").val(grade_sum["destruction_limit"]);
+        $("#enemy_destruction_rate").val(grade_sum["destruction_limit"]);
+    }
 }
 
 // セラフ遭遇戦敵ステータス設定
@@ -2831,7 +2834,11 @@ function getBuffEffectSize(buff_id, member_info, skill_lv, target_jewel_type) {
         return buff_info.min_power;
     }
     // 士気
-    let stat_up = getStatUp(member_info);
+    let morale = 0;
+    if (member_info.is_select) {
+        morale = Number($("#morale_count").val()) * 5;
+    }
+    let stat_up = getStatUp(member_info) + morale;
     let status = member_info[status_kbn[buff_info.ref_status_1]] + stat_up;
     let min_power = buff_info.min_power * (1 + 0.03 * (skill_lv - 1));
     let max_power = buff_info.max_power * (1 + 0.02 * (skill_lv - 1));
@@ -2871,7 +2878,11 @@ function getDebuffEffectSize(buff_id, member_info, skill_lv) {
         skill_lv = buff_info.max_lv;
     }
     // 士気
-    let stat_up = getStatUp(member_info);
+    let morale = 0;
+    if (member_info.is_select) {
+        morale = Number($("#morale_count").val()) * 5;
+    }
+    let stat_up = getStatUp(member_info) + morale;
     let status1 = member_info[status_kbn[buff_info.ref_status_1]] + stat_up;
     let status2 = member_info[status_kbn[buff_info.ref_status_2]] + stat_up;
     let min_power = buff_info.min_power * (1 + 0.05 * (skill_lv - 1));
@@ -2942,11 +2953,6 @@ function getEnemyDefenceRate(grade_sum) {
 
 // ステータスアップ取得
 function getStatUp(member_info) {
-    // 士気
-    let morale = 0;
-    if (member_info.is_select) {
-        morale = Number($("#morale_count").val()) * 5;
-    }
     let tears_of_dreams = 0;
     // 夢の泪
     if ($("#enemy_class").val() == ENEMY_CLASS_HARD_LAYER) {
@@ -2964,7 +2970,7 @@ function getStatUp(member_info) {
     }
     // パッシブ(能力固定上昇)
     let passive_status_up = getSumAbilityEffectSize(25, member_info.is_select, member_info.style_info.chara_id);
-    return morale + tears_of_dreams + all_status_up + score_bonus + passive_status_up;
+    return tears_of_dreams + all_status_up + score_bonus + passive_status_up;
 }
 
 // スコアタボーナス取得

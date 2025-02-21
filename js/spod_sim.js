@@ -1,7 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [36, 150, 152];
+const NOT_USE_STYLE = [36, 150, 152, 154];
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
 // 残ターン消費バフ
@@ -439,10 +439,10 @@ class unit_data {
     getFunnelList() {
         let ret = [];
         let buff_funnel_list = this.buff_list.filter(function (buff_info) {
-            return BUFF_FUNNEL == buff_info.buff_kind && !ALONE_ACTIVATION_BUFF_LIST.includes(buff_info.buff_id);
+            return BUFF_FUNNEL == buff_info.buff_kind && !isAloneActivation(buff_info);
         });
         let buff_unit_funnel_list = this.buff_list.filter(function (buff_info) {
-            return BUFF_FUNNEL == buff_info.buff_kind && ALONE_ACTIVATION_BUFF_LIST.includes(buff_info.buff_id);
+            return BUFF_FUNNEL == buff_info.buff_kind && isAloneActivation(buff_info);
         });
         let ability_list = this.buff_list.filter(function (buff_info) {
             return BUFF_ABILITY_FUNNEL == buff_info.buff_kind;
@@ -488,7 +488,7 @@ class unit_data {
         });
         // 使用後にリストから削除
         this.buff_list = this.buff_list.filter(function (item) {
-            return !item.use_funnel || ALONE_ACTIVATION_BUFF_LIST.includes(item.buff_id) || ALONE_ACTIVATION_ABILITY_LIST.includes(item.ability_id);
+            return !item.use_funnel || isAloneActivation(item) || ALONE_ACTIVATION_ABILITY_LIST.includes(item.ability_id);
         })
         return result_list;
     }
@@ -1633,7 +1633,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                         return true;
                     }
                 }
-                if (ALONE_ACTIVATION_BUFF_LIST.includes(buff_info.buff_id)) {
+                if (isAloneActivation(buff_info)) {
                     if (checkBuffIdExist(unit_data.buff_list, buff_info.buff_id)) {
                         if (buff_info.effect_count > 0) {
                             // 残ターン更新
@@ -1698,17 +1698,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_HEALSP: // SP追加
             target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
             $.each(target_list, function (index, target_no) {
-                let unit_data = getUnitData(turn_data, target_no);
-                let unit_sp = unit_data.sp;
-                unit_sp += buff_info.min_power;
-                let limit_sp = buff_info.max_power;
-                if (unit_sp + unit_data.over_drive_sp > limit_sp) {
-                    unit_sp = limit_sp - unit_data.over_drive_sp;
-                }
-                if (unit_sp < unit_data.sp) {
-                    unit_sp = unit_data.sp
-                }
-                unit_data.sp = unit_sp;
+                skillHealSp(turn_data, target_no, buff_info.min_power, buff_info.max_power, place_no, false);
             });
             break;
         case BUFF_ADDITIONALTURN: // 追加ターン
@@ -1748,6 +1738,33 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
     }
 }
 
+function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, isRecursion) {
+    let unit_data = getUnitData(turn_data, target_no);
+    let unit_sp = unit_data.sp;
+    unit_sp += add_sp;
+    if (unit_sp + unit_data.over_drive_sp > limit_sp) {
+        unit_sp = limit_sp - unit_data.over_drive_sp;
+    }
+    if (unit_sp < unit_data.sp) {
+        unit_sp = unit_data.sp
+    }
+    unit_data.sp = unit_sp;
+
+    if (!isRecursion) {
+        // 愛嬌
+        if (checkAbilityExist(unit_data.ability_other, 1605) && target_no != use_place_no) {
+            skillHealSp(turn_data, target_no, 3, 30, null, true)
+        }
+        // お裾分け
+        if (checkAbilityExist(unit_data.ability_other, 1606) && target_no != use_place_no) {
+            let target_list = getTargetList(turn_data, RANGE_ALLY_ALL, 0, target_no, null);
+            $.each(target_list, function (index, target_no) {
+                skillHealSp(turn_data, target_no, 2, 30, null, true)
+            });
+        }
+    }
+}
+
 function createBuffData(buff_info, use_unit_data) {
     let buff = new buff_data();
     buff.buff_kind = buff_info.buff_kind;
@@ -1774,6 +1791,14 @@ function createBuffData(buff_info, use_unit_data) {
             break;
     }
     return buff;
+}
+
+// 単独発動判定
+function isAloneActivation(buff_info) {
+    if (ALONE_ACTIVATION_BUFF_KIND.includes(buff_info.buff_kind)) {
+        return buff_info.effect_count > 0;
+    }
+    return false;
 }
 
 // 攻撃時にバフ消費
@@ -1993,6 +2018,9 @@ function getTargetList(turn_data, range_area, target_element, place_no, buff_tar
             target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
             target_list.push(place_no);
             target_list.push(target_unit_data[0].place_no);
+            break;
+        case RANGE_FRONT_OTHER: // 自分以外の前衛
+            target_list = [...Array(3).keys()].filter(num => num !== place_no);
             break;
         case RANGE_31C_MEMBER: // 31Cメンバー
             target_list = getTargetPlaceList(turn_data.unit_list, CHARA_ID_31C);
