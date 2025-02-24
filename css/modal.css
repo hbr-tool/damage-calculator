@@ -100,7 +100,8 @@ hr.line {
 }
 
 .rearity_area {
-  width: 144px;
+  width: 600px;
+  display: flex;
 }
 
 @media screen and (max-width: 768px) {
@@ -110,7 +111,11 @@ hr.line {
   }
 
   .rearity_area {
-    width: 96px;
+    width: 300px;
+  }
+
+  .narrow_buff {
+    width: 100px;
   }
 
   .emblem {

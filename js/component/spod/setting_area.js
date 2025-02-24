@@ -66,6 +66,9 @@ const SettingAreaComponent = ({ }) => {
                 <input className="battle_start" defaultValue="戦闘開始" type="button" onClick={startBattle} />
             </div>
             <div>
+                <ConstraintsListComponent />
+            </div>
+            <div>
                 <ReactModal
                     isOpen={modalIsOpen}
                     onRequestClose={closeModal}

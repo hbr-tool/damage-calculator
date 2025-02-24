@@ -476,6 +476,19 @@ img.select_style {
         -2px -2px 10px #f00;
 }
 
+
+.unit_ep {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ff7f00;
+    text-shadow: 2px 2px 10px #000,
+        -2px 2px 10px #000,
+        2px -2px 10px #000,
+        -2px -2px 10px #000;
+    text-align: right;
+    pointer-events: none;
+}
+
 .front_area,
 .back_area {
     height: 72px;

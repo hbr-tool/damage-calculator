@@ -18,7 +18,8 @@ const TargetSelectionComponent = () => {
     }
 
     window.handleTargetSelection = async function (unit, turn, buff_list) {
-        if (buff_list.some(buff => buff.range_area == RANGE_ALLY_UNIT || buff.range_area == RANGE_SELF_AND_UNIT)) {
+        const SELECT_RANGE = [RANGE_ALLY_UNIT, RANGE_SELF_AND_UNIT, RANGE_OTHER_UNIT];
+        if (buff_list.some(buff => SELECT_RANGE.includes(buff.range_area))) {
             const chara_id = await showModalSelectTarget(turn);
             if (!chara_id && chara_id !== 0) {
                 unit.buff_target_chara_id = 0;

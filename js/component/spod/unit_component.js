@@ -1,15 +1,29 @@
 const UnitSp = ({ unit }) => {
     let unit_sp;
+    let unit_ep = unit.ep;
     if (unit.sp_cost >= 90) {
         unit_sp = 0;
     } else {
         unit_sp = unit.sp + unit.over_drive_sp;
         if (unit_sp > 99) unit_sp = 99;
-        unit_sp -= unit.sp_cost;
+
+        // ノヴァエリミネーション
+        if (unit.select_skill_id == 591) {
+            unit_ep -= unit.sp_cost;
+        } else {
+            unit_sp -= unit.sp_cost;
+        }
     }
 
     let className = "unit_sp" + (unit_sp < 0 ? " minus" : "");
-    return <div className={className}>{unit_sp + (unit.add_sp > 0 ? ("+" + unit.add_sp) : "")}</div>;
+    return (
+        <>
+            <div className={className}>
+                <span>{unit_sp + (unit.add_sp > 0 ? ("+" + unit.add_sp) : "")}</span>
+                {(unit.ep != 0 ? <span className="unit_ep">{`EP${unit_ep}`}</span> : "")
+            }</div>
+        </>
+    )
 }
 
 const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, trigger_over_drive, chengeSkill, isCapturing }) => {

@@ -105,14 +105,17 @@ const RANGE_SELF = 7; // 自分
 const RANGE_SELF_OTHER = 8; // 自分以外
 const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
 const RANGE_FRONT_OTHER = 10; // 自分以外の前衛
+const RANGE_OTHER_UNIT = 11; // 自分以外の味方単体
 const RANGE_31C_MEMBER = 33; // 31Cメンバー
 const RANGE_31E_MEMBER = 35; // 31Eメンバー
 const RANGE_MARUYAMA_MEMBER = 41; // 丸山部隊
+const RANGE_RUKA_SHARO = 42; // 月歌とシャロ
 const RANGE_OTHER = 99; // その他
 
 const CHARA_ID_31C = [13, 14, 15, 16, 17, 18];
 const CHARA_ID_31E = [25, 26, 27, 28, 29, 30];
 const CHARA_ID_MARUYAMA = [15, 16, 28, 32, 40, 47];
+const CHARA_ID_RUKA_SHARO = [1, 42];
 
 /** スキル属性 */
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
