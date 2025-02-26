@@ -291,7 +291,7 @@ img.select_style {
 .turn {
     border: solid gray 2px;
     border-radius: 20px;
-    margin-top: 5px;
+    margin: 0px 0px 3px 0px;
     padding: 0px 5px 0px 5px;
     display: flex;
 }
@@ -467,6 +467,7 @@ img.select_style {
     margin-top: -56px;
     text-align: right;
     pointer-events: none;
+    white-space: nowrap;
 }
 
 .unit_sp.minus {

@@ -20,41 +20,45 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             handleClose();
         } else if (mode == "load") {
             let jsonstr = localStorage.getItem(`sim_data_${i}`);
-            let save_data = []
-            if (jsonstr) {
-                let ret = window.confirm("部隊情報が上書きされますが、よろしでしょうか？");
-                if (!ret) {
-                    return;
-                }
-                handleClose();
-                let decompress = decompressString(jsonstr)
-                save_data = JSON.parse(decompress);
-                // 部隊情報上書き
-                save_data.unit_data_list.forEach((unit_data, index) => {
-                    if (unit_data) {
-                        setMember(select_style_list, index, unit_data.style_id, false);
-                        select_style_list[index].limit_count = unit_data.limit_count;
-                        select_style_list[index].earring = unit_data.earring;
-                        select_style_list[index].bracelet = unit_data.bracelet;
-                        select_style_list[index].chain = unit_data.chain;
-                        select_style_list[index].init_sp = unit_data.init_sp;
-                        select_style_list[index].exclusion_skill_list = unit_data.exclusion_skill_list;
-                    } else {
-                        select_style_list[index] = undefined;
-                    }
-                })
-                // 戦闘データ初期化
-                cleanBattleData();
-                user_operation_list = save_data.user_operation_list;
-                // 初期データ作成
-                let turn_init = getInitBattleData();
-                // 最終ターンの情報
-                const last_turn_operation = user_operation_list[user_operation_list.length - 1];
-                // ターンデータ再生成
-                recreateTurnData(turn_init, last_turn_operation, true);
-            }
+            loadSimData(jsonstr);
         }
     };
+
+    const loadSimData = (jsonstr) => {
+        let save_data = []
+        if (jsonstr) {
+            let ret = window.confirm("部隊情報が上書きされますが、よろしでしょうか？");
+            if (!ret) {
+                return;
+            }
+            handleClose();
+            let decompress = decompressString(jsonstr)
+            save_data = JSON.parse(decompress);
+            // 部隊情報上書き
+            save_data.unit_data_list.forEach((unit_data, index) => {
+                if (unit_data) {
+                    setMember(select_style_list, index, unit_data.style_id, false);
+                    select_style_list[index].limit_count = unit_data.limit_count;
+                    select_style_list[index].earring = unit_data.earring;
+                    select_style_list[index].bracelet = unit_data.bracelet;
+                    select_style_list[index].chain = unit_data.chain;
+                    select_style_list[index].init_sp = unit_data.init_sp;
+                    select_style_list[index].exclusion_skill_list = unit_data.exclusion_skill_list;
+                } else {
+                    select_style_list[index] = undefined;
+                }
+            })
+            // 戦闘データ初期化
+            cleanBattleData();
+            user_operation_list = save_data.user_operation_list;
+            // 初期データ作成
+            let turn_init = getInitBattleData();
+            // 最終ターンの情報
+            const last_turn_operation = user_operation_list[user_operation_list.length - 1];
+            // ターンデータ再生成
+            recreateTurnData(turn_init, last_turn_operation, true);
+        }
+    }
 
     // メンバー情報からユニットデータに変換
     function convertUnitDataList() {
@@ -82,6 +86,60 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
         return null;
     }
 
+    // 出力クリック
+    const chickOutput = () => {
+        let save_data = {
+            unit_data_list: convertUnitDataList(),
+            user_operation_list: user_operation_list,
+        }
+        let compress = compressString(JSON.stringify(save_data));
+        let filename = "sim_data.sav";
+        downloadStringAsFile(compress, filename);
+        handleClose();
+    }
+
+    // 読み込みクリック
+    const chickRead = () => {
+        readFileAsString(function (content) {
+            loadSimData(content);
+        });
+    }
+
+    // ダウンロード
+    function downloadStringAsFile(content, filename) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        // ダウンロード用のリンクを作成
+        const downloadLink = document.createElement('a');
+        downloadLink.href = window.URL.createObjectURL(blob);
+        downloadLink.download = filename;
+        // ダウンロードリンクをクリックしてダウンロードを開始
+        downloadLink.click();
+        // 不要になったURLオブジェクトを解放
+        window.URL.revokeObjectURL(downloadLink.href);
+    }
+
+    // アップロード
+    function readFileAsString(callback) {
+        // ファイル選択用のinput要素を動的に作成
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.sav';
+        // ファイルが選択された時の処理
+        input.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            // ファイルの読み込みが完了した時の処理
+            reader.onload = function (event) {
+                const content = event.target.result;
+                callback(content); // コールバック関数を呼び出し、ファイルの内容を渡す
+            };
+            // ファイルの読み込みを開始
+            reader.readAsText(file);
+        });
+        // ファイル選択用のinput要素をクリックしてファイルを選択するダイアログを表示
+        input.click();
+    }
+
     let save = [];
     for (let i = 0; i < 10; i++) {
         let load_data = loadStorage(i);
@@ -95,18 +153,28 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
     }
 
     return (
-        <div>
-            <p>■保存されるもの</p>
-            <p>・スタイル/スタイルごとの設定(限界突破数/装備/スキル/初期SP)</p>
-            <p>・各ターンのキャラクターの配置、行動</p>
-            <p>■保存されないもの</p>
-            <p>・選択した敵</p>
-            <p>・詳細設定</p>
-            <ul className="save_load">
-                {save.map((item, index) => (
-                    <li key={index} onClick={() => handleClick(index, item)}>{item}</li>
-                ))}
-            </ul>
-        </div>
+        <>
+            <div>
+                <label className="modal_label">データ選択</label>
+            </div>
+            <div>
+                <p>■保存されるもの</p>
+                <p>・スタイル/スタイルごとの設定(限界突破数/装備/スキル/初期SP)</p>
+                <p>・各ターンのキャラクターの配置、行動</p>
+                <p>■保存されないもの</p>
+                <p>・選択した敵</p>
+                <p>・詳細設定</p>
+                <ul className="save_load">
+                    {save.map((item, index) => (
+                        <li key={index} onClick={() => handleClick(index, item)}>{item}</li>
+                    ))}
+                </ul>
+                {mode == "save" ?
+                    <input type="button" className="text-sm w-[120px]" onClick={chickOutput} value="ファイルへ出力" />
+                    :
+                    <input type="button" className="text-sm w-[120px]" onClick={chickRead} value="ファイルから読み込み" />
+                }
+            </div>
+        </>
     );
 };

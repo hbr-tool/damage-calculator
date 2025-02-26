@@ -105,20 +105,20 @@ class turn_data {
     // 1:通常戦闘,2:後打ちOD,3:追加ターン
     turnProceed(kb_next) {
         const self = this;
+        let turnProgress = true;
         this.enemy_debuff_list.sort((a, b) => a.buff_kind - b.buff_kind);
         if (kb_next == KB_NEXT_ACTION) {
             // オーバードライブ
             if (this.over_drive_max_turn > 0) {
                 this.over_drive_number++;
-                this.unitLoop(function (unit) {
-                    unit.unitOverDriveTurnProceed();
-                });
+                turnProgress = false;
                 if (this.over_drive_max_turn < this.over_drive_number) {
                     // オーバードライブ終了
                     this.over_drive_max_turn = 0;
                     this.over_drive_number = 0;
                     this.end_drive_trigger_count++;
                     if (this.finish_action) {
+                        turnProgress = true;
                         this.nextTurn();
                     }
                 }
@@ -129,17 +129,13 @@ class turn_data {
         } else if (kb_next == KB_NEXT_ADDITIONALTURN) {
             // 追加ターン
             this.additional_count++;
-            this.unitLoop(function (unit) {
-                unit.unitAdditionalTurnProceed();
-            });
+            turnProgress = false;
         } else {
             // 行動開始＋OD発動
             this.startOverDrive();
             this.finish_action = true;
             this.end_drive_trigger_count = 0;
-            this.unitLoop(function (unit) {
-                unit.unitOverDriveTurnProceed();
-            });
+            turnProgress = false;
         }
         // ターンごとに初期化
         this.trigger_over_drive = false;
@@ -147,6 +143,7 @@ class turn_data {
         this.old_field = this.field;
         this.seq_turn++;
         this.unitLoop(function (unit) {
+            unit.buffConsumption(turnProgress);
             unit.unitTurnInit(self.additional_turn);
         });
         this.setUserOperation();
@@ -344,7 +341,7 @@ class unit_data {
     unitTurnInit(additional_turn) {
         this.buff_effect_select_type = 0;
         if (this.place_no < 3 && (!additional_turn || this.additional_turn)) {
-            this.select_skill_id = this.init_skill_id;
+            this.setInitSkill();
         } else {
             this.select_skill_id = SKILL_NONE;
         }
@@ -371,47 +368,42 @@ class unit_data {
                 this.sp = 20
             }
         }
-
-        for (let i = this.buff_list.length - 1; i >= 0; i--) {
-            let buff = this.buff_list[i];
-            if (buff.rest_turn == 1) {
-                this.buff_list.splice(i, 1);
-            } else {
-                buff.rest_turn -= 1;
-            }
-        }
     }
+
+    setInitSkill() {
+        if (this.place_no < 3) {
+            this.select_skill_id = this.init_skill_id;
+            this.sp_cost = 0;
+        } else {
+            this.select_skill_id = SKILL_NONE;
+            this.sp_cost = 0;
+        }
+        this.buff_effect_select_type = null;
+        this.buff_target_chara_id = null;
+    }
+
     unitOverDriveTurnProceed() {
         this.buffSort();
-        // ターン消費
-        this.specialRestTurn();
         // OverDriveゲージをSPに加算
         this.sp += this.over_drive_sp;
         if (this.sp > 99) this.sp = 99;
         this.over_drive_sp = 0;
     }
 
-    unitAdditionalTurnProceed() {
-        if (this.additional_turn) {
-            // ターン消費
-            this.specialRestTurn();
-        }
-    }
-
-    specialRestTurn() {
-        // 追加ターンODのみのターン消費
+    buffConsumption(turnProgress) {
         for (let i = this.buff_list.length - 1; i >= 0; i--) {
             let buff_info = this.buff_list[i];
-            // ターン消費バフ
-            if (isAloneActivation(buff_info)) {
-                if (buff_info.rest_turn == 1) {
-                    this.buff_list.splice(i, 1);
-                } else {
-                    buff_info.rest_turn -= 1;
+            if (!turnProgress) {
+                // 単独発動と行動不能
+                if (isAloneActivation(buff_info) || buff_info.buff_kind == BUFF_RECOIL) {
+                    if (buff_info.rest_turn == 1) {
+                        this.buff_list.splice(i, 1);
+                    } else {
+                        buff_info.rest_turn -= 1;
+                    }
                 }
-            }
-            // 行動不能
-            if (buff_info.buff_kind == BUFF_RECOIL) {
+            } else {
+                // 全バフターン消費
                 if (buff_info.rest_turn == 1) {
                     this.buff_list.splice(i, 1);
                 } else {
@@ -1043,7 +1035,7 @@ const reflectUserOperation = (turn_data, isLoadMode) => {
         if (turn_data.additional_turn) {
             if (!isLoadMode) {
                 if (operation_place_no != unit.place_no) {
-                    turn_data.user_operation.select_skill[unit.place_no].skill_id = unit.init_skill_id;
+                    turn_data.user_operation.select_skill[unit.place_no].skill_id = unit.place_no < 3 ? unit.init_skill_id : SKILL_NONE;
                     turn_data.user_operation.place_style[unit.place_no] = unit.style.style_info.style_id;
                 }
                 return;

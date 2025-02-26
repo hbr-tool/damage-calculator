@@ -148,11 +148,8 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
 
     // 前衛後衛ユニット交換
     const exchangeUnit = ((old_front, old_back, select_skill) => {
-        old_front.select_skill_id = SKILL_NONE;
-        old_front.sp_cost = 0;
-        old_front.buff_effect_select_type = null;
-        old_front.buff_target_chara_id = null;
-        old_back.select_skill_id = old_back.init_skill_id;
+        old_back.setInitSkill();
+        old_front.setInitSkill();
         select_skill[old_front.place_no] = { skill_id: SKILL_NONE };
         select_skill[old_back.place_no] = { skill_id: old_back.init_skill_id };
     })
