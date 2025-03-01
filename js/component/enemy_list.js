@@ -62,6 +62,7 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
                     <option value="5">宝珠の迷宮</option>
                     <option value="6">スコアアタック</option>
                     <option value="7">プリズムバトル</option>
+                    <option value="13">イベントプリズム</option>
                     <option value="8">恒星掃戦線</option>
                     <option value="9">イベント隠しボス</option>
                     <option value="10">時の修練場</option>
