@@ -111,6 +111,9 @@ class turn_data {
             // オーバードライブ
             if (this.over_drive_max_turn > 0) {
                 this.over_drive_number++;
+                this.unitLoop(function (unit) {
+                    unit.unitOverDriveTurnProceed();
+                });
                 turnProgress = false;
                 if (this.over_drive_max_turn < this.over_drive_number) {
                     // オーバードライブ終了
@@ -135,6 +138,9 @@ class turn_data {
             this.startOverDrive();
             this.finish_action = true;
             this.end_drive_trigger_count = 0;
+            this.unitLoop(function (unit) {
+                unit.unitOverDriveTurnProceed();
+            });
             turnProgress = false;
         }
         // ターンごとに初期化
