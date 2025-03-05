@@ -13,9 +13,6 @@ const CONSTRAINTS_ABILITY = [
 ];
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
-// 残ターン消費バフ
-// 星屑の航路/星屑の航路+/バウンシー・ブルーミー/月光/流れ星に唄えば/チャーミングボイス/かき鳴らせキラーチューン/ジャムセッション/蒼星のイリデッセンス
-const REST_TURN_COST_BUFF = [67, 491, 523, 567, 568, 573, 575, 577, 586];
 
 const styleSheet = document.createElement('style');
 document.head.appendChild(styleSheet);
@@ -1649,6 +1646,9 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             }
             $.each(target_list, function (index, target_no) {
                 let unit_data = getUnitData(turn_data, target_no);
+                if (unit_data.blank) {
+                    return;
+                }
                 // 単一バフ
                 if (SINGLE_BUFF_LIST.includes(buff_info.buff_kind)) {
                     if (checkBuffExist(unit_data.buff_list, buff_info.buff_kind)) {
@@ -1683,6 +1683,9 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
             $.each(target_list, function (index, target_no) {
                 let unit_data = getUnitData(turn_data, target_no);
+                if (unit_data.blank) {
+                    return;
+                }
                 let exist_list = unit_data.buff_list.filter(function (buff_info) {
                     return buff_info.buff_kind == BUFF_MORALE;
                 });
@@ -1727,7 +1730,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_HEALSP: // SP追加
             target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
             $.each(target_list, function (index, target_no) {
-                skillHealSp(turn_data, target_no, buff_info.min_power, buff_info.max_power, place_no, false);
+                skillHealSp(turn_data, target_no, buff_info.min_power, buff_info.max_power, place_no, false, buff_info.buff_id);
             });
             break;
         case BUFF_ADDITIONALTURN: // 追加ターン
@@ -1767,28 +1770,33 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
     }
 }
 
-function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, isRecursion) {
+function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, is_recursion, buff_id) {
     let unit_data = getUnitData(turn_data, target_no);
     let unit_sp = unit_data.sp;
+    let minus_sp = 0;
+    // クレール・ド・リュンヌ(＋)は消費SPを加味する。
+    if (buff_id == 120 || buff_id == 121) {
+        minus_sp = unit_data.sp_cost;
+    }
     unit_sp += add_sp;
-    if (unit_sp + unit_data.over_drive_sp > limit_sp) {
-        unit_sp = limit_sp - unit_data.over_drive_sp;
+    if (unit_sp + unit_data.over_drive_sp - minus_sp > limit_sp) {
+        unit_sp = limit_sp - unit_data.over_drive_sp + minus_sp;
     }
     if (unit_sp < unit_data.sp) {
         unit_sp = unit_data.sp
     }
     unit_data.sp = unit_sp;
 
-    if (!isRecursion) {
+    if (!is_recursion) {
         // 愛嬌
         if (checkAbilityExist(unit_data.ability_other, 1605) && target_no != use_place_no) {
-            skillHealSp(turn_data, target_no, 3, 30, null, true)
+            skillHealSp(turn_data, target_no, 3, 30, null, true, 0)
         }
         // お裾分け
         if (checkAbilityExist(unit_data.ability_other, 1606) && target_no != use_place_no) {
             let target_list = getTargetList(turn_data, RANGE_ALLY_ALL, 0, target_no, null);
             $.each(target_list, function (index, target_no) {
-                skillHealSp(turn_data, target_no, 2, 30, null, true)
+                skillHealSp(turn_data, target_no, 2, 30, null, true, 0)
             });
         }
     }

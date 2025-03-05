@@ -1342,6 +1342,10 @@ function addBuffList(member_info, member_kind) {
     buff_list.forEach(value => {
         let buff_element = 0;
         let only_one = "";
+        if (value.buff_id == 2607 && member_info.style_info.style_id != 145) {
+            // 月光(歌姫の加護)
+            return;
+        }
 
         if (member_kind == 1) {
             // サブメンバーは一部のみ許可
@@ -1370,7 +1374,7 @@ function addBuffList(member_info, member_kind) {
                 addElementField(member_info, value.buff_name, value.min_power, value.buff_element, value.buff_id, value.skill_id);
                 return;
             case BUFF_ATTACKUP: // 攻撃アップ
-            case 12: // 破壊率アップ
+            case BUFF_DAMAGERATEUP: // 破壊率アップ
                 only_one = "only_one";
                 break;
             case BUFF_ELEMENT_ATTACKUP: // 属性攻撃アップ
@@ -1662,6 +1666,7 @@ function checkFrontAbility() {
 // パッシブ追加
 function addPassive(member_info) {
     let chara_id = member_info.style_info.chara_id;
+    let style_id = member_info.style_info.style_id;
     let is_select = member_info.is_select;
 
     const TARGET_KIND = [
@@ -1682,6 +1687,7 @@ function addPassive(member_info) {
     ]
     let passive_list = skill_list.filter(obj =>
         obj.chara_id === chara_id &&
+        obj.style_id === style_id &&
         obj.skill_active == 1
     );
 
