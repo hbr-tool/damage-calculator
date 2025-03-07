@@ -323,6 +323,7 @@ class unit_data {
         this.normal_attack_element = 0;
         this.earring_effect_size = 0;
         this.skill_list = [];
+        this.passive_skill_list = [];
         this.blank = false;
         this.use_skill_list = [];
         this.buff_target_chara_id = null;
@@ -718,6 +719,12 @@ class unit_data {
                     buff.buff_name = ability.ability_name;
                     self.buff_list.push(buff);
                     break;
+                case EFFECT_ADDITIONALTURN: // 追加ターン
+                    if (turn_data.additional_count == 0) {
+                        self.additional_turn = true;
+                        turn_data.additional_turn = true;
+                    }
+                    break;
             }
         });
     }
@@ -811,6 +818,10 @@ function getInitBattleData() {
                 unit.init_skill_id = 4; // 指揮行動
             } else {
                 unit.init_skill_id = 1; // 通常攻撃
+            }
+            // 曙
+            if (checkPassiveExist(unit.passive_skill_list, 606)) {
+                unit.normal_attack_element = 4;
             }
             ["0", "00", "1", "3", "5", "10"].forEach(num => {
                 if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {
@@ -1401,7 +1412,11 @@ const getOverDrive = (turn) => {
             if (isResist(physical, unit_data.normal_attack_element, skill_info.attack_id)) {
                 correction = 1 + badies / 100;
                 let hit_od = Math.floor(2.5 * correction * 100) / 100;
-                unit_od_plus += hit_od * 3;
+                let hit_count = 3;
+                if (checkPassiveExist(unit_data.passive_skill_list, 606)) {
+                    hit_count = enemy_count;
+                }
+                unit_od_plus += hit_od * hit_count;
             }
         } else if (skill_info.attack_id) {
             if (isResist(physical, attack_info.attack_element, skill_info.attack_id)) {

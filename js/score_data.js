@@ -6,8 +6,13 @@ const damage_limit1 = [1000000, 1200000, 1663158, 2126316, 2589474, 3052632, 351
 let damage_limit2 = [1400000, 1680000, 1960000, 2240000, 2520000, 2800000, 3080000, 3360000, 3640000, 3920000, 4200000, 7980000, 11760000, 12040000, 12320000, 12600000, 12880000, 13160000, 13440000, 13720000, 14000000, 15400000, 16800000, 18200000, 19600000, 21000000, 22400000, 23800000, 25200000, 26600000, 28000000, 29400000, 30800000, 32200000, 33600000, 35000000, 36400000, 37800000, 39200000, 40600000, 42000000];
 const turn_bonus = [0.00, 1.30, 1.29, 1.28, 1.27, 1.26, 1.24, 1.23, 1.22, 1.21, 1.20, 1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10, 1.09, 1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01, 1.00];
 const score_attack_list = [
-    { "score_attack_no": 68, "enemy_count": 1, "max_damage_rate": 0.770, "dp_rate": [1.040, 1.040, 1.040, 1.050, 1.010], "hp_rate": [1.060, 1.060, 1.005, 1.057, 1.010] },
-    { "score_attack_no": 69, "enemy_count": 1, "max_damage_rate": 0.770, "dp_rate": [1.040, 1.040, 1.030, 1.038, 1.020], "hp_rate": [1.050, 1.050, 1.050, 1.050, 1.020] },
+    // { "score_attack_no": 68, "enemy_count": 1, "max_damage_rate": 0.770, "dp_rate": [1.040, 1.040, 1.040, 1.050, 1.010], "hp_rate": [1.060, 1.060, 1.005, 1.057, 1.010] },
+    // { "score_attack_no": 69, "enemy_count": 1, "max_damage_rate": 0.770, "dp_rate": [1.040, 1.040, 1.030, 1.038, 1.020], "hp_rate": [1.050, 1.050, 1.050, 1.050, 1.020] },
+    {
+        "score_attack_no": 70, "enemy_count": 1, "max_damage_rate": 0.770,
+        "dp_rate": { 101: 331000, 120: 662000, 121: 707000, 140: 1586000, 141: 1601860, 150: 1744600 },
+        "hp_rate": { 101: 1905000, 120: 5080500, 121: 5284500, 140: 13468500, 141: 14141925, 150: 14815350 }
+    },
 ];
 
 // スコアタ情報取得
@@ -17,45 +22,19 @@ function getScoreAttack(score_attack_no) {
 }
 
 // スコアタHP取得
-function getScoreHp(score_lv, max_hp, score_attack, enemy_info) {
-    let lv_hp;
-    let count = [score_lv > 110 ? 10 : score_lv - 100,
-                score_lv > 120 ? 10 : score_lv < 110 ? 0 : score_lv - 110,
-                score_lv > 130 ? 10 : score_lv < 120 ? 0 : score_lv - 120,
-                score_lv > 140 ? 10 : score_lv < 130 ? 0 : score_lv - 130,
-                score_lv > 140 ? score_lv - 140 : 0];
-    let magn = 1;
-    let add = 0;
-    for (let i = 0; i < 5; i++) {
-        if (score_attack.hp_rate[i] !== 0) {
-            magn *= Math.pow(Number(score_attack.hp_rate[i]), count[i]);
-        } else {
-            add += score_attack.hp_add[i] * count[i];
-        }
+function getScoreHpDp(score_lv, score_attack, rate_kbn) {
+    let max_num = 150;
+    let min_num = 141;
+    if (score_lv <= 120) {
+        max_num = 120
+        min_num = 101;
+    } else if (score_lv <= 140) {
+        max_num = 140
+        min_num = 121;
     }
-    lv_hp = Math.ceil(max_hp * magn / 1000) * 1000;
-    lv_hp += add;
-    return lv_hp;
-}
 
-// スコアタDP取得
-function getScoreDp(score_lv, max_dp, score_attack, enemy_info) {
-    let lv_dp;
-    let count = [score_lv > 110 ? 10 : score_lv - 100,
-                score_lv > 120 ? 10 : score_lv < 110 ? 0 : score_lv - 110,
-                score_lv > 130 ? 10 : score_lv < 120 ? 0 : score_lv - 120,
-                score_lv > 140 ? 10 : score_lv < 130 ? 0 : score_lv - 130,
-                score_lv > 140 ? score_lv - 140 : 0];
-    let magn = 1;
-    let add = 0;
-    for (let i = 0; i < 5; i++) {
-        if (score_attack.dp_rate[i] !== 0) {
-            magn *= Math.pow(Number(score_attack.dp_rate[i]), count[i]);
-        } else {
-            add += score_attack.dp_add[i] * count[i];
-        }
-    }
-    lv_dp = Math.ceil(max_dp * magn / 1000) * 1000;
-    lv_dp += add;
-    return lv_dp;
+    let base = score_attack[rate_kbn][min_num];
+    let div = (score_attack[rate_kbn][max_num] - score_attack[rate_kbn][min_num]) / (max_num - min_num);
+    let diff = score_lv - min_num;
+    return Math.floor(base + div * diff);
 }

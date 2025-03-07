@@ -1671,6 +1671,7 @@ function addPassive(member_info) {
 
     const TARGET_KIND = [
         EFFECT_ATTACKUP, // 攻撃力アップ
+        EFFECT_DAMAGERATEUP, // 破壊率上昇
         EFFECT_CRITICAL_UP, // クリティカル率アップ
         EFFECT_FIELD_DEPLOYMENT, // フィールド展開
         EFFECT_STATUSUP_VALUE, // 能力固定上昇
@@ -1687,7 +1688,7 @@ function addPassive(member_info) {
     ]
     let passive_list = skill_list.filter(obj =>
         obj.chara_id === chara_id &&
-        obj.style_id === style_id &&
+        (obj.style_id === style_id || obj.style_id === 0) && 
         obj.skill_active == 1
     );
 
@@ -2422,8 +2423,7 @@ function getEnemyInfo() {
 }
 
 // グレード情報更新
-function updateGrade() {
-    let grade_sum = getGradeSum();
+function updateGrade(grade_sum) {
     for (let i = 1; i <= 3; i++) {
         setEnemyElement("#enemy_physical_" + i, null, - grade_sum["physical_" + i], null);
     }
@@ -2431,7 +2431,6 @@ function updateGrade() {
         setEnemyElement("#enemy_element_" + i, null, - grade_sum["element_" + i], null);
     }
     displayWeakRow();
-    updateEnemyScoreAttack();
 }
 
 // グレード情報取得
@@ -2457,7 +2456,7 @@ function getGradeSum(enemy_info) {
             if (grade.grade_none == 1) {
                 return true;
             }
-            [1, 2, 3].forEach(index => {
+            [1, 2, 3, 4].forEach(index => {
                 let kind = grade["effect_kind" + index];
                 if (kind == "") {
                     return;
@@ -2585,10 +2584,10 @@ function updateEnemyScoreAttack(enemy_info) {
     let score_attack = getScoreAttack(enemy_info.sub_no);
     let score_lv = Number($("#score_lv").val() ? $("#score_lv").val() : 150);
     let enemy_stat = score_stat[score_lv - 100];
-    let enemy_hp = getScoreHp(score_lv, Number(enemy_info.max_hp), score_attack, enemy_info);
+    let enemy_hp = getScoreHpDp(score_lv, score_attack, "hp_rate");
     let max_dp_list = enemy_info.max_dp.split(",");
     for (let i = 0; i < max_dp_list.length; i++) {
-        let enemy_dp = getScoreDp(score_lv, Number(max_dp_list[i]), score_attack, enemy_info);
+        let enemy_dp = getScoreHpDp(score_lv, score_attack, "dp_rate");
         $("#enemy_dp_" + i).val((enemy_dp * (1 + grade_sum["dp_rate"] / 100)).toLocaleString());
     }
     $("#enemy_stat").val(enemy_stat);
@@ -2598,6 +2597,7 @@ function updateEnemyScoreAttack(enemy_info) {
         $("#enemy_destruction_limit").val(grade_sum["destruction_limit"]);
         $("#enemy_destruction_rate").val(grade_sum["destruction_limit"]);
     }
+    updateGrade(grade_sum);
 }
 
 // セラフ遭遇戦敵ステータス設定

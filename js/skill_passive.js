@@ -13,4 +13,5 @@
     {"skill_id":559,"passive_name":"水光のゆらめき","passive_explan":"オーバードライブ中 自身がかけた防御力ダウンの効果量+10%","passive_short_explan":"オーバードライブ中 自身がかけた防御力ダウンの効果量+10%","effect_type":28,"activation_timing":99,"activation_place":3,"range_area":6,"effect_size":10},
     {"skill_id":600,"passive_name":"ルカとふたりきりですね…","passive_explan":"バトル開始時 自身と茅森月歌のSP+","passive_short_explan":"","effect_type":12,"activation_timing":0,"activation_place":3,"range_area":42,"effect_size":2},
     {"skill_id":601,"passive_name":"希望を拓く一矢","passive_explan":"自身がEXスキル使用後味方全体のSP+2","passive_short_explan":"","effect_type":12,"activation_timing":8,"activation_place":3,"range_area":6,"effect_size":2},
+    {"skill_id":611,"passive_name":"微笑の秘訣","passive_explan":"行動開始時に前衛に居ると自身のスキル攻撃時の破壊率上昇量+15%","passive_short_explan":"自身のスキル攻撃時の破壊率上昇量+15%","effect_type":5,"activation_timing":1,"activation_place":1,"range_area":7,"effect_size":15},
 ];
