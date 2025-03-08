@@ -146,6 +146,9 @@ class turn_data {
         this.old_field = this.field;
         this.seq_turn++;
         this.unitLoop(function (unit) {
+            if (kb_next == KB_NEXT_ADDITIONALTURN && !unit.additional_turn) {
+                return;
+            }
             unit.buffConsumption(turnProgress);
             unit.unitTurnInit(self.additional_turn);
         });
