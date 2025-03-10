@@ -102,7 +102,7 @@ class turn_data {
     // 1:通常戦闘,2:後打ちOD,3:追加ターン
     turnProceed(kb_next) {
         const self = this;
-        let turnProgress = true;
+        let turnProgress = false;
         this.enemy_debuff_list.sort((a, b) => a.buff_kind - b.buff_kind);
         if (kb_next == KB_NEXT_ACTION) {
             // オーバードライブ
@@ -111,7 +111,6 @@ class turn_data {
                 this.unitLoop(function (unit) {
                     unit.unitOverDriveTurnProceed();
                 });
-                turnProgress = false;
                 if (this.over_drive_max_turn < this.over_drive_number) {
                     // オーバードライブ終了
                     this.over_drive_max_turn = 0;
@@ -123,13 +122,13 @@ class turn_data {
                     }
                 }
             } else {
+                turnProgress = true;
                 this.nextTurn();
             }
             this.additional_count = 0;
         } else if (kb_next == KB_NEXT_ADDITIONALTURN) {
             // 追加ターン
             this.additional_count++;
-            turnProgress = false;
         } else {
             // 行動開始＋OD発動
             this.startOverDrive();
@@ -138,7 +137,6 @@ class turn_data {
             this.unitLoop(function (unit) {
                 unit.unitOverDriveTurnProceed();
             });
-            turnProgress = false;
         }
         // ターンごとに初期化
         this.trigger_over_drive = false;
@@ -153,6 +151,9 @@ class turn_data {
             unit.unitTurnInit(self.additional_turn);
         });
         this.setUserOperation();
+        if (turnProgress) {
+            this.abilityAction(ABILIRY_SELF_START);
+        }
     }
 
     setUserOperation() {
@@ -191,7 +192,6 @@ class turn_data {
         this.finish_action = false;
         this.end_drive_trigger_count = 0;
         this.abilityAction(ABILIRY_RECEIVE_DAMAGE);
-        this.abilityAction(ABILIRY_SELF_START);
         if (this.turn_number % this.step_turn == 0 && this.over_drive_gauge > 0) {
             this.over_drive_gauge += this.step_over_drive_down;
             if (this.over_drive_gauge < 0) {
@@ -1792,8 +1792,8 @@ function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, is_re
     let unit_data = getUnitData(turn_data, target_no);
     let unit_sp = unit_data.sp;
     let minus_sp = 0;
-    // クレール・ド・リュンヌ(＋)は消費SPを加味する。
-    if (buff_id == 120 || buff_id == 121) {
+    // クレール・ド・リュンヌ(＋)、収穫祭+は消費SPを加味する。
+    if (buff_id == 120 || buff_id == 121 || buff_id == 229) {
         minus_sp = unit_data.sp_cost;
     }
     unit_sp += add_sp;

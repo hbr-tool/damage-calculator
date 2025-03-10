@@ -1378,10 +1378,7 @@ function addBuffList(member_info, member_kind) {
                 only_one = "only_one";
                 break;
             case BUFF_ELEMENT_ATTACKUP: // 属性攻撃アップ
-                let attack_info = getAttackInfo(value.skill_attack1);
-                if (value.buff_element == attack_info.attack_element) {
-                    only_one = "only_one";
-                }
+                only_one = "only_one";
             case BUFF_ELEMENT_DEFENSEDOWN: // 属性防御ダウン
             case BUFF_RESISTDOWN: // 耐性ダウン
             case BUFF_ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
@@ -1688,7 +1685,7 @@ function addPassive(member_info) {
     ]
     let passive_list = skill_list.filter(obj =>
         obj.chara_id === chara_id &&
-        (obj.style_id === style_id || obj.style_id === 0) && 
+        (obj.style_id === style_id || obj.style_id === 0) &&
         obj.skill_active == 1
     );
 

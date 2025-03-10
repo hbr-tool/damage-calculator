@@ -29,13 +29,11 @@ function setMember(select_list, select_chara_no, style_id, isTrigger) {
     // 同一のキャラIDは不許可
     for (let i = 0; i < select_list.length; i++) {
         if (i !== select_chara_no && select_list[i]?.style_info.chara_id === style_info?.chara_id) {
-            // メンバーを入れ替える
-            if (select_list[select_chara_no]) {
-                // メンバーの情報を削除
-                if (typeof removeMember == "function") {
-                    removeMember(select_list, i, isTrigger);
-                }
+            // メンバーの情報を削除
+            if (typeof removeMember == "function") {
+                removeMember(select_list, i, isTrigger);
             }
+            // メンバーを入れ替える
             select_list[i] = select_list[select_chara_no];
             localStorage.setItem(`troops_${select_troops}_${i}`, select_list[i] ? select_list[i].style_info.style_id : null);
         }
