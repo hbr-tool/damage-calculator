@@ -597,7 +597,7 @@ class unit_data {
                 case EFFECT_HEALSP: // SP回復
                     $.each(target_list, function (index, target_no) {
                         let unit_data = getUnitData(turn_data, target_no);
-                        if (unit_data.sp < 20) {
+                        if (unit_data.sp + unit_data.over_drive_sp < 20) {
                             if (ability.ability_id) {
                                 switch (ability.ability_id) {
                                     case 1109: // 吉報
@@ -646,8 +646,8 @@ class unit_data {
                                         break;
                                 }
                             }
-                            if (unit_data.sp > 20) {
-                                unit_data.sp = 20
+                            if (unit_data.sp + unit_data.over_drive_sp > 20) {
+                                unit_data.sp = 20 - unit_data.over_drive_sp;
                             }
                         }
                     });
