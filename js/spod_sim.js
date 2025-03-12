@@ -144,7 +144,8 @@ class turn_data {
         this.old_field = this.field;
         this.seq_turn++;
         this.unitLoop(function (unit) {
-            if (kb_next == KB_NEXT_ADDITIONALTURN && !unit.additional_turn) {
+            if (unit.no_action) {
+                unit.no_action = false;
                 return;
             }
             unit.buffConsumption(turnProgress);
@@ -343,6 +344,7 @@ class unit_data {
         this.next_turn_min_sp = -1;
         this.select_skill_id = 0;
         this.init_skill_id = 0;
+        this.no_action = false;
     }
 
     unitTurnInit(additional_turn) {
@@ -1247,7 +1249,11 @@ function startAction(turn_data) {
     if (turn_data.additional_turn) {
         turn_data.additional_turn = false;
         turn_data.unitLoop(function (unit) {
-            unit.additional_turn = false;
+            if (unit.additional_turn) {
+                unit.additional_turn = false;
+            } else {
+                unit.no_action = true;
+            }
         });
     }
     // フィールド判定
