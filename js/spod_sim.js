@@ -179,6 +179,7 @@ class turn_data {
             turn_number: this.turn_number,
             additional_count: this.additional_count,
             over_drive_number: this.over_drive_number,
+            remark: "",
         }
     }
 
