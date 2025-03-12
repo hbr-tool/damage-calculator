@@ -154,6 +154,13 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
         select_skill[old_back.place_no] = { skill_id: old_back.init_skill_id };
     })
 
+    // 備考編集
+    const chengeRemark = ((e) => {
+        let user_operation = turn.user_operation;
+        user_operation.remark = e.target.value;
+        reRender(user_operation, false);
+    })
+
     // 次ターン
     function clickNextTurn() {
         turn.is_last_turn = false;
@@ -240,7 +247,7 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                 </div>
             </div>
             <div className="remark_area">
-                <textarea className="remaek_text" />
+                <textarea className="remaek_text" onChange={(e) => chengeRemark(e)} value={turn.user_operation.remark}/>
             </div>
         </div>
     )
