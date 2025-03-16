@@ -52,10 +52,10 @@ const DetailSettingComponent = () => {
                         </select>
                         OverDriveGauge
                         <input className="step_od_gauge w-[70px]" defaultValue="0"
-                            id="init_over_drive" max="300" min="-300" step="0.01" type="number" onChange={(e) => {checkNumber(e)}} />
+                            id="init_over_drive" max="300" min="-300" step="0.01" type="number" onChange={(e) => { checkNumber(e) }} />
                         SP＋
                         <input className="step_sp" defaultValue="0"
-                            id="init_sp_add" max="20" min="-20" step="1" type="number" onChange={(e) => {checkNumber(e)}} />
+                            id="init_sp_add" max="20" min="-20" step="1" type="number" onChange={(e) => { checkNumber(e) }} />
                     </div>
                 </li>
                 <li>
@@ -105,6 +105,9 @@ const DetailSettingComponent = () => {
                     </select>
                     ターンごとに OverDriveGauge
                     <select className="step_od_gauge w-[60px]" id="step_over_drive_down" defaultValue="0">
+                        <option value="15">15%</option>
+                        <option value="10">10%</option>
+                        <option value="5">5%</option>
                         <option value="0">0%</option>
                         <option value="-5">-5%</option>
                         <option value="-10">-10%</option>
@@ -112,6 +115,9 @@ const DetailSettingComponent = () => {
                     </select>
                     SP
                     <select className="step_sp" id="step_sp_down" defaultValue="0">
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
                         <option value="0">0</option>
                         <option value="-1">-1</option>
                         <option value="-2">-2</option>
