@@ -194,10 +194,13 @@ class turn_data {
         this.finish_action = false;
         this.end_drive_trigger_count = 0;
         this.abilityAction(ABILIRY_RECEIVE_DAMAGE);
-        if (this.turn_number % this.step_turn == 0 && this.over_drive_gauge > 0) {
+        if (this.turn_number % this.step_turn == 0) {
             this.over_drive_gauge += this.step_over_drive_down;
-            if (this.over_drive_gauge < 0) {
-                this.over_drive_gauge = 0;
+            if (this.over_drive_gauge < -300) {
+                this.over_drive_gauge = -300;
+            }
+            if (this.over_drive_gauge > 300) {
+                this.over_drive_gauge = 300;
             }
         }
         // 敵のデバフ消費
