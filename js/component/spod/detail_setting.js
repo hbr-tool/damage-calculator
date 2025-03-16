@@ -52,10 +52,10 @@ const DetailSettingComponent = () => {
                         </select>
                         OverDriveGauge
                         <input className="step_od_gauge w-[70px]" defaultValue="0"
-                            id="init_over_drive" max="300" min="0" step="0.01" type="number" onChange={(e) => {checkNumber(e)}} />
+                            id="init_over_drive" max="300" min="-300" step="0.01" type="number" onChange={(e) => {checkNumber(e)}} />
                         SP＋
                         <input className="step_sp" defaultValue="0"
-                            id="init_sp_add" max="20" min="0" step="1" type="number" onChange={(e) => {checkNumber(e)}} />
+                            id="init_sp_add" max="20" min="-20" step="1" type="number" onChange={(e) => {checkNumber(e)}} />
                     </div>
                 </li>
                 <li>
