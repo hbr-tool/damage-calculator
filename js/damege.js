@@ -897,6 +897,7 @@ function getSpCost() {
                     return true;
                 } else if (key == "sp_cost") {
                     single_sp_cost = Number(data) - sp_cost_down;
+                    single_sp_cost = single_sp_cost < 0 ? 0 : single_sp_cost;
                     return true;
                 }
                 if (max_count < Number(data)) {
