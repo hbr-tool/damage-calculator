@@ -576,6 +576,16 @@ class unit_data {
                         return;
                     }
                     break;
+                case "OD100%未満":
+                    if (turn_data.over_drive_gauge >= 100) {
+                        return;
+                    }
+                    break;
+                case "OD0%未満":
+                    if (turn_data.over_drive_gauge >= 0) {
+                        return;
+                    }
+                    break;
                 case "破壊率が200%以上":
                 case "トークン4つ以上":
                 case "敵のバフ解除":
@@ -691,6 +701,10 @@ class unit_data {
                     });
                     break;
                 case EFFECT_OVERDRIVEPOINTUP: // ODアップ
+                    if (ability.used) {
+                        return;
+                    }
+                    ability.used = true;
                     turn_data.over_drive_gauge += ability.effect_size;
                     if (turn_data.over_drive_gauge > 300) {
                         turn_data.over_drive_gauge = 300;
