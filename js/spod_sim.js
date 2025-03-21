@@ -701,7 +701,8 @@ class unit_data {
                     });
                     break;
                 case EFFECT_OVERDRIVEPOINTUP: // ODアップ
-                    if (ability.used) {
+                    if (ability.used && ability.ability_id == 1207) {
+                        // V字回復
                         return;
                     }
                     ability.used = true;
@@ -1252,7 +1253,7 @@ function getBuffInfo(skill_id) {
 // アビリティ情報取得
 function getAbilityInfo(ability_id) {
     const filtered_ability = ability_list.filter((obj) => obj.ability_id == ability_id);
-    return filtered_ability.length > 0 ? filtered_ability[0] : undefined;
+    return filtered_ability.length > 0 ?  JSON.parse(JSON.stringify(filtered_ability[0])) : undefined;
 }
 
 // パッシブ情報取得
