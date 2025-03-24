@@ -531,7 +531,7 @@
     {"skill_id":9011,"skill_name":"ファイアグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9012,"skill_name":"アイスグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9013,"skill_name":"サンダーグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
-    {"skill_id":9014,"skill_name":"ライトニンググラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":9014,"skill_name":"ライトグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9015,"skill_name":"ダークグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9999,"skill_name":"行動無し","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":4,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
 ];
