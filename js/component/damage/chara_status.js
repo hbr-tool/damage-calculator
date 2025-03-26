@@ -48,6 +48,7 @@ const CharaStatus = () => {
         styleReset(select_style_list, false);
         select_troops = e.target.value;
         localStorage.setItem('select_troops', select_troops);
+        setSelectStyle([...select_style_list]);
         loadTroopsList(select_style_list, select_troops);
     }
 
