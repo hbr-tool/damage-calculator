@@ -1429,8 +1429,9 @@ const getOverDrive = (turn) => {
                 }
                 unit_od_plus += Math.floor(buff_info.max_power * correction * 100) / 100;
             }
-            // 連撃のみとオギャり状態処理
-            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || buff_info.buff_kind == BUFF_BABIED) {
+            // 連撃、オギャり状態、チャージ処理
+            const PROC_KIND = [BUFF_BABIED, BUFF_CHARGE];
+            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || PROC_KIND .includes(buff_info.buff_kind)) {
                 addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data);
             }
         });
