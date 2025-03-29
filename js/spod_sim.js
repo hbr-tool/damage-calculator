@@ -1447,7 +1447,17 @@ const getOverDrive = (turn) => {
                 unit_od_plus += hit_od * hit_count;
             }
         } else if (skill_info.attack_id) {
-            if (isResist(physical, attack_info.attack_element, skill_info.attack_id)) {
+            // 攻撃IDの変換(暫定)
+            let attack_id = skill_info.attack_id
+            switch (skill_info.attack_id) {
+                case 83:
+                    // 唯雅粛正
+                    if (checkBuffExist(unit_data.buff_list, BUFF_CHARGE)) {
+                        attack_id = 84;
+                    }
+                    break;
+            }
+            if (isResist(physical, attack_info.attack_element, attack_id)) {
                 correction = 1 + (badies + earring) / 100;
                 let hit_od = Math.floor(2.5 * correction * 100) / 100;
                 let enemy_target = enemy_count;
