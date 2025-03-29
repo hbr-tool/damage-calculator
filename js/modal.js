@@ -161,7 +161,9 @@ function loadSubTroopsList(troops_no) {
 // サブパーティのメンバーを設定する。
 function setSubMember(sub_chara_no, style_id) {
     let style_info = style_list.find((obj) => obj.style_id === style_id);
-
+    if (!style_info) {
+        return
+    }
     let isDuplication = false;
     // 同一のキャラIDがあるかどうかをチェック
     for (let style of Object.values(select_style_list)) {
