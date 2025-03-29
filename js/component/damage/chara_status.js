@@ -17,6 +17,13 @@ const CharaStatus = () => {
         updateJewelLv(chara_no);
     }
 
+    // トークン変更
+    const changeToken = (chara_no, value) => {
+        let token = Number(value);
+        saveStatus(chara_no, "token", token);
+        calcDamage();
+    }
+
     // ステータス変更
     const changeStatus = (chara_no, item, value) => {
         let status = Number(value);
@@ -164,6 +171,7 @@ const CharaStatus = () => {
                 let luk = style ? style.luk : 400;
                 let limit = style ? style.limit_count : 2;
                 let jewel = style ? style.jewel_lv : 0;
+                let token = style ? style.token ? style.token : 0 : 0;
                 let results = [];
                 Object.keys(ref_status_list).forEach(key => {
                     if (ref_status_list[key].length == 0) {
@@ -205,7 +213,7 @@ const CharaStatus = () => {
                                 <option value={i} key={`jewel_${i}`}>{i}</option>
                             ))}
                         </select>
-                        <select className="token" defaultValue="0" id={`token_${chara_id}`}>
+                        <select className="token" value={token} onChange={(e) => { changeToken(index, e.target.value) }} id={`token_${chara_id}`}>
                             {Array.from({length: 11 }, (_, i) => (
                                 <option value={i} key={`token_${i}`}>{i}</option>
                             ))}

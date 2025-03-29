@@ -629,7 +629,7 @@ function calcDamage() {
     let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
     let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
-    let token = getSumTokenEffectSize(chara_id);
+    let token = getSumTokenEffectSize(member_info);
     let element_field = getSumEffectSize("element_field") / 100 + 1;
     let weak_physical = $("#enemy_physical_" + attack_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + attack_info.attack_element).val() / 100;
@@ -2085,9 +2085,9 @@ function getSumFunnelEffectList() {
 }
 
 // トークン効果量
-function getSumTokenEffectSize(chara_id) {
+function getSumTokenEffectSize(member_info) {
     // トークン
-    let token_count = Number($(`#token_${chara_id}`).val());
+    let token_count = member_info.token ? member_info.token : 0;
     if (select_attack_skill.token_power_up == 1) {
         return 1 + token_count * 16 / 100;
     }
