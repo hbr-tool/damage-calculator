@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" />
+    <link rel="icon" href="./favicon.png" />
+    <meta property="og:url" content="https://www.seraph.day" />
+    <meta property="og:title" content="Seraph Database | Heaven Burns Red" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="SeraphDB is a database project that provides information about Heaven Burns Red."
+    />
+    <meta property="og:image" content="https://www.seraph.day/ui/LoginBonus_Stamp.png" />
+    <meta
+      name="description"
+      content="SeraphDB is a database project that provides information about Heaven Burns Red."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      crossorigin="anonymous"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&family=Noto+Sans+KR:wght@400;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+TC:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Seraph Database | Heaven Burns Red | ヘブンバーンズレッド</title>
+    <script type="module" crossorigin src="/assets/index-B3Un4afH.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-VcmzGFaC.css">
+  </head>
+  <body>
+    <noscript>
+      <strong
+        >We're sorry but SeraphDB doesn't work properly without JavaScript enabled. Please enable it
+        to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+  </body>
+</html>
