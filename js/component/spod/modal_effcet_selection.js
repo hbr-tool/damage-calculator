@@ -40,6 +40,9 @@ const EffectSelectionComponent = () => {
         if (conditionsList.includes(CONDITIONS_BUFF_DISPEL) || skill_info.attribute_conditions == CONDITIONS_BUFF_DISPEL) {
             effect_type = 7;
         }
+        if (conditionsList.includes(CONDITIONS_DP_OVER_100) || skill_info.attribute_conditions == CONDITIONS_DP_OVER_100) {
+            effect_type = 8;
+        }
 
         switch (skill_id) {
             case 50: // トリック・カノン
@@ -89,6 +92,9 @@ const EffectSelectionComponent = () => {
             break;
         case 7:
             value = ["バフ解除なし", "バフ解除あり"];
+            break;
+        case 8:
+            value = ["DP100%未満", "DP100%以上"];
             break;
     }
     return (

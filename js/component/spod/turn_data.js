@@ -61,7 +61,7 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
 
         let sp_cost = unit.sp_cost;
         let skill_info = getSkillData(skill_id);
-        const selectionConditions = [CONDITIONS_HAS_SHADOW, CONDITIONS_DOWN_TURN];
+        const selectionConditions = [CONDITIONS_HAS_SHADOW, CONDITIONS_DOWN_TURN, CONDITIONS_DP_OVER_100];
         if (selectionConditions.includes(skill_info.attribute_conditions)) {
             if (unit.buff_effect_select_type == 1) {
                 if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {

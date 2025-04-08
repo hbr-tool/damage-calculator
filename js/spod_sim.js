@@ -1253,7 +1253,7 @@ function getBuffInfo(skill_id) {
 // アビリティ情報取得
 function getAbilityInfo(ability_id) {
     const filtered_ability = ability_list.filter((obj) => obj.ability_id == ability_id);
-    return filtered_ability.length > 0 ?  JSON.parse(JSON.stringify(filtered_ability[0])) : undefined;
+    return filtered_ability.length > 0 ? JSON.parse(JSON.stringify(filtered_ability[0])) : undefined;
 }
 
 // パッシブ情報取得
@@ -1381,6 +1381,10 @@ function origin(turn_data, skill_info, unit_data) {
         case 177: // エリミネイト・ポッシブル
             let target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === unit_data.buff_target_chara_id);
             target_unit_data[0].next_turn_min_sp = 3;
+            break;
+        case 617: // ドリーミー・ガーデン
+            let target_unit_list = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id !== unit_data.style.style_info.chara_id);
+            target_unit_list.forEach(unit => unit.next_turn_min_sp = 10);
             break;
     }
     return;
@@ -1597,6 +1601,7 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
         case CONDITIONS_PERCENTAGE_30: // 確率30%
         case CONDITIONS_DOWN_TURN: // ダウンターン
         case CONDITIONS_BUFF_DISPEL: // バフ解除
+        case CONDITIONS_DP_OVER_100: // DP100%以上
             return unit_data.buff_effect_select_type == 1;
         case CONDITIONS_OVER_DRIVE: // オーバードライブ中
             return turn_data.over_drive_max_turn > 0;
@@ -1626,6 +1631,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return !checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
         case CONDITIONS_NOT_NEGATIVE: // ネガティブ以外
             return !checkBuffExist(unit_data.buff_list, BUFF_NAGATIVE);
+        case CONDITIONS_SP_UNDER_0_ALL: // SP0以下の味方がいる
+            return checkSp(turn_data, RANGE_ALLY_ALL, 0);
     }
     return true;
 }
@@ -2089,7 +2096,9 @@ function getTargetList(turn_data, range_area, target_element, place_no, buff_tar
         case RANGE_ALLY_UNIT: // 味方単体
         case RANGE_OTHER_UNIT: // 自分以外の味方単体
             target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
-            target_list.push(target_unit_data[0].place_no);
+            if (target_unit_data.length > 0) {
+                target_list.push(target_unit_data[0].place_no);
+            }
             break;
         case RANGE_ALLY_FRONT: // 味方前衛
             target_list = [0, 1, 2];
@@ -2109,7 +2118,9 @@ function getTargetList(turn_data, range_area, target_element, place_no, buff_tar
         case RANGE_SELF_AND_UNIT: // 味方単体
             target_unit_data = turn_data.unit_list.filter(unit => unit?.style?.style_info?.chara_id === buff_target_chara_id);
             target_list.push(place_no);
-            target_list.push(target_unit_data[0].place_no);
+            if (target_unit_data.length > 0) {
+                target_list.push(target_unit_data[0].place_no);
+            }
             break;
         case RANGE_FRONT_OTHER: // 自分以外の前衛
             target_list = [...Array(3).keys()].filter(num => num !== place_no);
