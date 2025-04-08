@@ -637,9 +637,9 @@ function calcDamage() {
     let funnel_sum = 1 + getSumFunnelEffectList().reduce((accumulator, currentValue) => accumulator + currentValue, 0) / 100;
     let destruction_rate = Number($("#enemy_destruction_rate").val());
     let special = 1 + Number($("#dp_range_0").val() == 0 ? attack_info.hp_damege / 100 : attack_info.dp_damege / 100);
-    // バーチカルフォース/パドマ・ナーチュナー
+    // バーチカルフォース/パドマ・ナーチュナー/ディナミコ・アチェーゾ
     let skill_unique_rate = 1;
-    if (attack_info.attack_id == 115 || attack_info.attack_id == 2167) {
+    if (attack_info.attack_id == 115 || attack_info.attack_id == 2167 || attack_info.attack_id == 187) {
         let dp_rate = Number($("#skill_unique_dp_rate").val());
         dp_rate = dp_rate < 60 ? 60 : dp_rate;
         skill_unique_rate += (dp_rate - 100) / 200
