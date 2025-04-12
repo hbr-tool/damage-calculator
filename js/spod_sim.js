@@ -611,6 +611,10 @@ class unit_data {
                     });
                     break;
                 case EFFECT_HEALSP: // SP回復
+                    if (ability.used && ability.ability_id == 1528) {
+                        // 戦場の華
+                        return;
+                    }
                     $.each(target_list, function (index, target_no) {
                         let unit_data = getUnitData(turn_data, target_no);
                         if (unit_data.sp + unit_data.over_drive_sp < 20) {
@@ -847,7 +851,7 @@ function getInitBattleData() {
             if (checkPassiveExist(unit.passive_skill_list, 606)) {
                 unit.normal_attack_element = 4;
             }
-            ["0", "00", "1", "3", "5", "10"].forEach(num => {
+            ["0", "00", "1", "3", "4", "5", "10"].forEach(num => {
                 if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {
                     let ability_info = getAbilityInfo(member_info.style_info[`ability${num}`]);
                     if (CONSTRAINTS_ABILITY.includes(ability_info.ability_id)) {
@@ -1435,7 +1439,7 @@ const getOverDrive = (turn) => {
             }
             // 連撃、オギャり状態、チャージ処理
             const PROC_KIND = [BUFF_BABIED, BUFF_CHARGE];
-            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || PROC_KIND .includes(buff_info.buff_kind)) {
+            if (BUFF_FUNNEL_LIST.includes(buff_info.buff_kind) || PROC_KIND.includes(buff_info.buff_kind)) {
                 addBuffUnit(temp_turn, buff_info, skill_data.place_no, unit_data);
             }
         });
