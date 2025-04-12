@@ -615,6 +615,7 @@ class unit_data {
                         // 戦場の華
                         return;
                     }
+                    ability.used = true;
                     $.each(target_list, function (index, target_no) {
                         let unit_data = getUnitData(turn_data, target_no);
                         if (unit_data.sp + unit_data.over_drive_sp < 20) {
