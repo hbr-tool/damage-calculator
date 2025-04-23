@@ -2601,10 +2601,10 @@ function updateSeraphEncounter(enemy_info, selectedList) {
                 new_enemy_info.element_4 += item.effect_size;
                 break;
             case "HP_UP":
-                new_enemy_info.max_hp *= 1 + (item.effect_size / 100);
+                new_enemy_info.max_hp = Math.floor(new_enemy_info.max_hp * (1 + (item.effect_size / 100)));
                 break;
             case "DP_UP":
-                new_enemy_info.max_dp = String(Number(new_enemy_info.max_dp) * (1 + (item.effect_size / 100)));
+                new_enemy_info.max_dp = String(Math.floor(Number(new_enemy_info.max_dp) * (1 + (item.effect_size / 100))));
                 break;
         }
     })
