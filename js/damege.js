@@ -2117,7 +2117,7 @@ function getSumTokenAbilirySize(effect_type) {
 // 制圧戦のバイクパーツ取得
 function getBikePartsEffectSize(buff_kind) {
     // 制圧戦以外は無し
-    if ($("#enemy_class").val() != 11) {
+    if ($("#enemy_class").val() != ENEMY_CLASS.CONTROL_BATTLE) {
         return 0;
     }
     let buff = 0;
@@ -2208,6 +2208,10 @@ function getCriticalBuff() {
     critical_buff += getSumAbilityEffectSize(4);
     // 制圧戦
     critical_buff += getBikePartsEffectSize("critical_buff");
+    // セラフ遭遇戦
+    if ($("#enemy_class").val() == ENEMY_CLASS.SERAPH_ENCOUNTER) {
+        critical_buff += getCardEffect("CLIRICAL_DAMAGE");
+    }
     return 1 + critical_buff / 100;
 }
 
@@ -2491,19 +2495,6 @@ function judgeConditions(conditions) {
 
 // 敵ステータス設定
 function setEnemyStatus(enemy_info, isUpdate) {
-    // 種別ごとの設定
-    // switch (enemy_info.enemy_class) {
-    //     case ENEMY_CLASS_HARD_LAYER:
-    //         if (enemy_info.enemy_class_no == 12 || enemy_info.enemy_class_no == 13) {
-    //             $("#skull_feather_1st").css("display", "block");
-    //         } else {
-    //             $("#skull_feather_1st").css("display", "none");
-    //         }
-    //         break;
-    //     case ENEMY_CLASS_SCORE_ATTACK:
-    //         displayScoreAttack(enemy_info);
-    //         break;
-    // }
     if (!enemy_info) {
         return;
     }
@@ -2544,9 +2535,6 @@ function setEnemyStatus(enemy_info, isUpdate) {
     if (enemy_info.enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
         updateEnemyScoreAttack(enemy_info);
     }
-    // if (enemy_info.enemy_class == ENEMY_CLASS_SERAPH_ENCOUNTER) {
-    //     updateSeraphEncounter();
-    // }
     // バフ効果量を更新
     $(".variable_effect_size").each(function (index, value) {
         updateBuffEffectSize($(value));
@@ -2599,45 +2587,28 @@ function updateEnemyScoreAttack(enemy_info) {
 }
 
 // セラフ遭遇戦敵ステータス設定
-function updateSeraphEncounter() {
-    let enemy_info = getEnemyInfo();
-    let checked = $('input[name=card]:checked');
-    let hp_rate = 1;
-    let dp_rate = 1;
-    let status_up = 0;
-    let resist = [0, 0, 0, 0, 0, 0];
-
-    let kind = checked.data("kind");
-    if (kind) {
-        let value = Number(checked.val());
-        switch (kind) {
-            case "status":
-                status_up = value;
+function updateSeraphEncounter(enemy_info, selectedList) {
+    let new_enemy_info = JSON.parse(JSON.stringify(enemy_info));
+    selectedList.forEach((item) => {
+        switch (item.effect_kind) {
+            case "STAT_UP":
+                new_enemy_info.enemy_stat += item.effect_size;
                 break;
-            case "dp_rate":
-                dp_rate += value / 100;
+            case "ICE_DOWN":
+                new_enemy_info.element_2 += item.effect_size;
                 break;
-            case "hp_rate":
-                hp_rate += value / 100;
+            case "LIGHT_DOWN":
+                new_enemy_info.element_4 += item.effect_size;
+                break;
+            case "HP_UP":
+                new_enemy_info.max_hp *= 1 + (item.effect_size / 100);
+                break;
+            case "DP_UP":
+                new_enemy_info.max_dp = String(Number(new_enemy_info.max_dp) * (1 + (item.effect_size / 100)));
                 break;
         }
-        if (kind.includes("resist")) {
-            let index = Number(kind.split("_")[1]);
-            resist[index] = value;
-        }
-    }
-    let enemy_hp = Number(enemy_info.max_hp);
-    let max_dp_list = enemy_info.max_dp.split(",");
-    for (let i = 0; i < max_dp_list.length; i++) {
-        let enemy_dp = Number(max_dp_list[i]);
-        $("#enemy_dp_" + i).val((enemy_dp * dp_rate).toLocaleString());
-    }
-    let enemy_stat = Number(enemy_info.enemy_stat);
-    $("#enemy_stat").val((enemy_stat + status_up));
-    $("#enemy_hp").val((enemy_hp * hp_rate).toLocaleString());
-    // for (let i = 0; i <= 5; i++) {
-    //     setEnemyElement(`#enemy_element_${i}`, enemy_info[`element_${i}`] - resist[i]);
-    // }
+    })
+    setEnemyStatus(new_enemy_info)
 }
 
 // スコア設定
@@ -2939,9 +2910,9 @@ function getFunnelEffectSize(buff_id, member_info) {
 
 // 敵防御力取得
 function getEnemyDefenceRate(grade_sum) {
-    let defence_rate = 0;
+    let enemy_defence_rate = 1;
     if (grade_sum.defense_rate) {
-        defence_rate = grade_sum.defense_rate / 100;
+        enemy_defence_rate = 1 - grade_sum.defense_rate / 100;
     }
     let count = 1;
     if (grade_sum.effect_count !== undefined) {
@@ -2950,8 +2921,11 @@ function getEnemyDefenceRate(grade_sum) {
     if ($("#skull_feather_1st_defense").is(':visible')) {
         defence_rate = 5 / 100;
         count = Number($("#skull_feather_1st_defense").val())
+        enemy_defence_rate = (1 - defence_rate) ** count;
     }
-    let enemy_defence_rate = (1 - defence_rate) ** count;
+    if ($("#enemy_class").val() == ENEMY_CLASS.SERAPH_ENCOUNTER) {
+        enemy_defence_rate = getCardEffect("ATTACK_DOWN");
+    }
     return enemy_defence_rate;
 }
 

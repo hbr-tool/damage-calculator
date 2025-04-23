@@ -35,6 +35,7 @@ const ContentsAreaComponent = ({ }) => {
             <HardLayerComponent enemy_info={enemy_info} />
             <ScoreSettingComponent enemy_info={enemy_info} />
             <BikePartsComponent enemy_info={enemy_info} />
+            <SeraphCardList enemy_info={enemy_info} />
         </>
     )
 };

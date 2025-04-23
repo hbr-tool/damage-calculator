@@ -65,9 +65,9 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
                     <option value="13">イベントプリズム</option>
                     <option value="8">恒星掃戦線</option>
                     <option value="9">イベント隠しボス</option>
-                    <option value="10">時の修練場</option>
+                    <option value="10">時の修練場/アリーナ</option>
                     <option value="11">制圧戦</option>
-                    {/* <option value="12">セラフ遭遇戦</option> */}
+                    <option value="12">セラフ遭遇戦</option>
                     {is_free_input ?
                         <option value="99">自由入力</option>
                     : null}

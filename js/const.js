@@ -7,6 +7,16 @@ const ROLE_BUFFER = 5;
 const ROLE_DEBUFFER = 6;
 const ROLE_DEFENDER = 7;
 const ROLE_ADMIRAL = 8;
+const ROLE = {
+    ATTACKER: 1,
+    BREAKER: 2,
+    BLASTER: 3,
+    HEALER: 4,
+    BUFFER: 5,
+    DEBUFFER: 6,
+    DEFENDER: 7,
+    ADMIRAL: 8,
+}
 
 /** バフ種別 */
 const BUFF_ATTACKUP = 0; // 攻撃力アップ
@@ -34,7 +44,7 @@ const BUFF_ELEMENT_ETERNAL_DEFENSEDOWN = 22; // 永続属性防御ダウン
 const BUFF_HEALSP = 23; // SP増加
 const BUFF_RECOIL = 24; // 行動不能
 const BUFF_PROVOKE = 25; // 挑発
-const BUFF_ADDITIONALTURN = 26 // 追加ターン
+const BUFF_ADDITIONALTURN = 26; // 追加ターン
 const BUFF_COVER = 27; // 注目
 const BUFF_GIVEATTACKBUFFUP = 28; // バフ強化
 const BUFF_GIVEDEBUFFUP = 29; // デバフ強化
@@ -48,8 +58,48 @@ const BUFF_DIVA_BLESS = 36; // 歌姫の加護
 const BUFF_SHREDDING = 37; // 速弾き
 const BUFF_NAGATIVE = 38; // ネガティブ
 const BUFF_DISPEL = 90; // ディスペル
-
 const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
+const BUFF = {
+    ELEMENT_ATTACKUP: 1, // 属性アップ
+    MINDEYE: 2, // 心眼
+    DEFENSEDOWN: 3, // 防御ダウン
+    ELEMENT_DEFENSEDOWN: 4, // 属性防御ダウン
+    FRAGILE: 5, // 脆弱
+    CRITICALRATEUP: 6, // クリ率
+    CRITICALDAMAGEUP: 7, // クリダメ
+    ELEMENT_CRITICALRATEUP: 8, // 属性クリ率
+    ELEMENT_CRITICALDAMAGEUP: 9, // 属性クリダメ
+    CHARGE: 10,// チャージ
+    FIELD: 11, // フィールド
+    DAMAGERATEUP: 12, // 破壊率アップ
+    OVERDRIVEPOINTUP: 13, // OD増加
+    FIGHTINGSPIRIT: 14, // 闘志
+    MISFORTUNE: 15, // 厄
+    FUNNEL: 16, // 連撃
+    STRONG_BREAK: 18, // 強ブレイク
+    DEFENSEDP: 19, // DP防御ダウン
+    RESISTDOWN: 20, // 耐性ダウン
+    ETERNAL_DEFENSEDOWN: 21, // 永続防御力ダウン
+    ELEMENT_ETERNAL_DEFENSEDOWN: 22, // 永続属性防御ダウン
+    HEALSP: 23, // SP増加
+    RECOIL: 24, // 行動不能
+    PROVOKE: 25, // 挑発
+    ADDITIONALTURN: 26, // 追加ターン
+    COVER: 27, // 注目
+    GIVEATTACKBUFFUP: 28, // バフ強化
+    GIVEDEBUFFUP: 29, // デバフ強化
+    ARROWCHERRYBLOSSOMS: 30, // 桜花の矢
+    ETERNAL_OARH: 31, // 永遠なる誓い
+    EX_DOUBLE: 32, // EXスキル連続発動
+    BABIED: 33, // オギャり
+    MORALE: 34, // 士気
+    HACKING: 35, // ハッキング
+    DIVA_BLESS: 36, // 歌姫の加護
+    SHREDDING: 37, // 速弾き
+    NAGATIVE: 38, // ネガティブ
+    DISPEL: 90, // ディスペル
+    ABILITY_FUNNEL: 116, // アビリティ連撃
+}
 
 /** アビリティ/パッシブ効果 */
 const EFFECT_ATTACKUP = 1; // 攻撃力アップ
@@ -83,6 +133,39 @@ const EFFECT_TOKEN_DEFFENCEUP = 32; // トークン1つにつき防御力アッ�
 const EFFECT_TOKEN_DAMAGERATEUP = 33; // トークン1つにつき破壊率アップ
 const EFFECT_NEGATIVE = 51; // ネガティブ
 const EFFECT_HEALEP = 52; // EP回復
+const EFFECT = {
+    ATTACKUP: 1, // 攻撃力アップ
+    DEFFENCEDOWN: 2, // 防御力ダウン
+    CRITICAL_UP: 3, // クリティカル率アップ
+    CRITICAL_DAMAGE_UP: 4, // クリティカルダメージアップ
+    DAMAGERATEUP: 5, // 破壊率上昇量アップ
+    FUNNEL: 6, // 連撃数アップ
+    FIELD_DEPLOYMENT: 7, // フィールド展開
+    CHARGE: 8, // チャージ
+    OVERDRIVE_SP: 9, // ODSPアップ
+    DEFFENCEUP: 11, // 防御力アップ
+    HEALSP: 12, // SP回復
+    HEALDP: 13, // DP回復
+    OVERDRIVEPOINTUP: 14, // ODアップ
+    COST_SP_DOWN: 15, // 消費SPダウン
+    MORALE: 16, // 士気
+    BREAK_GUARD: 20, // ブレイクガード
+    STUN: 21, // スタン
+    MISFORTUNE: 22, // 厄
+    ARROWCHERRYBLOSSOMS: 23, // 桜花の矢
+    SHADOW_CLONE: 24, // 影分身
+    STATUSUP_VALUE: 25, // 能力上昇(固定)
+    STATUSUP_RATE: 26, // 能力上昇(%)
+    FIELD_STRENGTHEN: 27, // フィールド強化
+    BUFF_STRENGTHEN: 28, // バフ強化
+    ADDITIONALTURN: 29, // 追加ターン
+    TOKEN_UP: 30, // トークンアップ
+    TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
+    TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
+    TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
+    NEGATIVE: 51, // ネガティブ
+    HEALEP: 52, // EP回復
+}
 
 /** フィールド */
 const FIELD_NORMAL = 0; // 通常
@@ -93,6 +176,16 @@ const FIELD_LIGHT = 4; // 光
 const FIELD_DARK = 5; // 闇
 const FIELD_RICE = 6; // 稲穂
 const FIELD_SANDSTORM = 7; // 砂嵐
+const FIELD = {
+    NORMAL: 0, // 通常
+    FIRE: 1, // 火
+    ICE: 2, // 氷
+    THUNDER: 3, // 雷
+    LIGHT: 4, // 光
+    DARK: 5, // 闇
+    RICE: 6, // 稲穂
+    SANDSTORM: 7, // 砂嵐
+}
 
 /** 対象 */
 const RANGE_FIELD = 0; // 場
@@ -112,11 +205,36 @@ const RANGE_31E_MEMBER = 35; // 31Eメンバー
 const RANGE_MARUYAMA_MEMBER = 41; // 丸山部隊
 const RANGE_RUKA_SHARO = 42; // 月歌とシャロ
 const RANGE_OTHER = 99; // その他
+const RANGE = {
+    FIELD: 0, // 場
+    ENEMY_UNIT: 1, // 敵単体
+    ENEMY_ALL: 2, // 敵全体
+    ALLY_UNIT: 3, // 味方単体
+    ALLY_FRONT: 4, // 味方前衛
+    ALLY_BACK: 5, // 味方後衛
+    ALLY_ALL: 6, // 味方全員
+    SELF: 7, // 自分
+    SELF_OTHER: 8, // 自分以外
+    SELF_AND_UNIT: 9, // 自分と味方単体
+    FRONT_OTHER: 10, // 自分以外の前衛
+    OTHER_UNIT: 11, // 自分以外の味方単体
+    MEMBER_31C: 33, // 31Cメンバー
+    MEMBER_31E: 35, // 31Eメンバー
+    MARUYAMA_MEMBER: 41, // 丸山部隊
+    RUKA_SHARO: 42, // 月歌とシャロ
+    OTHER: 99, // その他
+}
 
 const CHARA_ID_31C = [13, 14, 15, 16, 17, 18];
 const CHARA_ID_31E = [25, 26, 27, 28, 29, 30];
 const CHARA_ID_MARUYAMA = [15, 16, 28, 32, 40, 47];
 const CHARA_ID_RUKA_SHARO = [1, 42];
+const CHARA_ID = {
+    MEMBER_31C: [13, 14, 15, 16, 17, 18],
+    MEMBER_31E: [25, 26, 27, 28, 29, 30],
+    MARUYAMA: [15, 16, 28, 32, 40, 47],
+    RUKA_SHARO: [1, 42],
+}
 
 /** スキル属性 */
 const ATTRIBUTE_NORMAL_ATTACK = 1; // 通常攻撃
@@ -125,6 +243,14 @@ const ATTRIBUTE_COMMAND_ACTION = 3; // 指揮行動
 const ATTRIBUTE_NOT_ACTION = 4; // 行動無し
 const ATTRIBUTE_SP_HALF = 11; // SP消費半減
 const ATTRIBUTE_SP_ZERO = 12; // SP消費0
+const ATTRIBUTE = {
+    NORMAL_ATTACK: 1, // 通常攻撃
+    PURSUIT: 2, // 追撃
+    COMMAND_ACTION: 3, // 指揮行動
+    NOT_ACTION: 4, // 行動無し
+    SP_HALF: 11, // SP消費半減
+    SP_ZERO: 12, // SP消費0
+}
 
 /** 条件 */
 const CONDITIONS_FIRST_TURN = 1; // 1ターン目
@@ -155,6 +281,35 @@ const CONDITIONS_NOT_NEGATIVE = 44; // ネガティブ以外
 const CONDITIONS_ENEMY_COUNT_1 = 51; // 敵1体
 const CONDITIONS_ENEMY_COUNT_2 = 52; // 敵2体
 const CONDITIONS_ENEMY_COUNT_3 = 53; // 敵3体
+const CONDITIONS = {
+    FIRST_TURN: 1, // 1ターン目
+    SKILL_INIT: 2, // 初回
+    ADDITIONAL_TURN: 3, // 追加ターン
+    OVER_DRIVE: 4, // オーバードライブ中
+    DESTRUCTION_OVER_200: 5, // 破壊率200%以上
+    BREAK: 6, // ブレイク時
+    PERCENTAGE_30: 7, // 確率30%
+    DOWN_TURN: 8, // ダウンターン
+    BUFF_DISPEL: 9, // バフ解除
+    DEFFENCE_DOWN: 11, // 防御ダウン中
+    FRAGILE: 12, // 脆弱中
+    TARGET_COVER: 13, // 集中・挑発状態
+    HAS_CHARGE: 21, // チャージ中
+    HAS_SHADOW: 22, // 影分身中
+    HAS_DODGE: 23, // 回避状態
+    TOKEN_OVER_4: 24, // トークン4つ以上
+    DP_OVER_100: 25, // DP100％以上
+    SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
+    OVER_31A_3: 31, // 31A3人以上
+    OVER_31E_3: 35, // 31E3人以上
+    FIELD_NOT_FIRE: 41, // 火属性以外フィールド
+    DIVA_BLESS: 42, // 歌姫の加護
+    NOT_DIVA_BLESS: 43, // 歌姫の加護以外
+    NOT_NEGATIVE: 44, // ネガティブ以外
+    ENEMY_COUNT_1: 51, // 敵1体
+    ENEMY_COUNT_2: 52, // 敵2体
+    ENEMY_COUNT_3: 53, // 敵3体
+}
 
 /** 敵リスト*/
 const ENEMY_CLASS_HARD_LAYER = 1; // 異時層
@@ -171,6 +326,22 @@ const ENEMY_CLASS_CONTROL_BATTLE = 11; // 制圧戦
 const ENEMY_CLASS_SERAPH_ENCOUNTER = 12; // セラフ遭遇戦
 const ENEMY_CLASS_EVENT_PRISMATIC = 13; // イベントプリズム
 const ENEMY_CLASS_FREE_INPUT = 99; // 自由入力
+const ENEMY_CLASS = {
+    HARD_LAYER: 1, // 異時層
+    ORB_BOSS: 2, // オーブボス
+    CLOCK_TOWER_NORMAL: 3, // 時計塔(N)
+    CLOCK_TOWER_HARD: 4, // 時計塔(H)
+    JEWEL_LABYRINTH: 5, // 宝珠の迷宮
+    SCORE_ATTACK: 6, // スコアアタック
+    PRISMATIC_BATTLE: 7, // プリズムバトル
+    STELLAR_SWEEP_FRONT: 8, // 恒星掃戦線
+    EVENT_HIDDEN_BOSS: 9, // イベント隠しボス
+    TIME_TRAINING: 10, // 時の修練場
+    CONTROL_BATTLE: 11, // 制圧戦
+    SERAPH_ENCOUNTER: 12, // セラフ遭遇戦
+    EVENT_PRISMATIC: 13, // イベントプリズム
+    FREE_INPUT: 99, // 自由入力
+}
 
 /** スキル種類 */
 const KIND_PURPOSE = 0; // 汎用
@@ -185,8 +356,13 @@ const SKILL_NORMAL_ATTACK = 1; // 通常攻撃
 const SKILL_NONE = 2; // 無し
 const SKILL_PURSUIT = 3; // 追撃
 const SKILL_COMMAND_ACTION = 4; // 指揮行動
-
-/** 貫通クリティカル */ 
+const SKILL = {
+    NORMAL_ATTACK: 1, // 通常攻撃
+    NONE: 2, // 無し
+    PURSUIT: 3, // 追撃
+    COMMAND_ACTION: 4, // 指揮行動
+}
+/** 貫通クリティカル */
 const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95, 2179];
 /** 単独発動バフ */
 const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 216, 217, 221, 222, 2606, 2607, 1033, 1034, 1036, 1113];
@@ -200,7 +376,7 @@ const ALONE_ACTIVATION_BUFF_KIND = [
     BUFF_ELEMENT_CRITICALDAMAGEUP,
     BUFF_FUNNEL,
     BUFF_BABIED,
-    BUFF_DIVA_BLESS, 
+    BUFF_DIVA_BLESS,
     BUFF_SHREDDING,
 ]
 /** 単独発動アビリティ */
