@@ -318,6 +318,16 @@ function checkMember(unit_list, troops) {
     return member_list.length;
 }
 
+// SPチェック
+function checkSp(turn_data, range_area, sp) {
+    let target_list = getTargetList(turn_data, range_area, null, null, null);
+    let exist_list = target_list.filter(function (target_no) {
+        let unit_data = getUnitData(turn_data, target_no);
+        return unit_data.sp < sp;
+    })
+    return exist_list.length > 0;
+}
+
 class unit_data {
     constructor() {
         this.place_no = 99;
