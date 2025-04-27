@@ -40,7 +40,7 @@ const ABILIRY_EX_SKILL_USE = 8;
 const ABILIRY_OTHER = 99;
 
 const BUFF_FUNNEL_LIST = [BUFF_FUNNEL, BUFF_ABILITY_FUNNEL];
-const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED, BUFF_DIVA_BLESS];
+const SINGLE_BUFF_LIST = [BUFF_CHARGE, BUFF_RECOIL, BUFF_ARROWCHERRYBLOSSOMS, BUFF_ETERNAL_OARH, BUFF_EX_DOUBLE, BUFF_BABIED, BUFF_DIVA_BLESS, BUFF.YAMAWAKI_SERVANT];
 const FIELD_LIST = {
     [FIELD_NORMAL]: "無し",
     [FIELD_FIRE]: "火",
@@ -596,6 +596,15 @@ class unit_data {
                         return;
                     }
                     break;
+                case "山脇様のしもべ6人":
+                    for (let i = 0; i < 6; i++) {
+                        let unit = turn_data.unit_list[i];
+                        if (unit.blank) return;
+                        if (!checkBuffExist(unit.buff_list, BUFF.YAMAWAKI_SERVANT)) {
+                            return;
+                        }
+                    }
+                    break;
                 case "破壊率が200%以上":
                 case "トークン4つ以上":
                 case "敵のバフ解除":
@@ -662,6 +671,12 @@ class unit_data {
                                             unit_data.sp += ability.effect_size;
                                         }
                                         break;
+                                    case 1140: // 世界を滅ぼすお手伝いでゲス！
+                                        // 山脇様のしもべチェック
+                                        if (checkBuffExist(unit_data.buff_list, BUFF.YAMAWAKI_SERVANT)) {
+                                            unit_data.sp += ability.effect_size;
+                                        };
+                                        break;
                                     default:
                                         unit_data.sp += ability.effect_size;
                                         break;
@@ -716,8 +731,9 @@ class unit_data {
                     });
                     break;
                 case EFFECT_OVERDRIVEPOINTUP: // ODアップ
-                    if (ability.used && ability.ability_id == 1207) {
-                        // V字回復
+                    // V字回復,世界征服の始まりでゲス！
+                    const onlyUseList = [1207, 1209]
+                    if (ability.used && onlyUseList.includes(ability.ability_id)) {
                         return;
                     }
                     ability.used = true;
@@ -763,6 +779,14 @@ class unit_data {
                         self.additional_turn = true;
                         turn_data.additional_turn = true;
                     }
+                    break;
+                case EFFECT.YAMAWAKI_SERVANT: // 山脇様のしもべ
+                    buff = {};
+                    buff.buff_kind = BUFF.YAMAWAKI_SERVANT;
+                    buff.buff_element = 0;
+                    buff.rest_turn = -1;
+                    buff.buff_name = ability.ability_name;
+                    unit.buff_list.push(buff);
                     break;
             }
         });
@@ -1229,6 +1253,9 @@ function getBuffIconImg(buff_info) {
         case BUFF_NAGATIVE: // ネガティブ
             src += "IconNegativeMind";
             break;
+        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
+            src += "IconYamawakiServant";
+            break;
     }
     if (buff_info.buff_element != 0) {
         src += buff_info.buff_element;
@@ -1523,6 +1550,9 @@ const getOverDrive = (turn) => {
 
 // 消費SP取得
 function getSpCost(turn_data, skill_info, unit) {
+    if (!skill_info) {
+        return 0;
+    }
     let sp_cost = skill_info.sp_cost;
     let sp_cost_down = turn_data.sp_cost_down
     if (harfSpSkill(turn_data, skill_info, unit)) {
@@ -1636,6 +1666,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return turn_data.enemy_count == 3;
         case CONDITIONS_31A_OVER_3: // 31A3人以上
             return checkMember(turn_data.unit_list, "31A") >= 3;
+        case CONDITIONS.OVER_31D_3: // 31D3人以上
+            return checkMember(turn_data.unit_list, "31D") >= 3;
         case CONDITIONS_31E_OVER_3: // 31E3人以上
             return checkMember(turn_data.unit_list, "31E") >= 3;
         case CONDITIONS_FIELD_NOT_FIRE: // 火属性フィールド以外
@@ -1648,6 +1680,14 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return !checkBuffExist(unit_data.buff_list, BUFF_NAGATIVE);
         case CONDITIONS_SP_UNDER_0_ALL: // SP0以下の味方がいる
             return checkSp(turn_data, RANGE_ALLY_ALL, 0);
+        case CONDITIONS.SARVANT_OVER3: // 山脇様のしもべ3人以上
+            let servant_count = 0;
+            turn_data.unit_list.forEach((unit) => {
+                if (checkBuffExist(unit.buff_list, BUFF.YAMAWAKI_SERVANT)) {
+                    servant_count++;
+                };
+            })
+            return servant_count >= 3;
     }
     return true;
 }
@@ -1709,6 +1749,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
         case BUFF_BABIED: // オギャり
         case BUFF_DIVA_BLESS: // 歌姫の加護
         case BUFF_SHREDDING: // 速弾き
+        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
             // バフ追加
             target_list = getTargetList(turn_data, buff_info.range_area, buff_info.target_element, place_no, use_unit_data.buff_target_chara_id);
             if (buff_info.buff_kind == BUFF_ATTACKUP || buff_info.buff_kind == BUFF_ELEMENT_ATTACKUP) {
@@ -2089,6 +2130,9 @@ function getBuffKindName(buff_info) {
             break;
         case BUFF_NAGATIVE: // ネガティブ
             buff_kind_name += "ネガティブ";
+            break;
+        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
+            buff_kind_name += "山脇様のしもべ";
             break;
         default:
             break;

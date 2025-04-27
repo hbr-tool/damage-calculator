@@ -398,6 +398,7 @@ label.strengthen input:checked+span {
 
 select.buff,
 select.mindeye,
+select.servant,
 select.funnel,
 select.destruction_rete_up,
 select.debuff,
@@ -496,6 +497,10 @@ div.lv select {
 
 label[class*="block_chara_id-"] {
     display: block !important;
+}
+
+td[class*="block_style_id-"] {
+    display: table-cell !important;
 }
 
 /* ステータスの色　*/

@@ -57,10 +57,12 @@ const BUFF_HACKING = 35; // ハッキング
 const BUFF_DIVA_BLESS = 36; // 歌姫の加護
 const BUFF_SHREDDING = 37; // 速弾き
 const BUFF_NAGATIVE = 38; // ネガティブ
+const BUFF_YAMAWAKI_SERVENT = 39; // 山脇様のしもべ 
 const BUFF_DISPEL = 90; // ディスペル
 const BUFF_ABILITY_FUNNEL = 116; // アビリティ連撃
 const BUFF = {
-    ELEMENT_ATTACKUP: 1, // 属性アップ
+    ATTACKUP: 0, // 攻撃力アップ
+    ELEMENT_ATTACKUP: 1, // 属性攻撃力アップ
     MINDEYE: 2, // 心眼
     DEFENSEDOWN: 3, // 防御ダウン
     ELEMENT_DEFENSEDOWN: 4, // 属性防御ダウン
@@ -97,6 +99,7 @@ const BUFF = {
     DIVA_BLESS: 36, // 歌姫の加護
     SHREDDING: 37, // 速弾き
     NAGATIVE: 38, // ネガティブ
+    YAMAWAKI_SERVANT: 39, // 山脇様のしもべ 
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
@@ -163,6 +166,7 @@ const EFFECT = {
     TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
     TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
+    YAMAWAKI_SERVANT: 39, //山脇様のしもべ
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
 }
@@ -201,6 +205,7 @@ const RANGE_SELF_AND_UNIT = 9; // 自分と味方単体
 const RANGE_FRONT_OTHER = 10; // 自分以外の前衛
 const RANGE_OTHER_UNIT = 11; // 自分以外の味方単体
 const RANGE_31C_MEMBER = 33; // 31Cメンバー
+const RANGE_31D_MEMBER = 34; // 31Cメンバー
 const RANGE_31E_MEMBER = 35; // 31Eメンバー
 const RANGE_MARUYAMA_MEMBER = 41; // 丸山部隊
 const RANGE_RUKA_SHARO = 42; // 月歌とシャロ
@@ -300,7 +305,9 @@ const CONDITIONS = {
     TOKEN_OVER_4: 24, // トークン4つ以上
     DP_OVER_100: 25, // DP100％以上
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
+    SARVANT_OVER3: 27, // 山脇様のしもべ3人以上
     OVER_31A_3: 31, // 31A3人以上
+    OVER_31D_3: 34, // 31D3人以上
     OVER_31E_3: 35, // 31E3人以上
     FIELD_NOT_FIRE: 41, // 火属性以外フィールド
     DIVA_BLESS: 42, // 歌姫の加護
@@ -363,7 +370,7 @@ const SKILL = {
     COMMAND_ACTION: 4, // 指揮行動
 }
 /** 貫通クリティカル */
-const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95, 2179];
+const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95, 190, 2179];
 /** 単独発動バフ */
 const ALONE_ACTIVATION_BUFF_LIST = [4, 133, 134, 201, 202, 216, 217, 221, 222, 2606, 2607, 1033, 1034, 1036, 1113];
 const ALONE_ACTIVATION_BUFF_KIND = [

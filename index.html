@@ -32,7 +32,7 @@
   <script src="js/micromodal/micromodal.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@hello-pangea/dnd@17.0.0/dist/dnd.min.js"></script>
   <script type="text/babel" src="js/component/modal_style_section.js"></script>
   <script type="text/babel" src="js/component/style_list.js"></script>
@@ -66,31 +66,30 @@
     var type_element = ["none", "fire", "ice", "thunder", "light", "dark"];
     var select_attack_skill;
     var open_damage_detail;
-    var buff_kbn = [
-      "power_up",
-      "element_up",
-      "mindeye",
-      "defense_down",
-      "element_down",
-      "fragile",
-      "critical_up",
-      "critical_damege",
-      "critical_element",
-      "critical_damege_element",
-      "charge",
-      "element_field",
-      "destruction_rete_up",
-      "",
-      "fightingspirit",
-      "misfortune",
-      "funnel",
-      "funnel",
-      "strong_break",
-      "dp_defense_down",
-      "resist_down",
-      "permanent_defense_down",
-      "permanent_element_down",
-    ];
+    const buff_kbn = {
+      0: "power_up",
+      1: "element_up",
+      2: "mindeye",
+      3: "defense_down",
+      4: "element_down",
+      5: "fragile",
+      6: "critical_up",
+      7: "critical_damege",
+      8: "critical_element",
+      9: "critical_damege_element",
+      10: "charge",
+      11: "element_field",
+      12: "destruction_rete_up",
+      14: "fightingspirit",
+      15: "misfortune",
+      16: "funnel",
+      18: "strong_break",
+      19: "dp_defense_down",
+      20: "resist_down",
+      21: "permanent_defense_down",
+      22: "permanent_element_down",
+      39: "servant"
+    };
     const DP_GAUGE_COUNT = 4;
     $(function () {
       // 自由入力取得
@@ -161,6 +160,20 @@
                 <div class="flex">
                   残りSP
                   <input id="skill_unique_sp" type="number" value="30" class="ml-2 w-12">
+                </div>
+              </div>
+              <!-- メガデストロイヤー専用 -->
+              <div class="skill_unique attack_attack_id-190 hidden">
+                <div class="flex">
+                  山脇様のしもべ
+                  <select id="servant_count">
+                    <option value="1">1人</option>
+                    <option value="2">2人</option>
+                    <option value="3">3人</option>
+                    <option value="4">4人</option>
+                    <option value="5">5人</option>
+                    <option value="6">6人</option>
+                  </select>
                 </div>
               </div>
               <!-- 美也専用 -->
@@ -357,7 +370,7 @@
                 <td colspan="5" class="kind">バフ</td>
               </tr>
               <tr>
-                <td rowspan="10" class="kind pc_only">バフ</td>
+                <td rowspan="11" class="kind pc_only">バフ</td>
                 <td class="type" colspan="2">攻撃力UP1</td>
                 <td><select id="power_up1" class="buff power_up redisplay include_lv" name="buff">
                     <option selected value="">無し</option>
@@ -421,6 +434,15 @@
                 <td class="row_weak"></td>
                 <td class="row_weak">
                   <div class="lv"><select id="mindeye2_lv" class="lv_effect"></select></div>
+                </td>
+              </tr>
+              <tr>
+                <td class="display_style_id-161 hidden type " colspan="2">山脇様のしもべ</td>
+                <td class="display_style_id-161 hidden"><select id="servant" class="servant redisplay" name="buff">
+                    <option selected value="">無し</option>
+                  </select></td>
+                <td class="display_style_id-161 hidden"></td>
+                <td class="display_style_id-161 hidden">
                 </td>
               </tr>
               <tr>
@@ -611,23 +633,21 @@
               </tr>
               <tr>
                 <td class="type " colspan="2">耐性ダウン1</td>
-                <td><select id="resist_down1"
-                    class="resist resist_down redisplay element include_lv" name="buff">
+                <td><select id="resist_down1" class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td><label
-                    class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label></td>
+                <td><label class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label>
+                </td>
                 <td></td>
                 </td>
               </tr>
               <tr>
                 <td class="type" colspan="2">耐性ダウン2</td>
-                <td><select id="resist_down2"
-                    class="resist resist_down redisplay element include_lv" name="buff">
+                <td><select id="resist_down2" class="resist resist_down redisplay element include_lv" name="buff">
                     <option selected value="">無し</option>
                   </select></td>
-                <td><label
-                    class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label></td>
+                <td><label class="strengthen display_chara_id-11 hidden"><input type="checkbox"><span>強化</span></label>
+                </td>
                 <td></td>
               </tr>
               <tr class="sp_only">

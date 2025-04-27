@@ -186,6 +186,9 @@ function setEventTrigger() {
         updatePenetrationResist();
         displayWeakRow();
     });
+    $("#servant_count").on("change", function (event) {
+        updatePenetrationResist();
+    });
     // チャージ変更
     $("#charge").on("change", function (event) {
         let selected_index = $(this).prop("selectedIndex");
@@ -490,6 +493,7 @@ function loadMember(select_chara_no, member_info, isTrigger) {
     addAbility(member_info);
     addPassive(member_info);
     $(".display_chara_id-" + member_info.style_info.chara_id).addClass(`block_chara_id-${member_info.style_info.chara_id}`);
+    $(".display_style_id-" + member_info.style_info.style_id).addClass(`block_style_id-${member_info.style_info.style_id}`);
 
     if (isTrigger) {
         $("#attack_list").trigger("change");
@@ -503,6 +507,7 @@ function removeMember(select_list, select_chara_no, isTrigger) {
     }
     // 入れ替えスタイルのスキルを削除
     let chara_id = select_list[select_chara_no].style_info.chara_id;
+    let style_id = select_list[select_chara_no].style_info.style_id;
     let chara_id_class = ".chara_id-" + chara_id;
     let parent = $(".include_lv " + chara_id_class + ":selected").parent();
     $.each(parent, function (index, value) {
@@ -515,12 +520,10 @@ function removeMember(select_list, select_chara_no, isTrigger) {
     // 該当メンバーのスキル削除
     $(chara_id_class).remove();
     $(".display_chara_id-" + chara_id).removeClass(`block_chara_id-${chara_id}`);
+    $(".display_style_id-" + style_id).removeClass(`block_style_id-${style_id}`);
     $(".display_chara_id-" + chara_id + " input").prop("checked", false);
     $(".display_chara_id-" + chara_id + " input").trigger("change");
-    // 消費SP初期化
-    $('#sp_cost_' + select_chara_no).text(0);
-    // 画像初期化
-    $('#select_chara_' + select_chara_no).attr("src", "img/plus.png");
+
     if (isTrigger) {
         $("#attack_list").trigger("change");
     }
@@ -626,7 +629,8 @@ function calcDamage() {
 
     let basePower = getBasePower(member_info, stat_up, stat_down);
     let buff = getSumBuffEffectSize(grade_sum);
-    let mindeye = isWeak() ? getSumEffectSize("mindeye") / 100 + 1 : 1;
+    let mindeye_buff = getSumEffectSize("mindeye") + getSumEffectSize("servant");
+    let mindeye = isWeak() ? mindeye_buff / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
     let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
     let token = getSumTokenEffectSize(member_info);
@@ -1094,6 +1098,16 @@ function updatePenetrationResist() {
             case 2179: // ネオンバースト
                 week_value += 200;
                 break;
+            case 190: // メガデストロイヤー
+                let servant = Number($("#servant_count").val());
+                if (servant < 2) {
+                    week_value += 300;
+                } else if (servant < 4) {
+                    week_value += 350;
+                } else {
+                    week_value += 400;
+                }
+                break;
             default:
                 break;
         }
@@ -1392,6 +1406,7 @@ function addBuffList(member_info, member_kind) {
             case BUFF_CRITICALRATEUP: // クリ率
             case BUFF_CRITICALDAMAGEUP: // クリダメ
             case BUFF_FUNNEL: // 連撃
+            case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
                 only_one = "only_one";
                 break;
             case BUFF_DEFENSEDOWN: // 防御ダウン
@@ -1776,6 +1791,7 @@ function getEffectSize(buff_kind, buff_id, member_info, skill_lv) {
         case BUFF_ELEMENT_CRITICALDAMAGEUP:	// 属性クリティカルダメージアップ
         case BUFF_CHARGE: // チャージ
         case BUFF_DAMAGERATEUP: // 破壊率アップ
+        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
             effect_size = getBuffEffectSize(buff_id, member_info, skill_lv, "3");
             break;
         case BUFF_CRITICALRATEUP:	// クリティカル率アップ
@@ -1860,19 +1876,28 @@ function select2ndSkill(select) {
 
 // 単一バフが既に設定済み判定
 function isOnlyBuff(option) {
+
     if (option.hasClass("only_first")) {
         let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
-        let buff_id = "buff_id-" + option.val();
-        if ($("." + class_name + " option." + buff_id + ":selected").length > 1) {
+        let buff_id_class = "buff_id-" + option.val();
+        if ($("." + class_name + " option." + buff_id_class + ":selected").length > 1) {
             return true;
         }
     }
     if (option.hasClass("only_one") && select_attack_skill !== undefined) {
         if (option.hasClass("chara_id-" + select_attack_skill.chara_id)) {
             let class_name = option.parent().attr("id").replace(/[0-9]/g, '');
-            let skill_id = "skill_id-" + option.data("skill_id");
-            if ($("." + class_name + " option." + skill_id + ":selected").length > 1) {
-                return true;
+            let skill_id_class = "skill_id-" + option.data("skill_id");
+            let buff_id_class = "buff_id-" + option.val();
+            if (["111", "112", "113"].includes(option.val())) {
+                // 豪快！パイレーツキャノン専用
+                if ($("." + class_name + " option." + skill_id_class + ":selected").length > 1) {
+                    return true;
+                }
+            } else {
+                if ($("." + class_name + " option." + buff_id_class + ":selected").length > 1) {
+                    return true;
+                }
             }
         }
     }
