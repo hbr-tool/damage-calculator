@@ -781,12 +781,12 @@ class unit_data {
                     }
                     break;
                 case EFFECT.YAMAWAKI_SERVANT: // 山脇様のしもべ
-                    buff = {};
+                    buff = new buff_data();
                     buff.buff_kind = BUFF.YAMAWAKI_SERVANT;
                     buff.buff_element = 0;
                     buff.rest_turn = -1;
                     buff.buff_name = ability.ability_name;
-                    unit.buff_list.push(buff);
+                    self.buff_list.push(buff);
                     break;
             }
         });
