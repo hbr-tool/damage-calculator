@@ -1681,13 +1681,21 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
         case CONDITIONS_SP_UNDER_0_ALL: // SP0以下の味方がいる
             return checkSp(turn_data, RANGE_ALLY_ALL, 0);
         case CONDITIONS.SARVANT_OVER3: // 山脇様のしもべ3人以上
+        case CONDITIONS.SARVANT_OVER5: // 山脇様のしもべ5人以上
+        case CONDITIONS.SARVANT_OVER6: // 山脇様のしもべ6人以上
             let servant_count = 0;
             turn_data.unit_list.forEach((unit) => {
                 if (checkBuffExist(unit.buff_list, BUFF.YAMAWAKI_SERVANT)) {
                     servant_count++;
                 };
             })
-            return servant_count >= 3;
+            if (CONDITIONS.SARVANT_OVER3 == conditions) {
+                return servant_count >= 3;
+            } else if (CONDITIONS.SARVANT_OVER5 == conditions) {
+                return servant_count >= 5;
+            } else if (CONDITIONS.SARVANT_OVER6 == conditions) {
+                return servant_count >= 6;
+            }
     }
     return true;
 }

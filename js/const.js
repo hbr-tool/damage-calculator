@@ -306,6 +306,8 @@ const CONDITIONS = {
     DP_OVER_100: 25, // DP100％以上
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
     SARVANT_OVER3: 27, // 山脇様のしもべ3人以上
+    SARVANT_OVER5: 28, // 山脇様のしもべ5人以上
+    SARVANT_OVER6: 29, // 山脇様のしもべ6人以上
     OVER_31A_3: 31, // 31A3人以上
     OVER_31D_3: 34, // 31D3人以上
     OVER_31E_3: 35, // 31E3人以上
