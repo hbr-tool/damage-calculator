@@ -1813,9 +1813,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                     buff = createBuffData(buff_info, use_unit_data);
                     unit_data.buff_list.push(buff);
                 }
-                if (buff.lv < 10) {
-                    buff.lv += buff_info.effect_size;
-                }
+                buff.lv = Math.min(buff.lv + buff_info.effect_size, 10);
             });
             break;
         case BUFF_DEFENSEDOWN: // 防御力ダウン
