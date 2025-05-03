@@ -1499,11 +1499,22 @@ function addAbility(member_info) {
     }
     for (let index = 0; index < ability_list.length; index++) {
         let ability_id = ability_list[index];
+        let ability_info = getAbilityInfo(ability_id);
+
         if (ability_id == null || ability_id > 1000) {
+            const servant_list = [1019, 1020, 1021];
+            if (servant_list.includes(ability_id)) {
+                let name = getCharaData(chara_id).chara_short_name;
+                let option = $('<option>')
+                    .val("4901")
+                    .addClass(`buff_element-0 buff_physical-0 only_chara_id-${chara_id} chara_id-${chara_id} skill_attack-0 hidden`)
+                    .text(`${name}: ${ability_info.ability_name} 30%`)
+                    .data("effect_size", 30)
+                $("#servant").append(option);
+            }
             // 1000番以降は不要
             continue;
         }
-        let ability_info = getAbilityInfo(ability_id);
         if (!is_select && ability_info.range_area != RANGE_FIELD) {
             // 他部隊のアビリティはフィールドのみ許可
             continue;
