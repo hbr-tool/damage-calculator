@@ -1,6 +1,6 @@
 const HardLayerComponent = ({ enemy_info }) => {
 
-    const tears_of_dreams_list = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20]
+    const tears_of_dreams_list = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20]
     if (enemy_info === undefined || enemy_info.enemy_class != ENEMY_CLASS_HARD_LAYER) {
         return null;
     }
