@@ -1,7 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [36];
+const NOT_USE_STYLE = [36, 162, 163];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -889,6 +889,9 @@ function getInitBattleData() {
             ["0", "00", "1", "3", "4", "5", "10"].forEach(num => {
                 if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {
                     let ability_info = getAbilityInfo(member_info.style_info[`ability${num}`]);
+                    if (!ability_info) {
+                        return;
+                    }
                     if (CONSTRAINTS_ABILITY.includes(ability_info.ability_id)) {
                         constraints_list.push(ability_info.ability_id);
                     }

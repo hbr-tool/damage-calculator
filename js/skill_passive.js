@@ -16,4 +16,5 @@
     {"skill_id":606,"passive_name":"曙","passive_explan":"通常攻撃が範囲攻撃に変更","passive_short_explan":"","effect_type":99,"activation_timing":0,"activation_place":0,"range_area":7,"effect_size":0},
     {"skill_id":611,"passive_name":"微笑の秘訣","passive_explan":"行動開始時に前衛に居ると自身のスキル攻撃時の破壊率上昇量+15%","passive_short_explan":"自身のスキル攻撃時の破壊率上昇量+15%","effect_type":5,"activation_timing":1,"activation_place":1,"range_area":7,"effect_size":15},
     {"skill_id":615,"passive_name":"オーリー","passive_explan":"バトル開始時 前衛にいるとオーバードライブゲージ+10%","passive_short_explan":"","effect_type":14,"activation_timing":0,"activation_place":1,"range_area":99,"effect_size":10},
+    {"skill_id":626,"passive_name":"千里眼","passive_explan":"自身がEXスキル使用後オーバードライブゲージ+10%","passive_short_explan":"","effect_type":14,"activation_timing":8,"activation_place":3,"range_area":99,"effect_size":10},
 ];
