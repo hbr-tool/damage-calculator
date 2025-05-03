@@ -318,6 +318,9 @@ const CONDITIONS = {
     ENEMY_COUNT_1: 51, // 敵1体
     ENEMY_COUNT_2: 52, // 敵2体
     ENEMY_COUNT_3: 53, // 敵3体
+    USE_COUNT_2: 54, // 2回目以降
+    USE_COUNT_3: 55, // 3回目以降
+    USE_COUNT_4: 56, // 4回目以降
 }
 
 /** 敵リスト*/
