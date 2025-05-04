@@ -505,18 +505,19 @@ let titleHeaders = [
         { label: 'スコア<br>アタック', rowspan: 2, class: 'htMiddle' },
         { label: '戦闘<br>回数', rowspan: 2, class: 'htMiddle' },
         { label: 'ダンジョン', rowspan: 2, class: 'htMiddle' },
-        { label: '異時層', colspan: 9, class: 'htMiddle' },
+        { label: '異時層', colspan: 10, class: 'htMiddle' },
     ],
     [
-        { label: '<img src="img/BadgeDeathSrag.webp">', },
-        { label: '<img src="img/BadgeRotaryMoll.webp">', },
-        { label: '<img src="img/BadgeRedCrimson.webp">', },
-        { label: '<img src="img/Badgefiller.webp">', },
-        { label: '<img src="img/BadgeFlatHand3rd.webp">', },
-        { label: '<img src="img/BadgeUltimateFiller.webp">', },
-        { label: '<img src="img/BadgeFlatHand4th.webp">', },
-        { label: '<img src="img/BadgeDessertDendron.webp">', },
-        { label: '<img src="img/BadgeSkullFeather.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_DeathSlug.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_RotaryMole.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_RedCrimson.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_Feeler.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_FlatHand.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_UltimateFeeler.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_UltimateFlatHand.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_DesertDendron.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_SkullFeatherHeadTail.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_SkullFeatherHead2nd.webp">', },
     ]
 ];
 
@@ -662,6 +663,12 @@ function getExp(rowData) {
                 { threshold: 1, exp: 1000 },
             ]
         },
+        {
+            value: rowData["skullFeather2nd"],
+            increments: [
+                { threshold: 1, exp: 1000 },
+            ]
+        },
     ];
 
     // 経験値の増分データ
@@ -777,6 +784,12 @@ function getExp(rowData) {
         },
         {
             value: rowData["skullFeather"],
+            increments: [
+                { threshold: 1, exp: 1000 },
+            ]
+        },
+        {
+            value: rowData["skullFeather2nd"],
             increments: [
                 { threshold: 1, exp: 1000 },
             ]
@@ -1023,7 +1036,7 @@ function getTitleColumns() {
             width: 60,
         },
     ];
-    const HARD_LAYER = ["deathSlag", "rotaryMoll", "redCrimson", "filler", "flatHand3rd", "ultimateFiller", "flatHand4th", "dessertDendron", "skullFeather"];
+    const HARD_LAYER = ["deathSlag", "rotaryMoll", "redCrimson", "filler", "flatHand3rd", "ultimateFiller", "flatHand4th", "dessertDendron", "skullFeather", "skullFeather2nd"];
     $.each(HARD_LAYER, function (index, enemy_name) {
         let column = {
             className: "htCenter",
