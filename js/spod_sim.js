@@ -1669,6 +1669,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return turn_data.enemy_count == 3;
         case CONDITIONS_31A_OVER_3: // 31A3人以上
             return checkMember(turn_data.unit_list, "31A") >= 3;
+        case CONDITIONS.OVER_31C_3: // 31C3人以上
+            return checkMember(turn_data.unit_list, "31C") >= 3;
         case CONDITIONS.OVER_31D_3: // 31D3人以上
             return checkMember(turn_data.unit_list, "31D") >= 3;
         case CONDITIONS_31E_OVER_3: // 31E3人以上
