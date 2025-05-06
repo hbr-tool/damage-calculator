@@ -1238,7 +1238,7 @@ function createBuffList() {
         let chara_id = $(value).data("chara_id");
         let skill_id = $(value).data("skill_id");
         let skill_info = getSkillData(skill_id)
-        if (!buff_info) {
+        if (!buff_info || !skill_info) {
             return true;
         }
         let unique_key = chara_id + '-' + skill_info.skill_id;
@@ -1297,7 +1297,7 @@ function setBuffList() {
             let chara_id = $(option).data("chara_id");
             let skill_id = $(option).data("skill_id");
             let skill_info = getSkillData(skill_id)
-            if (!buff_info || buff_info.buff_id == 0) {
+            if (!buff_info || buff_info.buff_id == 0 || !skill_info) {
                 return true;
             }
             let unique_key = chara_id + '-' + skill_info.skill_id;
