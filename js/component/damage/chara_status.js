@@ -56,10 +56,10 @@ const CharaStatus = () => {
         select_troops = e.target.value;
         localStorage.setItem('select_troops', select_troops);
         setSelectStyle([...select_style_list]);
-        loadTroopsList(select_style_list, select_troops);
         // 初期化
         $("#sub_troops").val("-1");
         loadSubTroopsList(-1);
+        loadTroopsList(select_style_list, select_troops);
     }
 
     // メンバー追加
