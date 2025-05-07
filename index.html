@@ -38,6 +38,7 @@
   <script type="text/babel" src="js/component/style_list.js"></script>
   <script type="text/babel" src="js/component/damage/chara_status.js"></script>
   <script type="text/babel" src="js/component/damage/content_area.js"></script>
+  <script type="text/babel" src="js/component/damage/enemy_area.js"></script>
   <script type="text/babel" src="js/component/damage/score_setting.js"></script>
   <script type="text/babel" src="js/component/damage/bike_parts.js"></script>
   <script type="text/babel" src="js/component/damage/hard_layer.js"></script>
@@ -193,89 +194,7 @@
               </div>
             </div>
           </div>
-          <div id="contents_area" class="surround_area adjust_width mx-auto mt-2"></div>
-          <div class="enemy_status surround_area mx-auto mt-2 adjust_width">
-            <label class="area_title">敵情報</label>
-            <div class="flex">
-              <div class="flex flex-wrap gap-1 w-40">
-                <div class="text-right enemy_label">能力値</div><input type="number" id="enemy_stat" value="" readonly
-                  class="w-10 text-center enemy_input">
-                <div class="text-right enemy_label">破壊率上限</div><input type="number" id="enemy_destruction_limit"
-                  value="" readonly class="w-10 text-center enemy_input">
-                <div class="text-right enemy_label">破壊率</div><input type="number" id="enemy_destruction_rate" min="100"
-                  class="text-center">
-                <div class="text-right enemy_label">破壊係数</div><input type="number" id="enemy_destruction" min="1"
-                  readonly class="text-center enemy_input">
-              </div>
-              <div>
-                <div class="flex">
-                  <div class="w-5">DP</div>
-                  <div>
-                    <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_3" value="" readonly class="w-20 text-right enemy_input comma"
-                        pattern="\d*">
-                      <input type="range" id="dp_range_3" class="enemy_dp_range dp_range" min="0" max="100" step="1"
-                        value="0">
-                      <output id="dp_rate_3" class="gauge_rate">0%</output>
-                    </div>
-                    <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_2" value="" readonly class="w-20 text-right enemy_input comma"
-                        pattern="\d*">
-                      <input type="range" id="dp_range_2" class="enemy_dp_range dp_range" min="0" max="100" step="1"
-                        value="0">
-                      <output id="dp_rate_2" class="gauge_rate">0%</output>
-                    </div>
-                    <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_1" value="" readonly class="w-20 text-right enemy_input comma"
-                        pattern="\d*">
-                      <input type="range" id="dp_range_1" class="enemy_dp_range dp_range" min="0" max="100" step="1"
-                        value="0">
-                      <output id="dp_rate_1" class="gauge_rate">0%</output>
-                    </div>
-                    <div class="dp_gauge">
-                      <input type="text" id="enemy_dp_0" value="" readonly class="w-20 text-right enemy_input comma"
-                        pattern="\d*">
-                      <input type="range" id="dp_range_0" class="enemy_dp_range dp_range" min="0" max="100" step="1"
-                        value="0">
-                      <output id="dp_rate_0" class="gauge_rate">0%</output>
-                    </div>
-                  </div>
-                </div>
-                <div class="flex">
-                  <div class="w-5">HP</div>
-                  <div>
-                    <div class="flex">
-                      <input type="text" id="enemy_hp" value="" readonly class="w-20 text-right enemy_input comma">
-                      <input type="range" id="hp_range" class="hp_range" min="0" max="100" step="1" value="0">
-                      <output id="hp_rate" class="gauge_rate">0%</output>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="resist_area mx-auto mt-2">
-              <div class="grid grid-cols-9">
-                <div class="slash"><input type="image" class="enemy_type_icon" src="img/slash.webp"><input type="text"
-                    id="enemy_physical_1" class="enemy_type_value enemy_input" readonly></div>
-                <div class="stab"><input type="image" class="enemy_type_icon" src="img/stab.webp"><input type="text"
-                    id="enemy_physical_2" class="enemy_type_value enemy_input" readonly></div>
-                <div class="strike"><input type="image" class="enemy_type_icon" src="img/strike.webp"><input type="text"
-                    id="enemy_physical_3" class="enemy_type_value enemy_input" readonly></div>
-                <div class="none"><input type="image" class="enemy_type_icon" src="img/none.webp"><input type="text"
-                    id="enemy_element_0" class="enemy_type_value enemy_input" readonly></div>
-                <div class="fire"><input type="image" class="enemy_type_icon" src="img/fire.webp"><input type="text"
-                    id="enemy_element_1" class="enemy_type_value enemy_input" readonly></div>
-                <div class="ice"><input type="image" class="enemy_type_icon" src="img/ice.webp"><input type="text"
-                    id="enemy_element_2" class="enemy_type_value enemy_input" readonly></div>
-                <div class="thunder"><input type="image" class="enemy_type_icon" src="img/thunder.webp"><input
-                    type="text" id="enemy_element_3" class="enemy_type_value enemy_input" readonly></div>
-                <div class="light"><input type="image" class="enemy_type_icon" src="img/light.webp"><input type="text"
-                    id="enemy_element_4" class="enemy_type_value enemy_input" readonly></div>
-                <div class="dark"><input type="image" class="enemy_type_icon" src="img/dark.webp"><input type="text"
-                    id="enemy_element_5" class="enemy_type_value enemy_input" readonly></div>
-              </div>
-            </div>
-          </div>
+          <div id="enemy_area"></div>
           <div class="surround_area mx-auto my-2 adjust_width">
             <label class="area_title">他設定</label>
             <div class="flex flex-wrap py-1 ml-3 gap-x-4 gap-y-2">
@@ -318,8 +237,6 @@
                 for="fightingspirit">闘志</label>
               <input type="checkbox" id="misfortune" class="ml-3 pt-0.5"><label class="checkbox01"
                 for="misfortune">厄</label>
-              <input type="checkbox" id="strong_break" class="ml-3 pt-0.5"><label class="checkbox01"
-                for="strong_break">強ブレイク</label>
               <div class="flex">
                 <div class="pt-0.5">士気</div>
                 <select id="morale_count" class="morale">

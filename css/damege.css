@@ -161,7 +161,8 @@ img.sub_style {
 
     .status,
     .limit,
-    .jewel {
+    .jewel,
+    .token {
         width: 50px;
     }
 }

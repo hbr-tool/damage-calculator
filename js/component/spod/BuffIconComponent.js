@@ -1,5 +1,5 @@
 
-const BuffIconComponent = ({ buff_list, loop_limit, loop_step, place_no, turn_number }) => {
+const BuffIconComponent = ({ buff_list, loop_limit, loop_step, place_no, turn_number, clickBuffIcon }) => {
     const scrollContentRef = React.useRef(null);
 
     React.useEffect(() => {
@@ -44,18 +44,9 @@ const BuffIconComponent = ({ buff_list, loop_limit, loop_step, place_no, turn_nu
         }
     }, [buff_list]);
 
-    // バフリストの表示    
-    const showBuffList = (e, buff_list) => {
-        if (buff_list.length > 0) {
-            e.stopPropagation();
-            setBuffList(buff_list);
-            MicroModal.show('modal_buff_detail_list');
-        }
-    };
-
     let className = "scroll-container " + (place_no == 7 ? "enemy_icon_list" : "icon_list");
-    return (
-        <div className={className} onClick={(e) => showBuffList(e, buff_list)}>
+    return (buff_list.length > 0 ?
+        <div className={className} onClick={() => clickBuffIcon(buff_list)}>
             <div className="scroll-content" ref={scrollContentRef}>
                 {buff_list.map((buffInfo, index) => (
                     <img
@@ -75,5 +66,6 @@ const BuffIconComponent = ({ buff_list, loop_limit, loop_step, place_no, turn_nu
                 }
             </div>
         </div>
+        : null
     );
 }

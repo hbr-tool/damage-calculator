@@ -1,15 +1,8 @@
-const EnemyAreaComponent = ({ enemy_class, enemy_select }) => {
+const EnemyArea = ({ enemy, setEnemy, detailSetting }) => {
     const physical = ["slash", "stab", "strike"];
     const element = ["none", "fire", "ice", "thunder", "light", "dark"];
 
-    const [enemy, setEnemy] = React.useState({
-        enemy_class: enemy_class,
-        enemy_select: enemy_select
-    });
-
     const setEnemyStatus = (enemy_class, enemy_select) => {
-        document.getElementById('change_element_before').value = 0;
-        document.getElementById('change_element_after').value = 0;
         setEnemy({enemy_class: enemy_class, enemy_select: enemy_select});
     }
     
@@ -43,7 +36,7 @@ const EnemyAreaComponent = ({ enemy_class, enemy_select }) => {
                     })}
                     {element.map((item, index) => {
                         let className = "enemy_type_value enemy_input";
-                        let val = enemy_status[`element_${index}`];
+                        let val = enemy_status[`element_${index}`] + Number(detailSetting[`changeElement${index}`]); ;
                         if (val < 100) {
                             className += " enemy_resist";
                         } else if (val > 100) {
@@ -53,7 +46,7 @@ const EnemyAreaComponent = ({ enemy_class, enemy_select }) => {
                             <div key={`element_${index}`} className={item}>
                                 <input className="enemy_type_icon" src={`img/${item}.webp`} type="image" />
                                 <input className={className} id={`enemy_element_${index}`} type="text" onChange={(e) =>changeEnemyType(e)}
-                                    value={enemy_status[`element_${index}`]} />
+                                    value={val} />
                             </div>
                         );
                     })}

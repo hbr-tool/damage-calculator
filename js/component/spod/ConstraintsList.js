@@ -1,4 +1,4 @@
-const ConstraintsListComponent = () => {
+const ConstraintsList = () => {
     const [key, setKey] = React.useState(0);
 
     window.updateConstraints = () => {

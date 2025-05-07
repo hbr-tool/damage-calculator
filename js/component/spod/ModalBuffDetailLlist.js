@@ -27,16 +27,9 @@ const BuffDetailLabelComponent = ({ buff }) => {
     )
 };
 
-const BuffDetailListComponent = () => {
-
-    const [buffList, setBuffList] = React.useState([]);
-
-    window.setBuffList = (buff_list) => {
-        setBuffList(buff_list);
-    }
-
+const BuffDetailListComponent = ({ buffList }) => {
     return (
-        <div>
+        <div className="p-6">
             <div className="mb-4">
                 <label className="modal_label">バフ一覧</label>
                 {buffList.map((buff, index) => {
@@ -47,7 +40,3 @@ const BuffDetailListComponent = () => {
         </div>
     )
 };
-$(function () {
-    const rootElement = document.getElementById('buff_detail_list');
-    ReactDOM.createRoot(rootElement).render(<BuffDetailListComponent />);
-});

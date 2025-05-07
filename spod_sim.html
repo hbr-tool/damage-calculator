@@ -44,7 +44,6 @@
   <script src="js/const.js"></script>
   <script src="js/chara_data.js"></script>
   <script src="js/chara_style.js"></script>
-  <script src="js/modal.js"></script>
   <script src="js/spod_sim.js"></script>
   <script src="js/skill_list.js"></script>
   <script src="js/skill_attack.js"></script>
@@ -52,90 +51,32 @@
   <script src="js/skill_passive.js"></script>
   <script src="js/enemy.js"></script>
   <script src="js/ability.js"></script>
-  <script type="text/babel" src="js/component/modal_style_section.js"></script>
-  <script type="text/babel" src="js/component/style_list.js"></script>
+  <script type="text/babel" src="js/component/ModalStyleSelection.js"></script>
+  <script type="text/babel" src="js/component/StyleIcon.js"></script>
   <script type="text/babel" src="js/component/enemy_list.js"></script>
-  <script type="text/babel" src="js/component/spod/chara_setting.js"></script>
-  <script type="text/babel" src="js/component/spod/enemy_area.js"></script>
-  <script type="text/babel" src="js/component/spod/detail_setting.js"></script>
-  <script type="text/babel" src="js/component/spod/setting_area.js"></script>
-  <script type="text/babel" src="js/component/spod/battle_area.js"></script>
-  <script type="text/babel" src="js/component/spod/turn_data.js"></script>
-  <script type="text/babel" src="js/component/spod/over_drive_gauge.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_explanation.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_target_selection.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_effcet_selection.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_buff_detail_list.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_skill_select_list.js"></script>
-  <script type="text/babel" src="js/component/spod/modal_save_load.js"></script>
-  <script type="text/babel" src="js/component/spod/unit_component.js"></script>
-  <script type="text/babel" src="js/component/spod/buff_icon_component.js"></script>
-  <script type="text/babel" src="js/component/spod/constraints_list.js"></script>
-  <script>
-    let chara_no = -1;
-    $(function () {
-      // スタイルリスト読み込み
-      select_troops = select_troops ? select_troops : 0;
-      loadTroopsList(select_style_list, select_troops);
-
-      // MicroModal初期化
-      MicroModal.init({
-        disableScroll: true,
-        disableFocus: true,
-        awaitOpenAnimation: true,
-        awaitCloseAnimation: true
-      });
-    });
-
-  </script>
+  <script type="text/babel" src="js/component/SpOdSimulation.js"></script>
+  <script type="text/babel" src="js/component/spod/CharaSetting.js"></script>
+  <script type="text/babel" src="js/component/spod/EnemyArea.js"></script>
+  <script type="text/babel" src="js/component/spod/DetailSetting.js"></script>
+  <script type="text/babel" src="js/component/spod/SettingArea.js"></script>
+  <script type="text/babel" src="js/component/spod/BattleArea.js"></script>
+  <script type="text/babel" src="js/component/spod/TurnData.js"></script>
+  <script type="text/babel" src="js/component/spod/OverDriveGauge.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalExplanation.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalTargetSelection.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalEffectSelection.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalBuffDetailLlist.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalSkillSelectList.js"></script>
+  <script type="text/babel" src="js/component/spod/ModalSaveLoad.js"></script>
+  <script type="text/babel" src="js/component/spod/UnitComponent.js"></script>
+  <script type="text/babel" src="js/component/spod/BuffIconComponent.js"></script>
+  <script type="text/babel" src="js/component/spod/ConstraintsList.js"></script>
 </head>
 
 <body>
   <main>
     <div class="header"></div>
-    <div id="root" class="frame w-screen pt-3 overflow-y-scroll border-b">
-      <div id="setting_area">読み込み中</div>
-      <div id="battle_area"></div>
-    </div>
-    <div class="modal micromodal-slide" id="modal_style_section" aria-hidden="true">
-      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_style" role="dialog" aria-modal="true" aria-labelledby="modal_section">
-          <div id="modal_section" class="modal_section"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal micromodal-slide" id="modal_target_selection" aria-hidden="true">
-      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="target_selection">
-          <div id="target_selection" aria-hidden="true" className="modal text-left min-w-[300px] mx-auto"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal micromodal-slide" id="modal_effect_selection" aria-hidden="true">
-      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="effect_selection">
-          <div id="effect_selection" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal micromodal-slide" id="modal_skill_select_list" aria-hidden="true">
-      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="skill_select_list">
-          <div id="skill_select_list" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal micromodal-slide" id="modal_buff_detail_list" aria-hidden="true">
-      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-        <div class="modal__container container_damage" role="dialog" aria-modal="true"
-          aria-labelledby="buff_detail_list">
-          <div id="buff_detail_list" aria-hidden="true" class="modal text-left min-w-[300px] mx-auto"></div>
-        </div>
-      </div>
-    </div>
+    <div id="root">
   </main>
 </body>
 

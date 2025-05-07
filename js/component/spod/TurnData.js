@@ -1,4 +1,4 @@
-const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isCapturing }) => {
+const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, handlers }) => {
     const isNextInfluence = React.useRef(false);
     const [turnData, setTurnData] = React.useState({
         user_operation: turn.user_operation
@@ -42,37 +42,59 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
         select_skill.skill_id = skill_id;
         skillUpdate(turn, skill_id, place_no);
         const unit = turn.unit_list.filter(unit => unit.place_no === place_no)[0];
-        processSkillChange(unit, skill_id, user_operation, select_skill);
+
+        const buff_list = getBuffInfo(skill_id);
+        const SELECT_RANGE = [RANGE_ALLY_UNIT, RANGE_SELF_AND_UNIT, RANGE_OTHER_UNIT];
+        if (buff_list.some(buff => SELECT_RANGE.includes(buff.range_area))) {
+            openModal(place_no, "target")
+        } else {
+            unit.buff_target_chara_id = null;
+        }
+
+        let effect_type = 0;
+        let skill_info = getSkillData(skill_id);
+        const conditionsList = buff_list.map(buff => buff.conditions).filter(condition => condition !== null);
+        if (conditionsList.includes(CONDITIONS_DESTRUCTION_OVER_200)) {
+            effect_type = 2;
+        }
+        if (conditionsList.includes(CONDITIONS_BREAK)) {
+            effect_type = 3;
+        }
+        if (conditionsList.includes(CONDITIONS_PERCENTAGE_30)) {
+            effect_type = 4;
+        }
+        if (conditionsList.includes(CONDITIONS_HAS_SHADOW) || skill_info.attribute_conditions == CONDITIONS_HAS_SHADOW) {
+            effect_type = 5;
+        }
+        if (conditionsList.includes(CONDITIONS_DOWN_TURN) || skill_info.attribute_conditions == CONDITIONS_DOWN_TURN) {
+            effect_type = 6;
+        }
+        if (conditionsList.includes(CONDITIONS_BUFF_DISPEL) || skill_info.attribute_conditions == CONDITIONS_BUFF_DISPEL) {
+            effect_type = 7;
+        }
+        if (conditionsList.includes(CONDITIONS_DP_OVER_100) || skill_info.attribute_conditions == CONDITIONS_DP_OVER_100) {
+            effect_type = 8;
+        }
+
+        switch (skill_id) {
+            case 50: // トリック・カノン
+                effect_type = 1;
+                break;
+            default:
+                break;
+        }
+
+        if (effect_type != 0) {
+            openModal(place_no, "effect", effect_type)
+        } else {
+            unit.buff_effect_select_type = null;
+        }
+
+        processSkillChange(unit, user_operation, select_skill);
     }
 
     // スキル変更時の追加処理
-    async function processSkillChange(unit, skill_id, user_operation, select_skill) {
-        const buff_list = getBuffInfo(skill_id);
-        if (!await handleTargetSelection(unit, turn, buff_list)) {
-            // 未選択時に初期値に戻す
-            unit.select_skill_id = unit.init_skill_id;
-            chengeSkill(unit.init_skill_id, unit.place_no);
-        }
-        if (!await handleEffectSelection(unit, skill_id, buff_list)) {
-            // 未選択時に初期値に戻す
-            unit.select_skill_id = unit.init_skill_id;
-            chengeSkill(unit.init_skill_id, unit.place_no);
-        }
-
-        let sp_cost = unit.sp_cost;
-        let skill_info = getSkillData(skill_id);
-        const selectionConditions = [CONDITIONS_HAS_SHADOW, CONDITIONS_DOWN_TURN, CONDITIONS_DP_OVER_100];
-        if (selectionConditions.includes(skill_info.attribute_conditions)) {
-            if (unit.buff_effect_select_type == 1) {
-                if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {
-                    sp_cost = Math.floor(sp_cost / 2);
-                }
-                if (skill_info.skill_attribute == ATTRIBUTE_SP_ZERO) {
-                    sp_cost = 0;
-                }
-            }
-        }
-        unit.sp_cost = sp_cost;
+    function processSkillChange(unit, user_operation, select_skill) {
         select_skill.buff_target_chara_id = unit.buff_target_chara_id;
         select_skill.buff_effect_select_type = unit.buff_effect_select_type;
         reRender(user_operation, true);
@@ -82,10 +104,10 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
     function triggerOverDrive(checked) {
         let user_operation = turn.user_operation;;
         if (checked) {
-            turn.startOverDrive();
+            startOverDrive(turn);
             user_operation.kb_action = KB_NEXT_ACTION;
         } else {
-            turn.removeOverDrive();
+            removeOverDrive(turn);
         }
         user_operation.trigger_over_drive = checked;
         reRender(user_operation, true);
@@ -148,8 +170,8 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
 
     // 前衛後衛ユニット交換
     const exchangeUnit = ((old_front, old_back, select_skill) => {
-        old_back.setInitSkill();
-        old_front.setInitSkill();
+        setInitSkill(old_back);
+        setInitSkill(old_front);
         select_skill[old_front.place_no] = { skill_id: SKILL_NONE };
         select_skill[old_back.place_no] = { skill_id: old_back.init_skill_id };
     })
@@ -166,30 +188,68 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
         turn.is_last_turn = false;
         let turn_data = deepClone(turn);
         turn_data.is_last_turn = true;
-        startAction(turn_data, seq_last_turn);
-        // 次ターンを追加
-        proceedTurn(turn_data, true);
+        startAction(turn_data);
+        // ターン開始処理
+        handlers.proceedTurn(turn_data, true);
     };
 
     React.useEffect(() => {
-        if (seq_last_turn !== index && isNextInfluence.current) {
-            // 最終ターンの情報
-            const last_turn_operation = turn_list[seq_last_turn].user_operation;
-
-            // 指定されたnumber以上の要素を削除
-            turn_list = turn_list.slice(0, index + 1);
-            let turn_data = turn_list[index];
-
-            recreateTurnData(turn_data, last_turn_operation, false);
+        if (!isLastTurn && isNextInfluence.current) {
+            handlers.recreateTurn(index);
         }
     }, [turnData, index]);
 
+    const [modalSetting, setModalSetting] = React.useState({
+        isOpen: false,
+        modalIndex: -1,
+        modalType: null,
+        effect_type: 0
+    });
+
+    const handleSelectTarget = (chara_id) => {
+        const unit = turn.unit_list.filter(unit => unit.place_no === modalSetting.modalIndex)[0];
+        unit.buff_target_chara_id = chara_id;
+        turn.user_operation.select_skill[modalSetting.modalIndex].buff_target_chara_id = chara_id;
+        reRender(turn.user_operation, true);
+    };
+
+    const handleSelectEffect = (effect_type) => {
+        const unit = turn.unit_list.filter(unit => unit.place_no === modalSetting.modalIndex)[0];
+        unit.buff_effect_select_type = effect_type;
+        turn.user_operation.select_skill[modalSetting.modalIndex].buff_effect_select_type = effect_type;
+        let sp_cost = unit.sp_cost;
+        let skill_info = getSkillData(unit.select_skill_id);
+
+        const selectionConditions = [CONDITIONS_HAS_SHADOW, CONDITIONS_DOWN_TURN, CONDITIONS_DP_OVER_100];
+        if (selectionConditions.includes(skill_info.attribute_conditions)) {
+            if (unit.buff_effect_select_type == 1) {
+                if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {
+                    sp_cost = Math.floor(sp_cost / 2);
+                }
+                if (skill_info.skill_attribute == ATTRIBUTE_SP_ZERO) {
+                    sp_cost = 0;
+                }
+            }
+        }
+        unit.sp_cost = sp_cost;
+        reRender(turn.user_operation, true);
+    };
+
+    const clickBuffIcon = (buff_list) => {
+        openModal(0, "buff", buff_list);
+    };
+
+
+    const openModal = (index, type, effect_type) => setModalSetting({ isOpen: true, modalIndex: index, modalType: type, effect_type: effect_type });
+    const closeModal = () => setModalSetting({ isOpen: false });
+
+    // console.log(`render${index}`);
     return (
         <div className="turn">
             <div className="turn_header_area">
                 <div className="turn_header_top">
                     <div>
-                        <div className="turn_number">{turn.getTurnNumber()}</div>
+                        <div className="turn_number">{getTurnNumber(turn)}</div>
                         <div className="left flex">
                             <img className="enemy_icon" src="icon/BtnEventBattleActive.webp" />
                             <div>
@@ -207,19 +267,19 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                     </div>
                     <OverDriveGauge turn={turn} />
                 </div>
-                <BuffIconComponent buff_list={turn.enemy_debuff_list} loop_limit={12} loop_step={1} place_no={7} turn_number={turn.turn_number} />
+                <BuffIconComponent buff_list={turn.enemy_debuff_list} loop_limit={12} loop_step={1} place_no={7} turn_number={turn.turn_number} clickBuffIcon={clickBuffIcon}/>
             </div>
             <div className="party_member">
                 <div className="flex front_area">
                     {[0, 1, 2].map(place_no =>
                         <UnitComponent turn={turn} key={`unit${place_no}`} place_no={place_no} selected_place_no={turnData.user_operation.selected_place_no}
-                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing} />
+                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} clickBuffIcon={clickBuffIcon} hideMode={hideMode} isCapturing={isCapturing} />
                     )}
                 </div>
                 <div className="flex back_area">
                     {[3, 4, 5].map(place_no =>
                         <UnitComponent turn={turn} key={`unit${place_no}`} place_no={place_no} selected_place_no={turnData.user_operation.selected_place_no}
-                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} hideMode={hideMode} isCapturing={isCapturing} />
+                            chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} clickBuffIcon={clickBuffIcon} hideMode={hideMode} isCapturing={isCapturing} />
                     )}
                     <div>
                         <select className="action_select" value={turnData.user_operation.kb_action} onChange={(e) => chengeAction(e)}>
@@ -237,18 +297,44 @@ const TurnDataComponent = React.memo(({ turn, index, is_last_turn, hideMode, isC
                             {turn.start_over_drive_gauge >= 100 && !turn.additional_turn && (turn.over_drive_number == 0 || turn.trigger_over_drive) ?
                                 <input type="checkbox" className="trigger_over_drive" checked={turn.trigger_over_drive} onChange={(e) => triggerOverDrive(e.target.checked)} />
                                 : null}
-                            {is_last_turn ?
+                            {isLastTurn ?
                                 <input className="turn_button next_turn" defaultValue="次ターン" type="button" onClick={clickNextTurn} />
                                 :
-                                <input className="turn_button return_turn" defaultValue="ここに戻す" type="button" onClick={() => returnTurn(turn.seq_turn)} />
+                                <input className="turn_button return_turn" defaultValue="ここに戻す" type="button" onClick={() => handlers.returnTurn(turn.seq_turn)} />
                             }
                         </div>
                     </div>
                 </div>
             </div>
             <div className="remark_area">
-                <textarea className="remaek_text" onChange={(e) => chengeRemark(e)} value={turn.user_operation.remark}/>
+                <textarea className="remaek_text" onChange={(e) => chengeRemark(e)} value={turn.user_operation.remark} />
+            </div>
+            <div>
+                <ReactModal
+                    isOpen={modalSetting.isOpen}
+                    onRequestClose={closeModal}
+                    className={"modal-content " + (modalSetting.isOpen ? "modal-content-open" : "")}
+                    overlayClassName={"modal-overlay " + (modalSetting.isOpen ? "modal-overlay-open" : "")}
+                >
+                    {
+                        modalSetting.modalType == "target" ?
+                            <ModalTargetSelection closeModal={closeModal} onSelect={handleSelectTarget} unitList={turn.unit_list} />
+                            : modalSetting.modalType == "effect" ?
+                                <ModalEffectSelection closeModal={closeModal} onSelect={handleSelectEffect} effectType={modalSetting.effect_type} />
+                                : modalSetting.modalType == "buff" ?
+                                    <BuffDetailListComponent buffList={modalSetting.effect_type} />
+                                    : null
+                    }
+                </ReactModal>
             </div>
         </div>
     )
+}, (prevProps, nextProps) => {
+  // 再描画が必要ないなら true を返す
+  return (
+    prevProps.turn === nextProps.turn &&
+    prevProps.isLastTurn === nextProps.isLastTurn &&
+    prevProps.hideMode === nextProps.hideMode &&
+    prevProps.isCapturing === nextProps.isCapturing
+  );
 });

@@ -1,6 +1,4 @@
 const OverDriveGauge = ({ turn }) => {
-
-   
     let over_drive_gauge = turn.over_drive_gauge;
     let add_over_drive_gauge = getOverDrive(turn);
     turn.add_over_drive_gauge = add_over_drive_gauge;

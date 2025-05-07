@@ -138,7 +138,7 @@ hr.line {
   }
 
   .search_result_area {
-    height: calc(100% - 250px);
+    height: calc(100% - 280px);
   }
 
   input.role {

@@ -92,7 +92,7 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
         && prevProps.isCapturing === nextProps.isCapturing;
 });
 
-const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeSelectUnit, hideMode, isCapturing }) => {
+const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeSelectUnit, hideMode, isCapturing, clickBuffIcon }) => {
     const filterUnit = turn.unit_list.filter(unit => unit.place_no === place_no);
     if (filterUnit.size === 0) {
         return null;
@@ -118,7 +118,7 @@ const UnitComponent = ({ turn, place_no, selected_place_no, chengeSkill, chengeS
                     }
                 </div>
                 {place_no <= 2 || hideMode ?
-                    <BuffIconComponent buff_list={unit.buff_list} loop_limit={loop_limit} loop_step={2} place_no={place_no} turn_number={turn.turn_number} />
+                    <BuffIconComponent buff_list={unit.buff_list} loop_limit={loop_limit} loop_step={2} place_no={place_no} turn_number={turn.turn_number} clickBuffIcon={clickBuffIcon} />
                     : null
                 }
             </div>

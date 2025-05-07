@@ -9,16 +9,23 @@ const SkillCheckComponent = ({ skill, exclusion_skill_list, changeSkillList }) =
     );
 }
 
-const SkillSelectListComponent = () => {
-
+const ModalSkillSelectList = ({index, closeModal}) => {
+    const { styleList, setStyleList } = React.useContext(StyleListContext);
     const [skillSet, setSkillSet] = React.useState({
-        skill_list: [],
-        exclusion_skill_list: [],
+        exclusion_skill_list: styleList.selectStyleList[index].exclusion_skill_list,
     });
 
-    window.setSkillList = (skill_list, exclusion_skill_list) => {
-        const state = { skill_list: skill_list, exclusion_skill_list: exclusion_skill_list }
-        setSkillSet(state);
+    let has_skill_list = [];
+    if (styleList.selectStyleList[index]) {
+        const style_info = styleList.selectStyleList[index].style_info;
+        has_skill_list = skill_list.filter(obj =>
+            (obj.chara_id === style_info.chara_id || obj.chara_id === 0) &&
+            (obj.style_id === style_info.style_id || obj.style_id === 0) &&
+            obj.skill_attribute != ATTRIBUTE_NORMAL_ATTACK &&
+            obj.skill_attribute != ATTRIBUTE_PURSUIT &&
+            obj.skill_attribute != ATTRIBUTE_COMMAND_ACTION &&
+            obj.skill_attribute != ATTRIBUTE_NOT_ACTION
+        );
     }
 
     const changeSkillList = (e, skill_id) => {
@@ -35,23 +42,20 @@ const SkillSelectListComponent = () => {
     const clickReleaseBtn = () => {
         let exclusion_skill_list = skillSet.exclusion_skill_list;
         exclusion_skill_list.splice(0);
-        skillSet.skill_list.forEach(element => {
+        has_skill_list.forEach(element => {
             exclusion_skill_list.push(element.skill_id);
         });
         setSkillSet({ ...skillSet, exclusion_skill_list: exclusion_skill_list });
     }
 
-    const closeModal = () => {
-        MicroModal.close('modal_skill_select_list');
-    }
     // 習得スキルは同一スキルを排除
     const learn_skill_list = Array.from(
-        new Map(skillSet.skill_list.filter((skill) => skill.skill_id < 9000 && skill.skill_active == 0).map(item => [item.skill_id, item])).values()
+        new Map(has_skill_list.filter((skill) => skill.skill_id < 9000 && skill.skill_active == 0).map(item => [item.skill_id, item])).values()
       );
-    const passive_skill_list = skillSet.skill_list.filter((skill) => skill.skill_id < 9000 && skill.skill_active == 1);
-    const orb_skill_list = skillSet.skill_list.filter((skill) => skill.skill_id > 9000);
+    const passive_skill_list = has_skill_list.filter((skill) => skill.skill_id < 9000 && skill.skill_active == 1);
+    const orb_skill_list = has_skill_list.filter((skill) => skill.skill_id > 9000);
     return (
-        <>
+        <div className="p-6">
             <div className="skill_select_container">
                 <label className="modal_label">スキル設定</label>
                 <button className="modal-close" aria-label="Close modal" onClick={closeModal}>&times;</button>
@@ -78,10 +82,6 @@ const SkillSelectListComponent = () => {
                     <SkillCheckComponent key={`skill${skill.skill_id}`} skill={skill} exclusion_skill_list={skillSet.exclusion_skill_list} changeSkillList={changeSkillList} />
                 )}
             </div>
-        </>
+        </div>
     )
 };
-$(function () {
-    const rootElement = document.getElementById('skill_select_list');
-    ReactDOM.createRoot(rootElement).render(<SkillSelectListComponent />);
-});

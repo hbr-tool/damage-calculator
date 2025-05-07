@@ -49,8 +49,6 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
         localStorage.setItem("free_enemy_" + enemy_class_no, JSON.stringify(enemy_info));
     }
 
-    $(".enemy_input").attr("readonly", enemy_class != ENEMY_CLASS_FREE_INPUT);
-
     return (
         <>
             <div id="enemy_select">
@@ -67,10 +65,10 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
                     <option value="9">イベント隠しボス</option>
                     <option value="10">時の修練場/アリーナ</option>
                     <option value="11">制圧戦</option>
-                    <option value="12">セラフ遭遇戦</option>
+                    {/* <option value="12">セラフ遭遇戦</option> */}
                     {is_free_input ?
                         <option value="99">自由入力</option>
-                    : null}
+                        : null}
                 </select>
                 <select id="enemy_list" value={enemy.enemy_select} onChange={(e) => changeEnemySelect(e.target.value)}>
                     {class_List.map((value) => {

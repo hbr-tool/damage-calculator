@@ -1,49 +1,57 @@
 
 const { DragDropContext, Droppable, Draggable } = window["ReactBeautifulDnd"];
-const CharaSettingComponent = () => {
+const CharaSetting = () => {
     const BRACELET_LIST = ["無し", "火撃", "氷撃", "雷撃", "光撃", "闇撃"];
     const EARRING_LIST = [10, 12, 15];
 
-    const [selectStyle, setSelectStyle] = React.useState([]);
+    const { styleList, setStyleList, loadMember, removeMember } = useStyleList();
 
     // 設定変更
     const setSetting = (place_no, item, value) => {
-        let style = select_style_list[place_no]
-        style[item] = Number(value);
-        setSelectStyle([...select_style_list]);
+        const updatedStyleList = [...styleList.selectStyleList];
+        updatedStyleList[place_no] = {
+            ...updatedStyleList[place_no], 
+            [item]: Number(value)
+        };
+        setStyleList({ ...styleList, selectStyleList: updatedStyleList });
     }
 
     // リセットボタン押下
     const resetStyle = () => {
-        styleReset(select_style_list, true);
-        setSelectStyle([...select_style_list]);
+        styleList.selectStyleList.forEach((style, index) => {
+            localStorage.removeItem(`troops_${styleList.selectTroops}_${index}`);
+        })
+        setStyleList({ ...styleList, selectStyleList: Array(6).fill(undefined) });
     }
 
     // 部隊変更
     const changeTroops = (e) => {
-        if (e.target.value == select_troops) {
+        if (e.target.value == styleList.selectTroops) {
             return;
         }
-        styleReset(select_style_list, false);
-        select_troops = e.target.value;
+        const updatedStyleList = [...styleList.selectStyleList];
+        updatedStyleList.forEach((style, index) => {
+            removeMember(index);
+        })
+        let select_troops = e.target.value;
         localStorage.setItem('select_troops', select_troops);
-        loadTroopsList(select_style_list, select_troops);
-        setSelectStyle([...select_style_list]);
+        loadMember(select_troops);
     }
 
     // メンバー更新
-    window.updateMember = function () {
-        setSelectStyle([...select_style_list]);
-    }
+    // window.updateMember = function () {
+    //     setSelectStyle([...select_style_list]);
+    // }
 
     // メンバー入れ替え
     const handleOnDragEnd = (result) => {
         if (!result.destination) return;
 
-        const [removed] = select_style_list.splice(result.source.index, 1);
-        select_style_list.splice(result.destination.index, 0, removed);
+        const updatedStyleList = [...styleList.selectStyleList];
+        const [removed] = updatedStyleList.splice(result.source.index, 1);
+        updatedStyleList.splice(result.destination.index, 0, removed);
 
-        select_style_list.forEach((style, index) => {
+        updatedStyleList.forEach((style, index) => {
             let style_id = null;
             if (style) {
                 style_id = style.style_info.style_id;
@@ -51,33 +59,29 @@ const CharaSettingComponent = () => {
             localStorage.setItem(`troops_${select_troops}_${index}`, style_id);
         })
 
-        setSelectStyle([...select_style_list]);
+        setStyleList({ ...styleList, selectStyleList: updatedStyleList });
     };
 
     // スキルリストの表示    
     const showSkillList = (index) => {
-        if (select_style_list[index]) {
-            const style_info = select_style_list[index].style_info;
-            const skill_filter_list = skill_list.filter(obj =>
-                (obj.chara_id === style_info.chara_id || obj.chara_id === 0) &&
-                (obj.style_id === style_info.style_id || obj.style_id === 0) &&
-                obj.skill_attribute != ATTRIBUTE_NORMAL_ATTACK && 
-                obj.skill_attribute != ATTRIBUTE_PURSUIT && 
-                obj.skill_attribute != ATTRIBUTE_COMMAND_ACTION && 
-                obj.skill_attribute != ATTRIBUTE_NOT_ACTION
-            );
-            const exclusion_skill_list = select_style_list[index].exclusion_skill_list;
-            setSkillList(skill_filter_list, exclusion_skill_list, index);
-            MicroModal.show('modal_skill_select_list');
-        }
+        openModal(index, "skill");
     };
+
+    const [modalSetting, setModalSetting] = React.useState({
+        isOpen: false,
+        modalIndex: -1,
+        modalType: null,
+    });
+
+    const openModal = (index, type) => setModalSetting({ isOpen: true, modalIndex: index, modalType: type, });
+    const closeModal = () => setModalSetting({ isOpen: false });
 
     return (
         <div className="grid grid-cols-7 text-center gap-y-px gap-x-0" id="chara_setting">
             <label className="mt-3 mb-3 small_font">部隊選択</label>
             <div className="col-span-6 flex">
                 {Array.from({ length: 9 }, (_, i) => {
-                    let className = "troops_btn " + (i === Number(select_troops) ? "selected_troops" : "")
+                    let className = "troops_btn " + (i === Number(styleList.selectTroops) ? "selected_troops" : "")
                     return (
                         <input key={i}
                             className={className}
@@ -107,7 +111,7 @@ const CharaSettingComponent = () => {
                                     padding: 0,
                                 }}
                             >
-                                {select_style_list.map((value, index) => {
+                                {styleList.selectStyleList.map((style, index) => {
                                     let id = `style_${index}`
                                     return (
                                         <Draggable key={id} draggableId={id} index={index}>
@@ -124,7 +128,7 @@ const CharaSettingComponent = () => {
                                                         justifyContent: 'center',
                                                     }}
                                                 >
-                                                    <StyleIcon place_no={index} />
+                                                    <StyleIcon style={style} place_no={index} onClick={() => { openModal(index, "style") }} />
                                                 </li>
                                             )}
                                         </Draggable>)
@@ -143,7 +147,7 @@ const CharaSettingComponent = () => {
                 <label className="label_status">初期SP</label>
                 <label className="label_status">スキル</label>
             </div>
-            {select_style_list.map((value, index) => {
+            {styleList.selectStyleList.map((value, index) => {
                 let style = value;
                 let rarity = style ? style.style_info.rarity : 1;
                 let bracelet = style ? style.bracelet : 0;
@@ -186,6 +190,21 @@ const CharaSettingComponent = () => {
                 )
             }
             )}
+            <div>
+                <ReactModal
+                    isOpen={modalSetting.isOpen}
+                    onRequestClose={closeModal}
+                    className={"modal-content modal-narrwow " + (modalSetting.isOpen ? "modal-content-open" : "")}
+                    overlayClassName={"modal-overlay " + (modalSetting.isOpen ? "modal-overlay-open" : "")}
+                >
+                    {
+                        modalSetting.modalType == "skill" ?
+                            <ModalSkillSelectList index={modalSetting.modalIndex} closeModal={closeModal} />
+                            :
+                            <ModalStyleSelection index={modalSetting.modalIndex} closeModal={closeModal} />
+                    }
+                </ReactModal>
+            </div>
         </div>
     )
 };

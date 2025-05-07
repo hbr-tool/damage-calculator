@@ -1,5 +1,6 @@
-const SaveLoadComponent = ({ mode, handleClose }) => {
+const ModalSaveLoad = ({ mode, handleClose, turnList, loadData }) => {
     const NONE = "無し"
+    const { styleList, setStyleList, setMember, saveMember, removeMember } = useStyleList();
 
     const handleClick = (i, name) => {
         if (mode == "save") {
@@ -10,10 +11,11 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             if (data_name === null) {
                 return;
             }
+            const userOperationList = turnList.map(turn => turn.user_operation);
             let save_data = {
                 data_name: data_name,
                 unit_data_list: convertUnitDataList(),
-                user_operation_list: user_operation_list,
+                user_operation_list: userOperationList,
             }
             let compress = compressString(JSON.stringify(save_data));
             localStorage.setItem(`sim_data_${i}`, compress);
@@ -34,35 +36,13 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
             handleClose();
             let decompress = decompressString(jsonstr)
             save_data = JSON.parse(decompress);
-            // 部隊情報上書き
-            save_data.unit_data_list.forEach((unit_data, index) => {
-                if (unit_data) {
-                    setMember(select_style_list, index, unit_data.style_id, false);
-                    select_style_list[index].limit_count = unit_data.limit_count;
-                    select_style_list[index].earring = unit_data.earring;
-                    select_style_list[index].bracelet = unit_data.bracelet;
-                    select_style_list[index].chain = unit_data.chain;
-                    select_style_list[index].init_sp = unit_data.init_sp;
-                    select_style_list[index].exclusion_skill_list = unit_data.exclusion_skill_list;
-                } else {
-                    select_style_list[index] = undefined;
-                }
-            })
-            // 戦闘データ初期化
-            cleanBattleData();
-            user_operation_list = save_data.user_operation_list;
-            // 初期データ作成
-            let turn_init = getInitBattleData();
-            // 最終ターンの情報
-            const last_turn_operation = user_operation_list[user_operation_list.length - 1];
-            // ターンデータ再生成
-            recreateTurnData(turn_init, last_turn_operation, true);
+            loadData(save_data);
         }
     }
 
     // メンバー情報からユニットデータに変換
     function convertUnitDataList() {
-        return select_style_list.map((style) => {
+        return styleList.selectStyleList.map((style) => {
             if (style) {
                 return {
                     style_id: style.style_info.style_id,
@@ -153,7 +133,7 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
     }
 
     return (
-        <>
+        <div className="p-6">
             <div>
                 <label className="modal_label">データ選択</label>
             </div>
@@ -175,6 +155,6 @@ const SaveLoadComponent = ({ mode, handleClose }) => {
                     <input type="button" className="text-sm w-[120px]" onClick={chickRead} value="ファイルから読み込み" />
                 }
             </div>
-        </>
+        </div>
     );
 };

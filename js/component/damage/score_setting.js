@@ -1,4 +1,4 @@
-const ScoreSettingComponent = ({ enemy_info }) => {
+const ScoreSettingComponent = ({ enemy_info, state, dispatch }) => {
 
     const [selectHalf, setSelectHalf] = React.useState(1);
     if (enemy_info === undefined || enemy_info.enemy_class != ENEMY_CLASS_SCORE_ATTACK) {
@@ -13,19 +13,18 @@ const ScoreSettingComponent = ({ enemy_info }) => {
     // タブ変更
     const handleTabChange = (half) => {
         setSelectHalf(half)
-        setEnemyStatus(enemy_info, false);
+        dispatch({ type: "RESET_COLLECT"});
     }
 
     // レベル変更
-    const handleScoreChange = () => {
-        setEnemyStatus(enemy_info, false);
+    const handleScoreChange = (lv) => {
+        dispatch({ type: "SET_SCORE_LV", lv });
     }
 
     // グレード変更
-    const handleGradeChange = () => {
-        setEnemyStatus(enemy_info, false);
+    const handleGradeChange = (grade, checked) => {
+        dispatch({ type: "SET_COLLECT", grade, checked });
     }
-
 
     const getImg = (conditions) => {
         let img = "img/";
@@ -90,7 +89,7 @@ const ScoreSettingComponent = ({ enemy_info }) => {
                 </span>
                 <span id="score_turn">
                     Lv
-                    <select className="text-right w-12" id="score_lv" onChange={() => handleScoreChange()}>
+                    <select className="text-right w-12" id="score_lv" value={state.score_lv} onChange={(e) => handleScoreChange(e.target.value)}>
                         {Array.from({ length: 50 }, (_, i) => (
                             <option value={150 - i} key={`score_lv_${i}`}>{150 - i}</option>
                         ))}
@@ -101,7 +100,7 @@ const ScoreSettingComponent = ({ enemy_info }) => {
                         <div key={`grade_${selectHalf}_${index}`}>
                             <input className={`half_check half_tab_${selectHalf}`} type="checkbox" id={`half_grade${index}`}
                                 data-grade_no={grade.grade_no}
-                                onChange={() => handleGradeChange()} />
+                                onChange={(e) => handleGradeChange(grade, e.target.checked)} />
                             <label className="checkbox01" htmlFor={`half_grade${index}`}>
                                 {grade.grade_name}(グレード:{grade.grade_rate})
                             </label>

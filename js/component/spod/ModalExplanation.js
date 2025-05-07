@@ -1,6 +1,6 @@
-const Explanation = () => {
+const ModalExplanation = () => {
     return (
-        <>
+        <div className="p-8">
             <div className="mb-4">
                 <label className="modal_label">注意事項</label>
             </div>
@@ -82,6 +82,6 @@ const Explanation = () => {
             <div className="mt-1 mx-auto text-right">
                 <a className="text-blue-500 underline" href="https://marshmallow-qa.com/ldboixq5xyndo94"> 不具合/要望受付フォーム</a>
             </div>
-        </>
+        </div>
     )
 };

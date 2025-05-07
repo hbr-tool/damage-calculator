@@ -4,10 +4,10 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  min-width: 300px;
   max-height: 90%;
   overflow-y: auto;
   background: white;
-  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   opacity: 0;
@@ -21,7 +21,6 @@
 
 .modal-narrwow {
   min-width: 340px;
-  max-width: 500px
 }
 
 /* モーダルが開いたとき */
@@ -44,6 +43,8 @@
 .modal-overlay-open {
   opacity: 1;
 }
+
+/**以下React版不使用 */
 
 /**************************\
   Basic Modal Styles
