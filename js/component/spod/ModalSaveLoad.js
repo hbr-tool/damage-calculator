@@ -68,9 +68,10 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData }) => {
 
     // 出力クリック
     const chickOutput = () => {
+        const userOperationList = turnList.map(turn => turn.user_operation);
         let save_data = {
             unit_data_list: convertUnitDataList(),
-            user_operation_list: user_operation_list,
+            user_operation_list: userOperationList,
         }
         let compress = compressString(JSON.stringify(save_data));
         let filename = "sim_data.sav";
