@@ -50,11 +50,6 @@ const turnProceed = (kb_next, turn) => {
         turn.end_drive_trigger_count = 0;
         unitLoop(unitOverDriveTurnProceed, turn.unit_list);
     }
-    // ターンごとに初期化
-    turn.trigger_over_drive = false;
-    turn.start_over_drive_gauge = turn.over_drive_gauge;
-    turn.old_field = turn.field;
-    turn.seq_turn++;
     unitLoop(function (unit) {
         if (unit.no_action) {
             unit.no_action = false;
@@ -63,10 +58,7 @@ const turnProceed = (kb_next, turn) => {
         buffConsumption(turnProgress, unit);
         unitTurnInit(turn.additional_turn, unit);
     }, turn.unit_list);
-    setUserOperation(turn);
-    if (turnProgress) {
-        abilityAction(ABILIRY_SELF_START, turn);
-    }
+    return turnProgress
 }
 
 const setUserOperation = (turn) => {
@@ -388,7 +380,7 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
             action_list = unit.ability_other;
             break;
     }
-    $.each(action_list, function (index, ability) {
+    action_list.forEach((ability, index) => {
         // 前衛
         if (ability.activation_place == 1 && unit.place_no >= 3) {
             return true;
@@ -635,18 +627,31 @@ function cleanBattleData() {
 }
 
 // ターン初期処理
-function initTurn(turn_data) {
-    unitSort(turn_data);
-    if (turn_data.additional_turn) {
-        turnProceed(KB_NEXT_ADDITIONALTURN, turn_data);
-        abilityAction(ABILIRY_ADDITIONALTURN, turn_data);
+function initTurn(turnData) {
+    unitSort(turnData);
+    if (turnData.additional_turn) {
+        turnProceed(KB_NEXT_ADDITIONALTURN, turnData);
+        // 追加ターン開始
+        abilityAction(ABILIRY_ADDITIONALTURN, turnData);
     } else {
-        let kb_action = turn_data.user_operation.kb_action;
-        turnProceed(kb_action, turn_data);
-        if (kb_action == KB_NEXT_ACTION) {
-            abilityAction(ABILIRY_ACTION_START, turn_data);
+        let kbAction = turnData.user_operation.kb_action;
+        if (kbAction == KB_NEXT_ACTION) {
+            // 行動開始時
+            abilityAction(ABILIRY_ACTION_START, turnData);
+        }
+        let turnProgress = turnProceed(kbAction, turnData);
+        if (turnProgress) {
+            // ターン開始時
+            abilityAction(ABILIRY_SELF_START, turnData);
         }
     }
+
+    // ターンごとに初期化
+    turnData.trigger_over_drive = false;
+    turnData.start_over_drive_gauge = turnData.over_drive_gauge;
+    turnData.old_field = turnData.field;
+    turnData.seq_turn++;
+    setUserOperation(turnData);
 }
 
 const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData }) => {
