@@ -237,8 +237,8 @@ const SettingArea = () => {
 
     // 戦闘開始前処理
     const startBattle = () => {
-        for (let i = 0; i < select_style_list.length; i++) {
-            let style = select_style_list[i]?.style_info;
+        for (let i = 0; i < styleList.selectStyleList.length; i++) {
+            let style = styleList.selectStyleList[i]?.style_info;
             if (NOT_USE_STYLE.includes(style?.style_id)) {
                 let chara_data = getCharaData(style.chara_id);
                 alert(`[${style.style_name}]${chara_data.chara_name}は現在使用できません。`);
