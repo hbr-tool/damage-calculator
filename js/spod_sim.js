@@ -1,7 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [36];
+const NOT_USE_STYLE = [36, 164];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
