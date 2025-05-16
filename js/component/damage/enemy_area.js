@@ -217,7 +217,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
                                 val = 100;
                             }
                             val -= correction - elementResistDown[key];
-                            if (attackInfo.penetration && key == 0) {
+                            if (attackInfo?.penetration && key == 0) {
                                 // 貫通クリティカル
                                 val = 100;
                             }
