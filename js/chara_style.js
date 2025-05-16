@@ -133,7 +133,7 @@
     {"style_id":133,"chara_id":27,"rarity":1,"style_name":"満艦飾の花乙女","image_url":"MiOhshimaYukata2024_R3_Thumbnail.webp","role":5,"element":0,"jewel_type":5,"ability0":1006,"ability1":1101,"ability3":1103},
     {"style_id":134,"chara_id":29,"rarity":1,"style_name":"Magic of Smile","image_url":"IrOhshimaShowTime_R3_Thumbnail.webp","role":6,"element":4,"jewel_type":4,"ability0":1120,"ability1":1101,"ability3":1516},
     {"style_id":135,"chara_id":37,"rarity":1,"style_name":"Carnival with You","image_url":"CReaperDate_R3_Thumbnail.webp","role":4,"element":1,"jewel_type":2,"ability0":1302,"ability1":1101,"ability3":501},
-    {"style_id":136,"chara_id":2,"rarity":1,"style_name":"傍らのプリンセス","image_url":"YIzumiCombat2023_R3_Thumbnail.webp","role":2,"element":5,"element2":1,"jewel_type":1,"ability0":409,"ability00":410,"ability1":1101,"ability3":1517},
+    {"style_id":136,"chara_id":2,"rarity":1,"style_name":"傍らのプリンセス","image_url":"YIzumiCombat2023_R3_Thumbnail.webp","role":2,"element":5,"element2":1,"jewel_type":1,"ability0":409,"ability00":410,"ability1":1101,"ability3":1517,"ability4":1210},
     {"style_id":137,"chara_id":8,"rarity":1,"style_name":"冷艶なるサイレンスキラー","image_url":"IMinaseAssassin_R3_Thumbnail.webp","role":1,"element":4,"jewel_type":1,"ability0":404,"ability00":1503,"ability1":1101,"ability3":210},
     {"style_id":138,"chara_id":9,"rarity":1,"style_name":"愛憐の綻び","image_url":"SMinaseDoll_R3_Thumbnail.webp","role":1,"element":0,"jewel_type":1,"ability0":1518,"ability1":1101,"ability3":6},
     {"style_id":139,"chara_id":7,"rarity":1,"style_name":"ヒビケ・Battlecry","image_url":"EAoiMilitary_R3_Thumbnail.webp","role":8,"element":0,"jewel_type":3,"ability0":1519,"ability1":510,"ability3":1016},

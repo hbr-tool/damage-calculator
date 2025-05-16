@@ -1,19 +1,9 @@
 
 
 
-const ModalStyleSelection = ({ index, closeModal }) => {
+const ModalStyleSelection = ({ index, closeModal, narrowStyle, setNarrowStyle }) => {
     const { styleList, setStyleList, setMember, removeMember } = useStyleList();
 
-    const [narrowStyle, setNarrowStyle] = React.useState({
-        physical: null,
-        element: null,
-        role: null,
-        rarity: 1,
-        target: "none",
-        buff_1: -1,
-        buff_2: -1,
-        buff_3: -1,
-    });
     const PHYSICAL_LIST = { "1": "slash", "2": "stab", "3": "strike" };
     const ELEMENT_LIST = { "0": "none", "1": "fire", "2": "ice", "3": "thunder", "4": "light", "5": "dark" };
     const ROLE_LIST = { "1": "ATTACKER", "2": "BREAKER", "3": "BLASTER", "4": "HEALER", "5": "BUFFER", "6": "DEBUFFER", "7": "DEFENDER", "8": "ADMIRAL", "9": "RIDER" };

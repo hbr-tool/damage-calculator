@@ -1,25 +1,17 @@
-const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_input }) => {
-    const [enemy, setEnemy] = React.useState({
-        enemy_class: enemy_class,
-        enemy_select: enemy_select
-    });
-
-    const changeEnemyClass = (enemy_class) => {
-        localStorage.setItem("enemy_class", enemy_class);
+const EnmeyListComponent = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => {
+    const handleClassChange = (newClass) => {
+        localStorage.setItem("enemy_class", newClass);
         localStorage.setItem("enemy_select", "1");
-
-        setEnemy({ enemy_class: enemy_class, enemy_select: "1" });
-        handleChange(enemy_class, "1");
+        handleChange(newClass, "1");
     };
 
-    const changeEnemySelect = (enemy_select) => {
-        localStorage.setItem("enemy_select", enemy_select);
-        setEnemy({ ...enemy, enemy_select: enemy_select });
-        handleChange(enemy.enemy_class, enemy_select);
+    const handleSelectChange = (newSelect) => {
+        localStorage.setItem("enemy_select", newSelect);
+        handleChange(enemyClass, newSelect);
     };
 
-    let class_List = enemy_list.filter((obj) => obj.enemy_class == enemy.enemy_class);
-    let enemy_status = enemy_list.filter((obj) => obj.enemy_class == enemy.enemy_class && obj.enemy_class_no == enemy.enemy_select)[0];
+    let class_List = enemy_list.filter((obj) => obj.enemy_class == enemyClass);
+    let enemy_status = enemy_list.filter((obj) => obj.enemy_class == enemyClass && obj.enemy_class_no == enemySelect)[0];
     if (!enemy_status) {
         enemy_status = enemy_list[0];
     }
@@ -52,7 +44,7 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
     return (
         <>
             <div id="enemy_select">
-                <select id="enemy_class" value={enemy.enemy_class} onChange={(e) => changeEnemyClass(e.target.value)}>
+                <select id="enemy_class" value={enemyClass} onChange={(e) => handleClassChange(e.target.value)}>
                     <option value="1">異時層</option>
                     <option value="2">オーブボス</option>
                     <option value="3">時計塔(N)</option>
@@ -66,16 +58,16 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
                     <option value="10">時の修練場/アリーナ</option>
                     <option value="11">制圧戦</option>
                     {/* <option value="12">セラフ遭遇戦</option> */}
-                    {is_free_input ?
+                    {isFreeInput ?
                         <option value="99">自由入力</option>
                         : null}
                 </select>
-                <select id="enemy_list" value={enemy.enemy_select} onChange={(e) => changeEnemySelect(e.target.value)}>
+                <select id="enemy_list" value={enemySelect} onChange={(e) => handleSelectChange(e.target.value)}>
                     {class_List.map((value) => {
                         let text = value.enemy_name;
-                        if (enemy.enemy_class == ENEMY_CLASS_SCORE_ATTACK) {
+                        if (enemyClass == ENEMY_CLASS_SCORE_ATTACK) {
                             text = `#${value.sub_no} ${value.enemy_name}`;
-                        } else if (enemy.enemy_class == ENEMY_CLASS_CLOCK_TOWER_NORMAL || enemy.enemy_class == ENEMY_CLASS_CLOCK_TOWER_HARD) {
+                        } else if (enemyClass == ENEMY_CLASS_CLOCK_TOWER_NORMAL || enemyClass == ENEMY_CLASS_CLOCK_TOWER_HARD) {
                             text = `(${value.sub_no}F) ${value.enemy_name}`;
                         }
                         return (
@@ -88,7 +80,7 @@ const EnmeyListComponent = ({ enemy_class, enemy_select, handleChange, is_free_i
                     <option value="2">2体</option>
                     <option value="3">3体</option>
                 </select>
-                {enemy_class == ENEMY_CLASS_FREE_INPUT ?
+                {enemyClass == ENEMY_CLASS_FREE_INPUT ?
                     <input id="enemy_save" type="button" value="保存" onClick={clickEnemySave} />
                     : null
                 }

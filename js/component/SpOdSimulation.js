@@ -90,16 +90,15 @@ const loadExclusionSkill = (member_info) => {
 }
 
 // 部隊リストの呼び出し
-const loadTroopsList = (select_list, troops_no) => {
-    for (let i = 0; i < 6; i++) {
-        select_list[i] = undefined;
-    }
+const loadTroopsList = (troops_no) => {
+    let styleList = Array(6).fill(undefined);
     for (let i = 0; i < 6; i++) {
         const style_id = localStorage.getItem(`troops_${troops_no}_${i}`);
         if (!isNaN(style_id) && Number(style_id) !== 0) {
-            setStyleMember(select_list, troops_no, i, Number(style_id));
+            setStyleMember(styleList, troops_no, i, Number(style_id));
         }
     }
+    return styleList;
 }
 
 // メンバーを設定する。
@@ -140,8 +139,7 @@ const StyleListProvider = ({ selectStyleList, selectTroops, children }) => {
     });
 
     const loadMember = (selectTroops) => {
-        const updatedStyleList = [...styleList.selectStyleList];
-        loadTroopsList(updatedStyleList, selectTroops);
+        const updatedStyleList = loadTroopsList(selectTroops);
         setStyleList({ ...styleList, selectStyleList: updatedStyleList, selectTroops: selectTroops });
     }
 
@@ -238,14 +236,15 @@ const SpOdSimulation = () => {
     // モーダル
     ReactModal.setAppElement("#root");
 
-    let selectTroops = localStorage.getItem('select_troops');
-    // スタイルリスト読み込み
-    selectTroops = selectTroops ? selectTroops : 0;
-    let selectStyleList = Array(6).fill(undefined);
-    loadTroopsList(selectStyleList, selectTroops);
+    const [selectTroops, setSelectTroops] = React.useState(() => {
+        // スタイルリスト読み込み
+        let selectTroops = localStorage.getItem('select_troops');
+        return  selectTroops ? selectTroops : 0;
+    });
+    let styleList = loadTroopsList(selectTroops);
 
     return (
-        <StyleListProvider selectStyleList={selectStyleList} selectTroops={selectTroops}>
+        <StyleListProvider selectStyleList={styleList} selectTroops={selectTroops}>
             <div className="frame w-screen pt-3 overflow-y-scroll border-b">
                 <SettingArea />
             </div>

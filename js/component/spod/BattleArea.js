@@ -429,6 +429,7 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
             case "破壊率が200%以上":
             case "トークン4つ以上":
             case "敵のバフ解除":
+            case "ブレイク中":
                 return;
         }
         switch (ability.effect_type) {
