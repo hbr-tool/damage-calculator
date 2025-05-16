@@ -1950,7 +1950,7 @@ function getSumBuffEffectSize(grade_sum) {
         sum_buff += grade_sum.power_up;
     }
     if (select_attack_skill.attack_element != 0) {
-        let name = "element_power_up_" + attack_info.attack_element;
+        let name = "element_power_up_" + select_attack_skill.attack_element;
         if (grade_sum[name]) {
             sum_buff += grade_sum[name];
         }
