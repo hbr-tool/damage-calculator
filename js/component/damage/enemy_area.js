@@ -180,7 +180,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
                         let id = `physical_${key}`;
                         let correction = state.correction[`physical_${key}`];
                         let val = enemy_info[id] - (focus == id ? 0 : correction);
-                        if (attackInfo.penetration && key == attackInfo.attack_physical) {
+                        if (attackInfo?.penetration && key == attackInfo?.attack_physical) {
                             // 貫通クリティカル
                             val = 100 + Number(attackInfo.penetration);
                             if (attackInfo.attack_id == 190) {
