@@ -7,8 +7,7 @@ let chara_sp_list = [];
 
 function setEventTrigger() {
     // 攻撃スキル変更
-    // $("#attack_list").on("change", function (event) {
-    $(document).on("change", "#attack_list", function (event) {
+    $("#attack_list").on("change", function (event) {
         let attack_info = getAttackInfo();
         if (select_attack_skill !== undefined) {
             if (attack_info === undefined || select_attack_skill.chara_id !== attack_info.chara_id) {
@@ -31,12 +30,12 @@ function setEventTrigger() {
                 $(`.buff_physical-${select_attack_skill.attack_physical} > input:not(':disabled')`).prop("checked", false);
             }
             // キャラ、スタイル専用非表示
-            // $(".skill_unique").hide();
+            $(".skill_unique").hide();
 
-            // $(".status_attack_skill").removeClass("status_attack_skill");
+            $(".status_attack_skill").removeClass("status_attack_skill");
         }
         if (attack_info === undefined) {
-            // $("#attack_physical, #attack_element").attr("src", "img/blank.png");
+            $("#attack_physical, #attack_element").attr("src", "img/blank.png");
             $("div.footer").hide();
             // 選択無しの場合は、削除のみ
             return;
@@ -85,13 +84,13 @@ function setEventTrigger() {
         }
 
         // 該当ステータスに着色
-        // let list = [];
-        // for (let i = 1; i <= 3; i++) {
-        //     if (status_kbn[attack_info["ref_status_" + i]]) {
-        //         list.push(status_kbn[attack_info["ref_status_" + i]] + attack_info.chara_id);
-        //     }
-        // }
-        // ref_status_list["status_attack"] = list;
+        let list = [];
+        for (let i = 1; i <= 3; i++) {
+            if (status_kbn[attack_info["ref_status_" + i]]) {
+                list.push(status_kbn[attack_info["ref_status_" + i]] + attack_info.chara_id);
+            }
+        }
+        ref_status_list["status_attack"] = list;
 
         $("input[type=checkbox].ability").each(function (index, value) {
             let ability_id = $(value).data("ability_id");
@@ -105,14 +104,14 @@ function setEventTrigger() {
         // アビリティ項目の表示設定
         setAbilityDisplay(member_info.limit_count, chara_id_class);
 
-        // let attack_physical = type_physical[attack_info.attack_physical];
-        // let attack_element = type_element[attack_info.attack_element];
-        // $("#attack_physical").attr("src", "img/" + attack_physical + ".webp");
-        // $("#attack_element").attr("src", "img/" + attack_element + ".webp");
-        // if (typeof updateAttackInfo == "function") {
-        //     updateAttackInfo(attack_info);
-        // }
-        // $("#range_area").text(attack_info.range_area == 1 ? "単体" : "全体");
+        let attack_physical = type_physical[attack_info.attack_physical];
+        let attack_element = type_element[attack_info.attack_element];
+        $("#attack_physical").attr("src", "img/" + attack_physical + ".webp");
+        $("#attack_element").attr("src", "img/" + attack_element + ".webp");
+        if (typeof updateAttackInfo == "function") {
+            updateAttackInfo(attack_info);
+        }
+        $("#range_area").text(attack_info.range_area == 1 ? "単体" : "全体");
 
         displayElementRow();
         $(".redisplay").each(function (index, value) {
@@ -122,7 +121,7 @@ function setEventTrigger() {
 
         // 敵情報再設定
         updateEnemyResistDown();
-        // createSkillLvList("skill_lv", max_lv, max_lv);
+        createSkillLvList("skill_lv", max_lv, max_lv);
     });
     $("#skill_special_display").on("change", function (event) {
         if ($("#skill_special_display").prop("checked")) {
@@ -413,9 +412,9 @@ function updateStatus(chara_no) {
 };
 
 // メンバー読み込み時の固有処理
-function loadMemberAdd(member_info, isTrigger) {
+function loadMember(select_chara_no, member_info, isTrigger) {
 
-    // addAttackList(member_info);
+    addAttackList(member_info);
     addBuffList(member_info, 0);
     addAbility(member_info);
     addPassive(member_info);
@@ -560,12 +559,12 @@ function calcDamage() {
     let stat_down = hacking || misfortune;
 
     let basePower = getBasePower(member_info, stat_up, stat_down);
-    let buff = getSumBuffEffectSize(attack_info, grade_sum);
+    let buff = getSumBuffEffectSize(grade_sum);
     let mindeye_buff = getSumEffectSize("mindeye") + getSumEffectSize("servant");
     let mindeye = isWeak() ? mindeye_buff / 100 + 1 : 1;
     let debuff = getSumDebuffEffectSize();
     let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
-    let token = getSumTokenEffectSize(attack_info, member_info);
+    let token = getSumTokenEffectSize(member_info);
     let element_field = getSumEffectSize("element_field") / 100 + 1;
     let weak_physical = $("#enemy_physical_" + attack_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + attack_info.attack_element).val() / 100;
@@ -596,11 +595,11 @@ function calcDamage() {
         buff += 0.5
     }
     // 影分身(アーデルハイト)
-    if (attack_info.chara_id == 17 && $("#skill_unique_shadow_clone").prop("checked")) {
+    if (attack_info.chara_id == 17 && $("#skill_unique_shadow_clone_17").prop("checked")) {
         buff += 0.3;
     }
     // 影分身(マリー)
-    if (attack_info.chara_id == 18 && $("#skill_unique_shadow_clone").prop("checked")) {
+    if (attack_info.chara_id == 18 && $("#skill_unique_shadow_clone_18").prop("checked")) {
         buff += 0.3;
     }
 
@@ -897,12 +896,12 @@ function updateFieldEffectSize(chara_id_class, strengthen) {
 }
 
 // バフ効果量更新
-function updateBuffEffectSize(option, skill_lv, member_info) {
+function updateBuffEffectSize(option, skill_lv) {
     let buff_id = Number(option.val());
     skill_lv = skill_lv || Number(option.data("select_lv"));
     let chara_id = Number(option.data("chara_id"));
     let skill_buff = getBuffIdToBuff(buff_id);
-    member_info = member_info || getCharaIdToMember(chara_id);
+    let member_info = getCharaIdToMember(chara_id);
     let effect_size = getEffectSize(skill_buff.buff_kind, buff_id, member_info, skill_lv);
     let chara_name = getCharaData(chara_id).chara_short_name;
     let ability_streng = getStrengthen(member_info, skill_buff);
@@ -1345,7 +1344,7 @@ function addBuffList(member_info, member_kind) {
         span.append(option);
         $("." + str_buff).append(span);
         $("." + str_buff + " .buff_id-" + value.buff_id + ".chara_id-" + chara_id).each(function (index, value) {
-            updateBuffEffectSize($(value), null, member_info);
+            updateBuffEffectSize($(value));
         });
     });
 }
@@ -1499,7 +1498,7 @@ function addAbility(member_info) {
         if (fg_update) {
             // バフ効果量を更新
             $(".variable_effect_size." + chara_id_class).each(function (index, value) {
-                updateBuffEffectSize($(value), null, member_info);
+                updateBuffEffectSize($(value));
             });
         }
     }
@@ -1924,13 +1923,13 @@ function getSumEffectSize(class_name) {
 }
 
 // 合計バフ効果量取得
-function getSumBuffEffectSize(attack_info, grade_sum) {
+function getSumBuffEffectSize(grade_sum) {
     // スキルバフ合計
     let sum_buff = getSumEffectSize("buff");
     // 攻撃力アップアビリティ
     sum_buff += getSumAbilityEffectSize(EFFECT_ATTACKUP);
     // 属性リング(0%-10%)
-    if (attack_info.attack_element != 0) {
+    if (select_attack_skill.attack_element != 0) {
         sum_buff += Number($("#elememt_ring option:selected").val());
     }
     // オーバードライブ10%
@@ -1950,8 +1949,8 @@ function getSumBuffEffectSize(attack_info, grade_sum) {
     if (grade_sum.power_up) {
         sum_buff += grade_sum.power_up;
     }
-    if (attack_info.attack_element != 0) {
-        let name = "element_power_up_" + attack_info.attack_element;
+    if (select_attack_skill.attack_element != 0) {
+        let name = "element_power_up_" + select_attack_skill.attack_element;
         if (grade_sum[name]) {
             sum_buff += grade_sum[name];
         }
@@ -2010,10 +2009,10 @@ function getSumFunnelEffectList() {
 }
 
 // トークン効果量
-function getSumTokenEffectSize(attack_info, member_info) {
+function getSumTokenEffectSize(member_info) {
     // トークン
     let token_count = member_info.token ? member_info.token : 0;
-    if (attack_info.token_power_up == 1) {
+    if (select_attack_skill.token_power_up == 1) {
         return 1 + token_count * 16 / 100;
     }
     return 1;
