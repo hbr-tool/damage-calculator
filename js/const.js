@@ -252,9 +252,10 @@ const ATTRIBUTE = {
     NORMAL_ATTACK: 1, // 通常攻撃
     PURSUIT: 2, // 追撃
     COMMAND_ACTION: 3, // 指揮行動
-    NOT_ACTION: 4, // 行動無し
+    PURSUIT_ONLY: 5, // 追撃のみ発動可能
     SP_HALF: 11, // SP消費半減
     SP_ZERO: 12, // SP消費0
+    NOT_ACTION: 99, // 行動無し
 }
 
 /** 条件 */
@@ -374,6 +375,7 @@ const SKILL = {
     NONE: 2, // 無し
     PURSUIT: 3, // 追撃
     COMMAND_ACTION: 4, // 指揮行動
+    AUTO_PURSUIT: 5, // 自動追撃
 }
 /** 貫通クリティカル */
 const PENETRATION_ATTACK_LIST = [84, 135, 137, 156, 163, 95, 190, 2179];

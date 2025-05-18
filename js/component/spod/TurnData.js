@@ -172,8 +172,8 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
     const exchangeUnit = ((old_front, old_back, select_skill) => {
         setInitSkill(old_back);
         setInitSkill(old_front);
-        select_skill[old_front.place_no] = { skill_id: SKILL_NONE };
-        select_skill[old_back.place_no] = { skill_id: old_back.init_skill_id };
+        select_skill[old_front.place_no] = { skill_id: old_front.select_skill_id };
+        select_skill[old_back.place_no] = { skill_id: old_back.select_skill_id };
     })
 
     // 備考編集

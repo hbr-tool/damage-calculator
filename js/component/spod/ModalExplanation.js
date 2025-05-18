@@ -49,6 +49,13 @@ const ModalExplanation = () => {
                 <p>・旺盛：DP101%以上</p>
                 <p>・痛気持ちいぃ～！：被ダメージ</p>
                 <img src="img/sp_add.png" />
+                <p>
+                    <b>4.特殊な挙動をするスタイル</b>
+                </p>
+                <img className="select_style" src="icon/YoOhshimaYukata2025_R3_Thumbnail.webp" />
+                <p>[ゆるりたゆたう湯道楽]大島四ツ葉</p>
+                <p>・自動追撃：前衛の消費SP8以下の攻撃スキルの回数分、追撃を行います。</p>
+                <p>・ネコジェット・シャテキ：ネコジェット・シャテキを実行後、(前衛の消費SP8以下の攻撃スキルの回数-1)回分、追撃を行います。</p>
             </div>
             <div className="mt-4">
                 <p>補助機能として、以下のデバフの表示を行っています。</p>

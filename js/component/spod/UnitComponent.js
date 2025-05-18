@@ -20,8 +20,10 @@ const UnitSp = ({ unit }) => {
         <>
             <div className={className}>
                 <span>{unit_sp + (unit.add_sp > 0 ? ("+" + unit.add_sp) : "")}</span>
-                {(unit.ep != 0 ? <span className="unit_ep">{`EP${unit_ep}`}</span> : "")
-            }</div>
+                {
+                    (unit.ep != 0 ? <span className="unit_ep">{`EP${unit_ep}`}</span> : "")
+                }
+            </div>
         </>
     )
 }
@@ -34,24 +36,43 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
                 // 夜醒
                 return !turn.additional_turn;
             }
-            if (skill.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
+            if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
                 // 通常攻撃
-                return unit.style.style_info.role != ROLE_ADMIRAL;
+                return unit.style.style_info.role != ROLE.ADMIRAL;
             }
-            if (skill.skill_attribute === ATTRIBUTE_COMMAND_ACTION) {
+            if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
                 // 指揮行動
-                return unit.style.style_info.role == ROLE_ADMIRAL;
+                return unit.style.style_info.role == ROLE.ADMIRAL;
             }
-            if (skill.skill_attribute === ATTRIBUTE_PURSUIT || skill.skill_id == 2) {
-                // 後衛専用
+            if (skill.skill_attribute === ATTRIBUTE.PURSUIT_ONLY) {
+                // 追撃のみ発動可能
+                return false;
+            }
+            const HIDDEN_SKILL_ID = [SKILL.NONE, SKILL.PURSUIT, SKILL.AUTO_PURSUIT]
+            if (HIDDEN_SKILL_ID.includes(skill.skill_id)) {
+                // 非表示スキルリスト
                 return false;
             }
             return true;
         })
     } else {
         skill_list = unit.skill_list.filter(skill => {
-            if (skill.skill_attribute === ATTRIBUTE_PURSUIT || skill.skill_id == 2) {
-                // 後衛専用
+            if (checkAbilityExist(unit.ability_other, 1530)) {
+                if (skill.skill_id == SKILL.AUTO_PURSUIT) {
+                    // 自動追撃
+                    return true;
+                }
+            } else {
+                if (skill.skill_id == SKILL.NONE) {
+                    // なし
+                    return true;
+                } else if (skill.skill_id == SKILL.PURSUIT) {
+                    // 追撃
+                    return true;
+                }
+            }
+            if (skill.skill_attribute === ATTRIBUTE.PURSUIT_ONLY) {
+                // 追撃専用
                 return true;
             }
             return false;
@@ -65,17 +86,15 @@ const UnitSkillSelect = React.memo(({ turn, unit, place_no, select_skill_id, tri
         {skill_list.filter((obj) => obj.skill_id == unit.select_skill_id || !isCapturing).map(skill => {
             let text = skill.skill_name;
             let sp_cost = 0;
-            if (skill.skill_attribute === ATTRIBUTE_NORMAL_ATTACK) {
+            if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
                 text += `(${physical_name[skill.attack_physical]}・${element_name[unit.normal_attack_element]})`;
-            } else if (skill.skill_id === 2) {
-            } else if (skill.skill_attribute === ATTRIBUTE_COMMAND_ACTION) {
-            } else if (skill.skill_attribute === ATTRIBUTE_PURSUIT) {
+            } else if (skill.skill_id == 0 || skill.skill_id === 2) {
+            } else if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
+            } else if (skill.skill_attribute === ATTRIBUTE.PURSUIT) {
                 text += `(${physical_name[skill.attack_physical]})`;
             } else if (skill.attack_id) {
                 sp_cost = getSpCost(turn, skill, unit);
                 text += `(${physical_name[skill.attack_physical]}・${element_name[skill.attack_element]}/${sp_cost})`;
-            } else if (skill.skill_id == 0) {
-                sp_cost = 0;
             } else {
                 sp_cost = getSpCost(turn, skill, unit);
                 text += `(${sp_cost})`;

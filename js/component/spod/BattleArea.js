@@ -70,7 +70,8 @@ const setUserOperation = (turn) => {
             if (unit.blank) {
                 return null;
             }
-            return { skill_id: (unit.place_no < 3 ? unit.init_skill_id : SKILL_NONE) };
+            setInitSkill(unit)
+            return { skill_id: unit.select_skill_id };
         }),
         place_style: turn.unit_list.map(function (unit) {
             return unit.blank ? 0 : unit.style.style_info.style_id;
@@ -177,15 +178,16 @@ const abilityAction = (action_kbn, turn) => {
         abilityActionUnit(turn, action_kbn, unit)
     }, turn.unit_list);
 }
+
 /** TurnDataここまで */
 
 /** UnitDataここから */
 const unitTurnInit = (additional_turn, unit) => {
     unit.buff_effect_select_type = 0;
-    if (unit.place_no < 3 && (!additional_turn || unit.additional_turn)) {
+    if (!additional_turn || unit.additional_turn) {
         setInitSkill(unit);
     } else {
-        unit.select_skill_id = SKILL_NONE;
+        unit.select_skill_id = SKILL.NONE;
     }
 }
 
@@ -218,7 +220,12 @@ const setInitSkill = (unit) => {
         unit.select_skill_id = unit.init_skill_id;
         unit.sp_cost = 0;
     } else {
-        unit.select_skill_id = SKILL_NONE;
+        if (checkAbilityExist(unit.ability_other, 1530)) {
+            // 湯めぐり
+            unit.select_skill_id = SKILL.AUTO_PURSUIT;
+        } else {
+            unit.select_skill_id = SKILL.NONE;
+        }
         unit.sp_cost = 0;
     }
     unit.buff_effect_select_type = null;
@@ -349,34 +356,37 @@ const getFunnelList = (unit) => {
 const abilityActionUnit = (turn_data, action_kbn, unit) => {
     let action_list = [];
     switch (action_kbn) {
-        case ABILIRY_BATTLE_START: // 戦闘開始時
+        case ABILIRY.BATTLE_START: // 戦闘開始時
             action_list = unit.ability_battle_start;
             break;
-        case ABILIRY_SELF_START: // 自分のターン開始時
+        case ABILIRY.SELF_START: // 自分のターン開始時
             action_list = unit.ability_self_start;
             break;
-        case ABILIRY_ACTION_START: // 行動開始時
+        case ABILIRY.ACTION_START: // 行動開始時
             action_list = unit.ability_action_start;
             break;
-        case ABILIRY_ENEMY_START: // 敵のターン開始時
+        case ABILIRY.ENEMY_START: // 敵のターン開始時
             action_list = unit.ability_enemy_start;
             break;
-        case ABILIRY_ADDITIONALTURN: // 追加ターン
+        case ABILIRY.ADDITIONALTURN: // 追加ターン
             action_list = unit.ability_additional_turn;
             break;
-        case ABILIRY_OD_START: // オーバードライブ開始時
+        case ABILIRY.OD_START: // オーバードライブ開始時
             action_list = unit.ability_over_drive;
             break;
-        case ABILIRY_EX_SKILL_USE: // EXスキル使用
+        case ABILIRY.EX_SKILL_USE: // EXスキル使用
             action_list = unit.ability_ex_skill_use;
             break;
-        case ABILIRY_RECEIVE_DAMAGE: // 被ダメージ時
+        case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
             // 前衛のみ
             if (unit.place_no < 3) {
                 action_list = unit.ability_receive_damage;
             }
             break;
-        case ABILIRY_OTHER: // その他
+        case ABILIRY.PURSUIT: // 追撃時
+            action_list = unit.ability_pursuit;
+            break;
+        case ABILIRY.OTHER: // その他
             action_list = unit.ability_other;
             break;
     }

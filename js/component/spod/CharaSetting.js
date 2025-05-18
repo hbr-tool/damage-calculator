@@ -10,7 +10,7 @@ const CharaSetting = () => {
     const setSetting = (place_no, item, value) => {
         const updatedStyleList = [...styleList.selectStyleList];
         updatedStyleList[place_no] = {
-            ...updatedStyleList[place_no], 
+            ...updatedStyleList[place_no],
             [item]: Number(value)
         };
         setStyleList({ ...styleList, selectStyleList: updatedStyleList });
@@ -37,11 +37,6 @@ const CharaSetting = () => {
         localStorage.setItem('select_troops', select_troops);
         loadMember(select_troops);
     }
-
-    // メンバー更新
-    // window.updateMember = function () {
-    //     setSelectStyle([...select_style_list]);
-    // }
 
     // メンバー入れ替え
     const handleOnDragEnd = (result) => {
@@ -75,6 +70,17 @@ const CharaSetting = () => {
 
     const openModal = (index, type) => setModalSetting({ isOpen: true, modalIndex: index, modalType: type, });
     const closeModal = () => setModalSetting({ isOpen: false });
+
+    const [narrowStyle, setNarrowStyle] = React.useState({
+        physical: null,
+        element: null,
+        role: null,
+        rarity: 1,
+        target: "none",
+        buff_1: -1,
+        buff_2: -1,
+        buff_3: -1,
+    });
 
     return (
         <div className="grid grid-cols-7 text-center gap-y-px gap-x-0" id="chara_setting">
@@ -201,7 +207,7 @@ const CharaSetting = () => {
                         modalSetting.modalType == "skill" ?
                             <ModalSkillSelectList index={modalSetting.modalIndex} closeModal={closeModal} />
                             :
-                            <ModalStyleSelection index={modalSetting.modalIndex} closeModal={closeModal} />
+                            <ModalStyleSelection index={modalSetting.modalIndex} closeModal={closeModal} narrowStyle={narrowStyle} setNarrowStyle={setNarrowStyle}/>
                     }
                 </ReactModal>
             </div>

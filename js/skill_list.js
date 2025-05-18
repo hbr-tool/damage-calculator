@@ -1,8 +1,9 @@
 ﻿let skill_list = [
     {"skill_id":1,"skill_name":"通常攻撃","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":1,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
-    {"skill_id":2,"skill_name":"なし","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":4,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":2,"skill_name":"なし","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":99,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":3,"skill_name":"追撃","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":2,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":4,"skill_name":"指揮行動","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":1,"skill_attribute":3,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":5,"skill_name":"自動追撃","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":2,"attribute_conditions":0,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":6,"skill_name":"クロス斬り","chara_id":1,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null,"attack_id":2110,"attack_physical":1,"attack_element":0},
     {"skill_id":7,"skill_name":"スピニングスラッシュ","chara_id":1,"style_id":0,"sp_cost":7,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null,"attack_id":2072,"attack_physical":1,"attack_element":0},
     {"skill_id":8,"skill_name":"リカバー","chara_id":1,"style_id":0,"sp_cost":5,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":1,"attack_element":null},
@@ -531,7 +532,7 @@
     {"skill_id":630,"skill_name":"ダイヤモンド・ダスト+","chara_id":18,"style_id":0,"sp_cost":12,"skill_active":0,"skill_kind":2,"skill_attribute":null,"attribute_conditions":null,"attack_id":191,"attack_physical":2,"attack_element":2},
     {"skill_id":631,"skill_name":"想像の翼","chara_id":16,"style_id":0,"sp_cost":8,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null,"attack_id":2183,"attack_physical":2,"attack_element":1},
     {"skill_id":632,"skill_name":"温泉手形","chara_id":28,"style_id":164,"sp_cost":0,"skill_active":1,"skill_kind":1,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":2,"attack_element":null},
-    {"skill_id":633,"skill_name":"ネコジェット・シャテキ","chara_id":28,"style_id":164,"sp_cost":10,"skill_active":0,"skill_kind":1,"skill_attribute":2,"attribute_conditions":null,"attack_id":193,"attack_physical":2,"attack_element":5},
+    {"skill_id":633,"skill_name":"ネコジェット・シャテキ","chara_id":28,"style_id":164,"sp_cost":10,"skill_active":0,"skill_kind":1,"skill_attribute":5,"attribute_conditions":null,"attack_id":193,"attack_physical":2,"attack_element":5},
     {"skill_id":634,"skill_name":"フォトン・バレット","chara_id":32,"style_id":0,"sp_cost":9,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null,"attack_id":2185,"attack_physical":2,"attack_element":4},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":0,"attack_element":null},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":0,"attack_element":null},
@@ -552,5 +553,5 @@
     {"skill_id":9013,"skill_name":"サンダーグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9014,"skill_name":"ライトグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
     {"skill_id":9015,"skill_name":"ダークグラビトン","chara_id":0,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":7,"skill_attribute":null,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
-    {"skill_id":9999,"skill_name":"行動無し","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":4,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
+    {"skill_id":9999,"skill_name":"行動無し","chara_id":0,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":99,"attribute_conditions":null,"attack_id":null,"attack_physical":null,"attack_element":null},
 ];

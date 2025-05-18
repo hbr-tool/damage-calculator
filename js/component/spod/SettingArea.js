@@ -57,6 +57,7 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
             ability_over_drive: [],
             ability_ex_skill_use: [],
             ability_receive_damage: [],
+            ability_pursuit: [],
             ability_other: [],
             next_turn_min_sp: -1,
             select_skill_id: 0,
@@ -111,31 +112,34 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
                         constraints_list.push(ability_info.ability_id);
                     }
                     switch (ability_info.activation_timing) {
-                        case ABILIRY_BATTLE_START: // 戦闘開始時
+                        case ABILIRY.BATTLE_START: // 戦闘開始時
                             unit.ability_battle_start.push(ability_info);
                             break;
-                        case ABILIRY_SELF_START: // 自分のターン開始時
+                        case ABILIRY.SELF_START: // 自分のターン開始時
                             unit.ability_self_start.push(ability_info);
                             break;
-                        case ABILIRY_ACTION_START: // 行動開始時
+                        case ABILIRY.ACTION_START: // 行動開始時
                             unit.ability_action_start.push(ability_info);
                             break;
-                        case ABILIRY_ENEMY_START: // 敵ターン開始時
+                        case ABILIRY.ENEMY_START: // 敵ターン開始時
                             unit.ability_enemy_start.push(ability_info);
                             break;
-                        case ABILIRY_ADDITIONALTURN: // 追加ターン
+                        case ABILIRY.ADDITIONALTURN: // 追加ターン
                             unit.ability_additional_turn.push(ability_info);
                             break;
-                        case ABILIRY_OD_START: // オーバードライブ開始時
+                        case ABILIRY.OD_START: // オーバードライブ開始時
                             unit.ability_over_drive.push(ability_info);
                             break;
-                        case ABILIRY_EX_SKILL_USE: // EXスキル使用時    
+                        case ABILIRY.EX_SKILL_USE: // EXスキル使用時    
                             unit.ability_ex_skill_use.push(ability_info);
                             break;
-                        case ABILIRY_RECEIVE_DAMAGE: // 被ダメージ時
+                        case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
                             unit.ability_receive_damage.push(ability_info);
                             break;
-                        case ABILIRY_OTHER: // その他
+                        case ABILIRY.PURSUIT: // 追撃時
+                            unit.ability_pursuit.push(ability_info);
+                            break;
+                        case ABILIRY.OTHER: // その他
                             if (ability_info.ability_id == 510) {
                                 // 蒼天
                                 turn_init.sp_cost_down = ability_info.effect_size;
@@ -151,31 +155,34 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
                     return;
                 }
                 switch (passive_info.activation_timing) {
-                    case ABILIRY_BATTLE_START: // 戦闘開始時
+                    case ABILIRY.BATTLE_START: // 戦闘開始時
                         unit.ability_battle_start.push(passive_info);
                         break;
-                    case ABILIRY_SELF_START: // 自分のターン開始時
+                    case ABILIRY.SELF_START: // 自分のターン開始時
                         unit.ability_self_start.push(passive_info);
                         break;
-                    case ABILIRY_ACTION_START: // 行動開始時
+                    case ABILIRY.ACTION_START: // 行動開始時
                         unit.ability_action_start.push(passive_info);
                         break;
-                    case ABILIRY_ENEMY_START: // 敵ターン開始時
+                    case ABILIRY.ENEMY_START: // 敵ターン開始時
                         unit.ability_enemy_start.push(passive_info);
                         break;
-                    case ABILIRY_ADDITIONALTURN: // 追加ターン
+                    case ABILIRY.ADDITIONALTURN: // 追加ターン
                         unit.ability_additional_turn.push(passive_info);
                         break;
-                    case ABILIRY_OD_START: // オーバードライブ開始時
+                    case ABILIRY.OD_START: // オーバードライブ開始時
                         unit.ability_over_drive.push(passive_info);
                         break;
-                    case ABILIRY_EX_SKILL_USE: // EXスキル使用時    
+                    case ABILIRY.EX_SKILL_USE: // EXスキル使用時    
                         unit.ability_ex_skill_use.push(passive_info);
                         break;
-                    case ABILIRY_RECEIVE_DAMAGE: // 被ダメージ時
+                    case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
                         unit.ability_receive_damage.push(passive_info);
                         break;
-                    case ABILIRY_OTHER: // その他
+                    case ABILIRY.PURSUIT: // 追撃時
+                        unit.ability_pursuit.push(ability_info);
+                        break;
+                    case ABILIRY.OTHER: // その他
                         unit.ability_other.push(passive_info);
                         break;
                 }
