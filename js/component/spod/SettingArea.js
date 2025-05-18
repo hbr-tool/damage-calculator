@@ -204,7 +204,9 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
     turn_init.step_turn_over_drive = Number(detailSetting.stepTurnOverDrive);
     turn_init.step_over_drive_gauge = Number(detailSetting.stepOverDriveGauge);
     turn_init.step_turn_sp = Number(detailSetting.stepTurnSp);
-    turn_init.step_sp_add = Number(detailSetting.stepSpAdd);
+    turn_init.step_sp_front_add = Number(detailSetting.stepSpFrontAdd);
+    turn_init.step_sp_back_add = Number(detailSetting.stepSpBackAdd);
+    turn_init.step_sp_all_add = Number(detailSetting.stepSpAllAdd);
 
     turn_init.enemy_count = Number($("#enemy_select_count").val());;
     turn_init.unit_list = unit_list;
@@ -339,7 +341,9 @@ const SettingArea = () => {
         stepTurnOverDrive: 1,
         stepOverDriveGauge: 0,
         stepTurnSp: 1,
-        stepSpAdd: 0,
+        stepSpAllAdd: 0,
+        stepSpFrontAdd: 0,
+        stepSpBackAdd: 0,
     });
 
     return (

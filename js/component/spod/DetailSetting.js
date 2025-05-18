@@ -129,8 +129,28 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                         <option value="4">4</option>
                         <option value="5">5</option>
                     </select>
-                    ターンごとに SP
-                    <select className="step_sp" id="stepSpAdd" value={detailSetting.stepSpAdd} onChange={(e) => updateDetailSetting(e)}>
+                    ターンごとに SP 全体
+                    <select className="step_sp" id="stepSpAllAdd" value={detailSetting.stepSpAllAdd} onChange={(e) => updateDetailSetting(e)}>
+                        <option value="3">+3</option>
+                        <option value="2">+2</option>
+                        <option value="1">+1</option>
+                        <option value="0">+0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                    前衛
+                    <select className="step_sp" id="stepSpFrontAdd" value={detailSetting.stepSpFrontAdd} onChange={(e) => updateDetailSetting(e)}>
+                        <option value="3">+3</option>
+                        <option value="2">+2</option>
+                        <option value="1">+1</option>
+                        <option value="0">+0</option>
+                        <option value="-1">-1</option>
+                        <option value="-2">-2</option>
+                        <option value="-3">-3</option>
+                    </select>
+                    後衛
+                    <select className="step_sp" id="stepSpBackAdd" value={detailSetting.stepSpBackAdd} onChange={(e) => updateDetailSetting(e)}>
                         <option value="3">+3</option>
                         <option value="2">+2</option>
                         <option value="1">+1</option>

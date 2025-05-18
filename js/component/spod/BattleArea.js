@@ -207,7 +207,12 @@ const unitTurnProceed = (unit, turn) => {
             unit.sp += turn.back_sp_add;
         }
         if ((turn.turn_number + 1) % turn.step_turn_sp == 0) {
-            unit.sp += turn.step_sp_add;
+            unit.sp += turn.step_sp_all_add;
+            if (unit.place_no < 3) {
+                unit.sp += turn.step_sp_front_add;
+            } else {
+                unit.sp += turn.step_sp_back_add;
+            }
         }
         if (unit.sp > 20) {
             unit.sp = 20
