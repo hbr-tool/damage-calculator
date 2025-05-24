@@ -381,6 +381,7 @@ function startAction(turn_data) {
     for (const skill_data of seq) {
         let skill_info = skill_data.skill_info;
         let unit_data = getUnitData(turn_data, skill_data.place_no);
+        let sp_cost = unit_data.sp_cost;
         // SP消費してから行動
         payCost(unit_data);
 
@@ -395,7 +396,7 @@ function startAction(turn_data) {
         if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
         } else if (skill_info.attack_id) {
-            front_cost_list.push(unit_data.sp_cost);
+            front_cost_list.push(sp_cost);
             attack_info = getAttackInfo(skill_info.attack_id);
         }
 
@@ -435,6 +436,9 @@ function startAction(turn_data) {
     // 後衛の選択取得
     [3, 4, 5].forEach(function (place_no) {
         let unit_data = getUnitData(turn_data, place_no);
+        if (unit_data.blank) {
+            return;
+        }
         let skill_id = unit_data.select_skill_id;
         // 無し
         if (skill_id == SKILL.NONE) {
@@ -607,6 +611,9 @@ const getOverDrive = (turn) => {
     // // 後衛の選択取得
     [3, 4, 5].forEach(function (place_no) {
         let unit_data = getUnitData(temp_turn, place_no);
+        if (unit_data.blank) {
+            return;
+        }
         let skill_id = unit_data.select_skill_id;
         if (skill_id == SKILL.NONE) {
             return true;
