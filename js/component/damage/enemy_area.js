@@ -68,7 +68,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
         maxHp = getScoreHpDp(state.score_lv, score_attack, "hp_rate");
         enemy_stat = score_stat[state.score_lv - 100];
     }
-    maxHp *= (1 + state.correction.hp_rate / 100);
+    maxHp = Math.floor(maxHp * (1 + state.correction.hp_rate / 100));
     let backgroundHp = getApplyGradient("#7C4378", state.hpRate)
 
     // 破壊率補正
@@ -143,7 +143,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
                                     let score_attack = getScoreAttack(enemy_info.sub_no);
                                     maxDp = getScoreHpDp(state.score_lv, score_attack, "dp_rate");
                                 }
-                                maxDp *= (1 + state.correction.dp_rate / 100);
+                                maxDp = Math.floor(maxDp * (1 + state.correction.dp_rate / 100));
                                 let background = getApplyGradient("#4F7C8B", dp_rate)
                                 return (
                                     <div className="dp_gauge" key={enemy_id}>
