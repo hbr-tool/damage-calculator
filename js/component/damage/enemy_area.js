@@ -222,6 +222,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
                                 val = 100;
                             }
                         }
+                        val = Math.floor(val);
                         let addClass = val < 100 ? "enemy_resist" : val > 100 ? "enemy_weak" : "";
                         let select = attackInfo?.attack_element == key ? " selected" : "";
                         return (<div key={id} className={select}>
