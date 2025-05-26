@@ -21,10 +21,10 @@ const ModalSkillSelectList = ({index, closeModal}) => {
         has_skill_list = skill_list.filter(obj =>
             (obj.chara_id === style_info.chara_id || obj.chara_id === 0) &&
             (obj.style_id === style_info.style_id || obj.style_id === 0) &&
-            obj.skill_attribute != ATTRIBUTE_NORMAL_ATTACK &&
-            obj.skill_attribute != ATTRIBUTE_PURSUIT &&
-            obj.skill_attribute != ATTRIBUTE_COMMAND_ACTION &&
-            obj.skill_attribute != ATTRIBUTE_NOT_ACTION
+            obj.skill_attribute != ATTRIBUTE.NORMAL_ATTACK &&
+            obj.skill_attribute != ATTRIBUTE.PURSUIT &&
+            obj.skill_attribute != ATTRIBUTE.COMMAND_ACTION &&
+            obj.skill_attribute != ATTRIBUTE.NOT_ACTION
         );
     }
 
