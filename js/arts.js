@@ -1,9 +1,10 @@
-const troop_list = ["31A", "31B", "31C", "31D", "31E", "31F"];
+const troop_list = ["31A", "31B", "31C", "31D", "31E", "31F", "31X"];
 const showTroopsList = {
     "0": troop_list,
     "2": ["31A", "31B", "31C", "31E"],
     "3": ["31A", "31B", "31C", "31F"],
     "4": ["31A", "31D", "31E", "31F"],
+    "6": ["31A", "31E", "31F", "31X"],
 } 
 const MAX_TROOPS_ARTS_COUNT = 24;
 const TROOPS_ARTS_COUNT = {
@@ -13,6 +14,7 @@ const TROOPS_ARTS_COUNT = {
     "31D": 3,
     "31E": 3,
     "31F": 3,
+    "31X": 3,
 }
 
 // イベントトリガー設定
