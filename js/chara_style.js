@@ -162,6 +162,8 @@
     {"style_id":162,"chara_id":14,"rarity":1,"style_name":"魔王に仕えし幻影の大魔道士","image_url":"SSakurabaEvil_R3_Thumbnail.webp","role":7,"element":0,"jewel_type":6,"ability0":1007,"ability00":1020,"ability1":1101,"ability3":1610},
     {"style_id":163,"chara_id":15,"rarity":1,"style_name":"魔王に仕えし冥界の死霊使い","image_url":"MTenneEvil_R3_Thumbnail.webp","role":4,"element":5,"jewel_type":2,"ability0":1021,"ability00":1022,"ability1":1101,"ability3":1529},
     {"style_id":164,"chara_id":28,"rarity":1,"style_name":"ゆるりたゆたう湯道楽","image_url":"YoOhshimaYukata2025_R3_Thumbnail.webp","role":5,"element":5,"jewel_type":3,"ability0":1530,"ability00":1901,"ability1":1107,"ability3":1141},
+    {"style_id":165,"chara_id":31,"rarity":1,"style_name":"夜の香り、薔薇の調べ","image_url":"MYanagiWhiteSuit_R3_Thumbnail.webp","role":8,"element":0,"jewel_type":3,"ability0":1023,"ability1":1101,"ability3":605},
+    {"style_id":166,"chara_id":34,"rarity":1,"style_name":"悪を討つヒロイックアクション","image_url":"CMatsuokaActor_R3_Thumbnail.webp","role":7,"element":3,"jewel_type":3,"ability0":1611,"ability1":1101,"ability3":1142},
     {"style_id":5001,"chara_id":1,"rarity":2,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail.webp","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail.webp","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail.webp","role":4,"element":0,"jewel_type":2,"ability3":1109},

@@ -166,7 +166,8 @@ const EFFECT = {
     TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
     TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
-    YAMAWAKI_SERVANT: 39, //山脇様のしもべ
+    YAMAWAKI_SERVANT: 39, // 山脇様のしもべ
+    HIGH_BOOST: 40, // ハイブースト状態
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
 }
