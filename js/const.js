@@ -100,6 +100,7 @@ const BUFF = {
     SHREDDING: 37, // 速弾き
     NAGATIVE: 38, // ネガティブ
     YAMAWAKI_SERVANT: 39, // 山脇様のしもべ 
+    HIGH_BOOST: 40, // ハイブースト 
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

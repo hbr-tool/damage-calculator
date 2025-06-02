@@ -1,7 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [36, 165];
+const NOT_USE_STYLE = [36];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -15,10 +15,6 @@ const CONSTRAINTS_ABILITY = [
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
 
-const styleSheet = document.createElement('style');
-document.head.appendChild(styleSheet);
-
-let battle_enemy_info;
 let physical_name = ["", "斬", "突", "打"];
 let element_name = ["無", "火", "氷", "雷", "光", "闇"];
 let constraints_list = [];
@@ -303,6 +299,9 @@ function getBuffIconImg(buff_info) {
             break;
         case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
             src += "IconYamawakiServant";
+            break;
+        case BUFF.HIGH_BOOST: // ハイブースト状態
+            src += "IconHighBoost";
             break;
     }
     if (buff_info.buff_element != 0) {
@@ -678,13 +677,18 @@ function getSpCost(turn_data, skill_info, unit) {
     if (!skill_info) {
         return 0;
     }
+    const NON_ACTION_ATTRIBUTE = [1, 2, 3, 99];
+    if (NON_ACTION_ATTRIBUTE.includes(skill_info.skill_attribute)) {
+        return 0;
+    }
     let sp_cost = skill_info.sp_cost;
-    let sp_cost_down = turn_data.sp_cost_down
+    let sp_cost_down = turn_data.sp_cost_down;
+    let sp_cost_up = 0;
     if (harfSpSkill(turn_data, skill_info, unit)) {
         sp_cost = Math.ceil(sp_cost / 2);
     }
     if (ZeroSpSkill(turn_data, skill_info, unit)) {
-        sp_cost = 0;
+        return 0;
     }
     // 追加ターン
     if (turn_data.additional_turn) {
@@ -719,6 +723,10 @@ function getSpCost(turn_data, skill_info, unit) {
             sp_cost_down = 2;
         }
     }
+    // ハイブースト
+    if (checkBuffExist(unit.buff_list, BUFF.HIGH_BOOST)) {
+        sp_cost_up = 2;
+    }
     // カラスの鳴き声で
     if (skill_info.skill_id == 578) {
         const count = unit.use_skill_list.filter(value => value === 578).length;
@@ -729,8 +737,9 @@ function getSpCost(turn_data, skill_info, unit) {
     if (sp_cost == 99) {
         sp_cost = unit.sp + unit.over_drive_sp;
         sp_cost_down = 0;
+        sp_cost_up = 0;
     }
-    sp_cost -= sp_cost_down;
+    sp_cost += sp_cost_up - sp_cost_down;
     return sp_cost < 0 ? 0 : sp_cost;
 }
 
@@ -1036,6 +1045,7 @@ function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, is_re
         minus_sp = unit_data.sp_cost;
     }
     unit_sp += add_sp;
+    limit_sp = unit_data.limit_sp > limit_sp ? unit_data.limit_sp : limit_sp;
     if (unit_sp + unit_data.over_drive_sp - minus_sp > limit_sp) {
         unit_sp = limit_sp - unit_data.over_drive_sp + minus_sp;
     }
@@ -1274,6 +1284,9 @@ function getBuffKindName(buff_info) {
             break;
         case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
             buff_kind_name += "山脇様のしもべ";
+            break;
+        case BUFF.HIGH_BOOST: // ハイブースト状態
+            buff_kind_name += "ハイブースト";
             break;
         default:
             break;

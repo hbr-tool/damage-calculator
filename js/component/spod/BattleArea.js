@@ -199,7 +199,7 @@ const unitTurnProceed = (unit, turn) => {
             unit.next_turn_min_sp = -1
         }
     }
-    if (unit.sp < 20) {
+    if (unit.sp < unit.limit_sp) {
         unit.sp += 2;
         if (unit.place_no < 3) {
             unit.sp += turn.front_sp_add;
@@ -214,8 +214,8 @@ const unitTurnProceed = (unit, turn) => {
                 unit.sp += turn.step_sp_back_add;
             }
         }
-        if (unit.sp > 20) {
-            unit.sp = 20
+        if (unit.sp > unit.limit_sp) {
+            unit.sp = unit.limit_sp
         }
     }
 }
@@ -417,6 +417,11 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                     return;
                 };
                 break;
+            case "チャージ状態":
+                if (!checkBuffExist(unit.buff_list, BUFF.CHARGE)) {
+                    return;
+                };
+                break;
             case "SP0以下":
                 if (self.sp > 0) {
                     return;
@@ -474,7 +479,7 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                 ability.used = true;
                 $.each(target_list, function (index, target_no) {
                     let unit_data = getUnitData(turn_data, target_no);
-                    if (unit_data.sp + unit_data.over_drive_sp < 20) {
+                    if (unit_data.sp + unit_data.over_drive_sp < unit_data.limit_sp) {
                         if (ability.ability_id) {
                             switch (ability.ability_id) {
                                 case 1109: // 吉報
@@ -529,8 +534,8 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                                     break;
                             }
                         }
-                        if (unit_data.sp + unit_data.over_drive_sp > 20) {
-                            unit_data.sp = 20 - unit_data.over_drive_sp;
+                        if (unit_data.sp + unit_data.over_drive_sp > unit_data.limit_sp) {
+                            unit_data.sp = unit_data.limit_sp - unit_data.over_drive_sp;
                         }
                     }
                 });
@@ -580,23 +585,23 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                 }
                 break;
             case EFFECT_ARROWCHERRYBLOSSOMS: // 桜花の矢
-                buff = {};
-                buff.buff_kind = BUFF_ARROWCHERRYBLOSSOMS;
-                buff.buff_element = 0;
-                buff.rest_turn = -1;
-                buff.buff_name = ability.ability_name;
-                unit.buff_list.push(buff);
+                addAbilityBuffUnit(BUFF.ARROWCHERRYBLOSSOMS, ability.ability_name, -1, target_list, turn_data)
                 break;
             case EFFECT.CHARGE: // チャージ
-                $.each(target_list, function (index, target_no) {
+                addAbilityBuffUnit(BUFF.CHARGE, ability.ability_name, -1, target_list, turn_data)
+                break;
+            case EFFECT.YAMAWAKI_SERVANT: // 山脇様のしもべ
+                addAbilityBuffUnit(BUFF.YAMAWAKI_SERVANT, ability.ability_name, -1, target_list, turn_data)
+                break;
+            case EFFECT.NEGATIVE: // ネガティブ
+                addAbilityBuffUnit(BUFF.NAGATIVE, ability.ability_name, ability.effect_count + 1, target_list, turn_data)
+                break;
+            case EFFECT.HIGH_BOOST: // ハイブースト
+                addAbilityBuffUnit(BUFF.HIGH_BOOST, ability.passive_name, ability.effect_count + 1, target_list, turn_data)
+                target_list.forEach(function (target_no) {
                     let unit = getUnitData(turn_data, target_no);
-                    buff = {};
-                    buff.buff_kind = BUFF_CHARGE;
-                    buff.buff_element = 0;
-                    buff.rest_turn = -1;
-                    buff.buff_name = ability.ability_name;
-                    unit.buff_list.push(buff);
-                });
+                    unit.limit_sp = 30;
+                })
                 break;
             case EFFECT_FIELD_DEPLOYMENT: // フィールド
                 if (ability.element) {
@@ -606,44 +611,29 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                     turn_data.field = FIELD_RICE;
                 }
                 break;
-            case EFFECT_NEGATIVE: // ネガティブ
-                buff = {};
-                buff.buff_kind = BUFF_NAGATIVE;
-                buff.buff_element = 0;
-                buff.rest_turn = ability.effect_count + 1;
-                buff.buff_name = ability.ability_name;
-                unit.buff_list.push(buff);
-                break;
             case EFFECT_ADDITIONALTURN: // 追加ターン
                 if (turn_data.additional_count == 0) {
                     unit.additional_turn = true;
                     turn_data.additional_turn = true;
                 }
                 break;
-            case EFFECT.YAMAWAKI_SERVANT: // 山脇様のしもべ
-                buff = {};
-                buff.buff_kind = BUFF.YAMAWAKI_SERVANT;
-                buff.buff_element = 0;
-                buff.rest_turn = -1;
-                buff.buff_name = ability.ability_name;
-                unit.buff_list.push(buff);
-                break;
+
         }
     });
 }
-/** UnitDataここまで */
 
-// 戦闘データ初期化
-function cleanBattleData() {
-    // 初期化
-    battle_enemy_info = getEnemyInfo();
-    for (let i = 1; i <= 3; i++) {
-        battle_enemy_info[`physical_${i}`] = Number($(`#enemy_physical_${i}`).val());
-    }
-    for (let i = 0; i <= 5; i++) {
-        battle_enemy_info[`element_${i}`] = Number($(`#enemy_element_${i}`).val());
-    }
+function addAbilityBuffUnit(buff_kind, ability_name, rest_turn, target_list, turn_data) {
+    target_list.forEach(function (target_no) {
+        let unit = getUnitData(turn_data, target_no);
+        let buff = {};
+        buff.buff_kind = buff_kind;
+        buff.buff_element = 0;
+        buff.rest_turn = rest_turn;
+        buff.buff_name = ability_name;
+        unit.buff_list.push(buff);
+    })
 }
+/** UnitDataここまで */
 
 // ターン初期処理
 function initTurn(turnData) {
