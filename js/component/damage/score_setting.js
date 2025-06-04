@@ -5,9 +5,9 @@ const ScoreSettingComponent = ({ enemy_info, state, dispatch }) => {
         return null;
     }
     let filtered_grade = grade_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no);
-    let filtered_bonus = bonus_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no);
     const uniqueHalf = [...new Set(filtered_grade.map(item => item.half))];
 
+    let filtered_bonus = bonus_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no && (obj.half == 0 ||obj.half == selectHalf));
     let half_grade = filtered_grade.filter((obj) => obj.half == selectHalf);
 
     // タブ変更

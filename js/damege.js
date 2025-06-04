@@ -2713,7 +2713,12 @@ function getScoreAttackBonus(kind, member_info) {
     let physical = getCharaData(member_info.style_info.chara_id).physical;
     let enemy_info = getEnemyInfo();
     let effect_max = 0;
-    bonus_list.filter((obj) => obj.score_attack_no == enemy_info.sub_no && obj.effect_kind == kind).forEach((obj) => {
+    let num = $("input[name='rule_tab']:checked").attr("id").split("_")[2];
+    bonus_list.filter((obj) => 
+        obj.score_attack_no == enemy_info.sub_no && 
+        (obj.half == 0 || obj.half == num) &&
+        obj.effect_kind == kind
+    ).forEach((obj) => {
         let conditions = obj.conditions.split("_");
         switch (conditions[0]) {
             case "element":

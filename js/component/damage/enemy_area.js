@@ -50,7 +50,9 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
     window.setEnemyResistDown = function (attack_element, resist_down) {
         const newResist = [0, 0, 0, 0, 0, 0];
         newResist[attack_element] = resist_down;
-        setElementResistDown(newResist)
+        if (!elementResistDown.every((value, index) => value === newResist[index])) {
+            setElementResistDown(newResist)
+        }
     }
 
     // 敵情報反映
@@ -80,6 +82,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
         updateEnemyResistDown();
     }, []);
 
+    // 移行時の暫定対応
     React.useEffect(() => {
         // 再描画時に呼び出す
         $(".variable_effect_size").each(function (index, value) {
