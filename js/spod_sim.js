@@ -682,6 +682,9 @@ function getSpCost(turn_data, skill_info, unit) {
         return 0;
     }
     let sp_cost = skill_info.sp_cost;
+    if (sp_cost == 0) {
+        return 0;
+    }
     let sp_cost_down = turn_data.sp_cost_down;
     let sp_cost_up = 0;
     if (harfSpSkill(turn_data, skill_info, unit)) {
