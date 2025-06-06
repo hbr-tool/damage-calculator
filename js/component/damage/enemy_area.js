@@ -89,7 +89,7 @@ const EnemyAreaComponent = ({ state, dispatch, attack_info }) => {
             updateBuffEffectSize($(value));
         });
         displayWeakRow();
-    }, [enemy_info, elementResistDown]);
+    }, [attackInfo, enemy_info, elementResistDown]);
 
     React.useEffect(() => {
         // ダメージ再計算
