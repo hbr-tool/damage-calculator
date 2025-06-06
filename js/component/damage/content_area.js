@@ -156,13 +156,6 @@ const ContentsAreaComponent = ({ }) => {
     } else {
         $(".row_dp").css("display", "table-cell");
     }
-    let physical_resist = enemy_info[`physical_${attack_info.attack_physical}`] - state.correction[`physical_${attack_info.attack_physical}`];
-    let element_resist = enemy_info[`element_${attack_info.attack_element}`] - state.correction[`element_${attack_info.attack_element}`];
-    if (PENETRATION_ATTACK_LIST.includes(attack_info.attack_id) || physical_resist * element_resist > 10000) {
-        $(".row_weak").css("display", "table-cell");
-    } else {
-        $(".row_weak").css("display", "none");
-    }
 
     return (
         <>
