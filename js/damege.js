@@ -993,7 +993,7 @@ function getStrengthen(member_info, skill_buff) {
         }
     }
     // 防御ダウン以外のデバフスキル
-    let other_debuff = [BUFF_FRAGILE];
+    let other_debuff = [BUFF.FRAGILE, BUFF.RESISTDOWN];
     if (other_debuff.includes(skill_buff.buff_kind)) {
         // ハイブースト状態
         if ($("#skill_passive635").prop("checked")) {
