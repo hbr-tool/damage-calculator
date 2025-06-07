@@ -92,8 +92,10 @@ const ContentsAreaComponent = ({ }) => {
             }
         }
         let new_destruction = new_limit < state.destruction ? new_limit : state.destruction;
+        const updatedEnemy = { ...state.enemy_info };
         return {
             ...state,
+            enemy_info: updatedEnemy,
             correction: updated,
             max_limit: new_limit,
             destruction: new_destruction,
