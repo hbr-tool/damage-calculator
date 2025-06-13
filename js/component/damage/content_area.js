@@ -81,7 +81,7 @@ const ContentsAreaComponent = ({ }) => {
         if (action.grade.grade_none == 1) return state;
         const updated = { ...state.correction };
         let new_limit = state.max_limit;
-        for (let i = 1; i <= 4; i++) {
+        for (let i = 1; i <= 5; i++) {
             const kind = action.grade[`effect_kind${i}`];
             if (kind) {
                 const size = action.grade[`effect_size${i}`];
