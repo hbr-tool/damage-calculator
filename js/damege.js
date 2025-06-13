@@ -2323,7 +2323,7 @@ function getGradeSum(enemy_info) {
             if (grade.grade_none == 1) {
                 return true;
             }
-            [1, 2, 3, 4].forEach(index => {
+            [1, 2, 3, 4, 5].forEach(index => {
                 let kind = grade["effect_kind" + index];
                 if (kind == "") {
                     return;
