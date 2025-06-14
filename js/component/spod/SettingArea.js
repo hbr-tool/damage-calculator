@@ -246,7 +246,7 @@ const SettingArea = () => {
     });
 
     // 戦闘開始前処理
-    const startBattle = () => {
+    const startBattle = (update, setUpdate) => {
         for (let i = 0; i < styleList.selectStyleList.length; i++) {
             let style = styleList.selectStyleList[i]?.style_info;
             if (NOT_USE_STYLE.includes(style?.style_id)) {
@@ -277,7 +277,7 @@ const SettingArea = () => {
         // 初期データ作成
         let turn_init = getInitBattleData(styleList.selectStyleList, saveMember, detailSetting);
         // 制約事項更新
-        updateConstraints();
+        setUpdate(update + 1);
         // 初期処理
         initTurn(turn_init, true);
         let turn_list = [turn_init];
@@ -288,7 +288,7 @@ const SettingArea = () => {
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
 
-    const loadData = (saveData) => {
+    const loadData = (saveData, key, setKey) => {
         // 部隊情報上書き
         const updatedStyleList = [...styleList.selectStyleList];
         saveData.unit_data_list.forEach((unit_data, index) => {
@@ -315,7 +315,7 @@ const SettingArea = () => {
         // 初期データ作成
         let turnInit = getInitBattleData(updatedStyleList, saveMember, detailSetting);
         // 制約事項更新
-        updateConstraints();
+        setKey(key + 1);
         let turn_list = [];
         recreateTurnData(turn_list, turnInit, saveData.user_operation_list, true);
         // 画面反映
@@ -347,6 +347,8 @@ const SettingArea = () => {
         stepSpBackAdd: 0,
     });
 
+    const [update, setUpdate] = React.useState(0);
+
     return (
         <>
             {
@@ -368,7 +370,7 @@ const SettingArea = () => {
                             <label className="checkbox01 text-sm" htmlFor="is_overwrite">
                                 上書き確認
                             </label>
-                            <input className="battle_start" defaultValue="戦闘開始" type="button" onClick={startBattle} />
+                            <input className="battle_start" defaultValue="戦闘開始" type="button" onClick={e => startBattle(update, setUpdate)} />
                         </div>
                         <div>
                             <ConstraintsList />
@@ -385,7 +387,7 @@ const SettingArea = () => {
                         </div>
                     </div>
             }
-            <BattleArea hideMode={hideMode} setHideMode={setHideMode} turnList={simProc.turn_list} dispatch={dispatch} loadData={loadData} />
+            <BattleArea hideMode={hideMode} setHideMode={setHideMode} turnList={simProc.turn_list} dispatch={dispatch} loadData={loadData} update={update} setUpdate={setUpdate} />
         </>
     )
 };

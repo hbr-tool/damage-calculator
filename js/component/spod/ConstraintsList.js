@@ -1,9 +1,4 @@
 const ConstraintsList = () => {
-    const [key, setKey] = React.useState(0);
-
-    window.updateConstraints = () => {
-        setKey(key + 1);
-    }
 
     return ( constraints_list.length == 0 ?
         null

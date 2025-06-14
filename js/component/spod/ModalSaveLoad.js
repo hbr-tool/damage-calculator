@@ -1,4 +1,4 @@
-const ModalSaveLoad = ({ mode, handleClose, turnList, loadData }) => {
+const ModalSaveLoad = ({ mode, handleClose, turnList, loadData, update, setUpdate }) => {
     const NONE = "無し"
     const { styleList, setStyleList, setMember, saveMember, removeMember } = useStyleList();
 
@@ -36,7 +36,7 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData }) => {
             handleClose();
             let decompress = decompressString(jsonstr)
             save_data = JSON.parse(decompress);
-            loadData(save_data);
+            loadData(save_data, update, setUpdate);
         }
     }
 

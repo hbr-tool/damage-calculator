@@ -1,7 +1,7 @@
 let select_troops = localStorage.getItem('select_troops');
 let select_style_list = Array(6).fill(undefined);
 // 使用不可スタイル
-const NOT_USE_STYLE = [36];
+const NOT_USE_STYLE = [36, 167];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -11,6 +11,7 @@ const CONSTRAINTS_ABILITY = [
     1509, // 怪盗乱麻
     1523, // アンコール
     1525, // ポジショニング
+    1531, // 鋒矢
 ];
 // 謎の処理順序
 const ACTION_ORDER = [1, 0, 2, 3, 4, 5];
@@ -793,6 +794,18 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return checkBuffExist(turn_data.enemy_debuff_list, BUFF_FRAGILE);
         case CONDITIONS_TARGET_COVER: // 集中・挑発状態
             return checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE) || checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER);
+        case CONDITIONS.FIELD_NONE: // フィールド無し
+            return turn_data.field == FIELD.NORMAL;
+        case CONDITIONS.FIELD_FIRE: // 火属性フィールド
+            return turn_data.field == FIELD.FIRE;
+        case CONDITIONS.FIELD_ICE: // 氷属性フィールド
+            return turn_data.field == FIELD.ICE;
+        case CONDITIONS.FIELD_THUNDER: // 雷属性フィールド
+            return turn_data.field == FIELD.THUNDER;
+        case CONDITIONS.FIELD_LIGHT: // 光属性フィールド
+            return turn_data.field == FIELD.LIGHT;
+        case CONDITIONS.FIELD_DARK: // 闇属性フィールド
+            return turn_data.field == FIELD.DARK;
         case CONDITIONS_HAS_CHARGE: // チャージ
             return checkBuffExist(unit_data.buff_list, BUFF_CHARGE);
         case CONDITIONS_ENEMY_COUNT_1: // 敵1体

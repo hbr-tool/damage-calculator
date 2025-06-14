@@ -663,7 +663,7 @@ function initTurn(turnData) {
     setUserOperation(turnData);
 }
 
-const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData }) => {
+const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData, update, setUpdate }) => {
     const [isCapturing, setIsCapturing] = React.useState(false);  // キャプチャ中の状態を管理
     const elementRef = React.useRef(null); // キャプチャ対象の要素参照
 
@@ -771,12 +771,12 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
 
     let display_class = hideMode ? "hide_mode " : "show_mode";
 
-    const [modal, setModa] = React.useState({
+    const [modal, setModal] = React.useState({
         isOpen: false,
         mode: ""
     });
-    const openModal = (mode) => setModa({ isOpen: true, mode: mode });
-    const closeModal = () => setModa({ isOpen: false, mode: "" });
+    const openModal = (mode) => setModal({ isOpen: true, mode: mode });
+    const closeModal = () => setModal({ isOpen: false, mode: "" });
 
     return (
         <div id="battle_area">
@@ -809,7 +809,7 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                     className={"modal-content modal-narrwow " + (modal.isOpen ? "modal-content-open" : "")}
                     overlayClassName={"modal-overlay " + (modal.isOpen ? "modal-overlay-open" : "")}
                 >
-                    <ModalSaveLoad mode={modal.mode} handleClose={closeModal} turnList={turnList} loadData={loadData} />
+                    <ModalSaveLoad mode={modal.mode} handleClose={closeModal} turnList={turnList} loadData={loadData} update={update} setUpdate={setUpdate} />
                 </ReactModal>
             }
         </div>
