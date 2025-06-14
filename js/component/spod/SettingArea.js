@@ -293,10 +293,10 @@ const SettingArea = () => {
         const updatedStyleList = [...styleList.selectStyleList];
         saveData.unit_data_list.forEach((unit_data, index) => {
             if (unit_data) {
+                let member_info = { ...initialMember };
                 let style_info = style_list.find((obj) => obj.style_id === unit_data.style_id);
                 // メンバー情報作成
-                let member_info = { ...initialMember };
-                member_info.is_select = true;
+                // member_info.is_select = true;
                 member_info.chara_no = Number(index);
                 member_info.style_info = style_info;
                 member_info.limit_count = unit_data.limit_count;
@@ -306,9 +306,8 @@ const SettingArea = () => {
                 member_info.init_sp = unit_data.init_sp;
                 member_info.exclusion_skill_list = unit_data.exclusion_skill_list;
                 updatedStyleList[index] = member_info;
-                localStorage.setItem(`troops_${styleList.selectTroops}_${index}`, unit_data.style_id);
             } else {
-                removeMember(index);
+                updatedStyleList[index] = null;
             }
         })
         setStyleList({ ...styleList, selectStyleList: updatedStyleList });
