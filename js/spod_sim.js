@@ -176,8 +176,8 @@ const reflectUserOperation = (turn_data, isLoadMode) => {
         if (skill) {
             unit.buff_target_chara_id = skill.buff_target_chara_id;
             unit.buff_effect_select_type = skill.buff_effect_select_type;
+            skillUpdate(turn_data, turn_data.user_operation.select_skill[unit.place_no].skill_id, unit.place_no);
         }
-        skillUpdate(turn_data, turn_data.user_operation.select_skill[unit.place_no].skill_id, unit.place_no);
     })
     // OD再計算
     turn_data.add_over_drive_gauge = getOverDrive(turn_data);
