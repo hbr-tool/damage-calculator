@@ -239,7 +239,7 @@ const SpOdSimulation = () => {
     const [selectTroops, setSelectTroops] = React.useState(() => {
         // スタイルリスト読み込み
         let selectTroops = localStorage.getItem('select_troops');
-        return  selectTroops ? selectTroops : 0;
+        return selectTroops ? selectTroops : 0;
     });
     let styleList = loadTroopsList(selectTroops);
 
