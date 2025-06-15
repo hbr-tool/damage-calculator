@@ -61,7 +61,7 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                         })}
                     </select>
                     水
-                    <select value={detailSetting.changeElement2} id="changeElement2"className="text-right"  onChange={(e) => updateDetailSetting(e)}>
+                    <select value={detailSetting.changeElement2} id="changeElement2" className="text-right" onChange={(e) => updateDetailSetting(e)}>
                         {ELEMENT_WEAK_LIST.map((value, index) => {
                             return <option key={index} value={value}>{value}</option>
                         })}
@@ -131,33 +131,36 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                     </select>
                     ターンごとに SP 全体
                     <select className="step_sp" id="stepSpAllAdd" value={detailSetting.stepSpAllAdd} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="3">+3</option>
-                        <option value="2">+2</option>
-                        <option value="1">+1</option>
-                        <option value="0">+0</option>
-                        <option value="-1">-1</option>
-                        <option value="-2">-2</option>
-                        <option value="-3">-3</option>
+                        {Array.from({ length: 11 }, (_, i) => {
+                            const value = i - 5;
+                            return (
+                                <option value={value} key={value}>
+                                    {value > 0 ? `+${value}` : value}
+                                </option>
+                            );
+                        })}
                     </select>
                     前衛
                     <select className="step_sp" id="stepSpFrontAdd" value={detailSetting.stepSpFrontAdd} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="3">+3</option>
-                        <option value="2">+2</option>
-                        <option value="1">+1</option>
-                        <option value="0">+0</option>
-                        <option value="-1">-1</option>
-                        <option value="-2">-2</option>
-                        <option value="-3">-3</option>
+                        {Array.from({ length: 11 }, (_, i) => {
+                            const value = i - 5;
+                            return (
+                                <option value={value} key={value}>
+                                    {value > 0 ? `+${value}` : value}
+                                </option>
+                            );
+                        })}
                     </select>
                     後衛
                     <select className="step_sp" id="stepSpBackAdd" value={detailSetting.stepSpBackAdd} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="3">+3</option>
-                        <option value="2">+2</option>
-                        <option value="1">+1</option>
-                        <option value="0">+0</option>
-                        <option value="-1">-1</option>
-                        <option value="-2">-2</option>
-                        <option value="-3">-3</option>
+                        {Array.from({ length: 11 }, (_, i) => {
+                            const value = i - 5;
+                            return (
+                                <option value={value} key={value}>
+                                    {value > 0 ? `+${value}` : value}
+                                </option>
+                            );
+                        })}
                     </select>
                 </li>
             </ul>
