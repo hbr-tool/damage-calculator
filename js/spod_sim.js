@@ -157,17 +157,19 @@ const reflectUserOperation = (turn_data, isLoadMode) => {
         if (unit.blank) return;
         let operation_place_no = turn_data.user_operation.place_style.findIndex((item) =>
             item === unit.style.style_info.style_id);
-        if (turn_data.additional_turn) {
-            if (!isLoadMode) {
-                if (operation_place_no != unit.place_no) {
-                    setInitSkill(unit);
-                    turn_data.user_operation.select_skill[unit.place_no].skill_id = unit.select_skill_id;
-                    turn_data.user_operation.place_style[unit.place_no] = unit.style.style_info.style_id;
+        if (operation_place_no >= 0) {
+            if (turn_data.additional_turn) {
+                if (!isLoadMode) {
+                    if (operation_place_no != unit.place_no) {
+                        setInitSkill(unit);
+                        turn_data.user_operation.select_skill[unit.place_no].skill_id = unit.select_skill_id;
+                        turn_data.user_operation.place_style[unit.place_no] = unit.style.style_info.style_id;
+                    }
+                    return;
                 }
-                return;
             }
+            unit.place_no = operation_place_no;
         }
-        unit.place_no = operation_place_no;
     })
     // オーバードライブ発動
     if (turn_data.user_operation.trigger_over_drive && turn_data.over_drive_gauge > 100) {
@@ -346,7 +348,8 @@ function getAttackIdToInfo(turnData, skillId) {
     switch (skillId) {
         case SKILL_ID_640:
             //ファーマメントブーケショット
-            filteredAttack = filteredAttack.filter((obj) => obj.attack_element == turnData.field);
+            let field = turnData.field < 6 ? turnData.field : FIELD.NORMAL;
+            filteredAttack = filteredAttack.filter((obj) => obj.attack_element == field);
             break;
     }
     return filteredAttack.length > 0 ? filteredAttack[0] : undefined;
@@ -817,7 +820,7 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
         case CONDITIONS_TARGET_COVER: // 集中・挑発状態
             return checkBuffExist(turn_data.enemy_debuff_list, BUFF_PROVOKE) || checkBuffExist(turn_data.enemy_debuff_list, BUFF_COVER);
         case CONDITIONS.FIELD_NONE: // フィールド無し
-            return turn_data.field == FIELD.NORMAL;
+            return [FIELD.NORMAL, FIELD.RICE, FIELD.SANDSTORM].includes(turn_data.field);
         case CONDITIONS.FIELD_FIRE: // 火属性フィールド
             return turn_data.field == FIELD.FIRE;
         case CONDITIONS.FIELD_ICE: // 氷属性フィールド

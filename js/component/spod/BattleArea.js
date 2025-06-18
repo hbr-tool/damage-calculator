@@ -537,6 +537,7 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
                         buff.buff_kind = BUFF_MORALE;
                         buff.buff_element = 0;
                         buff.rest_turn = -1;
+                        buff.lv = 0;
                         buff.buff_name = ability.ability_name;
                         unit_data.buff_list.push(buff);
                     }
