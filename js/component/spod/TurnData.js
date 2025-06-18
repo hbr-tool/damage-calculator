@@ -14,7 +14,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // 敵の数変更
     const chengeEnemyCount = (e) => {
-        const user_operation = { ...turn.user_operation };
+        let user_operation = turn.user_operation;
         user_operation.enemy_count = Number(e.target.value);
         turn.enemy_count = Number(e.target.value);
         reRender(user_operation, true);
@@ -22,7 +22,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // フィールド変更
     const chengeField = (e) => {
-        const user_operation = { ...turn.user_operation };
+        let user_operation = turn.user_operation;
         user_operation.field = Number(e.target.value);
         turn.field = Number(e.target.value);
         reRender(user_operation, true);
@@ -30,14 +30,14 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // 行動選択変更
     const chengeAction = (e) => {
-        const user_operation = { ...turn.user_operation };
+        let user_operation = turn.user_operation;
         user_operation.kb_action = Number(e.target.value);
         reRender(user_operation, true);
     }
 
     // スキル変更
     const chengeSkill = (skill_id, place_no) => {
-        const user_operation = { ...turn.user_operation };
+        let user_operation = turn.user_operation;
         let select_skill = user_operation.select_skill[place_no];
         select_skill.skill_id = skill_id;
         skillUpdate(turn, skill_id, place_no);
@@ -173,7 +173,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // 備考編集
     const chengeRemark = ((e) => {
-        let user_operation = turn.user_operation;
+        const user_operation = turn.user_operation;;
         user_operation.remark = e.target.value;
         reRender(user_operation, false);
     })
