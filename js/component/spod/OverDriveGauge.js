@@ -3,8 +3,9 @@ const OverDriveGauge = ({ turn }) => {
     let add_over_drive_gauge = getOverDrive(turn);
     turn.add_over_drive_gauge = add_over_drive_gauge;
     over_drive_gauge += add_over_drive_gauge;
-    over_drive_gauge = over_drive_gauge > 300 ? 300 : over_drive_gauge;
+    // over_drive_gauge = over_drive_gauge > 300 ? 300 : over_drive_gauge;
     let gauge = Math.floor(turn.over_drive_gauge / 100);
+    gauge = gauge > 3 ? 3 : gauge;
 
     return (
         <div className="flex">

@@ -14,7 +14,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // 敵の数変更
     const chengeEnemyCount = (e) => {
-        let user_operation = turn.user_operation;
+        const user_operation = { ...turn.user_operation };
         user_operation.enemy_count = Number(e.target.value);
         turn.enemy_count = Number(e.target.value);
         reRender(user_operation, true);
@@ -22,7 +22,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // フィールド変更
     const chengeField = (e) => {
-        let user_operation = turn.user_operation;
+        const user_operation = { ...turn.user_operation };
         user_operation.field = Number(e.target.value);
         turn.field = Number(e.target.value);
         reRender(user_operation, true);
@@ -30,14 +30,14 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // 行動選択変更
     const chengeAction = (e) => {
-        let user_operation = turn.user_operation;
+        const user_operation = { ...turn.user_operation };
         user_operation.kb_action = Number(e.target.value);
         reRender(user_operation, true);
     }
 
     // スキル変更
     const chengeSkill = (skill_id, place_no) => {
-        let user_operation = turn.user_operation;
+        const user_operation = { ...turn.user_operation };
         let select_skill = user_operation.select_skill[place_no];
         select_skill.skill_id = skill_id;
         skillUpdate(turn, skill_id, place_no);
@@ -90,11 +90,6 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
             unit.buff_effect_select_type = null;
         }
 
-        processSkillChange(unit, user_operation, select_skill);
-    }
-
-    // スキル変更時の追加処理
-    function processSkillChange(unit, user_operation, select_skill) {
         select_skill.buff_target_chara_id = unit.buff_target_chara_id;
         select_skill.buff_effect_select_type = unit.buff_effect_select_type;
         reRender(user_operation, true);
@@ -102,7 +97,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
 
     // OD発動/解除
     function triggerOverDrive(checked) {
-        let user_operation = turn.user_operation;;
+        const user_operation = turn.user_operation;;
         if (checked) {
             startOverDrive(turn);
             user_operation.kb_action = KB_NEXT_ACTION;
@@ -267,7 +262,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
                     </div>
                     <OverDriveGauge turn={turn} />
                 </div>
-                <BuffIconComponent buff_list={turn.enemy_debuff_list} loop_limit={12} loop_step={1} place_no={7} turn_number={turn.turn_number} clickBuffIcon={clickBuffIcon}/>
+                <BuffIconComponent buff_list={turn.enemy_debuff_list} loop_limit={12} loop_step={1} place_no={7} turn_number={turn.turn_number} clickBuffIcon={clickBuffIcon} />
             </div>
             <div className="party_member">
                 <div className="flex front_area">
@@ -330,11 +325,11 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
         </div>
     )
 }, (prevProps, nextProps) => {
-  // 再描画が必要ないなら true を返す
-  return (
-    prevProps.turn === nextProps.turn &&
-    prevProps.isLastTurn === nextProps.isLastTurn &&
-    prevProps.hideMode === nextProps.hideMode &&
-    prevProps.isCapturing === nextProps.isCapturing
-  );
+    // 再描画が必要ないなら true を返す
+    return (
+        prevProps.turn === nextProps.turn &&
+        prevProps.isLastTurn === nextProps.isLastTurn &&
+        prevProps.hideMode === nextProps.hideMode &&
+        prevProps.isCapturing === nextProps.isCapturing
+    );
 });

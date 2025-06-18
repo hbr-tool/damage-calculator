@@ -225,7 +225,7 @@ const setInitSkill = (unit) => {
         unit.select_skill_id = unit.init_skill_id;
         unit.sp_cost = 0;
     } else {
-        if (checkAbilityExist(unit.ability_other, 1530)) {
+        if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], 1530)) {
             // 湯めぐり
             unit.select_skill_id = SKILL.AUTO_PURSUIT;
         } else {
@@ -360,40 +360,13 @@ const getFunnelList = (unit) => {
 
 const abilityActionUnit = (turn_data, action_kbn, unit) => {
     let action_list = [];
-    switch (action_kbn) {
-        case ABILIRY.BATTLE_START: // 戦闘開始時
-            action_list = unit.ability_battle_start;
-            break;
-        case ABILIRY.SELF_START: // 自分のターン開始時
-            action_list = unit.ability_self_start;
-            break;
-        case ABILIRY.ACTION_START: // 行動開始時
-            action_list = unit.ability_action_start;
-            break;
-        case ABILIRY.ENEMY_START: // 敵のターン開始時
-            action_list = unit.ability_enemy_start;
-            break;
-        case ABILIRY.ADDITIONALTURN: // 追加ターン
-            action_list = unit.ability_additional_turn;
-            break;
-        case ABILIRY.OD_START: // オーバードライブ開始時
-            action_list = unit.ability_over_drive;
-            break;
-        case ABILIRY.EX_SKILL_USE: // EXスキル使用
-            action_list = unit.ability_ex_skill_use;
-            break;
-        case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
-            // 前衛のみ
-            if (unit.place_no < 3) {
-                action_list = unit.ability_receive_damage;
-            }
-            break;
-        case ABILIRY.PURSUIT: // 追撃時
-            action_list = unit.ability_pursuit;
-            break;
-        case ABILIRY.OTHER: // その他
-            action_list = unit.ability_other;
-            break;
+    action_list = unit[`ability_${action_kbn}`];
+    // 被ダメージ時
+    if (action_kbn == ABILIRY_TIMING.RECEIVE_DAMAGE) {
+        // 前衛のみ
+        if (unit.place_no >= 3) {
+            action_list = [];
+        }
     }
     action_list.forEach((ability, index) => {
         // 前衛

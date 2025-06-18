@@ -14,6 +14,7 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
         enemy_debuff_list: [],
         unit_list: [],
         start_over_drive_gauge: 0,
+        step_over_drive_gauge: 0,
         over_drive_gauge: 0,
         add_over_drive_gauge: 0,
         sp_cost_down: 0,
@@ -49,16 +50,6 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
             use_skill_list: [],
             buff_target_chara_id: null,
             buff_effect_select_type: 0,
-            ability_battle_start: [],
-            ability_self_start: [],
-            ability_action_start: [],
-            ability_enemy_start: [],
-            ability_additional_turn: [],
-            ability_over_drive: [],
-            ability_ex_skill_use: [],
-            ability_receive_damage: [],
-            ability_pursuit: [],
-            ability_other: [],
             next_turn_min_sp: -1,
             select_skill_id: 0,
             init_skill_id: 0,
@@ -68,7 +59,6 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
         unit.place_no = index;
         if (member_info) {
             saveMember(index);
-            let physical = getCharaData(member_info.style_info.chara_id).physical;
 
             unit.style = member_info;
             unit.sp = member_info.init_sp;
@@ -84,7 +74,6 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
                 const copiedObj = JSON.parse(JSON.stringify(obj));
                 if (copiedObj.chara_id === 0) {
                     copiedObj.chara_id === member_info.style_info.chara_id;
-                    copiedObj.attack_physical = physical;
                 }
                 return copiedObj;
             });
@@ -103,50 +92,24 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
             if (checkPassiveExist(unit.passive_skill_list, 606)) {
                 unit.normal_attack_element = 4;
             }
-            ["0", "00", "1", "3", "4", "5", "10"].forEach(num => {
-                if (member_info.style_info[`ability${num}`] && num <= member_info.limit_count) {
-                    let ability_info = getAbilityInfo(member_info.style_info[`ability${num}`]);
+            // アビリティ設定
+            Object.values(ABILIRY_TIMING).forEach(timing => {
+                unit[`ability_${timing}`] = [];
+            });
+            ["0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
+                const num = parseInt(numStr, 10);
+                if (member_info.style_info[`ability${numStr}`] && num <= member_info.limit_count) {
+                    let ability_info = getAbilityInfo(member_info.style_info[`ability${numStr}`]);
                     if (!ability_info) {
                         return;
                     }
                     if (CONSTRAINTS_ABILITY.includes(ability_info.ability_id)) {
                         constraints_list.push(ability_info.ability_id);
                     }
-                    switch (ability_info.activation_timing) {
-                        case ABILIRY.BATTLE_START: // 戦闘開始時
-                            unit.ability_battle_start.push(ability_info);
-                            break;
-                        case ABILIRY.SELF_START: // 自分のターン開始時
-                            unit.ability_self_start.push(ability_info);
-                            break;
-                        case ABILIRY.ACTION_START: // 行動開始時
-                            unit.ability_action_start.push(ability_info);
-                            break;
-                        case ABILIRY.ENEMY_START: // 敵ターン開始時
-                            unit.ability_enemy_start.push(ability_info);
-                            break;
-                        case ABILIRY.ADDITIONALTURN: // 追加ターン
-                            unit.ability_additional_turn.push(ability_info);
-                            break;
-                        case ABILIRY.OD_START: // オーバードライブ開始時
-                            unit.ability_over_drive.push(ability_info);
-                            break;
-                        case ABILIRY.EX_SKILL_USE: // EXスキル使用時    
-                            unit.ability_ex_skill_use.push(ability_info);
-                            break;
-                        case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
-                            unit.ability_receive_damage.push(ability_info);
-                            break;
-                        case ABILIRY.PURSUIT: // 追撃時
-                            unit.ability_pursuit.push(ability_info);
-                            break;
-                        case ABILIRY.OTHER: // その他
-                            if (ability_info.ability_id == 510) {
-                                // 蒼天
-                                turn_init.sp_cost_down = ability_info.effect_size;
-                            }
-                            unit.ability_other.push(ability_info);
-                            break;
+                    unit[`ability_${ability_info.activation_timing}`].push(ability_info);
+                    if (ability_info.ability_id == 510) {
+                        // 蒼天
+                        turn_init.sp_cost_down = ability_info.effect_size;
                     }
                 }
             });
@@ -155,38 +118,7 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
                 if (!passive_info) {
                     return;
                 }
-                switch (passive_info.activation_timing) {
-                    case ABILIRY.BATTLE_START: // 戦闘開始時
-                        unit.ability_battle_start.push(passive_info);
-                        break;
-                    case ABILIRY.SELF_START: // 自分のターン開始時
-                        unit.ability_self_start.push(passive_info);
-                        break;
-                    case ABILIRY.ACTION_START: // 行動開始時
-                        unit.ability_action_start.push(passive_info);
-                        break;
-                    case ABILIRY.ENEMY_START: // 敵ターン開始時
-                        unit.ability_enemy_start.push(passive_info);
-                        break;
-                    case ABILIRY.ADDITIONALTURN: // 追加ターン
-                        unit.ability_additional_turn.push(passive_info);
-                        break;
-                    case ABILIRY.OD_START: // オーバードライブ開始時
-                        unit.ability_over_drive.push(passive_info);
-                        break;
-                    case ABILIRY.EX_SKILL_USE: // EXスキル使用時    
-                        unit.ability_ex_skill_use.push(passive_info);
-                        break;
-                    case ABILIRY.RECEIVE_DAMAGE: // 被ダメージ時
-                        unit.ability_receive_damage.push(passive_info);
-                        break;
-                    case ABILIRY.PURSUIT: // 追撃時
-                        unit.ability_pursuit.push(ability_info);
-                        break;
-                    case ABILIRY.OTHER: // その他
-                        unit.ability_other.push(passive_info);
-                        break;
-                }
+                unit[`ability_${passive_info.activation_timing}`].push(passive_info);
             });
         } else {
             unit.blank = true;
@@ -213,7 +145,7 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
     turn_init.unit_list = unit_list;
     turn_init.enemy_info = getEnemyInfo()
     // 戦闘開始アビリティ
-    abilityAction(ABILIRY_BATTLE_START, turn_init);
+    abilityAction(ABILIRY_TIMING.BATTLE_START, turn_init);
     setUserOperation(turn_init);
 
     return turn_init;
