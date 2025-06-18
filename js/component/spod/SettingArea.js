@@ -239,7 +239,7 @@ const SettingArea = () => {
                 member_info.exclusion_skill_list = unit_data.exclusion_skill_list;
                 updatedStyleList[index] = member_info;
             } else {
-                updatedStyleList[index] = null;
+                updatedStyleList[index] = undefined;
             }
         })
         setStyleList({ ...styleList, selectStyleList: updatedStyleList });

@@ -10,7 +10,7 @@ const StyleListContext = React.createContext({
 });
 
 const initialMember = {
-    style_info: null,
+    style_info: undefined,
     // is_select: false,
     chara_no: -1,
     str: 400,
