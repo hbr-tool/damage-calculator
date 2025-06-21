@@ -86,6 +86,8 @@ const loadExclusionSkill = (member_info) => {
     let exclusion_skill_list = localStorage.getItem(`exclusion_${style_id}`);
     if (exclusion_skill_list) {
         member_info.exclusion_skill_list = exclusion_skill_list.split(",").map(Number);
+    } else {
+        member_info.exclusion_skill_list = [];
     }
 }
 

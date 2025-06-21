@@ -92,7 +92,7 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, place_no, select_skill_
     return (<select className={className} onChange={(e) => chengeSkill(Number(e.target.value), place_no)} value={unit.select_skill_id} >
         {skill_list.filter((obj) => obj.skill_id == unit.select_skill_id || !isCapturing).map(skill => {
             let text = skill.skill_name;
-            const attackInfo = getAttackIdToInfo(turn, skill.skill_id);
+            const attackInfo = getSkillIdToAttackInfo(turn, skill.skill_id);
             let sp_cost = 0;
             if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
                 text += `(${physical_name[physical]}・${element_name[unit.normal_attack_element]})`;

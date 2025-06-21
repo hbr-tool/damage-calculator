@@ -58,7 +58,7 @@ const ModalSkillSelectList = ({index, closeModal}) => {
         <div className="p-6">
             <div className="skill_select_container">
                 <label className="modal_label">スキル設定</label>
-                <button className="modal-close" aria-label="Close modal" onClick={closeModal}>&times;</button>
+                <button className="modal-close" onClick={closeModal}>&times;</button>
             </div>
             <div className="text-sm text-right">
                 <input className="w-20 mt-2 mb-2 default" defaultValue="すべてはずす" type="button" onClick={clickReleaseBtn} />

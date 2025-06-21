@@ -343,7 +343,7 @@ function getAttackInfo(attack_id) {
     const filtered_attack = skill_attack.filter((obj) => obj.attack_id == attack_id);
     return filtered_attack.length > 0 ? filtered_attack[0] : undefined;
 }
-function getAttackIdToInfo(turnData, skillId) {
+function getSkillIdToAttackInfo(turnData, skillId) {
     let filteredAttack = skill_attack.filter((obj) => obj.skill_id == skillId);
     switch (skillId) {
         case SKILL_ID_640:
@@ -416,7 +416,7 @@ function startAction(turn_data) {
         if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_info = { "attack_id": 0, "attack_element": unit_data.normal_attack_element };
         } else {
-            attackInfo = getAttackIdToInfo(turn_data, skill_info.skill_id);
+            attackInfo = getSkillIdToAttackInfo(turn_data, skill_info.skill_id);
             if (attackInfo) {
                 front_cost_list.push(sp_cost);
             }
@@ -481,7 +481,7 @@ function startAction(turn_data) {
         }
         let skill_info = getSkillData(skill_id)
         if (skill_info) {
-            let attackInfo = getAttackIdToInfo(turn_data, skill_id);
+            let attackInfo = getSkillIdToAttackInfo(turn_data, skill_id);
             if (attackInfo) {
                 // SP消費してから行動
                 payCost(unit_data);
@@ -569,7 +569,7 @@ const getOverDrive = (turn) => {
         const skill_info = skill_data.skill_info;
         const unit_data = getUnitData(temp_turn, skill_data.place_no);
         const buff_list = getBuffInfo(skill_info.skill_id);
-        const attackInfo = getAttackIdToInfo(turn, skill_info.skill_id);
+        const attackInfo = getSkillIdToAttackInfo(turn, skill_info.skill_id);
         let unit_od_plus = 0;
         // オギャり状態
         let badies = checkBuffExist(unit_data.buff_list, BUFF_BABIED) ? 20 : 0;
@@ -594,7 +594,7 @@ const getOverDrive = (turn) => {
         }
         let physical = getCharaData(unit_data.style.style_info.chara_id).physical;
         if (skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
-            if (isResist(turn.enemy_info, physical, unit_data.normal_attack_element, skill_info.attack_id)) {
+            if (isResist(turn.enemy_info, physical, unit_data.normal_attack_element, attackInfo?.attack_id)) {
                 unit_od_plus += calcODGain(3, 1, badies);
             }
         } else if (attackInfo) {
@@ -663,11 +663,11 @@ const getOverDrive = (turn) => {
 
         let skill_info = getSkillData(skill_id)
         if (skill_info) {
-            const attackInfo = getAttackIdToInfo(turn, skill_id);
+            const attackInfo = getSkillIdToAttackInfo(turn, skill_id);
             if (attackInfo) {
                 let badies = checkBuffExist(unit_data.buff_list, BUFF_BABIED) ? 20 : 0;
-                const earring = skill_info.attack_id ? getEarringEffectSize(attackInfo.hit_count, unit_data) : 0;
-                if (isResist(turn.enemy_info, physical, attackInfo.attack_element, skill_info.attack_id)) {
+                const earring = attackInfo.attack_id ? getEarringEffectSize(attackInfo.hit_count, unit_data) : 0;
+                if (isResist(turn.enemy_info, physical, attackInfo.attack_element, attackInfo.attack_id)) {
                     let enemy_target = enemy_count;
                     if (attackInfo.range_area == 1) {
                         enemy_target = 1;
@@ -1153,7 +1153,7 @@ function isAloneActivation(buff_info) {
 function consumeBuffUnit(turn_data, unit_data, attack_info, skill_info) {
     let consume_kind = [];
     let consume_count = 2
-    if (skill_info.attack_id) {
+    if (attack_info) {
         // 連撃消費
         getFunnelList(unit_data);
     }
@@ -1454,7 +1454,8 @@ const sortActionSeq = (turn_data) => {
             skill_info: skill_info,
             place_no: place_no
         };
-        if (skill_info.attack_id || skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
+        let attack_info = getSkillIdToAttackInfo(turn_data,skill_id);
+        if (attack_info || skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_seq.push(skill_data);
         } else {
             buff_seq.push(skill_data);
