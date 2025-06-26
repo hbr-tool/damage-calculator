@@ -545,7 +545,7 @@
     {"skill_id":643,"skill_name":"茜色","chara_id":10,"style_id":0,"sp_cost":10,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":644,"skill_name":"トロピカルスクランブル","chara_id":10,"style_id":169,"sp_cost":14,"skill_active":0,"skill_kind":1,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":645,"skill_name":"水影","chara_id":11,"style_id":0,"sp_cost":7,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
-    {"skill_id":646,"skill_name":"邪眼・マリンスラッシュ","chara_id":11,"style_id":170,"sp_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"attribute_conditions":null},
+    {"skill_id":646,"skill_name":"邪眼・マリンスラッシュ","chara_id":11,"style_id":170,"sp_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"attribute_conditions":30},
     {"skill_id":647,"skill_name":"サニートリガー","chara_id":8,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":648,"skill_name":"ビースト・プリズン+","chara_id":12,"style_id":0,"sp_cost":12,"skill_active":0,"skill_kind":2,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"skill_attribute":null,"attribute_conditions":null},

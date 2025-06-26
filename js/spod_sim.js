@@ -990,6 +990,9 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
                     }
                 }
                 let buff = createBuffData(buff_info, use_unit_data);
+                if (buff_info.buff_id == 1037 && unit_data.style.style_info.element == 1) {
+                    buff.rest_turn = 5;
+                }
                 unit_data.buff_list.push(buff);
             });
             break;

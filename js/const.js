@@ -153,6 +153,8 @@ const EFFECT = {
     OVERDRIVEPOINTUP: 14, // ODアップ
     COST_SP_DOWN: 15, // 消費SPダウン
     MORALE: 16, // 士気
+    GIVEATTACKBUFFUP: 17, // 攻撃力バフ強化
+    GIVEDEFFENCEDEBUFFUP: 18, // 防御力デバフ強化
     BREAK_GUARD: 20, // ブレイクガード
     STUN: 21, // スタン
     MISFORTUNE: 22, // 厄
