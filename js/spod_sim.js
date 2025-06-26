@@ -86,7 +86,11 @@ function checkBuffExist(buff_list, buff_kind) {
     let exist_list = buff_list.filter(function (buff_info) {
         return buff_info.buff_kind == buff_kind;
     });
-    return exist_list.length > 0;
+    if (buff_kind == BUFF.MORALE) {
+        return exist_list.length > 0 && exist_list[0].lv >= 6;
+    } else {
+        return exist_list.length > 0;
+    }
 }
 
 // バフ存在チェック
@@ -833,6 +837,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return turn_data.field == FIELD.DARK;
         case CONDITIONS_HAS_CHARGE: // チャージ
             return checkBuffExist(unit_data.buff_list, BUFF_CHARGE);
+        case CONDITIONS.MORALE_OVER_6: // 士気Lv6以上
+            return checkBuffExist(unit_data.buff_list, BUFF.MORALE);
         case CONDITIONS_ENEMY_COUNT_1: // 敵1体
             return turn_data.enemy_count == 1;
         case CONDITIONS_ENEMY_COUNT_2: // 敵2体
@@ -1081,6 +1087,7 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
 
 function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, is_recursion, buff_id) {
     let unit_data = getUnitData(turn_data, target_no);
+    if (unit_data.blank) return;
     let unit_sp = unit_data.sp;
     let minus_sp = 0;
     // クレール・ド・リュンヌ(＋)、収穫祭+は消費SPを加味する。
@@ -1102,8 +1109,10 @@ function skillHealSp(turn_data, target_no, add_sp, limit_sp, use_place_no, is_re
         if (checkAbilityExist(unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 1605) && target_no != use_place_no) {
             skillHealSp(turn_data, target_no, 3, 30, null, true, 0)
         }
-        // お裾分け
-        if (checkAbilityExist(unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 1606) && target_no != use_place_no) {
+        // お裾分け/意気軒昂
+        if ((checkAbilityExist(unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 1606) ||
+            checkAbilityExist(unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 1612))
+            && target_no != use_place_no) {
             let target_list = getTargetList(turn_data, RANGE_ALLY_ALL, 0, target_no, null);
             $.each(target_list, function (index, target_no) {
                 skillHealSp(turn_data, target_no, 2, 30, null, true, 0)
@@ -1454,7 +1463,7 @@ const sortActionSeq = (turn_data) => {
             skill_info: skill_info,
             place_no: place_no
         };
-        let attack_info = getSkillIdToAttackInfo(turn_data,skill_id);
+        let attack_info = getSkillIdToAttackInfo(turn_data, skill_id);
         if (attack_info || skill_info.skill_attribute == ATTRIBUTE_NORMAL_ATTACK) {
             attack_seq.push(skill_data);
         } else {

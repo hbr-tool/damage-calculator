@@ -953,6 +953,10 @@ function getStrengthen(member_info, skill_buff) {
         if (ability_list.includes(509) && $("#ability_all910").prop("checked")) {
             strengthen += 25;
         }
+        // 炎転
+        if (ability_list.includes(513) && $("#ability_all100").prop("checked")) {
+            strengthen += 25;
+        }
         // ハイブースト状態
         if ($("#skill_passive635").prop("checked")) {
             strengthen += 20;
@@ -1494,7 +1498,7 @@ function addAbility(member_info) {
             .addClass("ability")
             .addClass(chara_id_class);
         // スキル強化可変アビリティ
-        if (ability_id == 505 || ability_id == 506 || ability_id == 507 || ability_id == 508 || ability_id == 509) {
+        if (ability_id == 505 || ability_id == 506 || ability_id == 507 || ability_id == 508 || ability_id == 509 || ability_id == 513) {
             input.addClass("strengthen_skill");
             fg_update = true;
         }
@@ -2714,8 +2718,8 @@ function getScoreAttackBonus(kind, member_info) {
     let enemy_info = getEnemyInfo();
     let effect_max = 0;
     let num = $("input[name='rule_tab']:checked").attr("id").split("_")[2];
-    bonus_list.filter((obj) => 
-        obj.score_attack_no == enemy_info.sub_no && 
+    bonus_list.filter((obj) =>
+        obj.score_attack_no == enemy_info.sub_no &&
         (obj.half == 0 || obj.half == num) &&
         obj.effect_kind == kind
     ).forEach((obj) => {

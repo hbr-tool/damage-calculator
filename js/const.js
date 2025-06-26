@@ -323,6 +323,7 @@ const CONDITIONS = {
     SARVANT_OVER3: 27, // 山脇様のしもべ3人以上
     SARVANT_OVER5: 28, // 山脇様のしもべ5人以上
     SARVANT_OVER6: 29, // 山脇様のしもべ6人以上
+    MORALE_OVER_6: 30, // 士気Lv6以上
     OVER_31A_3: 31, // 31A3人以上
     OVER_31C_3: 33, // 31C3人以上
     OVER_31D_3: 34, // 31D3人以上
