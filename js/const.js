@@ -101,6 +101,8 @@ const BUFF = {
     NAGATIVE: 38, // ネガティブ
     YAMAWAKI_SERVANT: 39, // 山脇様のしもべ 
     HIGH_BOOST: 40, // ハイブースト 
+    SHADOW_CLONE : 41, // 影分身
+    MAKEUP : 42, // メイクアップ
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
@@ -140,7 +142,7 @@ const EFFECT_HEALEP = 52; // EP回復
 const EFFECT = {
     ATTACKUP: 1, // 攻撃力アップ
     DEFFENCEDOWN: 2, // 防御力ダウン
-    CRITICAL_UP: 3, // クリティカル率アップ
+    CRITICALRATEUP: 3, // クリティカル率アップ
     CRITICAL_DAMAGE_UP: 4, // クリティカルダメージアップ
     DAMAGERATEUP: 5, // 破壊率上昇量アップ
     FUNNEL: 6, // 連撃数アップ
@@ -163,7 +165,6 @@ const EFFECT = {
     STATUSUP_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
     FIELD_STRENGTHEN: 27, // フィールド強化
-    BUFF_STRENGTHEN: 28, // バフ強化
     ADDITIONALTURN: 29, // 追加ターン
     TOKEN_UP: 30, // トークンアップ
     TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
@@ -171,6 +172,7 @@ const EFFECT = {
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
     YAMAWAKI_SERVANT: 39, // 山脇様のしもべ
     HIGH_BOOST: 40, // ハイブースト状態
+    MAKEUP: 41, // メイクアップ
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
 }
@@ -334,6 +336,7 @@ const CONDITIONS = {
     DIVA_BLESS: 42, // 歌姫の加護
     NOT_DIVA_BLESS: 43, // 歌姫の加護以外
     NOT_NEGATIVE: 44, // ネガティブ以外
+    HAS_MAEKUP: 45, // メイクアップ状態
     ENEMY_COUNT_1: 51, // 敵1体
     ENEMY_COUNT_2: 52, // 敵2体
     ENEMY_COUNT_3: 53, // 敵3体
@@ -411,3 +414,13 @@ const ALONE_ACTIVATION_BUFF_KIND = [
 ]
 /** 単独発動アビリティ */
 const ALONE_ACTIVATION_ABILITY_LIST = [12, 407, 408];
+
+const JEWEL_EXPLAIN = {
+    1 : "スキルダメージの威力を上げる",
+    2 : "回復スキルの効果量を上げる",
+    3 : "スキル攻撃力アップの効果量を上げる",
+    4 : "デバフスキルの効果量を上げる",
+    5 : "クリティカル率上昇スキルの効果量を上げる",
+    6 : "挑発・注目状態：ダメージ軽減",
+    7 : "ダメージ軽減",
+}

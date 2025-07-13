@@ -4,7 +4,7 @@ let select_style_list = Array(6).fill(undefined);
 const SKILL_ID_640 = 640; //ファーマメントブーケショット
 
 // 使用不可スタイル
-const NOT_USE_STYLE = [36];
+const NOT_USE_STYLE = [36, 172];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -315,6 +315,9 @@ function getBuffIconImg(buff_info) {
             break;
         case BUFF.HIGH_BOOST: // ハイブースト状態
             src += "IconHighBoost";
+            break;
+        case BUFF.MAKEUP: // メイクアップ
+            src += "IconMakeup";
             break;
     }
     if (buff_info.buff_element != 0) {
@@ -861,6 +864,8 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return !checkBuffExist(unit_data.buff_list, BUFF_DIVA_BLESS);
         case CONDITIONS_NOT_NEGATIVE: // ネガティブ以外
             return !checkBuffExist(unit_data.buff_list, BUFF_NAGATIVE);
+        case CONDITIONS.HAS_MAEKUP: // メイクアップ
+            return checkBuffExist(unit_data.buff_list, BUFF.MAKEUP);
         case CONDITIONS_SP_UNDER_0_ALL: // SP0以下の味方がいる
             return checkSp(turn_data, RANGE_ALLY_ALL, 0);
         case CONDITIONS.SARVANT_OVER3: // 山脇様のしもべ3人以上
@@ -1342,6 +1347,9 @@ function getBuffKindName(buff_info) {
             break;
         case BUFF.HIGH_BOOST: // ハイブースト状態
             buff_kind_name += "ハイブースト";
+            break;
+        case BUFF.MAKEUP: // メイクアップ
+            buff_kind_name += "メイクアップ";
             break;
         default:
             break;

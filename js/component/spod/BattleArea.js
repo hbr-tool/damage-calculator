@@ -570,6 +570,9 @@ const abilityActionUnit = (turn_data, action_kbn, unit) => {
             case EFFECT.NEGATIVE: // ネガティブ
                 addAbilityBuffUnit(BUFF.NAGATIVE, ability.ability_name, ability.effect_count + 1, target_list, turn_data)
                 break;
+            case EFFECT.MAKEUP: // メイクアップ
+                addAbilityBuffUnit(BUFF.MAKEUP, ability.ability_name, -1, target_list, turn_data)
+                break;
             case EFFECT.HIGH_BOOST: // ハイブースト
                 addAbilityBuffUnit(BUFF.HIGH_BOOST, ability.passive_name, ability.effect_count + 1, target_list, turn_data)
                 target_list.forEach(function (target_no) {
