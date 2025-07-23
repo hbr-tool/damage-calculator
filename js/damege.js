@@ -613,7 +613,9 @@ function calcDamage() {
     damage_detail = new RestGauge();
     critical_detail = new RestGauge();
 
-    let fixed = mindeye * fragile * token * element_field * weak_physical * weak_element * enemy_defence_rate * skill_unique_rate;
+    buff += mindeye + element_field;
+    debuff += fragile;
+    let fixed = token * weak_physical * weak_element * enemy_defence_rate * skill_unique_rate;
     calculateDamage(basePower, attack_info, buff, debuff, fixed, "#damage", "#destruction_last_rate", damage_detail);
     calculateDamage(basePower * 0.9, attack_info, buff, debuff, fixed, "#damage_min", undefined, damage_detail);
     calculateDamage(basePower * 1.1, attack_info, buff, debuff, fixed, "#damage_max", undefined, damage_detail);
@@ -629,14 +631,14 @@ function calcDamage() {
         debuff += dp_debuff;
     }
     $("#mag_debuff").val(convertToPercentage(debuff));
-    $("#mag_element_field").val(convertToPercentage(element_field));
+    // $("#mag_element_field").val(convertToPercentage(element_field));
     $("#mag_special").val(convertToPercentage(special));
     $("#mag_funnel").val(convertToPercentage(funnel_sum));
     $("#mag_physical").val(convertToPercentage(weak_physical));
     $("#mag_element").val(convertToPercentage(weak_element));
     $("#mag_token").val(convertToPercentage(token));
-    $("#mag_mindeye").val(convertToPercentage(mindeye));
-    $("#mag_fragile").val(convertToPercentage(fragile));
+    // $("#mag_mindeye").val(convertToPercentage(mindeye));
+    // $("#mag_fragile").val(convertToPercentage(fragile));
     $("#mag_destruction").val(destruction_rate + "%");
     $("#mag_critical").val(convertToPercentage(critical_buff));
 
