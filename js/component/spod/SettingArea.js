@@ -55,6 +55,8 @@ function getInitBattleData(selectStyleList, saveMember, detailSetting) {
             init_skill_id: 0,
             no_action: false,
             limit_sp: 20,
+            spCostUp: 0,
+            spCostDown: 0,
         };
         unit.place_no = index;
         if (member_info) {
