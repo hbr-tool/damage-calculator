@@ -4,7 +4,7 @@ let select_style_list = Array(6).fill(undefined);
 const SKILL_ID_640 = 640; //ファーマメントブーケショット
 
 // 使用不可スタイル
-const NOT_USE_STYLE = [36, 172, 173];
+const NOT_USE_STYLE = [36, 172];
 // 制限アビリティ
 const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -82,12 +82,12 @@ function checkPassiveExist(passive_list, skill_id) {
 }
 
 // バフ存在チェック
-function checkBuffExist(buff_list, buff_kind) {
+function checkBuffExist(buff_list, buff_kind, lv = 6) {
     let exist_list = buff_list.filter(function (buff_info) {
         return buff_info.buff_kind == buff_kind;
     });
     if (buff_kind == BUFF.MORALE) {
-        return exist_list.length > 0 && exist_list[0].lv >= 6;
+        return exist_list.length > 0 && exist_list[0].lv >= lv;
     } else {
         return exist_list.length > 0;
     }
@@ -586,7 +586,7 @@ const getOverDrive = (turn) => {
             // OD増加
             if (buff_info.buff_kind == BUFF_OVERDRIVEPOINTUP) {
                 // 条件判定
-                if (buff_info.conditions && !judgmentCondition(buff_info.conditions, temp_turn, unit_data, buff_info.skill_id)) {
+                if (buff_info.conditions && !judgmentCondition(buff_info.conditions, buff_info.conditions_id, temp_turn, unit_data, buff_info.skill_id)) {
                     continue;
                 }
                 // サービス・エースが可変
@@ -785,7 +785,7 @@ function getSpCost(turn_data, skill_info, unit) {
 function harfSpSkill(turn_data, skill_info, unit_data) {
     // SP消費半減
     if (skill_info.skill_attribute == ATTRIBUTE_SP_HALF) {
-        if (judgmentCondition(skill_info.attribute_conditions, turn_data, unit_data, skill_info.skill_id)) {
+        if (judgmentCondition(skill_info.attribute_conditions, undefined, turn_data, unit_data, skill_info.skill_id)) {
             return true;
         }
     }
@@ -796,7 +796,7 @@ function harfSpSkill(turn_data, skill_info, unit_data) {
 function ZeroSpSkill(turn_data, skill_info, unit_data) {
     // SP消費0
     if (skill_info.skill_attribute == ATTRIBUTE_SP_ZERO) {
-        if (judgmentCondition(skill_info.attribute_conditions, turn_data, unit_data, skill_info.skill_id)) {
+        if (judgmentCondition(skill_info.attribute_conditions, undefined, turn_data, unit_data, skill_info.skill_id)) {
             return true;
         }
     }
@@ -804,7 +804,7 @@ function ZeroSpSkill(turn_data, skill_info, unit_data) {
 }
 
 // 条件判定
-function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
+function judgmentCondition(conditions, conditionsId, turn_data, unit_data, skill_id) {
     switch (conditions) {
         case CONDITIONS_FIRST_TURN: // 1ターン目
             return turn_data.turn_number == 1;
@@ -840,10 +840,12 @@ function judgmentCondition(conditions, turn_data, unit_data, skill_id) {
             return turn_data.field == FIELD.LIGHT;
         case CONDITIONS.FIELD_DARK: // 闇属性フィールド
             return turn_data.field == FIELD.DARK;
+        case CONDITIONS.HAS_ABILITY: // アビリティ
+            return checkAbilityExist(unit_data[`ability_${ABILIRY_TIMING.OTHER}`], conditionsId);
         case CONDITIONS_HAS_CHARGE: // チャージ
             return checkBuffExist(unit_data.buff_list, BUFF_CHARGE);
         case CONDITIONS.MORALE_OVER_6: // 士気Lv6以上
-            return checkBuffExist(unit_data.buff_list, BUFF.MORALE);
+            return checkBuffExist(unit_data.buff_list, BUFF.MORALE, conditionsId);
         case CONDITIONS_ENEMY_COUNT_1: // 敵1体
             return turn_data.enemy_count == 1;
         case CONDITIONS_ENEMY_COUNT_2: // 敵2体
@@ -909,7 +911,7 @@ function getFieldElement(turn_data) {
 function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
     // 条件判定
     if (buff_info.conditions != null) {
-        if (!judgmentCondition(buff_info.conditions, turn_data, use_unit_data, buff_info.skill_id)) {
+        if (!judgmentCondition(buff_info.conditions, buff_info.conditions_id, turn_data, use_unit_data, buff_info.skill_id)) {
             return;
         }
     }
@@ -1070,6 +1072,10 @@ function addBuffUnit(turn_data, buff_info, place_no, use_unit_data) {
             if (field_turn > 0) {
                 // 天長地久
                 if (checkAbilityExist(use_unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 603)) {
+                    field_turn = 0;
+                }
+                // 天長地久
+                if (checkAbilityExist(use_unit_data[`ability_${ABILIRY_TIMING.OTHER}`], 606) && checkBuffExist(use_unit_data.buff_list, BUFF.MORALE, 6)) {
                     field_turn = 0;
                 }
                 // メディテーション

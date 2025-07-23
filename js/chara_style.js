@@ -107,7 +107,7 @@
     {"style_id":107,"chara_id":103,"rarity":1,"style_name":"Faraway Eden","image_url":"AliceCDefault_R3_Thumbnail.webp","role":7,"element":2,"jewel_type":2,"ability0":1005,"ability1":1101,"ability3":1203},
     {"style_id":108,"chara_id":2,"rarity":1,"style_name":"君を待つ紅玉","image_url":"YIzumiSnowWhite_R3_Thumbnail.webp","role":2,"element":5,"jewel_type":1,"ability0":407,"ability1":1101,"ability3":408},
     {"style_id":109,"chara_id":13,"rarity":1,"style_name":"Daydream Believer","image_url":"BIYamawakiDaydream_R3_Thumbnail.webp","role":1,"element":3,"jewel_type":1,"ability0":7,"ability1":1101,"ability3":1004},
-    {"style_id":110,"chara_id":1,"rarity":1,"style_name":"The feel of the Throne","image_url":"RKayamoriCombat2023_R3_Thumbnail.webp","role":1,"element":5,"element2":1,"jewel_type":1,"ability0":237,"ability00":507,"ability1":1101,"ability3":200},
+    {"style_id":110,"chara_id":1,"rarity":1,"style_name":"The feel of the Throne","image_url":"RKayamoriCombat2023_R3_Thumbnail.webp","role":1,"element":5,"element2":1,"jewel_type":1,"ability0":237,"ability00":507,"ability1":1101,"ability3":200,"ability4":1615},
     {"style_id":111,"chara_id":15,"rarity":1,"style_name":"至高のひととき","image_url":"MTenneWizard_R3_Thumbnail.webp","role":6,"element":4,"jewel_type":4,"ability1":1101,"ability3":1506},
     {"style_id":112,"chara_id":16,"rarity":1,"style_name":"お花見怪人クシダンゴ","image_url":"YBungoDango_R3_Thumbnail.webp","role":2,"element":3,"jewel_type":1,"ability1":1101,"ability3":1004},
     {"style_id":113,"chara_id":11,"rarity":1,"style_name":"ホップ・ステップ・スリップ！","image_url":"KHiiragiWaitress_R3_Thumbnail.webp","role":5,"element":0,"jewel_type":5,"ability0":1111,"ability1":1101,"ability3":1103},

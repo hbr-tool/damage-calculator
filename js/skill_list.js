@@ -554,7 +554,7 @@
     {"skill_id":652,"skill_name":"サマーグレイス","chara_id":30,"style_id":0,"sp_cost":4,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":653,"skill_name":"真夏のひんやりショック！","chara_id":30,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":1,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":654,"skill_name":"ときめきスライダー","chara_id":7,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
-    {"skill_id":655,"skill_name":"くぎづけ♡ラブリービーム","chara_id":7,"style_id":173,"sp_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":null,"attribute_conditions":null},
+    {"skill_id":655,"skill_name":"くぎづけ♡ラブリービーム","chara_id":7,"style_id":173,"sp_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"attribute_conditions":30},
     {"skill_id":656,"skill_name":"ぽかぽかリフレッシュ","chara_id":12,"style_id":0,"sp_cost":3,"skill_active":0,"skill_kind":0,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"skill_attribute":null,"attribute_conditions":null},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9,"skill_attribute":null,"attribute_conditions":null},

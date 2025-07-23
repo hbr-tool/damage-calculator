@@ -318,6 +318,7 @@ const CONDITIONS = {
     FIELD_THUNDER: 17, // 雷属性フィールド
     FIELD_LIGHT: 18, // 光属性フィールド
     FIELD_DARK: 19, // 闇属性フィールド
+    HAS_ABILITY: 20, // アビリティ発動中
     HAS_CHARGE: 21, // チャージ中
     HAS_SHADOW: 22, // 影分身中
     HAS_DODGE: 23, // 回避状態
