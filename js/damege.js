@@ -560,11 +560,11 @@ function calcDamage() {
     let basePower = getBasePower(member_info, stat_up, stat_down);
     let buff = getSumBuffEffectSize(grade_sum);
     let mindeye_buff = getSumEffectSize("mindeye") + getSumEffectSize("servant");
-    let mindeye = isWeak() ? mindeye_buff / 100 + 1 : 1;
+    let mindeye = isWeak() ? mindeye_buff / 100 : 0;
     let debuff = getSumDebuffEffectSize();
-    let fragile = isWeak() ? getSumEffectSize("fragile") / 100 + 1 : 1;
+    let fragile = isWeak() ? getSumEffectSize("fragile") / 100 : 0;
     let token = getSumTokenEffectSize(member_info);
-    let element_field = getSumEffectSize("element_field") / 100 + 1;
+    let element_field = getSumEffectSize("element_field") / 100;
     let weak_physical = $("#enemy_physical_" + attack_info.attack_physical).val() / 100;
     let weak_element = $("#enemy_element_" + attack_info.attack_element).val() / 100;
     let enemy_defence_rate = getEnemyDefenceRate(grade_sum);
