@@ -289,6 +289,7 @@ const SettingArea = () => {
                     null
                     :
                     <div className="setting_area">
+                        <div class="text-base font-bold text-red-500">新システム対応中のため、現在更新を一時停止しています。</div>
                         <div className="unit_setting_area">
                             <input className="w-20" defaultValue="注意事項" role="button" type="button"
                                 onClick={openModal} />
