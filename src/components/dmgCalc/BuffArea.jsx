@@ -12,7 +12,7 @@ import {
     isOnlyUse, isAloneActivation, isOnlyBuff, filteredBuffList, filteredOrb,
     getEnemyResist
 } from "./logic";
-import { getCharaData, getStyleData, getPassiveInfo, getResonanceInfo, getAbilityInfo, deepClone } from "utils/common";
+import { getCharaData, getPassiveInfo, getResonanceInfo, getAbilityInfo, deepClone } from "utils/common";
 import BuffField from "./BuffField";
 import AbilityCheckbox from "./AbilityCheckbox";
 import PassiveCheckbox from "./PassiveCheckbox";
