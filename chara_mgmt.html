@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta content="ヘブンバーンズレッドのキャラクター管理ツールです。" name="description">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@RELI_hevburn" />
+<meta name="twitter:title" content="ヘブバン キャラクター管理ツール" />
+<meta name="twitter:description" content="ヘブンバーンズレッドのキャラクター管理ツールです。" />
+<meta name="" content="https://www.hbr-tool.com/img/summary_card_mgmt.png" />
+<title>ヘブバン キャラクター管理ツール</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/6.2.2/handsontable.full.min.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/mgmt.css">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/6.2.2/handsontable.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+<script src="js/common.js"></script>
+<script src="js/chara_data.js"></script>
+<script src="js/mgmt.js"></script>
+<script>
+  let data;
+  loadStorage();
+  $(function () {
+    initSetting();
+    createGrid();
+    // イベント設定
+    setEventTrigger();
+  });
+</script>
+</head>
+
+<body>
+  <main>
+    <div class="frame static w-screen h-screen overflow-y-scroll">
+      <div class="flex">
+        <div class="main_area mx-auto">
+          <div class="container">
+            <div>
+              <div class="mt-2 flex">
+                <div class="top_flex">
+                  <div>
+                    表示列数
+                  </div>
+                  <select id="display_columns" class="">
+                    <option value="1">1列表示</option>
+                    <option value="2" selected>2列表示</option>
+                  </select>
+                </div>
+                <div class="top_flex">
+                  <input type="radio" name="info_select" id="basic" class="select_info" checked><label
+                    for="basic">基本情報</label>
+                  <input type="radio" name="info_select" id="badge" class="select_info"><label for="badge">称号バッチ</label>
+                </div>
+              </div>
+            </div>
+            <div class="ml-2">
+              <input type="button" id="exportSaveBtn" class="w-24 mt-2 mb-2 default" value="データ出力">
+              <input type="button" id="importSaveBtn" class="w-24 mt-2 mb-2 default" value="データ読込">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="grid_area" class="grid grid-cols-2 mx-auto">
+        <div id="grid1"></div>
+        <div id="grid2"></div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>
