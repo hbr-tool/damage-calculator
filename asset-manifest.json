@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/damage-calculator/static/css/main.fa5ba017.css",
+    "main.css": "/damage-calculator/static/css/main.549cb0cf.css",
     "main.js": "/damage-calculator/static/js/main.f591ad78.js",
     "static/media/frend.jpg": "/damage-calculator/static/media/frend.4e5cc11d24a1b88f2c65.jpg",
     "static/media/KarenSwim2024_R3.webp": "/damage-calculator/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
@@ -726,11 +726,11 @@
     "static/media/dark.webp": "/damage-calculator/static/media/dark.b5452543ed7baa8837c3.webp",
     "static/media/none.webp": "/damage-calculator/static/media/none.6879fc5bb3f6e4e97fc2.webp",
     "static/media/light.webp": "/damage-calculator/static/media/light.40cf475c601964339dea.webp",
-    "main.fa5ba017.css.map": "/damage-calculator/static/css/main.fa5ba017.css.map",
+    "main.549cb0cf.css.map": "/damage-calculator/static/css/main.549cb0cf.css.map",
     "main.f591ad78.js.map": "/damage-calculator/static/js/main.f591ad78.js.map"
   },
   "entrypoints": [
-    "static/css/main.fa5ba017.css",
+    "static/css/main.549cb0cf.css",
     "static/js/main.f591ad78.js"
   ]
 }
