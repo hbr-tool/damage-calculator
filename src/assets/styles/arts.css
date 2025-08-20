@@ -1,0 +1,30 @@
+@media screen and (max-width: 1280px) {
+  .main_area {
+    width: 360px;
+  }
+  .select_arts {
+    width: 60px;
+    height: 86px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .main_area {
+    width: 1110px;
+  }
+  .select_arts {
+    width: 92px;
+    height: 130px;
+  } 
+}
+
+div.arts_frame {
+  height: calc(100svh - 120px);
+}
+
+.arts_troops {
+  margin-top: 5px;
+  margin-left: 3px;
+  display: flex;
+  width: 552px;
+  background-color: black;
+}
