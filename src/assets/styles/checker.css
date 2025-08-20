@@ -2,16 +2,18 @@
   .checker_main_area {
     width: 100%;
   }
+  div.checker_frame {
+    height: calc(100svh - 255px);
+  }
 }
 
 @media screen and (min-width: 848px) {
   .checker_main_area {
     width: 828px;
   }
-}
-
-div.checker_frame {
-  height: calc(100svh - 255px);
+  div.checker_frame {
+    height: calc(100svh - 195px);
+  }
 }
 
 .checker_troops {
