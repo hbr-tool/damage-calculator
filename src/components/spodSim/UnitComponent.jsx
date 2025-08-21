@@ -49,8 +49,9 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     let skillList = unit.skillList
     if (placeNo < 3) {
         skillList = skillList.filter(skill => {
-            if (skill.skill_id === SKILL_ID.WAKING_NIGHT) {
-                // 夜醒
+            // 夜醒,謀略
+            const ADDTIONAL_SKILL_ID = [SKILL_ID.WAKING_NIGHT, SKILL_ID.CONSPIRACY];
+            if (ADDTIONAL_SKILL_ID.includes(skill.skill_id)) {
                 return !turn.additionalTurn;
             }
             if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {

@@ -72,11 +72,11 @@ export function checkSp(turnData, range_area, sp) {
 
 
 // スキルデータ更新
-export const skillUpdate = (turnData, skill_id, placeNo) => {
+export const skillUpdate = (turnData, skillId, placeNo) => {
     const unit = turnData.unitList.filter(unit => unit.placeNo === placeNo)[0];
-    unit.selectSkillId = skill_id;
-    if (skill_id !== 0) {
-        unit.sp_cost = getSpCost(turnData, getSkillData(skill_id), unit);
+    unit.selectSkillId = skillId;
+    if (skillId !== 0) {
+        unit.sp_cost = getSpCost(turnData, getSkillData(skillId), unit);
     } else {
         unit.sp_cost = 0;
     }
@@ -365,7 +365,7 @@ export function startAction(turnData) {
     // 攻撃後に付与されるバフ種
     const ATTACK_AFTER_LIST = [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.CRITICALRATEUP, BUFF.CRITICALDAMAGEUP, BUFF.ELEMENT_CRITICALRATEUP,
     BUFF.ELEMENT_CRITICALDAMAGEUP, BUFF.CHARGE, BUFF.DAMAGERATEUP];
-    const front_cost_list = [];
+    const frontCostList = [];
     for (const skill_data of seq) {
         let skillInfo = skill_data.skillInfo;
         let unitData = getUnitData(turnData, skill_data.placeNo);
@@ -386,7 +386,7 @@ export function startAction(turnData) {
         } else {
             attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
             if (attackInfo) {
-                front_cost_list.push(sp_cost);
+                frontCostList.push(sp_cost);
             }
         }
 
@@ -442,7 +442,7 @@ export function startAction(turnData) {
 
         // 自動追撃
         if (skillId === SKILL.AUTO_PURSUIT) {
-            front_cost_list.filter(cost => cost <= 8).forEach(cost => {
+            frontCostList.filter(cost => cost <= 8).forEach(cost => {
                 abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, unitData)
             });
             return true;
@@ -466,7 +466,7 @@ export function startAction(turnData) {
             if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
                 // ネコジェット・シャテキ後自動追撃
                 abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, unitData)
-                const validCosts = front_cost_list.filter(cost => cost <= 8);
+                const validCosts = frontCostList.filter(cost => cost <= 8);
                 validCosts.slice(0, Math.max(validCosts.length - 1, 0)).forEach(() => {
                     abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, unitData)
                 });
@@ -537,7 +537,7 @@ export const getOverDrive = (turn) => {
     const enemyCount = turn.enemyCount;
     let odPlus = 0;
     const tempTurn = deepClone(turn);
-    const front_cost_list = [];
+    const frontCostList = [];
 
     for (const skill_data of seq) {
         const skillInfo = skill_data.skillInfo;
@@ -585,7 +585,7 @@ export const getOverDrive = (turn) => {
                 default:
                     break;
             }
-            front_cost_list.push(unitData.sp_cost);
+            frontCostList.push(unitData.sp_cost);
             if (!isResist(turn.enemyInfo, physical, attackInfo.attack_element, attackId)) {
                 let enemyTarget = enemyCount;
                 if (attackInfo.range_area === 1) {
@@ -631,8 +631,8 @@ export const getOverDrive = (turn) => {
         if (skill_id === SKILL.AUTO_PURSUIT) {
             if (!isResist(turn.enemyInfo, physical, 0, 0)) {
                 let chara_data = getCharaData(unitData.style.styleInfo.chara_id)
-                front_cost_list.filter(cost => cost <= 8).forEach(cost => {
-                    odPlus += chara_data.pursuit * 2.5
+                frontCostList.filter(cost => cost <= 8).forEach(cost => {
+                    odPlus += chara_data.pursuit * 2.5;
                 });
             }
             return true;
@@ -657,7 +657,7 @@ export const getOverDrive = (turn) => {
                 // ネコジェット・シャテキ後自動追撃
                 if (!isResist(turn.enemyInfo, physical, 0, 0)) {
                     let chara_data = getCharaData(unitData.style.styleInfo.chara_id)
-                    const validCosts = front_cost_list.filter(cost => cost <= 8);
+                    const validCosts = frontCostList.filter(cost => cost <= 8);
                     validCosts.slice(0, Math.max(validCosts.length - 1, 0)).forEach(() => {
                         odPlus += chara_data.pursuit * 2.5;
                     });
@@ -828,7 +828,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             return checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], conditionsId);
         case CONDITIONS.HAS_CHARGE: // チャージ
             return checkBuffExist(unitData.buffList, BUFF.CHARGE);
-        case CONDITIONS.MORALE_OVER_6: // 士気Lv6以上
+        case CONDITIONS.MORALE_OVER_LV: // 士気Lv以上
             return checkBuffExist(unitData.buffList, BUFF.MORALE, conditionsId);
         case CONDITIONS.ENEMY_COUNT: // 敵数指定
             return turnData.enemyCount === conditionsId;
@@ -1142,8 +1142,14 @@ function createBuffData(buffInfo, useUnitData) {
         case BUFF.FRAGILE: // 脆弱
         case BUFF.DEFENSEDP: // DP防御力ダウン 
             // ダブルリフト
-            if (checkAbilityExist(useUnitData[`ability_${ABILIRY_TIMING.OTHER}`], 1516)) {
+            if (checkAbilityExist(useUnitData[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.DOUBLE_LIFT)) {
                 buff.rest_turn++;
+            }
+            // ドミネーション・グラビティ
+            if (buffInfo.skill_id === SKILL_ID.DOMINATION_GRAVITY) {
+                if (useUnitData.useSkillList.filter(value => value === SKILL_ID.DOMINATION_GRAVITY).length >= 3) {
+                    buff.rest_turn++;
+                }
             }
             break;
         case BUFF.FUNNEL: // 連撃
@@ -1849,12 +1855,12 @@ const payCost = (unit) => {
     unit.sp_cost = 0;
 }
 
-const getearringEffectSize = (hit_count, unit) => {
+const getearringEffectSize = (hitCount, unit) => {
     // ドライブ
     if (unit.earringEffectSize !== 0) {
-        hit_count = hit_count < 1 ? 1 : hit_count;
-        hit_count = hit_count > 10 ? 10 : hit_count;
-        return (unit.earringEffectSize - ((unit.earringEffectSize - 5) / 9 * (10 - hit_count)));
+        hitCount = hitCount < 1 ? 1 : hitCount;
+        hitCount = hitCount > 10 ? 10 : hitCount;
+        return (unit.earringEffectSize - ((unit.earringEffectSize - 5) / 9 * (10 - hitCount)));
     }
     return 0;
 }

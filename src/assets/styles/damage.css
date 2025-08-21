@@ -12,6 +12,7 @@ div.footer {
     width: 100%;
     height: calc(125px + env(safe-area-inset-bottom));
     transition: height 0.3s ease;
+    background-color: white;
 }
 
 .display_area {

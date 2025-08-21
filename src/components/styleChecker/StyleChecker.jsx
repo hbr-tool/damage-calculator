@@ -7,7 +7,7 @@ import ReactModal from "react-modal";
 import ModalDownload from './ModalDownload';
 
 // 比較関数
-function compare(a, b) {
+export function compare(a, b) {
     var r = 0;
     if (a.chara_id < b.chara_id) { r = -1; }
     else if (a.chara_id > b.chara_id) { r = 1; }

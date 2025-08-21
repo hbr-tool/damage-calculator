@@ -100,7 +100,7 @@ function getDamageBonus(damage, num, scoreAttack, socreEnemyUnit) {
     } else {
         damageBonus = damageLimitValue * (1 + Math.log(damage / damageLimitValue));
     }
-    return Math.floor(damageBonus * scoreAttack.max_damage_rate / 100);
+    return Math.floor(damageBonus * scoreAttack.max_damage_rate);
 }
 
 export default PredictionScore

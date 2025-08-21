@@ -32,21 +32,25 @@ export const SKILL_ID = {
     RUBY_PERFUME: 635, // ルビー・パヒューム
     BOUQUET_SHOOT: 640, // ファーマメントブーケショット
     SUMMER_FINE_WEATHER: 658, // 夏のひより
+    CONSPIRACY: 669, // 謀略
+    DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
 }
 
 export const BUFF_ID = {
-    MOON_LIGHT: 2607,
-    MEGA_DESTROYER5: 235,
-    MEGA_DESTROYER6: 236
+    MOON_LIGHT: 2607,   // 月光
+    MEGA_DESTROYER5: 235,   // メガデストロイヤー5人
+    MEGA_DESTROYER6: 236,   // メガデストロイヤー5人
 }
 
 export const ABILITY_ID = {
     MOROIUO: 506, // モロイウオ
     EVIL_ARMY: 511, // 悪の軍団は最強でゲス！
     KIREAJI: 602, // キレアジ
+    QUIET_PRESSURE: 515, // 静かなプレッシャー
     ADMIRAL_COMMON: 299, // 指揮行動
     BLUE_SKY: 510, // 蒼天
     QUICK_RECAST: 1506, // クイックリキャスト
+    DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530 // 自動追撃,
 }
 
@@ -226,6 +230,7 @@ export const CONDITIONS = {
     TARGET_COVER: 13, // 集中・挑発状態
     FIELD_NONE: 14, // フィールドなし
     FIELD_ELEMENT: 15, // 属性フィールド
+    HAS_ABILITY: 20, // アビリティ発動中
     HAS_CHARGE: 21, // チャージ中
     HAS_SHADOW: 22, // 影分身中
     HAS_DODGE: 23, // 回避状態
@@ -234,7 +239,7 @@ export const CONDITIONS = {
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
     SARVANT_OVER: 27, // 山脇様のしもべ
     FIRE_MARK: 28, // 火の印
-    MORALE_OVER_6: 30, // 士気Lv6以上
+    MORALE_OVER_LV: 30, // 士気Lv以上
     OVER_31A_3: 31, // 31A3人以上
     OVER_31C_3: 33, // 31C3人以上
     OVER_31D_3: 34, // 31D3人以上

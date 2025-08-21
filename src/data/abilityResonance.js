@@ -7,6 +7,7 @@ const abilityResonance = [
     {"resonance_id":6,"resonance_name":"Get it together!","resonance_text":"自身がかける防御力ダウンの効果量+{0}%","effect_type":18,"effect_limit_0":15,"effect_limit_1":18,"effect_limit_2":20,"effect_limit_3":22,"effect_limit_4":25},
     {"resonance_id":7,"resonance_name":"We Live Better","resonance_text":"自身がかけるスキル攻撃力アップの効果量+{0}%","effect_type":17,"effect_limit_0":15,"effect_limit_1":18,"effect_limit_2":20,"effect_limit_3":22,"effect_limit_4":25},
     {"resonance_id":8,"resonance_name":"Excelsior","resonance_text":"自身の攻撃で敵をブレイクしたとき ODゲージ+{0}%","effect_type":null,"effect_limit_0":12,"effect_limit_1":14,"effect_limit_2":16,"effect_limit_3":18,"effect_limit_4":20},
+    {"resonance_id":9,"resonance_name":"暗躍","resonance_text":"自身のスキル攻撃力+{0}%","effect_type":1,"effect_limit_0":40,"effect_limit_1":48,"effect_limit_2":56,"effect_limit_3":64,"effect_limit_4":70},
 ];
 
 export default abilityResonance;

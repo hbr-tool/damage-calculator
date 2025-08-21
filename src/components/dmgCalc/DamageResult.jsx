@@ -120,6 +120,14 @@ const DamageDetail = ({ mode, enemyInfo, detail, result, dispatch, closeModal })
                     <div className="magnification">×オーバードライブ</div>
                     <input type="text" className="text-center magnification_value" value={detail.overdrive} readOnly />
                 </div>
+                <div>
+                    <div className="magnification">×スキル固有補正</div>
+                    <input type="text" className="text-center magnification_value" value={detail.skillUniqueRate} readOnly />
+                </div>
+                <div>
+                    <div className="magnification">×敵防御力</div>
+                    <input type="text" className="text-center magnification_value" value={detail.enemyDefenceRate} readOnly />
+                </div>
                 {mode === "critical" && (
                     <div>
                         <div className="magnification">×クリティカル倍率</div>

@@ -175,6 +175,8 @@ const styleList = [
     {"style_id":175,"chara_id":48,"rarity":0,"style_name":"夏陽炎の名勝負","image_url":"SKuraSwim2025_R3_Thumbnail","role":1,"element":0,"jewel_type":1,"ability0":1532,"ability1":1101,"ability3":1613},
     {"style_id":176,"chara_id":5,"rarity":0,"style_name":"CODE:Virtual Killer","image_url":"KAsakuraTwins_R3_Thumbnail","role":3,"element":0,"jewel_type":1,"ability0":1144,"ability1":1101,"ability3":269,"ability4":1211},
     {"style_id":177,"chara_id":5,"rarity":9,"style_name":"CODE:Virtual Killer","image_url":"KAsakuraTwinsAnother_R3_Thumbnail","role":3,"element":0,"jewel_type":1,"ability0":607,"ability1":1101,"ability3":1533},
+    {"style_id":178,"chara_id":18,"rarity":1,"style_name":"魔王に仕えし混沌の謀臣","image_url":"MSatsukiEvil_R3_Thumbnail","role":6,"element":0,"jewel_type":4,"ability0":22,"ability00":1404,"ability1":1101,"ability3":515,"ability_resonance":9},
+    {"style_id":179,"chara_id":24,"rarity":0,"style_name":"キラキラサマーへ、ジャンプイン！","image_url":"AMizuharaSwim2025_R3_Thumbnail","role":6,"element":3,"jewel_type":4,"ability0":516,"ability1":1101,"ability3":517},
     {"style_id":5001,"chara_id":1,"rarity":2,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail","role":4,"element":0,"jewel_type":2,"ability3":1109},

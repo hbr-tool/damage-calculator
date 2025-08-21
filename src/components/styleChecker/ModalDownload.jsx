@@ -1,6 +1,7 @@
 import React from "react";
 import styleList from 'data/styleList';
 import selectImg from 'assets/select';
+import { compare } from './StyleChecker';
 
 const ModalDownload = ({ target }) => {
     const [imageColumns, setImageColumns] = React.useState(4);
@@ -9,7 +10,7 @@ const ModalDownload = ({ target }) => {
         let createStyle = styleList.filter(function (style) {
             let select = localStorage.getItem("style_has_" + style.style_id);
             return (style.rarity === 1 || style.rarity === 0) && (target === "all" || select === "1");
-        });
+        }).sort(compare);
         combineImagesWithHatching(createStyle, imageColumns);
     };
     return (

@@ -309,8 +309,9 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
             .filter(ability => ability.chara_id === charaId)
             .filter(ability => ability.checked)
             .filter(ability => {
-                if (ability.ability_id === ABILITY_ID.MOROIUO) {
-                    // モロイウオ
+                // モロイウオ、静かなプレッシャー
+                const COST_UNDER_8 = [ABILITY_ID.MOROIUO, ABILITY_ID.QUIET_PRESSURE];
+                if (COST_UNDER_8.includes(ability.ability_id)) {
                     let spCost = getCostVariable(buff.sp_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap)
                     if (spCost > 8) {
                         return false;
@@ -636,6 +637,8 @@ export function getDamageResult(attackInfo, styleList, state, selectSKillLv,
         token: convertToPercentage(token),
         overdrive: convertToPercentage(overdrive),
         damageRate: state.damageRate + "%",
+        enemyDefenceRate: convertToPercentage(enemyDefenceRate),
+        skillUniqueRate: convertToPercentage(skillUniqueRate),
         criticalRate: convertToPercentage(criticalRate / 100),
         criticalBuff: convertToPercentage(criticalBuff),
     }
@@ -647,6 +650,7 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
     let damageRate = state.damageRate;
     let maxDamageRate = state.maxDamageRate;
     let destruction = Number(enemyInfo.destruction);
+    destruction *= (1 - state.correction.destruction_resist / 100);
     let dpPenetration = state.dpRate.length === 1 || state.dpRate[1] === 0;
     let restDp = Array(state.dpRate.length).fill(0);
     let dpNo = -1;  // 現在の使用DPゲージ番号を取得

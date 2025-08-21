@@ -147,8 +147,8 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
             e.stopPropagation();
             return;
         }
-        let new_unit = getUnitData(turn, placeNo);
-        if (new_unit.blank) {
+        let newUnit = getUnitData(turn, placeNo);
+        if (newUnit.blank) {
             return;
         }
         // 追加ターンの制約
@@ -156,38 +156,38 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
             if (2 < placeNo) {
                 return;
             }
-            if (!new_unit.additionalTurn) {
+            if (!newUnit.additionalTurn) {
                 return;
             }
         }
         let userOperation = turn.userOperation;
-        let old_placeNo = userOperation.selectedPlaceNo;
+        let oldPlaceNo = userOperation.selectedPlaceNo;
         let selectSkill = userOperation.selectSkill;
         let placeStyle = userOperation.placeStyle;
         let render = false;
-        if (old_placeNo !== -1) {
-            if (old_placeNo !== placeNo) {
-                let old_unit = getUnitData(turn, old_placeNo)
-                if (new_unit && old_unit) {
-                    new_unit.placeNo = old_placeNo;
-                    old_unit.placeNo = placeNo;
+        if (oldPlaceNo !== -1) {
+            if (oldPlaceNo !== placeNo) {
+                let oldUnit = getUnitData(turn, oldPlaceNo)
+                if (newUnit && oldUnit) {
+                    newUnit.placeNo = oldPlaceNo;
+                    oldUnit.placeNo = placeNo;
                 }
-                if (placeNo <= 2 && 3 <= old_placeNo) {
+                if (placeNo <= 2 && 3 <= oldPlaceNo) {
                     // 前衛と後衛の交換
-                    exchangeUnit(new_unit, old_unit, selectSkill);
-                } else if (3 <= placeNo && old_placeNo <= 2) {
+                    exchangeUnit(newUnit, oldUnit, selectSkill);
+                } else if (3 <= placeNo && oldPlaceNo <= 2) {
                     // 後衛と前衛の交換
-                    exchangeUnit(old_unit, new_unit, selectSkill);
+                    exchangeUnit(oldUnit, newUnit, selectSkill);
                 } else {
                     // 前衛同士/後衛同士
                     const tmp_skill = selectSkill[placeNo];
-                    selectSkill[placeNo] = selectSkill[old_placeNo]
-                    selectSkill[old_placeNo] = tmp_skill;
+                    selectSkill[placeNo] = selectSkill[oldPlaceNo]
+                    selectSkill[oldPlaceNo] = tmp_skill;
                 }
 
                 const tmp_style = placeStyle[placeNo];
-                placeStyle[placeNo] = placeStyle[old_placeNo]
-                placeStyle[old_placeNo] = tmp_style;
+                placeStyle[placeNo] = placeStyle[oldPlaceNo]
+                placeStyle[oldPlaceNo] = tmp_style;
                 render = true;
             }
             placeNo = -1;
@@ -217,6 +217,8 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
         userOperation.placeStyle[placeNo] = styleId;
         let unit = turn.unitList.filter(unit => unit.placeNo === placeNo)[0];
         changeStyleInfo(unit, styleId);
+        userOperation.selectSkill[placeNo].skill_id = unit.initSkillId;
+        skillUpdate(turn, unit.initSkillId, placeNo);
         reRender(userOperation, true);
     }
 
