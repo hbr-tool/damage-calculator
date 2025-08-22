@@ -295,13 +295,15 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
                         break;
                 }
             })
-        resonanceList.forEach(resonance => {
-            if (resonance.effect_type === EFFECT.GIVEATTACKBUFFUP) {
-                const limitCount = resonance.limitCount;
-                const effectSize = resonance[`effect_limit_${limitCount}`];
-                strengthen += effectSize;
-            }
-        })
+        resonanceList
+            .filter(resonance => resonance.charaId === charaId)
+            .forEach(resonance => {
+                if (resonance.effect_type === EFFECT.GIVEATTACKBUFFUP) {
+                    const limitCount = resonance.limitCount;
+                    const effectSize = resonance[`effect_limit_${limitCount}`];
+                    strengthen += effectSize;
+                }
+            })
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
     if (KIND_DEFENSEDOWN.includes(buff.buff_kind)) {
@@ -343,13 +345,15 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
                         break;
                 }
             })
-        resonanceList.forEach(resonance => {
-            if (resonance.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
-                const limitCount = resonance.limitCount;
-                const effectSize = resonance[`effect_limit_${limitCount}`];
-                strengthen += effectSize;
-            }
-        })
+        resonanceList
+            .filter(resonance => resonance.charaId === charaId)
+            .forEach(resonance => {
+                if (resonance.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
+                    const limitCount = resonance.limitCount;
+                    const effectSize = resonance[`effect_limit_${limitCount}`];
+                    strengthen += effectSize;
+                }
+            })
     }
     // 防御ダウン以外のデバフスキル
     if ([BUFF.FRAGILE, BUFF.RESISTDOWN].includes(buff.buff_kind)) {
@@ -888,7 +892,6 @@ function getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSett
         }
     })
 
-
     // 降順でソート
     funnel_list.sort(function (a, b) {
         return b - a;
@@ -1090,14 +1093,16 @@ function getSumAbilityEffectSize(handlers, effectType) {
         }
     });
 
-    resonanceList.forEach(resonance => {
-        if (resonance.effect_type === effectType ||
-            ([EFFECT.ATTACKUP, EFFECT.DAMAGERATEUP].includes(effectType) && (resonance.effect_type === EFFECT.ATTACKUP_AND_DAMAGERATEUP))) {
-            const limitCount = resonance.limitCount;
-            const effectSize = resonance[`effect_limit_${limitCount}`];
-            abilityEffectSize += effectSize;
-        }
-    })
+    resonanceList
+        .filter(resonance => resonance.charaId === memberInfo.styleInfo.chara_id)
+        .forEach(resonance => {
+            if (resonance.effect_type === effectType ||
+                ([EFFECT.ATTACKUP, EFFECT.DAMAGERATEUP].includes(effectType) && (resonance.effect_type === EFFECT.ATTACKUP_AND_DAMAGERATEUP))) {
+                const limitCount = resonance.limitCount;
+                const effectSize = resonance[`effect_limit_${limitCount}`];
+                abilityEffectSize += effectSize;
+            }
+        })
     return abilityEffectSize;
 }
 

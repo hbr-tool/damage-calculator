@@ -665,6 +665,7 @@ function generateResonanceList(styleList, attackInfo) {
                             return;
                         }
                     }
+                    resonance.charaId = charaId;
                     resonance.charaName = charaName;
                     resonance.limitCount = support.limitCount;
                     resonanceList.push(resonance);
