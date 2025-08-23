@@ -133,7 +133,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
         if (checked) {
             startOverDrive(turn, overDriveLevel);
             userOperation.kbAction = KB_NEXT.ACTION;
-            userOperation.overDriveLevel = turn.overDriveLevel;;
+            userOperation.overDriveLevel = overDriveLevel;
         } else {
             removeOverDrive(turn);
         }
