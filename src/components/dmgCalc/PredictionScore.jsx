@@ -89,12 +89,7 @@ function getDamageBonus(damage, num, scoreAttack, socreEnemyUnit) {
     // ダメージ上限
     damage = damage > 2_000_000_000 ? 2_000_000_000 : damage;
     let damageBonus;
-    let damageLimitValue;
-    if (scoreAttack.enemy_count === 1) {
-        damageLimitValue = DAMAGE_LIMIT1[num];
-    } else {
-        damageLimitValue = DAMAGE_LIMIT2[num];
-    }
+    let damageLimitValue = scoreAttack["damage_limit"][num - 1]
     if (damage <= damageLimitValue) {
         damageBonus = damage;
     } else {
