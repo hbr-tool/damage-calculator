@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.7000d09e.css",
-    "main.js": "/static/js/main.5d571c76.js",
+    "main.js": "/static/js/main.91f4663f.js",
     "static/media/frend.jpg": "/static/media/frend.4e5cc11d24a1b88f2c65.jpg",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -731,10 +731,10 @@
     "static/media/none.webp": "/static/media/none.6879fc5bb3f6e4e97fc2.webp",
     "static/media/light.webp": "/static/media/light.40cf475c601964339dea.webp",
     "main.7000d09e.css.map": "/static/css/main.7000d09e.css.map",
-    "main.5d571c76.js.map": "/static/js/main.5d571c76.js.map"
+    "main.91f4663f.js.map": "/static/js/main.91f4663f.js.map"
   },
   "entrypoints": [
     "static/css/main.7000d09e.css",
-    "static/js/main.5d571c76.js"
+    "static/js/main.91f4663f.js"
   ]
 }
