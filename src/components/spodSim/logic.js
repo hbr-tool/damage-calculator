@@ -823,7 +823,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
         case CONDITIONS.FIELD_NONE: // フィールド無し
             return [FIELD.NORMAL, FIELD.RICE, FIELD.SANDSTORM].includes(turnData.field);
         case CONDITIONS.FIELD_ELEMENT: // 属性フィールド
-            return turnData.field === conditionsId;
+            return conditionsId ? turnData.field === conditionsId : getFieldElement(turnData) !== 0;
         case CONDITIONS.HAS_ABILITY: // アビリティ
             return checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], conditionsId);
         case CONDITIONS.HAS_CHARGE: // チャージ
@@ -1997,6 +1997,11 @@ const abilityActionUnit = (turnData, action_kbn, unit) => {
             case "敵のバフ解除":
             case "ブレイク中":
                 return;
+            case CONDITIONS.FIELD_ELEMENT: // フィールド属性
+                if (!judgmentCondition(ability.conditions, ability.conditions_id, turnData, unit, null)) {
+                    return true;
+                }
+                break;
             default:
                 break;
         }

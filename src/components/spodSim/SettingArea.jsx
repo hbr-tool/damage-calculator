@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import ReactModal from "react-modal";
 import { ROLE, BUFF } from "utils/const";
-import { ABILIRY_TIMING, NOT_USE_STYLE, CONSTRAINTS_ABILITY } from "./const";
+import { ABILIRY_TIMING, NOT_USE_STYLE, CONSTRAINTS_ABILITY, CONSTRAINTS_PASSIVE } from "./const";
 import { checkPassiveExist, recreateTurnData, initTurn, abilityAction, setUserOperation } from "./logic";
 import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, deepClone } from "utils/common";
 import { useStyleList } from "components/StyleListProvider";
@@ -60,7 +60,7 @@ const reducer = (state, action) => {
 };
 
 // 戦闘初期データ作成
-function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraints) {
+function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraintsAbility, setConstraintsPassive) {
     // 初期データ作成
     let turnInit = {
         turnNumber: 0,
@@ -84,7 +84,8 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         userOperation: {}
     }
     let unitList = [];
-    let constraintsList = [];
+    let constraintsAbility = [];
+    let constraintsPassive = [];
 
     let initSpAdd = Number(detailSetting.initSpAdd);
     // スタイル情報を作成
@@ -163,17 +164,20 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                         return;
                     }
                     if (CONSTRAINTS_ABILITY.includes(abilityInfo.ability_id)) {
-                        constraintsList.push(abilityInfo.ability_id);
+                        constraintsAbility.push(abilityInfo.ability_id);
                     }
                     unit[`ability_${abilityInfo.activation_timing}`].push(abilityInfo);
                 }
             });
             unit.passiveSkillList.forEach(skill => {
-                let passive_info = getPassiveInfo(skill.skill_id);
-                if (!passive_info) {
+                let passiveInfo = getPassiveInfo(skill.skill_id);
+                if (!passiveInfo) {
                     return;
                 }
-                unit[`ability_${passive_info.activation_timing}`].push(passive_info);
+                if (CONSTRAINTS_PASSIVE.includes(skill.skill_id)) {
+                    constraintsPassive.push(skill.skill_id);
+                }
+                unit[`ability_${passiveInfo.activation_timing}`].push(passiveInfo);
             });
             if (member.morale > 0) {
                 let morale = {
@@ -213,7 +217,8 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
     abilityAction(ABILIRY_TIMING.BATTLE_START, turnInit);
     setUserOperation(turnInit);
 
-    setConstraints(constraintsList);
+    setConstraintsAbility(constraintsAbility);
+    setConstraintsPassive(constraintsPassive);
     return turnInit;
 }
 
@@ -261,7 +266,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
     let enemyInfo = getEnemyInfo(enemyClass, enemySelect);
 
     // 戦闘開始前処理
-    const startBattle = (update, setUpdate, setConstraints) => {
+    const startBattle = (update, setUpdate, setConstraintsAbility, setConstraintsPassive) => {
         if (!checkStartBattle(styleList)) {
             return;
         }
@@ -269,7 +274,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         /** 戦闘開始処理 */
         // 初期データ作成
         let turnInit = getInitBattleData(
-            styleList.selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraints);
+            styleList.selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraintsAbility, setConstraintsPassive);
         // 制約事項更新
         setUpdate(update + 1);
         // 初期処理
@@ -280,7 +285,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
     };
 
     // 戦闘開始前処理
-    const restartBattle = (update, setUpdate, setConstraints) => {
+    const restartBattle = (update, setUpdate, setConstraintsAbility, setConstraintsPassive) => {
         if (!checkStartBattle(styleList)) {
             return;
         }
@@ -289,7 +294,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         const userOperationList = simProc.turnList.map(turn => turn.userOperation);
         // 初期データ作成
         let turnInit = getInitBattleData(
-            styleList.selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraints);
+            styleList.selectStyleList, enemyInfo, saveStyle, detailSetting, setConstraintsAbility, setConstraintsPassive);
         // 制約事項更新
         setUpdate(update + 1);
         let turnList = [];
@@ -302,7 +307,8 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
     const openModal = () => setModalIsOpen(true);
     const closeModal = () => setModalIsOpen(false);
     const [update, setUpdate] = useState(0);
-    const [constraints, setConstraints] = useState([]);
+    const [constraintsAbility, setConstraintsAbility] = useState([]);
+    const [constraintsPassive, setConstraintsPassive] = useState([]);
 
     const loadData = (saveData, key, setKey) => {
         // 部隊情報上書き
@@ -326,7 +332,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         setStyleList({ ...styleList, selectStyleList: updatedStyleList });
         // 初期データ作成
         let turnInit = getInitBattleData(
-            updatedStyleList, enemyInfo, saveStyle, detailSetting, setConstraints);
+            updatedStyleList, enemyInfo, saveStyle, detailSetting, setConstraintsAbility, setConstraintsPassive);
         // 制約事項更新
         setKey(key + 1);
         let turnList = [];
@@ -375,14 +381,14 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
                         </div>
                         <div className="flex justify-center mt-2 text-sm">
                             <input className="battle_start" defaultValue="戦闘開始" type="button" onClick={e =>
-                                startBattle(update, setUpdate, setConstraints)} />
+                                startBattle(update, setUpdate, setConstraintsAbility, setConstraintsPassive)} />
                             {settingUpdate &&
                                 <input className="battle_setting ml-4" defaultValue="設定のみ反映" type="button" onClick={e =>
-                                    restartBattle(update, setUpdate, setConstraints)} />
+                                    restartBattle(update, setUpdate, setConstraintsAbility, setConstraintsPassive)} />
                             }
                         </div>
                         <div>
-                            <ConstraintsList constraints={constraints} />
+                            <ConstraintsList constraintsAbility={constraintsAbility} constraintsPassive={constraintsPassive} />
                         </div>
                         <div>
                             <ReactModal

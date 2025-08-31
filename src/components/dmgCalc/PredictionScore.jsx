@@ -1,5 +1,5 @@
 import React from 'react';
-import { getScoreAttack, NO_BREAK_BONUS, LEVEL_BONUS, TURN_BONUS, DAMAGE_LIMIT1, DAMAGE_LIMIT2 } from "data/scoreData";
+import { getScoreAttack, NO_BREAK_BONUS, LEVEL_BONUS, TURN_BONUS } from "data/scoreData";
 
 const PredictionScore = ({ damageResult, state }) => {
     let enemyInfo = state.enemyInfo

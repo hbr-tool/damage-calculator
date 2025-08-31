@@ -15,7 +15,6 @@ export const ABILIRY_TIMING = {
     OTHER: 99,
 }
 
-
 // 使用不可スタイル
 export const NOT_USE_STYLE = [36, 172];
 // 制限アビリティ
@@ -28,6 +27,11 @@ export const CONSTRAINTS_ABILITY = [
     1523, // アンコール
     1525, // ポジショニング
     1531, // 鋒矢
+];
+// 制限パッシブ
+export const CONSTRAINTS_PASSIVE = [
+    664, // BeatDown();
+    668, // 名探偵は明るく照らす
 ];
 // 謎の処理順序
 export const ACTION_ORDER = [1, 0, 2, 3, 4, 5];

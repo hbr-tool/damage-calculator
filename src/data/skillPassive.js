@@ -19,7 +19,10 @@ const skillPassive = [
     {"skill_id":626,"passive_name":"千里眼","passive_explan":"自身がEXスキル使用後オーバードライブゲージ+10%","passive_short_explan":"","effect_type":14,"activation_timing":8,"activation_place":3,"range_area":99,"target_element":0,"effect_size":10},
     {"skill_id":635,"passive_name":"ルビー・パフューム","passive_explan":"バトル開始時 味方全体をハイブースト状態にする(ターン永続)さらにSPの上限が30になる","passive_short_explan":"味方全体をハイブースト状態にする","effect_type":40,"activation_timing":0,"activation_place":3,"range_area":6,"target_element":0,"effect_size":0},
     {"skill_id":658,"passive_name":"夏のひより","passive_explan":"バトル開始時 火属性スタイルに火の印を付与する(ターン永続/解除不可)","passive_short_explan":"火属性スタイルに火の印を付与する","effect_type":43,"activation_timing":0,"activation_place":3,"range_area":6,"target_element":1,"effect_size":0},
+    {"skill_id":664,"passive_name":"BeatDown();","passive_explan":"自身の攻撃で敵をブレイクしたとき前衛のSPが2上昇","passive_short_explan":"","effect_type":0,"activation_timing":0,"activation_place":0,"range_area":0,"target_element":0},
     {"skill_id":665,"passive_name":"めつるもまをまかな","passive_explan":"自身の連撃数(中ダメージ)を常時2回上げる [単独発動]","passive_short_explan":"自身の連撃数(中ダメージ)を常時2回上げる [単独発動]","effect_type":10,"activation_timing":0,"activation_place":1,"range_area":7,"target_element":0,"effect_size":12,"effect_count":2},
+    {"skill_id":666,"passive_name":"光彩陸離のスペクトル","passive_explan":"ターン開始時 元素属性強化フィールドが展開されていると自身のSP+1","passive_short_explan":"","effect_type":12,"activation_timing":1,"activation_place":3,"range_area":7,"target_element":0,"effect_size":1,"conditions":15},
+    {"skill_id":668,"passive_name":"名探偵は明るく照らす","passive_explan":"自身が敵のバフを解除したときオーバードライブゲージ+30%","passive_short_explan":"","effect_type":0,"activation_timing":0,"activation_place":0,"range_area":0,"target_element":0},
 ];
 
 export default skillPassive;
