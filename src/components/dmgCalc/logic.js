@@ -60,11 +60,12 @@ function convertToPercentage(value) {
 // ピアス効果量取得
 function getEarringEffectSize(otherSetting, type, hitCount) {
     hitCount = hitCount < 1 ? 1 : hitCount;
+    hitCount = hitCount > 10 ? 10 : hitCount;
     let earring = otherSetting.earring.split("_");
     if (earring.length === 2) {
         if (earring[0] === type) {
             let effectSize = Number(earring[1]);
-            return (effectSize - (10 / 9 * (hitCount - 1)));
+            return (effectSize - ((effectSize - 5) / 9 * (hitCount - 1)));
         }
     }
     return 0;
