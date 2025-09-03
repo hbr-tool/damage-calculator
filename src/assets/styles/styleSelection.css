@@ -1,0 +1,155 @@
+.modal_inner {
+  border-top: 5px solid #5bc8ac;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 10px;
+  height: 90vh;
+  max-width: 800px;
+  min-width: 350px;
+  width: 80vw;
+}
+
+.modal_inner_headline {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.search_result_area {
+  height: calc(100% - 190px);
+  overflow-y: scroll;
+}
+
+input[type="button"].role {
+  width: 80px;
+  font-size: 14px;
+  color: #fff;
+  background: #7f7fff;
+  border-radius: 10vh;
+  margin: 2px;
+}
+
+input[type="button"].role:hover {
+  background: #b1b1f5;
+}
+
+hr.line {
+  height: 5px;
+  background-color: #888;
+  width: 100%;
+  border: none;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.narrow_buff {
+    border: solid 1px #000;
+    height: 21px;
+}
+
+.stylelist > .troops {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 5px;
+  display: flex;
+}
+
+.narrow_area {
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+.translucent {
+  opacity: 0.3;
+}
+
+.select_style_list {
+  cursor: pointer;
+}
+
+.rearity_area {
+  display: flex;
+}
+
+@media screen and (max-width: 768px) {
+  .select_style_list {
+    width: 48px;
+    height: 48px;
+  }
+
+  .rearity_area {
+    width: 300px;
+  }
+
+  .narrow_buff {
+    width: 100px;
+  }
+
+  .emblem {
+    width: 48px;
+    height: 48px;
+  }
+
+  input[type='image'].narrow {
+    width: 32px;
+    height: 32px;
+  }
+
+  input.remove_btn {
+    width: 50px;
+    height: 40px;
+    line-height: 28px;
+    font-size: 1rem;
+    border-radius: 100vh;
+  }
+
+  .search_result_area {
+    height: calc(100% - 280px);
+  }
+
+  input.role {
+    width: 60px;
+    font-size: 10px;
+    border-radius: 8vh;
+  }
+
+  .narrow_element {
+    width: 300px;
+  }
+
+  .rarity {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .select_style_list {
+    width: 64px;
+    height: 64px;
+  }
+
+  .emblem {
+    width: 64px;
+    height: 64px;
+  }
+
+  input[type='image'].narrow {
+    width: 48px;
+    height: 48px;
+  }
+
+  input.remove_btn {
+    width: 100px;
+    font-size: 20px;
+    border-radius: 100vh;
+  }
+
+  .narrow_element {
+    width: 480px;
+  }
+
+  .rarity {
+    width: 48px;
+    height: 48px;
+  }
+}

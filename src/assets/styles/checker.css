@@ -1,0 +1,51 @@
+@media screen and (max-width: 848px) {
+  .checker_main_area {
+    width: 100%;
+  }
+  div.checker_frame {
+    height: calc(100svh - 255px);
+  }
+}
+
+@media screen and (min-width: 848px) {
+  .checker_main_area {
+    width: 828px;
+  }
+  div.checker_frame {
+    height: calc(100svh - 195px);
+  }
+}
+
+.checker_troops {
+  margin-top: 10px;
+  display: flex;
+}
+
+input[type="button"].checker_default {
+  font-size: 16px;
+  height: 26px;
+}
+
+input[type="button"].btn_post {
+  font-size: 20px;
+  width: 200px;
+  height: 40px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+input[type="button"].btn_download {
+  font-size: 16px;
+  width: 100px;
+  height: 24px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+footer {
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: calc(120px + env(safe-area-inset-bottom));
+}
