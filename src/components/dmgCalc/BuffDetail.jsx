@@ -15,10 +15,11 @@ const BUFF_KIND_TO_JEWEL_TYPE = {
     [BUFF.ELEMENT_ATTACKUP]: JEWEL_TYPE.SKILL_ATTACKUP,
     [BUFF.CRITICALRATEUP]: JEWEL_TYPE.CRITICALRATE_UP,
     [BUFF.ELEMENT_CRITICALRATEUP]: JEWEL_TYPE.CRITICALRATE_UP,
+    [BUFF.ETERNAL_OARH]: JEWEL_TYPE.SKILL_ATTACKUP,
 };
 
 const BUFF_LIST = [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.MINDEYE, BUFF.CHARGE,
-BUFF.CRITICALRATEUP, BUFF.ELEMENT_CRITICALRATEUP];
+BUFF.CRITICALRATEUP, BUFF.ELEMENT_CRITICALRATEUP, BUFF.ETERNAL_OARH];
 
 const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuffSettingMap,
     abilitySettingMap, passiveSettingMap, resonanceList, closeModal }) => {
@@ -57,7 +58,7 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     }
     let status = getStatus(buffInfo, memberInfo, statUp)
 
-    const effectSize = getEffectSize(styleList, buffInfo, buffSetting, memberInfo, state, 
+    const effectSize = getEffectSize(styleList, buffInfo, buffSetting, memberInfo, state,
         abilitySettingMap, passiveSettingMap, resonanceList);
 
     const jpnName = ["", "力", "器用さ", "体力", "精神", "知性", "運"];
@@ -202,50 +203,54 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
                     <div className="text-right text-sm">※デバフ強化適用前の効果量です</div>
                 </>
             }
-            {buffInfo.param_limit !== 0 && buffInfo.min_power !== buffInfo.max_power && (
-                <>
-                    <div className="mt-2">
-                        <span className="damage_label">使用者情報</span>
-                    </div>
-                    <div className="w-[350px] mx-auto grid grid-cols-2 text-center">
-                        <span>ステータス</span>
-                        <span>{Math.floor(status * 100) / 100}</span>
-                        {isJewel &&
-                            <>
-                                <span>宝珠強化</span>
-                                <span className="explain">{`${JEWEL_EXPLAIN[memberInfo.styleInfo.jewel_type]}(Lv${memberInfo.jewelLv})`}</span>
-                            </>
-                        }
-                        <span>闘志</span>
-                        <div className="text-center status_checkbox">
-                            <input type="checkbox" id="fightingspirit" checked={buffSetting.collect?.fightingspirit}
-                                onChange={(e) => changeBuffSetting("fightingspirit", e.target.checked)}
-                            />
-                            <label htmlFor="fightingspirit" className="checkbox01"></label>
-                        </div>
-                        {isDebuff &&
-                            <>
-                                <span>厄</span>
-                                <div className="text-center status_checkbox">
-                                    <input type="checkbox" id="misfortune" checked={buffSetting.collect?.misfortune}
-                                        onChange={(e) => changeBuffSetting("misfortune", e.target.checked)}
-                                    />
-                                    <label htmlFor="misfortune" className="checkbox01"></label>
-                                </div>
-                                <span>ハッキング</span>
-                                <div className="text-center status_checkbox">
-                                    <input type="checkbox" id="hacking" checked={buffSetting.collect?.hacking}
-                                        onChange={(e) => changeBuffSetting("hacking", e.target.checked)}
-                                    />
-                                    <label htmlFor="hacking" className="checkbox01"></label>
-                                </div>
-                            </>
-                        }
-                        <span>最終効果量</span>
-                        <span>{Math.floor(effectSize * 100) / 100}%</span>
-                    </div>
-                </>
-            )}
+            {/* {buffInfo.param_limit !== 0 && buffInfo.min_power !== buffInfo.max_power && ( */}
+            <>
+                <div className="mt-2">
+                    <span className="damage_label">使用者情報</span>
+                </div>
+                <div className="w-[350px] mx-auto grid grid-cols-2 text-center">
+                    {buffInfo.ref_status_1 !== 0 && buffInfo.min_power !== buffInfo.max_power &&
+                        <>
+                            <span>ステータス</span>
+                            <span>{Math.floor(status * 100) / 100}</span>
+                            {isJewel &&
+                                <>
+                                    <span>宝珠強化</span>
+                                    <span className="explain">{`${JEWEL_EXPLAIN[memberInfo.styleInfo.jewel_type]}(Lv${memberInfo.jewelLv})`}</span>
+                                </>
+                            }
+                            <span>闘志</span>
+                            <div className="text-center status_checkbox">
+                                <input type="checkbox" id="fightingspirit" checked={buffSetting.collect?.fightingspirit}
+                                    onChange={(e) => changeBuffSetting("fightingspirit", e.target.checked)}
+                                />
+                                <label htmlFor="fightingspirit" className="checkbox01"></label>
+                            </div>
+                            {isDebuff &&
+                                <>
+                                    <span>厄</span>
+                                    <div className="text-center status_checkbox">
+                                        <input type="checkbox" id="misfortune" checked={buffSetting.collect?.misfortune}
+                                            onChange={(e) => changeBuffSetting("misfortune", e.target.checked)}
+                                        />
+                                        <label htmlFor="misfortune" className="checkbox01"></label>
+                                    </div>
+                                    <span>ハッキング</span>
+                                    <div className="text-center status_checkbox">
+                                        <input type="checkbox" id="hacking" checked={buffSetting.collect?.hacking}
+                                            onChange={(e) => changeBuffSetting("hacking", e.target.checked)}
+                                        />
+                                        <label htmlFor="hacking" className="checkbox01"></label>
+                                    </div>
+                                </>
+                            }
+                        </>
+                    }
+                    <span>最終効果量</span>
+                    <span>{Math.floor(effectSize * 100) / 100}%</span>
+                </div>
+            </>
+            {/* )} */}
             {abilityList.length > 0 &&
                 <>
                     <div className="mt-2">

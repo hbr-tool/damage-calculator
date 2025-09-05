@@ -34,6 +34,7 @@ export const BUFF_KBN = {
     33: "babied",
     39: "servant",
     41: "shadow_clone",
+    44: "curry",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -207,6 +208,8 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.SHADOW_CLONE: // 影分身
                 return 30;
             case BUFF.ARROWCHERRYBLOSSOMS: // 桜花の矢
+                return 50;
+            case BUFF.CURRY: // カリー
                 return 50;
             default:
                 break;

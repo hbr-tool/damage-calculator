@@ -308,6 +308,9 @@ export function getBuffIconImg(buffInfo) {
         case BUFF.FIRE_MARK: // 火の印
             src += "IconFireMark";
             break;
+        case BUFF.CURRY: // カリー
+            src += "IconCurry";
+            break;
         default:
             break;
     }
@@ -934,6 +937,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, use_unitData) {
         case BUFF.DIVA_BLESS: // 歌姫の加護
         case BUFF.SHREDDING: // 速弾き
         case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
+        case BUFF.CURRY: // カリー
             // バフ追加
             targetList = getTargetList(turnData, buffInfo.range_area, buffInfo.target_element, placeNo, use_unitData.buffTargetCharaId);
             if (buffInfo.buff_kind === BUFF.ATTACKUP || buffInfo.buff_kind === BUFF.ELEMENT_ATTACKUP) {
@@ -1351,8 +1355,14 @@ export function getBuffKindName(buffInfo) {
         case BUFF.HIGH_BOOST: // ハイブースト状態
             buff_kind_name += "ハイブースト";
             break;
-        case BUFF.MAKEUP: // メイクアップ
+        case BUFF.MAKEUP:
             buff_kind_name += "メイクアップ";
+            break;
+        case BUFF.FIRE_MARK:
+            buff_kind_name += "火の印";
+            break;
+        case BUFF.CURRY:
+            buff_kind_name += "カリー";
             break;
         default:
             break;

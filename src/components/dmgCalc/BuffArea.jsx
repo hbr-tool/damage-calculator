@@ -6,7 +6,7 @@ import {
     , CHARA_ID, STYLE_ID, BUFF_ID, ABILITY_ID
 } from "utils/const";
 import {
-    DEBUFF_LIST, TROOP_KBN,
+    DEBUFF_LIST, TROOP_KBN, BUFF_KBN,
     getCharaIdToMember, getEffectSize, getSumEffectSize,
     getBuffKey, getBestBuffKeys, checkDuplicationChara,
     isOnlyUse, isAloneActivation, isOnlyBuff, filteredBuffList, filteredOrb,
@@ -21,35 +21,6 @@ import BuffBulkSetting from "./BuffBulkSetting";
 import BuffDetail from "./BuffDetail";
 import skillList from "data/skillList";
 import skillBuff from "data/skillBuff";
-
-const BUFF_KBN = {
-    0: "power_up",
-    1: "element_up",
-    2: "mindeye",
-    3: "defense_down",
-    4: "element_down",
-    5: "fragile",
-    6: "critical_rate_up",
-    7: "critical_damege",
-    8: "critical_element",
-    9: "critical_damege_element",
-    10: "charge",
-    11: "field",
-    12: "destruction_rete_up",
-    14: "fightingspirit",
-    15: "misfortune",
-    16: "funnel",
-    18: "strong_break",
-    19: "dp_defense_down",
-    20: "resist_down",
-    21: "permanent_defense_down",
-    22: "permanent_element_down",
-    30: "arrow_cherry_blossoms",
-    31: "eternal_ourh",
-    33: "babied",
-    39: "servant",
-    41: "shadow_clone",
-};
 
 const TARGET_KIND = [
     EFFECT.ATTACKUP, // 攻撃力アップ
@@ -829,6 +800,9 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
     const isWedingSharo = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.WEDING_SHARO
     );
+    const isKitchenVritika  = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_VRITIKA
+    );
     const isRisa = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
     );
@@ -845,6 +819,7 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
         ...(isMiya ? [{ name: "桜花の矢", kind: BUFF.ARROWCHERRYBLOSSOMS, overlap: false },] : []),
         ...(isWedingSharo ? [{ name: "永遠なる誓い", kind: BUFF.ETERNAL_OARH, overlap: false },] : []),
         ...(isRisa ? [{ name: "オギャり", kind: BUFF.BABIED, overlap: false },] : []),
+        ...(isKitchenVritika ? [{ name: "カリー", kind: BUFF.CURRY, overlap: false },] : []),
         ...(isWeak ? [{ name: "心眼", kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
         { name: "連撃", kind: BUFF.FUNNEL, overlap: true },
