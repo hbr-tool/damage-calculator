@@ -576,7 +576,7 @@ const skilLlist = [
     {"skill_id":674,"skill_name":"サンダー・オブ・ジャスティス","chara_id":37,"style_id":180,"sp_cost":17,"skill_active":0,"skill_kind":1},
     {"skill_id":675,"skill_name":"ナンおかわり","chara_id":40,"style_id":0,"sp_cost":0,"skill_active":1,"skill_kind":0},
     {"skill_id":676,"skill_name":"饗宴アヌラーガ","chara_id":40,"style_id":181,"sp_cost":13,"skill_active":0,"skill_kind":1},
-    {"skill_id":677,"skill_name":"君に咲くグラナータ+","chara_id":42,"style_id":0,"sp_cost":13,"skill_active":0,"skill_kind":2},
+    {"skill_id":677,"skill_name":"君に咲くグラナータ+","chara_id":42,"style_id":0,"sp_cost":11,"skill_active":0,"skill_kind":2},
     {"skill_id":678,"skill_name":"ティーブレイク","chara_id":39,"style_id":0,"sp_cost":10,"skill_active":0,"skill_kind":0},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9},
