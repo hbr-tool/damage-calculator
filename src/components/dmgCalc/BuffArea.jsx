@@ -285,7 +285,7 @@ const BuffArea = ({ argument: {
         Object.keys(selectBuffKeyMap).forEach((buffKey) => {
             let buffKind = Number(buffKey.split('-')[1]);
             const selectedKeys = selectBuffKeyMap[buffKey].map(selectedKey => {
-                if (refBuffSettingMap.current[buffKind][0][selectedKey]) {
+                if (refBuffSettingMap.current?.[buffKind]?.[0]?.[selectedKey]) {
                     return selectedKey;
                 } else {
                     return "";

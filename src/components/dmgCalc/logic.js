@@ -926,22 +926,27 @@ function getDamagerateEffectSize(handlers, hitCount) {
 
 // クリティカル率取得
 function getCriticalRate(handlers) {
+    const attackInfo = handlers.attackInfo;
     const memberInfo = handlers.memberInfo;
     const selectBuffKeyMap = handlers.selectBuffKeyMap;
     const enemyInfo = handlers.state.enemyInfo;
 
     let criticalRate = 1.5;
-    let diff = (memberInfo.luk - enemyInfo.enemy_stat);
-    criticalRate += diff > 0 ? diff * 0.04 : 0;
-    criticalRate = criticalRate > 15 ? 15 : criticalRate;
-    criticalRate += getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap, [BUFF.CRITICALRATEUP, BUFF.ELEMENT_CRITICALRATEUP]);
-    criticalRate += getSumAbilityEffectSize(handlers, EFFECT.CRITICALRATEUP);
-    // チャージ
-    criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.CHARGE)]?.[0] ?? 0) ? 20 : 0;
-    // 永遠なる誓い
-    criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.ETERNAL_OARH)]?.[0] ?? 0) ? 100 : 0;
-    // // 制圧戦
-    // critical_rate += getBikePartsEffectSize("critical_rate");
+    if (attackInfo?.penetration) {
+        criticalRate = 100;
+    } else {
+        let diff = (memberInfo.luk - enemyInfo.enemy_stat);
+        criticalRate += diff > 0 ? diff * 0.04 : 0;
+        criticalRate = criticalRate > 15 ? 15 : criticalRate;
+        criticalRate += getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap, [BUFF.CRITICALRATEUP, BUFF.ELEMENT_CRITICALRATEUP]);
+        criticalRate += getSumAbilityEffectSize(handlers, EFFECT.CRITICALRATEUP);
+        // チャージ
+        criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.CHARGE)]?.[0] ?? 0) ? 20 : 0;
+        // 永遠なる誓い
+        criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.ETERNAL_OARH)]?.[0] ?? 0) ? 100 : 0;
+        // // 制圧戦
+        // critical_rate += getBikePartsEffectSize("critical_rate");
+    }
     return criticalRate > 100 ? 100 : criticalRate;
 }
 
