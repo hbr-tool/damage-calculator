@@ -431,7 +431,9 @@ export function isOnlyUse(attackInfo, buffInfo) {
     if (!buffInfo || !ATTACK_BUFF_LIST.includes(buffInfo.buff_kind)) {
         return false;
     }
-
+    if (isAloneActivation(buffInfo)) {
+        return false;
+    }
     if (!buffInfo.skill_attack1 || buffInfo.chara_id !== attackInfo.chara_id) {
         return false;
     }

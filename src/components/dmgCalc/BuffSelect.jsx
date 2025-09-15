@@ -47,14 +47,14 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
                     }
                 }
             }
+            if (isAloneActivation(buffInfo)) {
+                handleSelectChange(buffKey, [value, ""]);
+                return;
+            }
             if (isOnlyUse(attackInfo, buffInfo)) {
                 confirmSet(`${buffInfo.buff_name}は\r\n通常、他スキルに設定出来ません。\r\n設定してよろしいですか？`, () => {
                     handleSelectChange(buffKey, newSelected);
                 });
-                return;
-            }
-            if (isAloneActivation(buffInfo)) {
-                handleSelectChange(buffKey, [value, ""]);
                 return;
             }
         }

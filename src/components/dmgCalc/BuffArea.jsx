@@ -270,7 +270,7 @@ const BuffArea = ({ argument: {
 
             const buffItemList = [
                 ...kindBuffList.filter(buffInfo =>
-                    !(isOnlyUse(attackInfo, buffInfo))
+                    !isOnlyUse(attackInfo, buffInfo)
                 ),
                 ...kindBuffList.filter(buffInfo =>
                     !(isAloneActivation(buffInfo) || isOnlyBuff(attackInfo, buffInfo) || isOnlyUse(attackInfo, buffInfo))
