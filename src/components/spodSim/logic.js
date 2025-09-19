@@ -311,6 +311,9 @@ export function getBuffIconImg(buffInfo) {
         case BUFF.CURRY: // カリー
             src += "IconCurry";
             break;
+        case BUFF.SHCHI: // シチー
+            src += "IconShchi";
+            break;
         default:
             break;
     }
@@ -938,6 +941,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, use_unitData) {
         case BUFF.SHREDDING: // 速弾き
         case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
         case BUFF.CURRY: // カリー
+        case BUFF.SHCHI: // シチー
             // バフ追加
             targetList = getTargetList(turnData, buffInfo.range_area, buffInfo.target_element, placeNo, use_unitData.buffTargetCharaId);
             if (buffInfo.buff_kind === BUFF.ATTACKUP || buffInfo.buff_kind === BUFF.ELEMENT_ATTACKUP) {
@@ -1363,6 +1367,9 @@ export function getBuffKindName(buffInfo) {
             break;
         case BUFF.CURRY:
             buff_kind_name += "カリー";
+            break;
+        case BUFF.SHCHI:
+            buff_kind_name += "シチー";
             break;
         default:
             break;

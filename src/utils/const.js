@@ -18,6 +18,7 @@ export const STYLE_ID = {
     SERVANT: [162, 163],    // 下僕天音、聖羅
     UNISON_KARENCHAN: 177,  // ユニソンカレンチャン
     KITCHEN_VRITIKA: 181,  // キッチンヴリティカ
+    KITCHEN_SHARO: 182,  // キッチンシャロ
 }
 
 export const SKILL_ID = {
@@ -124,6 +125,7 @@ export const BUFF = {
     MAKEUP: 42, // メイクアップ
     FIRE_MARK: 43, // 火の印 
     CURRY: 44, // カリー
+    SHCHI: 45, // シチー
     HEALEP: 52, // EP回復
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃

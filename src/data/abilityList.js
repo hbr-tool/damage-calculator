@@ -246,6 +246,8 @@ const abilityList = [
     {"ability_id":2001,"ability_name":"オーバーレイ","ability_explan":"味方がフィールドを展開した時自身のSP+2(パッシブスキル・アビリティ除く)","ability_short_explan":"","activation_timing":10,"activation_place":3,"conditions":"","range_area":7,"physical":0,"element":0,"target_element":0,"effect_type":12,"effect_size":2},
     {"ability_id":2002,"ability_name":"勝利のカリーを食べましょう","ability_explan":"バトル勝利時 味方全体の氷属性スタイルのDP+100%","ability_short_explan":"","activation_timing":99,"activation_place":3,"conditions":"","range_area":6,"physical":0,"element":2,"target_element":0,"effect_type":13,"effect_size":100},
     {"ability_id":2003,"ability_name":"おかわりもどうぞ","ability_explan":"バトル勝利時 味方全体の氷属性スタイルのSP+3","ability_short_explan":"","activation_timing":99,"activation_place":3,"conditions":"","range_area":6,"physical":0,"element":2,"target_element":0,"effect_type":12,"effect_size":3},
+    {"ability_id":2004,"ability_name":"愛情の料理","ability_explan":"バトル勝利時 味方全体の火属性スタイルのDP+100%","ability_short_explan":"","activation_timing":99,"activation_place":3,"conditions":"","range_area":6,"physical":0,"element":1,"target_element":0,"effect_type":13,"effect_size":100},
+    {"ability_id":2005,"ability_name":"実の父よりもシチーは飽きることがない","ability_explan":"バトル勝利時 味方全体の火属性スタイルのSP+3","ability_short_explan":"","activation_timing":99,"activation_place":3,"conditions":"","range_area":6,"physical":0,"element":1,"target_element":0,"effect_type":12,"effect_size":3},
 ];
 
 export default abilityList;

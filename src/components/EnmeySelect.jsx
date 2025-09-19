@@ -47,7 +47,7 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
                     <option value="9">イベント隠しボス</option>
                     <option value="10">時の修練場/アリーナ</option>
                     {/* <option value="11">制圧戦</option> */}
-                    {/* <option value="12">セラフ遭遇戦</option> */}
+                    <option value="12">聖環の庭</option>
                     {isFreeInput ?
                         <option value="99">自由入力</option>
                         : null}

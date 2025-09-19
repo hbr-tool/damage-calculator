@@ -396,6 +396,7 @@ const skillAttack = [
     {"attack_id":2186,"skill_id":641,"attack_name":"輝耀","chara_id":38,"style_id":0,"ref_status_1":0,"ref_status_2":1,"ref_status_3":2,"attack_element":0,"min_power":2295.000,"max_power":4590.00,"hit_count":4,"destruction":2.000,"sp_cost":10,"param_limit":129,"hp_damege":0,"dp_damege":0,"max_lv":10,"range_area":1,"damege_distribution":"","penetration":200},
     {"attack_id":2187,"skill_id":657,"attack_name":"爆裂サーブ","chara_id":44,"style_id":0,"ref_status_1":0,"ref_status_2":1,"ref_status_3":2,"attack_element":1,"min_power":2625.000,"max_power":5250.00,"hit_count":1,"destruction":2.000,"sp_cost":10,"param_limit":135,"hp_damege":0,"dp_damege":0,"max_lv":10,"range_area":2,"damege_distribution":""},
     {"attack_id":2188,"skill_id":678,"chara_id":39,"style_id":0,"ref_status_1":2,"ref_status_2":1,"ref_status_3":0,"attack_element":2,"min_power":2197.500,"max_power":4395.00,"hit_count":2,"destruction":1.800,"sp_cost":10,"param_limit":132,"hp_damege":0,"dp_damege":30,"max_lv":10,"range_area":2},
+    {"attack_id":2189,"skill_id":679,"chara_id":41,"style_id":0,"ref_status_1":0,"ref_status_2":1,"ref_status_3":2,"attack_element":1,"min_power":2197.500,"max_power":4395.00,"hit_count":1,"destruction":1.800,"sp_cost":10,"param_limit":132,"hp_damege":0,"dp_damege":0,"max_lv":10,"range_area":2},
 ];
 
 export default skillAttack;

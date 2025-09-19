@@ -803,6 +803,9 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
     const isKitchenVritika  = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_VRITIKA
     );
+    const isKitchenSharo  = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_SHARO
+    );
     const isRisa = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
     );
@@ -820,6 +823,7 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
         ...(isWedingSharo ? [{ name: "永遠なる誓い", kind: BUFF.ETERNAL_OARH, overlap: false },] : []),
         ...(isRisa ? [{ name: "オギャり", kind: BUFF.BABIED, overlap: false },] : []),
         ...(isKitchenVritika ? [{ name: "カリー", kind: BUFF.CURRY, overlap: false },] : []),
+        ...(isKitchenSharo ? [{ name: "シチー", kind: BUFF.SHCHI, overlap: false },] : []),
         ...(isWeak ? [{ name: "心眼", kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
         { name: "連撃", kind: BUFF.FUNNEL, overlap: true },
