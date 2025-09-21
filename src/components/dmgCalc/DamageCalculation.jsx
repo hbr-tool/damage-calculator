@@ -277,7 +277,13 @@ const DamageCalculation = () => {
         selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting);
 
     const bulkSetting = (collect) => {
-        setAttackInfo({ ...attackInfo, collect: collect })
+        setAttackInfo(prev => ({
+            ...prev,
+            collect: {
+                ...prev.collect, // 既存の項目を保持
+                ...collect,      // 渡された項目で上書き
+            },
+        }));
         const newBuffSettingMap = { ...buffSettingMap };
         Object.keys(newBuffSettingMap).forEach(key =>
             newBuffSettingMap[key].forEach((buffList, index) => {

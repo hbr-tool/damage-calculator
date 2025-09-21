@@ -305,8 +305,9 @@ const CharaStatus = ({ argument: {
                                 let tempCount = {};
                                 for (const [key, buffKey] of Object.entries(values)) {
                                     if (!buffKey) continue;
-                                    const [, buffId, useCharaId] = buffKey.split("_");
+                                    const [kind, buffId, useCharaId] = buffKey.split("_");
                                     if (Number(useCharaId) !== charaId) continue;
+                                    if (kind === "ability") continue;
                                     const buffInfo = getBuffIdToBuff(Number(buffId));
                                     if (!buffInfo) continue;
                                     let buffSetting = {};

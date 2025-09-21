@@ -464,8 +464,8 @@ export function isSelectBuff(buffInfo) {
     if (!buffInfo) {
         return false;
     }
-    // 豪快！パイレーツキャノン
-    if (buffInfo.skill_id === SKILL_ID.PIRATES_CANON) {
+    // 敵の数
+    if (buffInfo.conditions === CONDITIONS.ENEMY_COUNT) {
         return true;
     }
     return false;
