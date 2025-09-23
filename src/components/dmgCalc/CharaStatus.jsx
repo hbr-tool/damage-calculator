@@ -5,7 +5,7 @@ import ModalSkillSelectList from "components/ModalSkillSelectList";
 import ModalStyleSelection from "components/ModalStyleSelection";
 import StyleIcon from "components/StyleIcon";
 import { getBuffIdToBuff, getSkillData } from "utils/common";
-import { STATUS_KBN } from "utils/const";
+import { SKILL_ID, STATUS_KBN } from "utils/const";
 import { getCostVariable } from "./logic";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import editIcon from 'assets/img/edit.png';
@@ -293,13 +293,7 @@ const CharaStatus = ({ argument: {
                                         results.push(STATUS_KBN[attackInfo["ref_status_" + i]]);
                                     }
                                 }
-                                let magn = 1;
-                                if (attackInfo.collect?.sphalf) {
-                                    magn = 0.5;
-                                } else if (attackInfo.collect?.spzero) {
-                                    magn = 0;
-                                }
-                                spCost[attackInfo.skill_id] = magn;
+                                spCost[attackInfo.skill_id] = [attackInfo.collect];
                             }
                             for (const values of Object.values(selectBuffKeyMap)) {
                                 let tempCount = {};
@@ -310,17 +304,14 @@ const CharaStatus = ({ argument: {
                                     if (kind === "ability") continue;
                                     const buffInfo = getBuffIdToBuff(Number(buffId));
                                     if (!buffInfo) continue;
-                                    let buffSetting = {};
+
                                     if (buffSettingMap[buffInfo.buff_kind] && buffSettingMap[buffInfo.buff_kind][key][buffKey]) {
-                                        buffSetting = buffSettingMap[buffInfo.buff_kind][key][buffKey];
+                                        let buffSetting = buffSettingMap[buffInfo.buff_kind][key][buffKey];
+                                        if (buffInfo.skill_id !== SKILL_ID.MEGA_DESTROYER) {
+                                            const value = buffSetting.collect ?? {};
+                                            (tempCount[buffInfo.skill_id] ??= []).push(value);
+                                        }
                                     }
-                                    let magn = 1;
-                                    if (buffSetting.collect?.sphalf) {
-                                        magn = 0.5;
-                                    } else if (buffSetting.collect?.spzero) {
-                                        magn = 0;
-                                    }
-                                    tempCount[buffInfo.skill_id] = (tempCount[buffInfo.skill_id] ?? 0) + magn;
 
                                     for (let i = 1; i <= 2; i++) {
                                         const statusKey = buffInfo[`ref_status_${i}`];
@@ -329,8 +320,11 @@ const CharaStatus = ({ argument: {
                                         }
                                     }
                                 }
-                                for (const [skillId, count] of Object.entries(tempCount)) {
-                                    spCost[skillId] = Math.max(spCost[skillId] ?? 0, count);
+                                for (const [skillId, collects] of Object.entries(tempCount)) {
+                                    if (!spCost[skillId] || spCost[skillId].length < collects.length ||
+                                        getSortKey(spCost[skillId][0]) > getSortKey(collects[0]) || getSortKey(spCost[skillId][1]) < getSortKey(collects[1])) {
+                                        spCost[skillId] = collects;
+                                    }
                                 }
                             };
                             let strClassName = "status " + (results.includes("str") ? "status_active" : "");
@@ -340,10 +334,23 @@ const CharaStatus = ({ argument: {
                             let intClassName = "status " + (results.includes("int") ? "status_active" : "");
                             let lukClassName = "status " + (results.includes("luk") ? "status_active" : "");
                             let sp_cost = 0;
-                            for (const [key, value] of Object.entries(spCost)) {
+                            function getSortKey(collect) {
+                                if (!collect) return 0; // undefined の場合
+                                if (collect.sphalf) return 1;
+                                if (collect.spzero) return 2;
+                                return 0; // どちらも false
+                            }
+                            for (const [key, values] of Object.entries(spCost)) {
                                 let skill = getSkillData(key);
                                 if (skill) {
-                                    sp_cost += Math.floor(getCostVariable(skill.sp_cost, {}, style, abilitySettingMap, passiveSettingMap) * value);
+                                    for (const collect of values
+                                        .slice()
+                                        .sort((a, b) => getSortKey(a) - getSortKey(b))
+                                        .slice(0, 2)) {
+                                        sp_cost += Math.floor(
+                                            getCostVariable(skill.sp_cost, collect, style, abilitySettingMap, passiveSettingMap)
+                                        );
+                                    }
                                 }
                             }
                             return (
