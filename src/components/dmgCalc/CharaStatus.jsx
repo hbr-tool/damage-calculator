@@ -322,7 +322,7 @@ const CharaStatus = ({ argument: {
                                 }
                                 for (const [skillId, collects] of Object.entries(tempCount)) {
                                     if (!spCost[skillId] || spCost[skillId].length < collects.length ||
-                                        getSortKey(spCost[skillId][0]) > getSortKey(collects[0]) || getSortKey(spCost[skillId][1]) < getSortKey(collects[1])) {
+                                        getSortKey(spCost[skillId][0]) > getSortKey(collects[0]) || getSortKey(spCost[skillId][1]) > getSortKey(collects[1])) {
                                         spCost[skillId] = collects;
                                     }
                                 }

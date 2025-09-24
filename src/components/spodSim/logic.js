@@ -141,15 +141,24 @@ const reflectUserOperation = (turnData, isLoadMode) => {
             item === unit.style.styleInfo.style_id || item === changeStyle[unit.style.styleInfo.style_id]);
         let styleId = unit.style.styleInfo.style_id;
         let operationStyleId = turnData.userOperation.placeStyle[operationPlaceNo];
+        // スタイル変更
         if (styleId !== operationStyleId) {
             changeStyleInfo(unit, operationStyleId);
         }
+        // 配置変更
         if (operationPlaceNo >= 0) {
             if (turnData.additionalTurn) {
                 if (!isLoadMode) {
                     if (operationPlaceNo !== unit.placeNo) {
                         setInitSkill(unit);
-                        turnData.userOperation.selectSkill[unit.placeNo].skill_id = unit.selectSkillId;
+                        // turnData.userOperation.selectSkill[operationPlaceNo].skill_id = turnData.userOperation.selectSkill[unit.placeNo].skill_id;
+                        // turnData.userOperation.selectSkill[operationPlaceNo].buffEffectSelectType = turnData.userOperation.selectSkill[unit.placeNo].buffEffectSelectType;
+                        // turnData.userOperation.selectSkill[operationPlaceNo].buffTargetCharaId = turnData.userOperation.selectSkill[unit.placeNo].buffTargetCharaId;
+                        turnData.userOperation.placeStyle[operationPlaceNo] = turnData.userOperation.placeStyle[unit.placeNo];
+
+                        // turnData.userOperation.selectSkill[unit.placeNo].skill_id = unit.selectSkillId;
+                        // turnData.userOperation.selectSkill[unit.placeNo].buffEffectSelectType = unit.buffEffectSelectType;
+                        // turnData.userOperation.selectSkill[unit.placeNo].buffTargetCharaId = unit.buffTargetCharaId;
                         turnData.userOperation.placeStyle[unit.placeNo] = unit.style.styleInfo.style_id;
                     }
                     return;
