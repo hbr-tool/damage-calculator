@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import artsList from 'data/artsList';
 import artsImage from 'assets/arts';
 
-const TROOPS_LIST = ["31A", "31B", "31C", "31D", "31E", "31F", "31X"];
+const TROOPS_LIST = ["31A", "31B", "31C", "31D", "31E", "31F", "31X", "30G"];
 const SHOW_TROOPS_LIST = {
     "0": TROOPS_LIST,
     "2": ["31A", "31B", "31C", "31E"],
     "3": ["31A", "31B", "31C", "31F"],
     "4": ["31A", "31D", "31E", "31F"],
     "6": ["31A", "31E", "31F", "31X"],
+    "7": ["31A", "31D", "31X", "30G"],
 }
 const MAX_TROOPS_ARTS_COUNT = 24;
 const TROOPS_ARTS_COUNT = {
@@ -19,6 +20,7 @@ const TROOPS_ARTS_COUNT = {
     "31E": 3,
     "31F": 3,
     "31X": 3,
+    "30G": 3,
 }
 // 保存
 function saveLocalStrage(troops, artsSelect) {
@@ -75,6 +77,7 @@ const ArtsList = () => {
                             <option value="3">ENDLESSシーズン3</option>
                             <option value="4">ENDLESSシーズン4,5</option>
                             <option value="6">ENDLESSシーズン6</option>
+                            <option value="7">ENDLESSシーズン7</option>
                         </select>
                     </div>
                     <div className="grid grid-cols-1 xl:grid-cols-2">
