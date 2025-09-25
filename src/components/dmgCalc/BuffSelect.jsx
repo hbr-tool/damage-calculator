@@ -35,7 +35,7 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
                 return;
             }
             if (isSelectBuff(buffInfo)) {
-                const partnerBuffId = Number(newSelected[index ^ 1].split('_')[1]);
+                const partnerBuffId = Number(newSelected[index ^ 1]?.split('_')[1]);
                 if (partnerBuffId) {
                     let partnerBuffInfo = getBuffIdToBuff(partnerBuffId);
                     if (buffInfo.skill_id === partnerBuffInfo.skill_id) {
