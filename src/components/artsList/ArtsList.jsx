@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import artsList from 'data/artsList';
 import artsImage from 'assets/arts';
 
@@ -28,7 +28,7 @@ function saveLocalStrage(troops, artsSelect) {
 }
 
 const ArtsList = () => {
-    const [update, setUpdate] = useState(0);
+    const [selectCount, setSelectCount] = useState(0);
     const [showArts, setShowArts] = useState("0");
     const troopList = SHOW_TROOPS_LIST[showArts];
 
@@ -36,16 +36,34 @@ const ArtsList = () => {
         let newSelect = select === "1" ? "0" : "1";
         artsSplit[index] = newSelect;
         saveLocalStrage(troops, artsSplit)
-        setUpdate(update + 1);
+        setSelectCount(select === "1" ? selectCount - 1 : selectCount + 1);
     }
 
     const handleSelectClick = (select) => {
+        let selectCount = 0;
         troopList.forEach((troops) => {
             let artsSplit = Array(TROOPS_ARTS_COUNT[troops] * 6).fill(select);
+            selectCount += select === "1" ? TROOPS_ARTS_COUNT[troops] * 6 : 0;
             saveLocalStrage(troops, artsSplit);
         });
-        setUpdate(update + 1);
+        setSelectCount(selectCount);
     }
+
+    let deckCount = troopList.reduce((total, troops) => {
+        return total + TROOPS_ARTS_COUNT[troops] * 6;
+    }, 0);
+
+    useEffect(() => {
+        let count = 0;
+        troopList.forEach((troops) => {
+            let artsSelect = localStorage.getItem("arts_select_" + troops);
+            if (artsSelect) {
+                let artsSplit = artsSelect.split(",");
+                count += artsSplit.filter((value) => value === "1").length;
+            }
+        });
+        setSelectCount(count);
+    }, [showArts, troopList]);
 
     return (
         <div className="arts_frame static h-screen overflow-y-scroll">
@@ -67,7 +85,7 @@ const ArtsList = () => {
                     <div className="clear-left flex">
                         <div className="flex text-2xl font-bold">
                             <div className="w-32">デッキ枚数</div>
-                            <label className="text-center w-12" id="deck_count" />
+                            {selectCount}/{deckCount} 枚
                         </div>
                         <select
                             className="border border-black text-lg font-bold" value={showArts}
@@ -122,12 +140,20 @@ function combineImagesWithHatching(showList) {
 
     const rows = getRowSize(showList);
 
+    // === 縦方向（row）の区切りロジック ===
+    const separateUnit = (r) => {
+        if (r < 4) return 1; // 最初の4行までは区切りなし
+        // 最初の4行を1ブロックとして、その後3行ごとに区切り
+        const rest = r - 4;
+        return 2 + Math.floor(rest / 3);
+    };
+
     // 画像の横幅と高さを半分に縮小
     const scaledWidth = Math.floor(512 / 4);
     const scaledHeight = Math.floor(702 / 4);
 
     canvas.width = scaledWidth * columns + separate * 3;
-    canvas.height = scaledHeight * rows + separate * 3;
+    canvas.height = scaledHeight * rows + separate * separateUnit(rows);
 
     context.fillStyle = 'white';
     context.fillRect(0, 0, canvas.width, canvas.height);
@@ -155,7 +181,8 @@ function combineImagesWithHatching(showList) {
         const promise = new Promise((resolve, reject) => {
             img.onload = () => {
                 const [row, col] = getRowColumn(showList, arts.troops, Number(arts.rarity), Number(arts.chara_id));
-                const adjustRow = (Math.floor(row / 4) + 1) * separate;
+
+                const adjustRow = separateUnit(row) * separate;
                 const adjustCol = (Math.floor(col / 6) + 1) * separate;
 
                 context.drawImage(
