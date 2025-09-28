@@ -530,7 +530,7 @@ export function getBestBuffKeys(buffKind, kindBuffList, buffSettingMap) {
 }
 
 // ダメージ計算結果取得
-export function getDamageResult(attackInfo, styleList, state, selectSKillLv,
+export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting) {
     if (!attackInfo) {
         return null;
@@ -552,7 +552,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSKillLv,
     }
     let criticalStatDown = Math.max(enemyStatDown, 50);
 
-    let skillPower = getSkillPower(attackInfo, selectSKillLv, attackMemberInfo, statUp, enemyInfo, enemyStatDown);
+    let skillPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, enemyInfo, enemyStatDown);
 
     // 引数のfuntionをまとめる
     const memberInfo = attackMemberInfo;
@@ -606,7 +606,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSKillLv,
         skillUniqueRate = (sp > 30 ? 30 : sp) / 30;
     }
 
-    let criticalPower = getSkillPower(attackInfo, selectSKillLv, attackMemberInfo, statUp, enemyInfo, criticalStatDown);
+    let criticalPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, enemyInfo, criticalStatDown);
     let criticalRate = getCriticalRate(handlers);
     let criticalBuff = getCriticalBuff(handlers);
 
@@ -744,14 +744,14 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
 }
 
 // 基礎攻撃力取得
-export function getSkillPower(attackInfo, selectSKillLv, memberInfo, statUp, enemyInfo, enemyStatDown) {
+export function getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, enemyInfo, enemyStatDown) {
     let jewelLv = 0;
     if (memberInfo.styleInfo.jewel_type === JEWEL_TYPE.ATTACK_UP) {
         jewelLv = memberInfo.jewelLv;
     }
     let enemyStat = Math.max(enemyInfo.enemy_stat - enemyStatDown, 0);
     let status = getStatus(attackInfo, memberInfo, statUp);
-    return calcAttackEffectSize(attackInfo, status, enemyStat, selectSKillLv, jewelLv)
+    return calcAttackEffectSize(attackInfo, status, enemyStat, selectSkillLv, jewelLv)
 }
 
 // 基礎攻撃力計算

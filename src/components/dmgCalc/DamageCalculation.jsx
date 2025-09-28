@@ -315,7 +315,7 @@ const DamageCalculation = () => {
                 <div className="status_area mx-auto">
                     <CharaStatus argument={argument} />
                     <AttackList attackInfo={attackInfo} setAttackInfo={setAttackInfo}
-                        selectSKillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv}
+                        selectSkillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv}
                         abilitySettingMap={abilitySettingMap} passiveSettingMap={passiveSettingMap} state={state} dispatch={dispatch} />
                     <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
