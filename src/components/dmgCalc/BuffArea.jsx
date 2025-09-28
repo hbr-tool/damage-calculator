@@ -88,12 +88,12 @@ const BuffArea = ({ argument: {
     }).join(',');
 
     let supportList = styleList.selectStyleList.map(style => {
-        return style?.support?.styleId + "," + style?.support?.limitCount;
+        return style?.support?.styleInfo.style_id + "," + style?.support?.limitCount;
     }).join(',');
 
     const { buffGroup, abilityList, passiveList } = useMemo(() => {
         return generateBuffAbilityPassiveLists(styleList, attackInfo, attackUpBuffs, defDownBuffs, criticalBuffs);
-    }, [attackInfo?.attack_id, attackInfo?.servantCount, selectList, isWeak]);
+    }, [attackInfo?.attack_id, attackInfo?.servantCount, selectList, isWeak, JSON.stringify(defDownBuffs)]);
 
     const resonance = useMemo(() => {
         return generateResonanceList(styleList, attackInfo);
@@ -628,7 +628,7 @@ function generateResonanceList(styleList, attackInfo) {
             const charaName = getCharaData(charaId).chara_short_name;
 
             // レゾナンス判定
-            if (memberInfo.styleInfo.rarity === 0 && memberInfo.supportStyleId) {
+            if ((memberInfo.styleInfo.rarity === 0 || memberInfo.styleInfo.rarity === 9) && memberInfo.supportStyleId) {
                 const support = memberInfo.support;
                 if (support.styleInfo.ability_resonance) {
                     const resonance = getResonanceInfo(support.styleInfo.ability_resonance);
@@ -800,10 +800,10 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
     const isWedingSharo = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.WEDING_SHARO
     );
-    const isKitchenVritika  = selectStyleList.some(
+    const isKitchenVritika = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_VRITIKA
     );
-    const isKitchenSharo  = selectStyleList.some(
+    const isKitchenSharo = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_SHARO
     );
     const isRisa = selectStyleList.some(

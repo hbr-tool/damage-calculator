@@ -402,14 +402,14 @@ const CharaStatus = ({ argument: {
                         </div>
                         {styleList.selectStyleList.map((style, index) => {
                             const styleId = style?.supportStyleId;
-                            if (style?.styleInfo?.style_id && style?.styleInfo?.rarity <= 1) {
+                            if (style?.styleInfo?.style_id && (style?.styleInfo?.rarity <= 1 || style?.styleInfo?.rarity === 9)) {
                                 return (
                                     <div key={`style_${index}`} className="cursor-pointer flex items-center justify-center">
                                         <StyleIcon styleId={styleId} placeNo={index} onClick={() => { clickSupportMember(index) }} styleClass="support_style" />
                                     </div>
                                 )
                             } else {
-                                return <div></div>
+                                return <div key={`style_${index}`} ></div>
                             }
                         })}
                         <div>

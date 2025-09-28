@@ -11,7 +11,7 @@ import { AttackLineChart } from "./SimpleLineChart";
 const TYPE_PHYSICAL = ["none", "slash", "stab", "strike"];
 const TYPE_ELEMENT = ["none", "fire", "ice", "thunder", "light", "dark"];
 
-const AttackList = ({ attackInfo, setAttackInfo, selectSKillLv, setSelectSKillLv,
+const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv,
     abilitySettingMap, passiveSettingMap, state, dispatch,
 }) => {
     const { styleList } = useStyleList();
@@ -22,7 +22,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSKillLv, setSelectSKillLv
         if (selectAttackInfo) {
             const physical = getCharaData(selectAttackInfo.chara_id).physical;
             selectAttackInfo.attack_physical = physical;
-            setSelectSKillLv(selectAttackInfo.max_lv);
+            setSelectSkillLv(selectAttackInfo.max_lv);
             setAttackInfo(selectAttackInfo);
         }
     }
@@ -63,10 +63,10 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSKillLv, setSelectSKillLv
                     attack_physical: getCharaData(firstAttack.chara_id).physical,
                 };
                 setAttackInfo(newInfo);
-                setSelectSKillLv(newInfo.max_lv);
+                setSelectSkillLv(newInfo.max_lv);
             } else {
                 setAttackInfo(undefined);
-                setSelectSKillLv(undefined);
+                setSelectSkillLv(undefined);
             }
         }
     }, [memberAttackList, attackInfo]);
@@ -100,7 +100,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSKillLv, setSelectSKillLv
                     return (
                         <>
                             <div className="lv">
-                                <select id="skill_lv" value={selectSKillLv} onChange={e => setSelectSKillLv(e.target.value)} >
+                                <select id="skill_lv" value={selectSkillLv} onChange={e => setSelectSkillLv(e.target.value)} >
                                     {attackInfo && (() =>
                                         Array.from({ length: attackInfo.max_lv }, (_, i) => i + 1).map(value => (
                                             <option key={`skill${value}`} value={value}>
@@ -136,7 +136,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSKillLv, setSelectSKillLv
                 overlayClassName={"modal-overlay " + (modal ? "modal-overlay-open" : "")}
             >
                 <AttackDetail attackInfo={attackInfo} setAttackInfo={setAttackInfo}
-                    selectSKillLv={selectSKillLv} styleList={styleList} state={state}
+                    selectSkillLv={selectSkillLv} styleList={styleList} state={state}
                     abilitySettingMap={abilitySettingMap} passiveSettingMap={passiveSettingMap} closeModal={() => setModal(false)} />
             </ReactModal>
         </div >
@@ -221,9 +221,9 @@ const YamawakiServant = ({ attackInfo, setAttackInfo }) => {
 }
 
 
-const AttackDetail = ({ attackInfo, setAttackInfo, selectSKillLv, styleList, state, abilitySettingMap, passiveSettingMap, closeModal }) => {
-    const minPower = attackInfo.min_power * (1 + 0.05 * (selectSKillLv - 1));
-    const maxPower = attackInfo.max_power * (1 + 0.02 * (selectSKillLv - 1));
+const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, state, abilitySettingMap, passiveSettingMap, closeModal }) => {
+    const minPower = attackInfo.min_power * (1 + 0.05 * (selectSkillLv - 1));
+    const maxPower = attackInfo.max_power * (1 + 0.02 * (selectSkillLv - 1));
 
     const memberInfo = getCharaIdToMember(styleList, attackInfo.chara_id);
     const enemyInfo = state.enemyInfo;
@@ -237,8 +237,8 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSKillLv, styleList, sta
         enemyStatDown = 20;
     }
     let criticalStatDown = Math.max(enemyStatDown, 50);
-    let skillPower = getSkillPower(attackInfo, selectSKillLv, memberInfo, statUp, enemyInfo, enemyStatDown);
-    let criticalPower = getSkillPower(attackInfo, selectSKillLv, memberInfo, statUp, enemyInfo, criticalStatDown);
+    let skillPower = getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, enemyInfo, enemyStatDown);
+    let criticalPower = getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, enemyInfo, criticalStatDown);
 
     let enemyStat = Number(enemyInfo.enemy_stat);
     let status = getStatus(attackInfo, memberInfo, statUp);
@@ -274,7 +274,7 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSKillLv, styleList, sta
                 <span>攻撃力</span>
                 <span>{`${minPower.toLocaleString()}～${maxPower.toLocaleString()}`}</span>
                 <div></div>
-                <span>(スキルLv{selectSKillLv})</span>
+                <span>(スキルLv{selectSkillLv})</span>
                 <span>破壊係数</span>
                 <span>{attackInfo.destruction}%</span>
                 <span>HIT数</span>
@@ -331,7 +331,7 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSKillLv, styleList, sta
                     </>
                 )}
             </div>
-            <AttackLineChart status={Math.floor(status)} attackInfo={attackInfo} enemyStat={enemyStat} enemyStatDown={enemyStatDown} jewelLv={jewelLv} skillLv={selectSKillLv} />
+            <AttackLineChart status={Math.floor(status)} attackInfo={attackInfo} enemyStat={enemyStat} enemyStatDown={enemyStatDown} jewelLv={jewelLv} skillLv={selectSkillLv} />
             <div className="mt-2">
                 <span className="damage_label">使用者情報</span>
             </div>

@@ -191,7 +191,7 @@ const reducer = (state, action) => {
 const DamageCalculation = () => {
     const { styleList } = useStyleList();
     const [attackInfo, setAttackInfo] = useState(undefined);
-    const [selectSKillLv, setSelectSKillLv] = useState(undefined);
+    const [selectSkillLv, setSelectSkillLv] = useState(undefined);
     const [buffSettingMap, setBuffSettingMap] = useState({});
 
     // 初期値を決める関数
@@ -273,7 +273,7 @@ const DamageCalculation = () => {
         },
     });
 
-    let damageResult = getDamageResult(attackInfo, styleList, state, selectSKillLv,
+    let damageResult = getDamageResult(attackInfo, styleList, state, selectSkillLv,
         selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting);
 
     const bulkSetting = (collect) => {
@@ -315,7 +315,7 @@ const DamageCalculation = () => {
                 <div className="status_area mx-auto">
                     <CharaStatus argument={argument} />
                     <AttackList attackInfo={attackInfo} setAttackInfo={setAttackInfo}
-                        selectSKillLv={selectSKillLv} setSelectSKillLv={setSelectSKillLv}
+                        selectSKillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv}
                         abilitySettingMap={abilitySettingMap} passiveSettingMap={passiveSettingMap} state={state} dispatch={dispatch} />
                     <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
