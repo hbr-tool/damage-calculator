@@ -106,6 +106,9 @@ const scoreGrade = [
     {"score_attack_no":82,"half":1,"grade_no":1,"grade_name":"毎ターン前衛のSP-2","grade_rate":25,"grade_none":1,"effect_kind1":"","conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
     {"score_attack_no":82,"half":1,"grade_no":2,"grade_name":"5ターン毎に敵の防御力10%アップ(解除不可)","grade_rate":10,"grade_none":0,"effect_kind1":"defense_rate","effect_size1":10,"conditions1":"step_turn5","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
     {"score_attack_no":82,"half":1,"grade_no":3,"grade_name":"雷弱点が火弱点に変更","grade_rate":0,"grade_none":0,"effect_kind1":"element_3","effect_size1":150,"conditions1":"","effect_kind2":"element_1","effect_size2":-150,"conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":83,"half":1,"grade_no":1,"grade_name":"敵のデバフ行動の使用頻度がアップ、さらに特定の攻撃に防御デバフを追加","grade_rate":25,"grade_none":1,"effect_kind1":"","conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":83,"half":1,"grade_no":2,"grade_name":"Defenderのスキル使用回数2回","grade_rate":10,"grade_none":1,"effect_kind1":"","conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":83,"half":1,"grade_no":3,"grade_name":"ターン開始時、やる気が付与されている味方の攻撃力30%アップ(1ターン)","grade_rate":0,"grade_none":0,"effect_kind1":"power_up","effect_size1":30,"conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
 ];
 
 export default scoreGrade;
