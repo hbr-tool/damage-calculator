@@ -6,7 +6,7 @@ import ModalStyleSelection from "components/ModalStyleSelection";
 import StyleIcon from "components/StyleIcon";
 import { getBuffIdToBuff, getSkillData } from "utils/common";
 import { SKILL_ID, STATUS_KBN } from "utils/const";
-import { getCostVariable } from "./logic";
+import { checkPawapuroExist, getCostVariable } from "./logic";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import editIcon from 'assets/img/edit.png';
 
@@ -179,6 +179,7 @@ const CharaStatus = ({ argument: {
         closeModal();
     }
 
+    const isPawapuro = checkPawapuroExist(styleList.selectStyleList);
     return (
         <>
             <div id="chara_status" className="grid grid-cols-7 text-center gap-y-px gap-x-0">
@@ -267,6 +268,9 @@ const CharaStatus = ({ argument: {
                             <span className="label_status">宝珠Lv</span>
                             <span className="label_status">トークン</span>
                             <span className="label_status">士気</span>
+                            {isPawapuro &&
+                                <span className="label_status">やる気</span>
+                            }
                             <span className="label_status">スキル</span>
                             <span className="label_status">消費SP</span>
                         </div>
@@ -285,6 +289,7 @@ const CharaStatus = ({ argument: {
                             let jewel = style ? style.jewelLv : 0;
                             let token = style ? style.token ? style.token : 0 : 0;
                             let morale = style ? style.morale ? style.morale : 0 : 0;
+                            let motivation = style ? style.motivation ? style.motivation : 0 : 0;
                             let results = [];
                             let spCost = {};
                             if (attackInfo && attackInfo.chara_id === charaId) {
@@ -386,6 +391,14 @@ const CharaStatus = ({ argument: {
                                             <option value={i} key={`morale_${i}`}>{i}</option>
                                         ))}
                                     </select>
+                                    {isPawapuro &&
+                                        <select className="status" style={{ fontSize: "0.75rem" }}
+                                            value={motivation} onChange={(e) => { setSetting(index, "motivation", e.target.value) }}>
+                                            {["超好調", "好調", "普通", "不調", "絶不調"].map((value, i) => (
+                                                <option value={i} key={`motivation_${i}`}>{value}</option>
+                                            ))}
+                                        </select>
+                                    }
                                     <input className="status show_skill" defaultValue="設定" type="button" onClick={() => showSkillList(index)} />
                                     <div>
                                         <span>{sp_cost}</span>

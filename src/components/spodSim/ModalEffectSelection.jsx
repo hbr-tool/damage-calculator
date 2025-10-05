@@ -36,6 +36,9 @@ const ModalEffectSelection = ({ closeModal, onSelect, effectType }) => {
         case 9:
             value = ["超ダウンなし", "超ダウンあり"];
             break;
+        case 10:
+            value = ["絶不調", "不調", "普通", "好調", "絶好調"];
+            break;
         default:
             break;
     }
@@ -45,20 +48,15 @@ const ModalEffectSelection = ({ closeModal, onSelect, effectType }) => {
                 <label className="modal_label">効果選択</label>
             </div>
             <div className="select_effect">
-                <input
-                    className="effect_button"
-                    data-value="0"
-                    defaultValue={value[0]}
-                    onClick={() => setSelectEffect(0)}
-                    type="button"
-                />
-                <input
-                    className="effect_button"
-                    data-value="1"
-                    defaultValue={value[1]}
-                    onClick={() => setSelectEffect(1)}
-                    type="button"
-                />
+                {value.map((val, index) => (
+                    <input
+                        className="effect_button"
+                        data-value="0"
+                        defaultValue={val}
+                        onClick={() => setSelectEffect(index)}
+                        type="button"
+                    />
+                ))}
             </div>
         </div>
     )

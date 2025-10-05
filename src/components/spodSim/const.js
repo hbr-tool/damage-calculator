@@ -16,7 +16,7 @@ export const ABILIRY_TIMING = {
 }
 
 // 使用不可スタイル
-export const NOT_USE_STYLE = [36, 172];
+export const NOT_USE_STYLE = [36, 172, 184];
 // 制限アビリティ
 export const CONSTRAINTS_ABILITY = [
     1136, // 勝勢

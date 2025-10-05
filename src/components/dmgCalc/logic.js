@@ -1,7 +1,7 @@
 import {
     ELEMENT, BUFF, RANGE, CHARA_ID, EFFECT, ENEMY_CLASS, CONDITIONS
     , ALONE_ACTIVATION_BUFF_KIND, ALONE_ACTIVATION_ABILITY_LIST
-    , SKILL_ID, ABILITY_ID, JEWEL_TYPE, STATUS_KBN
+    , STYLE_ID, SKILL_ID, ABILITY_ID, JEWEL_TYPE, STATUS_KBN
 } from 'utils/const';
 import enemyList from "data/enemyList";
 import scoreBonusList from "data/scoreBonus";
@@ -94,6 +94,19 @@ function getChainEffectSize(otherSetting, type) {
             break;
     }
     return 0;
+}
+
+// パワプロ存在チェック
+export function checkPawapuroExist(selectStyleList) {
+    return checkStyleExist(selectStyleList,
+        [STYLE_ID.PAWAPURO_RUKA, STYLE_ID.PAWAPURO_ICHIGO, STYLE_ID.PAWAPURO_HISAME]);
+}
+
+// スタイル存在チェック
+export function checkStyleExist(selectStyleList, searchStyleIds) {
+    return selectStyleList.some(member =>
+        searchStyleIds.includes(member?.styleInfo?.style_id)
+    );
 }
 
 // キャラ重複チェック
@@ -761,7 +774,7 @@ export function calcAttackEffectSize(attackInfo, status, enemyStat, skillLv, jew
     let skillStat = attackInfo.param_limit;
     let basePower;
     // 宝珠分以外
-    if (enemyStat >= status) {
+    if (enemyStat > status) {
         basePower = minPower / skillStat * (status - enemyStat + skillStat);
         basePower = basePower < 1 ? 1 : basePower;
     } else if (enemyStat + skillStat > status) {
@@ -992,7 +1005,7 @@ function getSumTokenAbilirySize(handlers, effectType) {
             let abilityId = data.ability_id;
             let memberInfo = getCharaIdToMember(styleList, data.chara_id);
             let abilityInfo = getAbilityInfo(abilityId);
-            if (abilityInfo.effect_type === effectType) {
+            if (abilityInfo.effect_type === effectType && memberInfo) {
                 sum = abilityInfo.effect_size * (memberInfo.token ? memberInfo.token : 0);
             }
         }
@@ -1031,6 +1044,12 @@ function getSumAbilityEffectSize(handlers, effectType) {
                     if (spCost > 8) {
                         effectSize = 0;
                     }
+                }
+                // スペシャルタッグ
+                if (abilityId === ABILITY_ID.SPECIAL_TAG) {
+                    let goodCondition = targetCountMotivation(styleList, 1);
+                    effectSize = Math.min(goodCondition * 10, 30);
+
                 }
                 if (ALONE_ACTIVATION_ABILITY_LIST.includes(abilityId)) {
                     if (abilityInfo.element !== 0) {
@@ -1146,6 +1165,23 @@ function targetCountInclude(styleList, targetElement) {
     let count = 0;
     styleList.selectStyleList.forEach((style) => {
         if (style?.styleInfo.element === targetElement || style?.styleInfo.element2 === targetElement) {
+            count++;
+        }
+    })
+    return count;
+}
+
+// やるき対象数判定
+function targetCountMotivation(styleList, motivation) {
+    let count = 0;
+    styleList.selectStyleList.forEach((style) => {
+        let styleMotivation = 0;
+        if (style) {
+            styleMotivation = style.motivation ? style.motivation : 0;
+        } else {
+            styleMotivation = undefined;
+        }
+        if (styleMotivation <= motivation) {
             count++;
         }
     })
@@ -1415,15 +1451,23 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
             });
     }
     // 士気
-    let morale = memberInfo.morale ? memberInfo.morale * 5 : 0;
+    let morale = memberInfo.morale ? memberInfo.morale * 5 : null;
     // 闘志
-    let fightingspirit = collect?.fightingspirit ? 20 : 0;
+    let fightingspirit = collect?.fightingspirit ? 20 : null;
+    // やる気
+    let motivation = null;
+    if (checkPawapuroExist(styleList.selectStyleList)) {
+        const MOTIVATION_LIST = [50, 25, 10, -5, -10];
+        motivation = MOTIVATION_LIST[memberInfo.motivation ? memberInfo.motivation : 0];
+    }
+    const candidates = [morale, fightingspirit, motivation].filter(v => v != null);
+
     // パッシブ(能力固定上昇)
     const handlers = {
         memberInfo, styleList, abilitySettingMap, passiveSettingMap, state, resonanceList: []
     };
     let passiveStatusUp = getSumAbilityEffectSize(handlers, EFFECT.STATUSUP_VALUE);
-    return tearsOfDreams + scoreBonus + (morale > fightingspirit ? morale : fightingspirit) + passiveStatusUp;
+    return tearsOfDreams + scoreBonus + Math.max(...candidates) + passiveStatusUp;
 }
 
 // カンマ削除

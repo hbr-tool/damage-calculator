@@ -24,6 +24,7 @@ import skillBuff from "data/skillBuff";
 
 const TARGET_KIND = [
     EFFECT.ATTACKUP, // 攻撃力アップ
+    EFFECT.DEFFENCEDOWN, // 防御力ダウン
     EFFECT.DAMAGERATEUP, // 破壊率上昇
     EFFECT.CRITICALRATEUP, // クリティカル率アップ
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開

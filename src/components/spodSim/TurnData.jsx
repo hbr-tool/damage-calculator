@@ -107,6 +107,9 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
         if (conditionsList.includes(CONDITIONS.SUPER_DOWN) || skillInfo.conditions === CONDITIONS.SUPER_DOWN) {
             effectType = 9;
         }
+        if (conditionsList.includes(CONDITIONS.MOTIVATION) || skillInfo.conditions === CONDITIONS.MOTIVATION) {
+            effectType = 10;
+        }
 
         switch (skillId) {
             case 50: // トリック・カノン
@@ -259,9 +262,9 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
         let skillInfo = getSkillData(unit.selectSkillId);
 
         const selectionConditions = [CONDITIONS.DESTRUCTION_OVER_200, CONDITIONS.HAS_SHADOW,
-        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN];
+        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN, CONDITIONS.MOTIVATION];
         if (selectionConditions.includes(skillInfo.conditions)) {
-            if (unit.buffEffectSelectType === 1) {
+            if (unit.buffEffectSelectType >= 1) {
                 let spCost = getSpCost(turn, skillInfo, unit)
                 unit.sp_cost = spCost;
             }
