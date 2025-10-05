@@ -89,7 +89,9 @@ const BuffArea = ({ argument: {
     }).join(',');
 
     let supportList = styleList.selectStyleList.map(style => {
-        return style?.support?.styleInfo.style_id + "," + style?.support?.limitCount;
+        const styleId = style?.support?.styleInfo?.style_id ?? "";
+        const limitCount = style?.support?.limitCount ?? "";
+        return `${styleId},${limitCount}`;
     }).join(',');
 
     const { buffGroup, abilityList, passiveList } = useMemo(() => {
@@ -632,7 +634,7 @@ function generateResonanceList(styleList, attackInfo) {
             if ((memberInfo.styleInfo.rarity === 0 || memberInfo.styleInfo.rarity === 9) && memberInfo.supportStyleId) {
                 const support = memberInfo.support;
                 if (support.styleInfo.ability_resonance) {
-                    const resonance = getResonanceInfo(support.styleInfo.ability_resonance);
+                    const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));
                     if (resonance.effect_type === EFFECT.ATTACKUP_AND_DAMAGERATEUP) {
                         if (attackCharaId !== charaId) {
                             return;
