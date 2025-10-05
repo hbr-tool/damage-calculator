@@ -571,8 +571,13 @@ export const getOverDrive = (turn) => {
                 if (buffInfo.conditions && !judgmentCondition(buffInfo.conditions, buffInfo.conditions_id, tempTurn, unitData, buffInfo.skill_id)) {
                     continue;
                 }
-                // サービス・エースが可変
-                let correction = 1 + (badies + earring) / 100;
+                // 可変ODはいったん非対応
+
+                let correction = 1;
+                // 補正はのプラスの時のみ
+                if (buffInfo.max_power > 0) {
+                    correction +=  (badies + earring) / 100;
+                }
                 unitOdPlus += Math.floor(buffInfo.max_power * correction * 100) / 100;
             }
             // 連撃、オギャり状態、チャージ処理

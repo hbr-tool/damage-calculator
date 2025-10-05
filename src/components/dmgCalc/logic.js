@@ -1461,13 +1461,13 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
         motivation = MOTIVATION_LIST[memberInfo.motivation ? memberInfo.motivation : 0];
     }
     const candidates = [morale, fightingspirit, motivation].filter(v => v != null);
-
+    const statUp = candidates.length > 0 ? Math.max(...candidates) : 0;
     // パッシブ(能力固定上昇)
     const handlers = {
         memberInfo, styleList, abilitySettingMap, passiveSettingMap, state, resonanceList: []
     };
     let passiveStatusUp = getSumAbilityEffectSize(handlers, EFFECT.STATUSUP_VALUE);
-    return tearsOfDreams + scoreBonus + Math.max(...candidates) + passiveStatusUp;
+    return tearsOfDreams + scoreBonus + statUp + passiveStatusUp;
 }
 
 // カンマ削除
