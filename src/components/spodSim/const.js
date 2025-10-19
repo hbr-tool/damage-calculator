@@ -16,7 +16,7 @@ export const ABILIRY_TIMING = {
 }
 
 // 使用不可スタイル
-export const NOT_USE_STYLE = [36, 172, 184];
+export const NOT_USE_STYLE = [36, 172];
 // 制限アビリティ
 export const CONSTRAINTS_ABILITY = [
     1136, // 勝勢
@@ -27,6 +27,7 @@ export const CONSTRAINTS_ABILITY = [
     1523, // アンコール
     1525, // ポジショニング
     1531, // 鋒矢
+    1213, // 絶好調女
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [

@@ -576,7 +576,7 @@ export const getOverDrive = (turn) => {
                 let correction = 1;
                 // 補正はのプラスの時のみ
                 if (buffInfo.max_power > 0) {
-                    correction +=  (badies + earring) / 100;
+                    correction += (badies + earring) / 100;
                 }
                 unitOdPlus += Math.floor(buffInfo.max_power * correction * 100) / 100;
             }
@@ -888,6 +888,11 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             return (conditionsId - 1) <= unitData.useSkillList.filter(id => id === skill_id).length;
         case CONDITIONS.MOTIVATION: // やる気
             return unitData.buffEffectSelectType >= conditionsId;
+        case CONDITIONS.HAS_PASSIVE: // パッシブ所持
+            if (conditionsId === SKILL_ID.FAST_SHOT && turnData.turnNumber > 2) {
+                return false
+            }
+            return checkPassiveExist(unitData.passiveSkillList, conditionsId);
         default:
             break;
     }
