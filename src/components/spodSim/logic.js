@@ -411,8 +411,6 @@ export function startAction(turnData) {
 
         // EXスキル使用
         if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
-            // アビリティ
-            abilityActionUnit(turnData, ABILIRY_TIMING.EX_SKILL_USE, unitData);
             // EXスキル連続使用
             if (checkBuffExist(unitData.buffList, BUFF.EX_DOUBLE)) {
                 for (let i = 0; i < buffList.length; i++) {
@@ -426,6 +424,8 @@ export function startAction(turnData) {
                 }
                 unitData.buffList = unitData.buffList.filter(obj => obj.buff_kind !== BUFF.EX_DOUBLE);
             }
+            // アビリティ
+            abilityActionUnit(turnData, ABILIRY_TIMING.EX_SKILL_USE, unitData);
         }
 
         // 攻撃後にバフを付与
@@ -2206,6 +2206,9 @@ const abilityActionUnit = (turnData, action_kbn, unit) => {
                 break;
             case EFFECT.FIRE_MARK: // 火の印
                 addAbilityBuffUnit(BUFF.FIRE_MARK, ability.passive_name, -1, targetList, turnData)
+                break;
+            case EFFECT.EX_DOUBLE: // EXスキル連続使用
+                addAbilityBuffUnit(BUFF.EX_DOUBLE, ability.ability_name, -1, targetList, turnData)
                 break;
             case EFFECT.FIELD_DEPLOYMENT: // フィールド
                 if (ability.element) {

@@ -183,7 +183,7 @@ const styleList = [
     {"style_id":183,"chara_id":1,"rarity":0,"style_name":"白熱！勝利を呼ぶ一球入魂！","image_url":"RKayamoriHR_R3_Thumbnail","role":1,"element":4,"jewel_type":1,"ability0":1024,"ability00":1303,"ability1":1214,"ability3":277},
     {"style_id":184,"chara_id":8,"rarity":0,"style_name":"熱闘！かっとばせホームラン！","image_url":"IMinaseHR_R3_Thumbnail","role":5,"element":4,"jewel_type":3,"ability0":1024,"ability1":1213,"ability3":277},
     {"style_id":185,"chara_id":6,"rarity":0,"style_name":"ようこそ♪ナイトメア・パレード","image_url":"TKunimiAutumn2025_R3_Thumbnail","role":6,"element":2,"jewel_type":4,"ability0":1802,"ability1":1101,"ability3":1146},
-    {"style_id":186,"chara_id":9,"rarity":1,"style_name":"いたずらブラックキャット","image_url":"SMinaseAutumn2025_R3_Thumbnail","role":2,"element":2,"jewel_type":1,"ability0":1025,"ability1":1101,"ability3":1803},
+    {"style_id":186,"chara_id":9,"rarity":1,"style_name":"いたずらブラックキャット","image_url":"SMinaseAutumn2025_R3_Thumbnail","role":2,"element":2,"jewel_type":1,"ability0":1025,"ability1":1101,"ability3":1803,"ability_resonance":12},
     {"style_id":5001,"chara_id":1,"rarity":2,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail","role":4,"element":0,"jewel_type":2,"ability3":1109},
