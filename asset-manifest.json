@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.281ac8c7.css",
-    "main.js": "/static/js/main.8589896d.js",
+    "main.js": "/static/js/main.1d63cef7.js",
     "static/media/frend.jpg": "/static/media/frend.4e5cc11d24a1b88f2c65.jpg",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -233,6 +233,7 @@
     "static/media/CSugaharaDefault_R3_Select.webp": "/static/media/CSugaharaDefault_R3_Select.a38eb1bc996fe96ffdee.webp",
     "static/media/VBalakrishnanDefault_R3_Select.webp": "/static/media/VBalakrishnanDefault_R3_Select.47ee98447e7ce4b758a5.webp",
     "static/media/YIzumiSnowWhite_R3_Select.webp": "/static/media/YIzumiSnowWhite_R3_Select.2e2088764402b90d25a4.webp",
+    "static/media/TKunimiAutumn2025_R3_Select.webp": "/static/media/TKunimiAutumn2025_R3_Select.174190664fc5b00203c7.webp",
     "static/media/TKunimiDefault_R3_Select.webp": "/static/media/TKunimiDefault_R3_Select.f59a14b3212cdeee704d.webp",
     "static/media/MuOhshimaDefault_R3_Select.webp": "/static/media/MuOhshimaDefault_R3_Select.aa6eb1ed44e479cff61b.webp",
     "static/media/MAikawaMaiden_R3_Select.webp": "/static/media/MAikawaMaiden_R3_Select.36d1f22dc8a82c9b1fcf.webp",
@@ -307,6 +308,7 @@
     "static/media/YIzumiCombat2023_R3_Thumbnail.webp": "/static/media/YIzumiCombat2023_R3_Thumbnail.238e15fd3f8eb6d08747.webp",
     "static/media/ByakkoSwim2025_R2_Thumbnail.webp": "/static/media/ByakkoSwim2025_R2_Thumbnail.f303a4acc99dbcef3b4e.webp",
     "static/media/AMizuharaJellyfish_R3_Thumbnail.webp": "/static/media/AMizuharaJellyfish_R3_Thumbnail.c7292a281c58e2126d8b.webp",
+    "static/media/SMinaseAutumn2025_R3_Select.webp": "/static/media/SMinaseAutumn2025_R3_Select.a48d01f9374b798e6a23.webp",
     "static/media/SKuraSwim2025_R3_Thumbnail.webp": "/static/media/SKuraSwim2025_R3_Thumbnail.81f144ea7e9689b6a11f.webp",
     "static/media/YBungoEvil_R3_Thumbnail.webp": "/static/media/YBungoEvil_R3_Thumbnail.4798c8c1a1f5b853b5be.webp",
     "static/media/MKiryuDefault_R2a_Thumbnail.webp": "/static/media/MKiryuDefault_R2a_Thumbnail.ba7ee6addee9a2cfa58a.webp",
@@ -352,6 +354,7 @@
     "static/media/KarenDefault_R3_Select.webp": "/static/media/KarenDefault_R3_Select.8cfc5f64109bd15ac90e.webp",
     "static/media/IrOhshimaShowTime_R3_Thumbnail.webp": "/static/media/IrOhshimaShowTime_R3_Thumbnail.8e9894ed2e51dd11fa63.webp",
     "static/media/HOgasawaraHR_R2_Thumbnail.webp": "/static/media/HOgasawaraHR_R2_Thumbnail.f2847582bd006c67fa3e.webp",
+    "static/media/TKunimiAutumn2025_R3_Thumbnail.webp": "/static/media/TKunimiAutumn2025_R3_Thumbnail.c18bbcb19e37cb7cf109.webp",
     "static/media/YBungoDefault_R3_Thumbnail.webp": "/static/media/YBungoDefault_R3_Thumbnail.d33a26cfbf8267333538.webp",
     "static/media/IRedmaynePhantom_R3_Select.webp": "/static/media/IRedmaynePhantom_R3_Select.80528a3a8ba8b20ff4ed.webp",
     "static/media/IIshiiDefault_R2a_Thumbnail.webp": "/static/media/IIshiiDefault_R2a_Thumbnail.bd0413b0bff8e8539b01.webp",
@@ -393,6 +396,7 @@
     "static/media/SHiguchiDoctor_R3_Thumbnail.webp": "/static/media/SHiguchiDoctor_R3_Thumbnail.94ab2929aa3d3d9a717b.webp",
     "static/media/EAoiNewYear2024_R3_Thumbnail.webp": "/static/media/EAoiNewYear2024_R3_Thumbnail.8a3a91554a1bc4e5c155.webp",
     "static/media/IMinaseDefault_R3_Thumbnail.webp": "/static/media/IMinaseDefault_R3_Thumbnail.ef0de132973706daed3f.webp",
+    "static/media/SMinaseAutumn2025_R3_Thumbnail.webp": "/static/media/SMinaseAutumn2025_R3_Thumbnail.154ed66dadd6a2d1c02d.webp",
     "static/media/MKurosawaDefault_R1_Thumbnail.webp": "/static/media/MKurosawaDefault_R1_Thumbnail.8d00e5902c2ee1707b40.webp",
     "static/media/INatsumeButterfly_R3_Select.webp": "/static/media/INatsumeButterfly_R3_Select.7de0f7c2961a53a854c6.webp",
     "static/media/angelbeats.webp": "/static/media/angelbeats.359fbb2afdbdcf12e723.webp",
@@ -766,6 +770,6 @@
   },
   "entrypoints": [
     "static/css/main.281ac8c7.css",
-    "static/js/main.8589896d.js"
+    "static/js/main.1d63cef7.js"
   ]
 }
