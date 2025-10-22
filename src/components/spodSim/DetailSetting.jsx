@@ -113,15 +113,8 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                         <option value="5">5</option>
                     </select>
                     ターンごとに OverDriveGauge
-                    <select className="step_od_gauge w-[60px]" id="stepOverDriveGauge" value={detailSetting.stepOverDriveGauge} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="15">+15%</option>
-                        <option value="10">+10%</option>
-                        <option value="5">+5%</option>
-                        <option value="0">+0%</option>
-                        <option value="-5">-5%</option>
-                        <option value="-10">-10%</option>
-                        <option value="-15">-15%</option>
-                    </select>
+                    <input id="stepOverDriveGauge" className="step_od_gauge w-[70px]" value={detailSetting.stepOverDriveGauge}
+                        max="300" min="-300" step="0.01" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                 </li>
                 <li>
                     <select className="h-[25px]" id="stepTurnSp" value={detailSetting.stepTurnSp} onChange={(e) => updateDetailSetting(e)}>
