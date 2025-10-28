@@ -1139,7 +1139,7 @@ function skillHealSp(turnData, targetNo, addSp, limitSp, usePlaceNo, isRecursion
     if (!isRecursion) {
         // 愛嬌
         if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], 1605) && targetNo !== usePlaceNo) {
-            skillHealSp(unitData, targetNo, 3, 30, null, true, 0)
+            skillHealSp(turnData, targetNo, 3, 30, null, true, 0)
         }
         // お裾分け/意気軒昂
         if ((checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], 1606) ||
