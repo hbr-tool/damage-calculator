@@ -39,6 +39,9 @@ const ModalEffectSelection = ({ closeModal, onSelect, effectType }) => {
         case 10:
             value = ["絶不調", "不調", "普通", "好調", "絶好調"];
             break;
+        case 11:
+            value = ["トークン0", "トークン1", "トークン2", "トークン3", "トークン4", "トークン5", "トークン6", "トークン7", "トークン8", "トークン9", "トークン10"];
+            break;
         default:
             break;
     }

@@ -12,6 +12,7 @@ export const ABILIRY_TIMING = {
     EX_SKILL_USE: 8,
     PURSUIT: 9,
     FIELD_DEPLOY: 10,
+    SKILL_USE: 11,
     OTHER: 99,
 }
 
@@ -27,6 +28,8 @@ export const CONSTRAINTS_ABILITY = [
     1523, // アンコール
     1525, // ポジショニング
     1531, // 鋒矢
+    1533, // 貴様に託した
+    1534, // 破竹の勢い
     1213, // 絶好調女
 ];
 // 制限パッシブ

@@ -403,6 +403,8 @@ export function startAction(turnData) {
             if (attackInfo) {
                 frontCostList.push(sp_cost);
             }
+            // アビリティ(スキル使用)
+            abilityActionUnit(turnData, ABILIRY_TIMING.SKILL_USE, unitData);
         }
 
         if (attackInfo) {
@@ -424,7 +426,7 @@ export function startAction(turnData) {
                 }
                 unitData.buffList = unitData.buffList.filter(obj => obj.buff_kind !== BUFF.EX_DOUBLE);
             }
-            // アビリティ
+            // アビリティ（EXスキル使用）
             abilityActionUnit(turnData, ABILIRY_TIMING.EX_SKILL_USE, unitData);
         }
 
@@ -887,6 +889,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
         case CONDITIONS.USE_COUNT: // 回数以降
             return (conditionsId - 1) <= unitData.useSkillList.filter(id => id === skill_id).length;
         case CONDITIONS.MOTIVATION: // やる気
+        case CONDITIONS.TOKEN_OVER: // トークン
             return unitData.buffEffectSelectType >= conditionsId;
         case CONDITIONS.HAS_PASSIVE: // パッシブ所持
             if (conditionsId === SKILL_ID.FAST_SHOT && turnData.turnNumber > 2) {
@@ -1758,9 +1761,9 @@ const debuffConsumption = (turn) => {
     }
 }
 
-export const abilityAction = (action_kbn, turn) => {
+export const abilityAction = (actionKbn, turn) => {
     unitOrderLoop(function (unit) {
-        abilityActionUnit(turn, action_kbn, unit)
+        abilityActionUnit(turn, actionKbn, unit)
     }, turn.unitList);
 }
 
@@ -1960,11 +1963,11 @@ const getFunnelList = (unit) => {
     return resultList;
 }
 
-const abilityActionUnit = (turnData, action_kbn, unit) => {
+const abilityActionUnit = (turnData, actionKbn, unit) => {
     let actionList = [];
-    actionList = unit[`ability_${action_kbn}`];
+    actionList = unit[`ability_${actionKbn}`];
     // 被ダメージ時
-    if (action_kbn === ABILIRY_TIMING.RECEIVE_DAMAGE) {
+    if (actionKbn === ABILIRY_TIMING.RECEIVE_DAMAGE) {
         // 前衛のみ
         if (unit.placeNo >= 3) {
             actionList = [];
@@ -2028,6 +2031,14 @@ const abilityActionUnit = (turnData, action_kbn, unit) => {
                     if (!checkBuffExist(unit.buffList, BUFF.FIRE_MARK)) {
                         return;
                     }
+                }
+                break;
+            case "ODゲージ使用":
+                let list = getBuffList(unit.selectSkillId)
+                    .filter(skill => skill.buff_kind === BUFF.OVERDRIVEPOINTUP)
+                    .filter(skill => skill.min_power < 0);
+                if (list.length === 0) {
+                    return;
                 }
                 break;
             case "破壊率が200%以上":

@@ -11,6 +11,7 @@ const abilityResonance = [
     {"resonance_id":10,"resonance_name":"ムクワス","resonance_text":"バトル勝利時 味方全体の氷属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)","effect_type":null,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5},
     {"resonance_id":11,"resonance_name":"ザクースカ","resonance_text":"バトル勝利時 味方全体の火属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)","effect_type":null,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5},
     {"resonance_id":12,"resonance_name":"つめとぎ","resonance_text":"自身のスキル攻撃力+{0}%","effect_type":1,"effect_limit_0":40,"effect_limit_1":48,"effect_limit_2":56,"effect_limit_3":64,"effect_limit_4":70},
+    {"resonance_id":13,"resonance_name":"素敵な夜","resonance_text":"バトル開始時 自身をモクテル状態にする(回復量{0}%)","effect_type":null,"effect_limit_0":10,"effect_limit_1":20,"effect_limit_2":30,"effect_limit_3":40,"effect_limit_4":50},
 ];
 
 export default abilityResonance;
