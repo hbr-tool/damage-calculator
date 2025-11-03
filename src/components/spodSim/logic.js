@@ -1687,12 +1687,15 @@ const nextTurn = (turn) => {
     abilityAction(ABILIRY_TIMING.RECEIVE_DAMAGE, turn);
     if (turn.turnNumber % turn.stepTurnOverDrive === 0) {
         turn.overDriveGauge += turn.stepOverDriveGauge;
-        if (turn.overDriveGauge < -300) {
-            turn.overDriveGauge = -300;
-        }
-        if (turn.overDriveGauge > 300) {
-            turn.overDriveGauge = 300;
-        }
+    }
+    if (turn.turnNumber === turn.ordinalTurnOverDrive) {
+        turn.overDriveGauge += turn.ordinalOverDriveGauge;
+    }
+    if (turn.overDriveGauge < -300) {
+        turn.overDriveGauge = -300;
+    }
+    if (turn.overDriveGauge > 300) {
+        turn.overDriveGauge = 300;
     }
     // 敵のデバフ消費
     debuffConsumption(turn);
@@ -1789,17 +1792,20 @@ const unitTurnProceed = (unit, turn) => {
     }
     if (unit.sp < unit.limitSp) {
         unit.sp += 2;
-        if (unit.placeNo < 3) {
-            unit.sp += turn.frontSpAdd;
-        } else {
-            unit.sp += turn.backSpAdd;
-        }
         if ((turn.turnNumber + 1) % turn.stepTurnSp === 0) {
             unit.sp += turn.stepSpAllAdd;
             if (unit.placeNo < 3) {
                 unit.sp += turn.stepSpFrontAdd;
             } else {
                 unit.sp += turn.stepSpBackAdd;
+            }
+        }
+        if ((turn.turnNumber + 1) === turn.ordinalTurnSp) {
+            unit.sp += turn.ordinalSpAllAdd;
+            if (unit.placeNo < 3) {
+                unit.sp += turn.ordinalSpFrontAdd;
+            } else {
+                unit.sp += turn.ordinalSpBackAdd;
             }
         }
         if (checkBuffExist(unit.buffList, BUFF.FIRE_MARK)) {

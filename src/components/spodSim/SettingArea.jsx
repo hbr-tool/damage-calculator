@@ -201,14 +201,18 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         turnInit.fieldTurn = -1;
     }
     turnInit.overDriveGauge = Number(detailSetting.initOverDrive);
-    turnInit.frontSpAdd = Number(detailSetting.frontSpAdd);
-    turnInit.backSpAdd = Number(detailSetting.backSpAdd);
     turnInit.stepTurnOverDrive = Number(detailSetting.stepTurnOverDrive);
     turnInit.stepOverDriveGauge = Number(detailSetting.stepOverDriveGauge);
     turnInit.stepTurnSp = Number(detailSetting.stepTurnSp);
     turnInit.stepSpFrontAdd = Number(detailSetting.stepSpFrontAdd);
     turnInit.stepSpBackAdd = Number(detailSetting.stepSpBackAdd);
     turnInit.stepSpAllAdd = Number(detailSetting.stepSpAllAdd);
+    turnInit.ordinalTurnOverDrive = Number(detailSetting.ordinalTurnOverDrive);
+    turnInit.ordinalOverDriveGauge = Number(detailSetting.ordinalOverDriveGauge);
+    turnInit.ordinalTurnSp = Number(detailSetting.ordinalTurnSp);
+    turnInit.ordinalSpFrontAdd = Number(detailSetting.ordinalSpFrontAdd);
+    turnInit.ordinalSpBackAdd = Number(detailSetting.ordinalSpBackAdd);
+    turnInit.ordinalSpAllAdd = Number(detailSetting.ordinalSpAllAdd);
 
     turnInit.enemyCount = Number(enemyInfo.enemy_count);
     turnInit.unitList = unitList;
@@ -351,14 +355,18 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         changeElement3: 0,
         changeElement4: 0,
         changeElement5: 0,
-        frontSpAdd: 0,
-        backSpAdd: 0,
         stepTurnOverDrive: 1,
         stepOverDriveGauge: 0,
         stepTurnSp: 1,
         stepSpAllAdd: 0,
         stepSpFrontAdd: 0,
         stepSpBackAdd: 0,
+        ordinalTurnOverDrive: 1,
+        ordinalOverDriveGauge: 0,
+        ordinalTurnSp: 1,
+        ordinalSpAllAdd: 0,
+        ordinalSpFrontAdd: 0,
+        ordinalSpBackAdd: 0,
     });
 
     return (
