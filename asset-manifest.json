@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.759c8ac2.css",
-    "main.js": "/static/js/main.085305dc.js",
+    "main.js": "/static/js/main.d757dfe6.js",
     "static/media/frend.jpg": "/static/media/frend.4e5cc11d24a1b88f2c65.jpg",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -171,6 +171,7 @@
     "static/media/KHiiragiBloody_R3_Select.webp": "/static/media/KHiiragiBloody_R3_Select.93f8c26339055c17d1e9.webp",
     "static/media/TTojoSwim2022_R3_Select.webp": "/static/media/TTojoSwim2022_R3_Select.c1597f63cf072f3a15d5.webp",
     "static/media/ADateFurisode2025_R3_Select.webp": "/static/media/ADateFurisode2025_R3_Select.3c87dbcc79b4417662eb.webp",
+    "static/media/BIYamawakiEvil_R3_Select.webp": "/static/media/BIYamawakiEvil_R3_Select.78863e38cb151cf14863.webp",
     "static/media/CathyBDefault_R3_Select.webp": "/static/media/CathyBDefault_R3_Select.5ad1f57de932ce06d37a.webp",
     "static/media/KarenSwim2024_R3_Select.webp": "/static/media/KarenSwim2024_R3_Select.65ed4c96dc71c624cc24.webp",
     "static/media/TKunimiNewYear2023_R3_Select.webp": "/static/media/TKunimiNewYear2023_R3_Select.ee112330a143a3654f55.webp",
@@ -390,6 +391,7 @@
     "static/media/SSakurabaNewYear2023_R3_Thumbnail.webp": "/static/media/SSakurabaNewYear2023_R3_Thumbnail.8e95ab20ebb1f1584809.webp",
     "static/media/YoOhshimaDefault_R3_Select.webp": "/static/media/YoOhshimaDefault_R3_Select.1bfb9979cf9e02c09051.webp",
     "static/media/IIshiiBride_R3_Thumbnail.webp": "/static/media/IIshiiBride_R3_Thumbnail.c4729db76c62aa1b64cf.webp",
+    "static/media/BIYamawakiEvil_R3_Thumbnail.webp": "/static/media/BIYamawakiEvil_R3_Thumbnail.09330c4839ac9a9c1a7e.webp",
     "static/media/LShanhuaDefault_R2a_Thumbnail.webp": "/static/media/LShanhuaDefault_R2a_Thumbnail.04f2c2986a9c0cf16f7e.webp",
     "static/media/CReaperDefault_R1_Thumbnail.webp": "/static/media/CReaperDefault_R1_Thumbnail.ee7294b1e64715dc02fc.webp",
     "static/media/IrOhshimaDefault_R3_Thumbnail.webp": "/static/media/IrOhshimaDefault_R3_Thumbnail.2ef57b7edf1f751bfce9.webp",
@@ -775,6 +777,6 @@
   },
   "entrypoints": [
     "static/css/main.759c8ac2.css",
-    "static/js/main.085305dc.js"
+    "static/js/main.d757dfe6.js"
   ]
 }
