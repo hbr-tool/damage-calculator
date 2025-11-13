@@ -115,6 +115,9 @@ const scoreGrade = [
     {"score_attack_no":85,"half":1,"grade_no":1,"grade_name":"3ターン毎に敵の攻撃力10%アップ(解除不可)","grade_rate":15,"grade_none":1,"effect_kind1":"","conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
     {"score_attack_no":85,"half":1,"grade_no":2,"grade_name":"敵のHP+50%","grade_rate":10,"grade_none":0,"effect_kind1":"hp_rate","effect_size1":50,"conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
     {"score_attack_no":85,"half":1,"grade_no":3,"grade_name":"ODがLv.2でしか発動できない","grade_rate":10,"grade_none":1,"effect_kind1":"","conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":86,"half":1,"grade_no":1,"grade_name":"敵のHP+50%","grade_rate":20,"grade_none":0,"effect_kind1":"hp_rate","effect_size1":50,"conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":86,"half":1,"grade_no":2,"grade_name":"敵のDP+25%","grade_rate":15,"grade_none":0,"effect_kind1":"dp_rate","effect_size1":25,"conditions1":"","effect_kind2":"","conditions2":"","effect_kind3":"","conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
+    {"score_attack_no":86,"half":1,"grade_no":3,"grade_name":"闇弱点に変化","grade_rate":0,"grade_none":0,"effect_kind1":"element_3","effect_size1":150,"conditions1":"","effect_kind2":"element_4","effect_size2":150,"conditions2":"","effect_kind3":"element_5","effect_size3":-150,"conditions3":"","effect_kind4":"","conditions4":"","effect_kind5":"","conditions5":""},
 ];
 
 export default scoreGrade;

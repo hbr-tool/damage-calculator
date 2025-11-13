@@ -186,6 +186,7 @@ const styleList = [
     {"style_id":186,"chara_id":9,"rarity":1,"style_name":"いたずらブラックキャット","image_url":"SMinaseAutumn2025_R3_Thumbnail","role":2,"element":2,"jewel_type":1,"ability0":1025,"ability1":1101,"ability3":1803,"ability_resonance":12},
     {"style_id":187,"chara_id":27,"rarity":0,"style_name":"ミッドナイト・プレリュード","image_url":"MiOhshimaMocktail_R3_Thumbnail","role":2,"element":4,"jewel_type":1,"ability0":2101,"ability1":1139,"ability3":1534},
     {"style_id":188,"chara_id":29,"rarity":1,"style_name":"夜語りのひとしずく","image_url":"IrOhshimaNightlife_R3_Thumbnail","role":5,"element":5,"jewel_type":3,"ability0":1026,"ability00":1503,"ability1":1139,"ability3":1027,"ability_resonance":13},
+    {"style_id":189,"chara_id":13,"rarity":0,"style_name":"誇り高き魔王の凱旋","image_url":"BIYamawakiEvil_R3_Thumbnail","role":1,"element":5,"jewel_type":1,"ability0":23,"ability00":1028,"ability1":1149,"ability3":518,"ability4":1215},
     {"style_id":5001,"chara_id":1,"rarity":2,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail","role":4,"element":0,"jewel_type":2,"ability3":1109},

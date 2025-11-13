@@ -316,7 +316,11 @@ const getBuffEffectDisplay = (buffInfo, skillLv) => {
                 return `${unit}%×${minPower}Hit～${maxPower}Hit`
             }
         default:
-            minPower = buffInfo.min_power * (1 + 0.03 * (skillLv - 1));
+            if (BUFF_LIST.includes(buffInfo.buff_kind)) {
+                minPower = buffInfo.min_power * (1 + 0.03 * (skillLv - 1));
+            } else {
+                minPower = buffInfo.min_power * (1 + 0.05 * (skillLv - 1));
+            }
             maxPower = buffInfo.max_power * (1 + 0.02 * (skillLv - 1));
             if (minPower === maxPower) {
                 return `${minPower.toLocaleString()}%`

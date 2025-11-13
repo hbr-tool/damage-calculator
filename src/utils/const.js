@@ -15,7 +15,7 @@ export const STYLE_ID = {
     ONLY_MOON_LIGHT: 145,   // 月光月歌
     WEDING_SHARO: 123,  // ウェディングシャロ
     UNISON_BUNGO: 161,  // ユニソン豊後
-    SERVANT: [162, 163],    // 下僕天音、聖羅
+    SERVANT: [162, 163, 178, 189],    // 下僕天音、聖羅、マリ、魔王
     UNISON_KARENCHAN: 177,  // ユニソンカレンチャン
     KITCHEN_VRITIKA: 181,  // キッチンヴリティカ
     KITCHEN_SHARO: 182,  // キッチンシャロ

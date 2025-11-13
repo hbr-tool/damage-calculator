@@ -88,58 +88,24 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                     </select>
                 </li>
                 <li>
-                    <select className="h-[25px]" id="stepTurnOverDrive" value={detailSetting.stepTurnOverDrive} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+                    <input id="stepTurnOverDrive" className="step_od_gauge w-[30px]" value={detailSetting.stepTurnOverDrive}
+                        max="30" min="0" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                     ターンごとに OverDriveGauge
                     <input id="stepOverDriveGauge" className="step_od_gauge w-[70px]" value={detailSetting.stepOverDriveGauge}
                         max="300" min="-300" step="5" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                 </li>
                 <li>
-                    <select className="h-[25px]" id="stepTurnSp" value={detailSetting.stepTurnSp} onChange={(e) => updateDetailSetting(e)}>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
+                    <input id="stepTurnSp" className="step_od_gauge w-[30px]" value={detailSetting.stepTurnSp}
+                        max="30" min="0" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                     ターンごとに SP 全体
-                    <select className="step_sp" id="stepSpAllAdd" value={detailSetting.stepSpAllAdd} onChange={(e) => updateDetailSetting(e)}>
-                        {Array.from({ length: 11 }, (_, i) => {
-                            const value = i - 5;
-                            return (
-                                <option value={value} key={value}>
-                                    {value > 0 ? `+${value}` : value}
-                                </option>
-                            );
-                        })}
-                    </select>
+                    <input id="stepSpAllAdd" className="step_od_gauge step_sp" value={detailSetting.stepSpAllAdd}
+                        max="30" min="-30" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                     前衛
-                    <select className="step_sp" id="stepSpFrontAdd" value={detailSetting.stepSpFrontAdd} onChange={(e) => updateDetailSetting(e)}>
-                        {Array.from({ length: 11 }, (_, i) => {
-                            const value = i - 5;
-                            return (
-                                <option value={value} key={value}>
-                                    {value > 0 ? `+${value}` : value}
-                                </option>
-                            );
-                        })}
-                    </select>
+                    <input id="stepSpFrontAdd" className="step_od_gauge step_sp" value={detailSetting.stepSpFrontAdd}
+                        max="30" min="-30" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                     後衛
-                    <select className="step_sp" id="stepSpBackAdd" value={detailSetting.stepSpBackAdd} onChange={(e) => updateDetailSetting(e)}>
-                        {Array.from({ length: 11 }, (_, i) => {
-                            const value = i - 5;
-                            return (
-                                <option value={value} key={value}>
-                                    {value > 0 ? `+${value}` : value}
-                                </option>
-                            );
-                        })}
-                    </select>
+                    <input id="stepSpBackAdd" className="step_od_gauge step_sp" value={detailSetting.stepSpBackAdd}
+                        max="30" min="-30" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                 </li>
                 <li>
                     <input id="ordinalTurnOverDrive" className="step_od_gauge w-[30px]" value={detailSetting.ordinalTurnOverDrive}

@@ -31,6 +31,7 @@ export const CONSTRAINTS_ABILITY = [
     1533, // 貴様に託した
     1534, // 破竹の勢い
     1213, // 絶好調女
+    1028, // 魔界騎兵起動！
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [

@@ -61,6 +61,7 @@ const BuffArea = ({ argument: {
 
     let isElement = false;
     let isWeak = false;
+    let isDamageRate = Number(state.maxDamageRate) !== Number(state.damageRate);
     if (attackInfo) {
         isElement = attackInfo.attack_element;
         const [physicalResist, elementResist] = getEnemyResist(attackInfo, state);
@@ -68,7 +69,7 @@ const BuffArea = ({ argument: {
     }
     let isDp = Number(state.dpRate[0]) !== 0;
 
-    const attackUpBuffs = getAttackUpBuffs(isElement, isWeak, attackInfo, styleList.selectStyleList);
+    const attackUpBuffs = getAttackUpBuffs(isElement, isWeak, isDamageRate, attackInfo, styleList.selectStyleList);
     const defDownBuffs = getDefenseDownBuffs(isElement, isWeak, isDp);
     const criticalBuffs = getCriticalBuffs(isElement);
 
@@ -798,7 +799,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
         });
 }
 
-const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleList) {
+const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, selectStyleList) {
     const isShadowClone = CHARA_ID.SHADOW_CLONE.includes(attackInfo?.chara_id);
     const isWedingSharo = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.WEDING_SHARO
@@ -830,7 +831,7 @@ const getAttackUpBuffs = function (isElement, isWeak, attackInfo, selectStyleLis
         ...(isWeak ? [{ name: "心眼", kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
         { name: "連撃", kind: BUFF.FUNNEL, overlap: true },
-        { name: "破壊率UP", kind: BUFF.DAMAGERATEUP, overlap: true },
+        ...(isDamageRate ? [{ name: "破壊率UP", kind: BUFF.DAMAGERATEUP, overlap: true },] : []),
     ];
 }
 

@@ -255,8 +255,8 @@ export function getCostVariable(spCost, collect, memberInfo, abilitySettingMap, 
     let costVariable = 0;
     if (collect?.sphalf) {
         spCost = Math.ceil(spCost / 2);
-    } else if (collect?.spzero) {
-        spCost = 0;
+    } else if (collect?.spzero || spCost === 0) {
+        return 0;
     }
     // 蒼天
     const blueSky = Object.values(abilitySettingMap)

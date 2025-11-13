@@ -596,6 +596,8 @@ const skilLlist = [
     {"skill_id":694,"skill_name":"星降るシャンデリア・グラス","chara_id":29,"style_id":188,"sp_cost":0,"skill_active":0,"skill_kind":1},
     {"skill_id":695,"skill_name":"フラッフィー","chara_id":28,"style_id":0,"sp_cost":12,"skill_active":0,"skill_kind":0},
     {"skill_id":696,"skill_name":"快感・スプリント！+","chara_id":30,"style_id":0,"sp_cost":11,"skill_active":0,"skill_kind":2},
+    {"skill_id":697,"skill_name":"ごきげんダンス","chara_id":13,"style_id":0,"sp_cost":6,"skill_active":0,"skill_kind":0},
+    {"skill_id":698,"skill_name":"ギガビッグバン","chara_id":13,"style_id":189,"sp_cost":0,"skill_active":0,"skill_kind":1},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8003,"skill_name":"連撃＋","chara_id":501,"style_id":0,"sp_cost":0,"skill_active":0,"skill_kind":9},
