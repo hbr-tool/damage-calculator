@@ -16,7 +16,7 @@ import {
 } from "./logic";
 import enemyIcon from 'assets/img/BtnEventBattleActive.webp';
 
-const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, handlers }) => {
+const TurnData = React.memo(({ turn, index, activeTurnNumber, isLastTurn, hideMode, isCapturing, handlers }) => {
     const isNextInfluence = useRef(false);
 
     // 再描画
@@ -294,8 +294,10 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
     const openModal = (type, index, effect_type) => setModalSetting({ isOpen: true, modalIndex: index, modalType: type, effect_type: effect_type });
     const closeModal = () => setModalSetting({ isOpen: false });
 
+    const turnClass = "turn_area" + (turn.additionalTurn ? " additional_turn" : turn.overDriveMaxTurn > 0 ? " overdrive_turn" : "");
+    const activeTurnClass = activeTurnNumber === turn.turnNumber ? " active_turn" : "";
     return (
-        <div className="turn">
+        <div className={turnClass + activeTurnClass} onClick={() => handlers.setActiveTurnNumber(turn.turnNumber)}>
             <div className="turn_header_area">
                 <div className="turn_header_top">
                     <div>
@@ -391,6 +393,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, hideMode, isCapturing, h
     // 再描画が必要ないなら true を返す
     return (
         prevProps.turn === nextProps.turn &&
+        (prevProps.activeTurnNumber === prevProps.turn.turnNumber && nextProps.turn.turnNumber === nextProps.activeTurnNumber) &&
         prevProps.isLastTurn === nextProps.isLastTurn &&
         prevProps.hideMode === nextProps.hideMode &&
         prevProps.isCapturing === nextProps.isCapturing

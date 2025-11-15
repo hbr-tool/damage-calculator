@@ -249,12 +249,24 @@ input.troops_btn.selected_troops {
     content: 'OD発動';
 }
 
-.turn {
+.turn_area {
     border: solid gray 2px;
     border-radius: 20px;
     margin: 0px 0px 3px 0px;
     padding: 0px 5px 0px 5px;
     display: flex;
+}
+
+.turn_area.additional_turn {
+    border-color: #FF8888;
+}
+
+.turn_area.overdrive_turn {
+    border-color: #8888FF;
+}
+
+.active_turn {
+    /* background-color: #FFFF88; */
 }
 
 .party_member {

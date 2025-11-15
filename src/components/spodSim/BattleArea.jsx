@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import TurnData from "./TurnData";
 import ModalSaveLoad from "./ModalSaveLoad";
@@ -84,11 +84,11 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
     };
 
     // ターンを進める
-    const proceedTurn = (turn_data, isInitTurn) => {
+    const proceedTurn = (turnData, isInitTurn) => {
         // ターン開始処理
-        initTurn(turn_data, isInitTurn);
+        initTurn(turnData, isInitTurn);
         // 次ターン追加
-        dispatch({ type: 'ADD_TURN_LIST', payload: turn_data });
+        dispatch({ type: 'ADD_TURN_LIST', payload: turnData });
     }
 
     // ターンを戻す
@@ -108,18 +108,22 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
         // ターン更新
         dispatch({ type: 'UPDATE_TURN', payload: seqTurn, turnData: turnData });
     }
+    const [activeTurnNumber, setActiveTurnNumber] = useState(1);
 
     // 引数のfuntionをまとめる
-    const handlers = { proceedTurn, returnTurn, recreateTurn, updateTurn };
+    const handlers = { proceedTurn, returnTurn, recreateTurn, updateTurn, setActiveTurnNumber };
 
     const changeHideMode = (e) => {
         const hideMode = e.target.checked;
         setHideMode(hideMode);
     }
+    useEffect(() => {
+        setActiveTurnNumber(turnList.length);
+    }, [turnList.length]);
 
     let display_class = hideMode ? "hide_mode " : "show_mode";
 
-    const [modal, setModal] = React.useState({
+    const [modal, setModal] = useState({
         isOpen: false,
         mode: ""
     });
@@ -144,7 +148,7 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                     </div>
                     <div id="battle_display" className="text-left" ref={elementRef}>
                         {turnList.map((turn, index) => {
-                            return <TurnData turn={turn} index={index} key={`turn${index}`}
+                            return <TurnData turn={turn} index={index} key={`turn${index}`} activeTurnNumber={activeTurnNumber}
                                 isLastTurn={turnList.length - 1 === index} hideMode={hideMode} isCapturing={isCapturing} handlers={handlers} />
                         })}
                     </div>
