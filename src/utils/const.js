@@ -40,6 +40,7 @@ export const SKILL_ID = {
     CONSPIRACY: 669, // 謀略
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
+    SUNNY_DANCE: 669, // ごきげんダンス
 }
 
 export const BUFF_ID = {

@@ -147,15 +147,18 @@ const ModalStyleSelection = ({ index, narrowStyle, setNarrowStyle, clickSetMembe
                 })}
             </div>
             <div className="flex flex-wrap rearity_area justify-center mx-auto">
-                {Object.keys(RARITY_LIST).map(key => {
+                {Object.keys(RARITY_LIST).map((key, index) => {
                     key = Number(key);
-                    let opacity = key === narrowStyle.rarity ? "" : "translucent";
+                    let opacity = narrowStyle.rarity[index] ? "" : "translucent";
                     let className = `rarity ${opacity}`
                     return (<input className={className} id={`rarity_${key}`} src={rarity[RARITY_LIST[key]]} type="image"
                         key={`rearity_${key}`}
                         alt={RARITY_LIST[key]}
                         onClick={(e) => {
-                            setNarrowStyle({ ...narrowStyle, rarity: key });
+                            setNarrowStyle(prev => ({
+                                ...prev,
+                                rarity: prev.rarity.map((v, i) => (i === index ? !v : v)),
+                            }));
                         }}
                     />)
                 })}
@@ -225,7 +228,7 @@ const ModalStyleSelection = ({ index, narrowStyle, setNarrowStyle, clickSetMembe
                             };
                         }
                         return charaData.troops === key
-                            && (narrowStyle.rarity === null || style.rarity === narrowStyle.rarity)
+                            && (narrowStyle.rarity[style.rarity])
                             && (narrowStyle.physical === null || charaData.physical === narrowStyle.physical)
                             && (narrowStyle.element === null || style.element === narrowStyle.element || style.element2 === narrowStyle.element)
                             && (narrowStyle.role === null || style.role === narrowStyle.role);

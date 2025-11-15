@@ -119,7 +119,7 @@ const CharaStatus = ({ argument: {
         physical: null,
         element: null,
         role: null,
-        rarity: 0,
+        rarity: [true, true, false, false],
         target: "none",
         buff_1: -1,
         buff_2: -1,
