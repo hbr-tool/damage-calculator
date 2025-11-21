@@ -752,7 +752,7 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
         damage: Math.floor(damage),
         restDp: restDp,
         restHp: restHp,
-        damageRate: Math.round(damageRate * 10) / 10,
+        damageRate: Math.floor(damageRate * 10) / 10,
     };
 }
 
@@ -930,7 +930,7 @@ function getDamagerateEffectSize(handlers, hitCount) {
     destructionEffectSize += getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap, [BUFF.DAMAGERATEUP]);
     destructionEffectSize += getSumAbilityEffectSize(handlers, EFFECT.DAMAGERATEUP);
     destructionEffectSize += getSumTokenAbilirySize(handlers, EFFECT.TOKEN_DAMAGERATEUP)
-    destructionEffectSize += getEarringEffectSize(otherSetting, "blast", 10 - hitCount);
+    destructionEffectSize += getEarringEffectSize(otherSetting, "blast", 11 - hitCount);
     destructionEffectSize += getChainEffectSize(otherSetting, "skill");
 
     // // 制圧戦
