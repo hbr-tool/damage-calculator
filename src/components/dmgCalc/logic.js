@@ -752,7 +752,7 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
         damage: Math.floor(damage),
         restDp: restDp,
         restHp: restHp,
-        damageRate: Math.floor(damageRate * 10) / 10,
+        damageRate: Math.round(damageRate * 10) / 10,
     };
 }
 
