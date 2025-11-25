@@ -2121,13 +2121,14 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                                         }
                                     }
                                     break;
-                                case 1204: // エンゲージリンク
+                                case ABILITY_ID.ENGAGE_LINK: // エンゲージリンク
                                     // 永遠なる誓いチェック
                                     if (checkBuffExist(unitData.buffList, BUFF.ETERNAL_OARH)) {
                                         unitData.sp += ability.effect_size;
                                     }
                                     break;
-                                case 1140: // 世界を滅ぼすお手伝いでゲス！
+                                case ABILITY_ID.DESTROY_WORLD: // 世界を滅ぼすお手伝いでゲス！
+                                case ABILITY_ID.LETS_MARCH: // いざ進軍！
                                     // 山脇様のしもべチェック
                                     if (checkBuffExist(unitData.buffList, BUFF.YAMAWAKI_SERVANT)) {
                                         unitData.sp += ability.effect_size;
@@ -2188,8 +2189,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 });
                 break;
             case EFFECT.OVERDRIVEPOINTUP: // ODアップ
-                // V字回復,世界征服の始まりでゲス！
-                const onlyUseList = [1207, 1209]
+                const onlyUseList = [ABILITY_ID.V_RECOVERY, ABILITY_ID.CONQUER_WORLD, ABILITY_ID.GREAT_OFFENSIVE]
                 if (ability.used && onlyUseList.includes(ability.ability_id)) {
                     return;
                 }

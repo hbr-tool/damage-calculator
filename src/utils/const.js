@@ -59,7 +59,13 @@ export const ABILITY_ID = {
     QUICK_RECAST: 1506, // クイックリキャスト
     DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530, // 自動追撃,
-    SPECIAL_TAG: 277, //	スペシャルタッグ
+    SPECIAL_TAG: 277, // スペシャルタッグ
+    ENGAGE_LINK: 1204, // エンゲージリンク
+    V_RECOVERY: 1207,  // V字回復,
+    DESTROY_WORLD: 1140, // 世界を滅ぼすお手伝いでゲス！
+    CONQUER_WORLD: 1209,// 世界征服の始まりでゲス！
+    GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
+    LETS_MARCH: 1149, // いざ進軍！
 }
 
 export const STATUS_KBN = ["", "str", "dex", "con", "mnd", "int", "luk"];
