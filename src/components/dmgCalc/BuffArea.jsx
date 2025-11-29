@@ -683,6 +683,11 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                 if (troopKbn === TROOP_KBN.SUB) {
                     return DEBUFF_LIST.includes(buff.buff_kind);
                 }
+                if (attackMemberInfo) {
+                    if (buff.target_element !== 0 &&
+                        buff.target_element !== attackMemberInfo.styleInfo.element &&
+                        buff.target_element !== attackMemberInfo.styleInfo.element2) return;
+                }
                 // 除外スキル
                 if (memberInfo.exclusionSkillList.includes(buff.skill_id)) return false;
                 return true;

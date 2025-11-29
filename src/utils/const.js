@@ -66,6 +66,7 @@ export const ABILITY_ID = {
     CONQUER_WORLD: 1209,// 世界征服の始まりでゲス！
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
+    BRAVE_FIGURE: 1150, // 勇姿
 }
 
 export const STATUS_KBN = ["", "str", "dex", "con", "mnd", "int", "luk"];
@@ -235,7 +236,7 @@ export const ATTRIBUTE = {
 export const CONDITIONS = {
     FIRST_TURN: 1, // 1ターン目
     SKILL_INIT: 2, // 初回
-    additionalTurn: 3, // 追加ターン
+    ADDITIONAL_TURN: 3, // 追加ターン
     OVER_DRIVE: 4, // オーバードライブ中
     DESTRUCTION_OVER_200: 5, // 破壊率200%以上
     BREAK: 6, // ブレイク時
@@ -257,6 +258,7 @@ export const CONDITIONS = {
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
     SARVANT_OVER: 27, // 山脇様のしもべ
     FIRE_MARK: 28, // 火の印
+    NOT_ADDITIONAL_TURN: 29, // 追加ターン以外
     MORALE_OVER_LV: 30, // 士気Lv以上
     OVER_31A_3: 31, // 31A3人以上
     OVER_31C_3: 33, // 31C3人以上
