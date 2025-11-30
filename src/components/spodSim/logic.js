@@ -773,6 +773,11 @@ export function getSpCost(turnData, skillInfo, unit) {
                 && checkPassiveExist(unitData.passiveSkillList, SKILL_ID.MARUYAMA_MEMBER)) {
                 spCostDown = 1;
             }
+            // 勇姿
+            if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.SELF_START}`], ABILITY_ID.BRAVE_FIGURE)
+                && checkBuffExist(unit.buffList, BUFF.CHARGE)) {
+                spCostDown = 1;
+            }
         }
     })
 
