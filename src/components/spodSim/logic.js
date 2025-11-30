@@ -1644,6 +1644,7 @@ const turnProceed = (kbNext, turn) => {
         }
         turn.finishAction = true;
         turn.endDriveTriggerCount = 0;
+        turn.additionalCount = 0;
         unitLoop(unitOverDriveTurnProceed, turn.unitList);
     }
     unitLoop(function (unit) {
