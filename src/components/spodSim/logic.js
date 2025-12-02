@@ -1147,18 +1147,8 @@ function skillHealSp(turnData, targetNo, addSp, limitSp, usePlaceNo, isRecursion
     unitData.sp = unitSp;
 
     if (!isRecursion) {
-        // 愛嬌
-        if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], 1605) && targetNo !== usePlaceNo) {
-            skillHealSp(turnData, targetNo, 3, 30, null, true, 0)
-        }
-        // お裾分け/意気軒昂
-        if ((checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], 1606) ||
-            checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], 1612))
-            && targetNo !== usePlaceNo) {
-            let targetList = getTargetList(turnData, RANGE.ALLY_ALL, 0, targetNo, null);
-            targetList.forEach(function (targetNo) {
-                skillHealSp(turnData, targetNo, 2, 30, null, true, 0)
-            });
+        if(targetNo !== usePlaceNo) {
+            abilityActionUnit(turnData, ABILIRY_TIMING.HEAL_SP, unitData);
         }
     }
 }

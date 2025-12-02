@@ -1,10 +1,10 @@
 
 import React, { useState } from "react";
 import ReactModal from "react-modal";
-import { ROLE, BUFF } from "utils/const";
+import { ROLE, BUFF, RANGE } from "utils/const";
 import { ABILIRY_TIMING, NOT_USE_STYLE, CONSTRAINTS_ABILITY, CONSTRAINTS_PASSIVE } from "./const";
 import { checkPassiveExist, recreateTurnData, initTurn, abilityAction, setUserOperation } from "./logic";
-import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, deepClone } from "utils/common";
+import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, getResonanceInfo, deepClone } from "utils/common";
 import { useStyleList } from "components/StyleListProvider";
 import skillList from "data/skillList";
 import CharaSetting from "./CharaSetting";
@@ -179,6 +179,19 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                 }
                 unit[`ability_${passiveInfo.activation_timing}`].push(passiveInfo);
             });
+            // レゾナンス判定
+            if ((member.styleInfo.rarity === 0 || member.styleInfo.rarity === 9) && member.supportStyleId) {
+                const support = member.support;
+                if (support.styleInfo.ability_resonance) {
+                    const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));
+                    if (resonance.activation_timing !== null) {
+                        resonance.ability_name = resonance.resonance_name;
+                        resonance.range_area = RANGE.SELF;
+                        resonance.effect_size = resonance[`effect_limit_${support.limitCount}`];
+                        unit[`ability_${resonance.activation_timing}`].push(resonance);
+                    }
+                }
+            }
             if (member.morale > 0) {
                 let morale = {
                     buff_kind: BUFF.MORALE,

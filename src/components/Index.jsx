@@ -1,5 +1,5 @@
 import React from 'react';
-import frend from 'assets/img/frend.jpg';
+import frend from 'assets/img/frend.png';
 import AmazonButton from './AmazonButton';
 
 const Index = () => {

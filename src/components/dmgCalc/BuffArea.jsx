@@ -232,12 +232,14 @@ const BuffArea = ({ argument: {
         const updateMap = { ...buffSettingMap };
         let buffKind = Number(buffKindKey.split('-')[1]);
         updateMap[buffKind].forEach(buffInnerList => {
-            let settingBuff = buffInnerList[buffKey];
-            settingBuff.skill_lv = lv
-            let buff = buffGroup[buffKind][index].filter(buff => buff.key === buffKey)[0];
-            const memberInfo = getCharaIdToMember(styleList, buff.use_chara_id);
-            settingBuff.effect_size = getEffectSize(styleList, buff, settingBuff, memberInfo, state,
-                abilitySettingMap, passiveSettingMap, resonanceList);
+            if (Object.keys(buffInnerList).length > 0) {
+                let settingBuff = buffInnerList[buffKey];
+                settingBuff.skill_lv = lv
+                let buff = buffGroup[buffKind][index].filter(buff => buff.key === buffKey)[0];
+                const memberInfo = getCharaIdToMember(styleList, buff.use_chara_id);
+                settingBuff.effect_size = getEffectSize(styleList, buff, settingBuff, memberInfo, state,
+                    abilitySettingMap, passiveSettingMap, resonanceList);
+            }
         })
         setBuffSettingMap(updateMap);
     };
