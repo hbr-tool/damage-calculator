@@ -182,7 +182,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             // レゾナンス判定
             if ((member.styleInfo.rarity === 0 || member.styleInfo.rarity === 9) && member.supportStyleId) {
                 const support = member.support;
-                if (support.styleInfo.ability_resonance) {
+                if (support?.styleInfo.ability_resonance) {
                     const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));
                     if (resonance.activation_timing !== null) {
                         resonance.ability_name = resonance.resonance_name;
