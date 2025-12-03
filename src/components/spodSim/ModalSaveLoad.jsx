@@ -57,6 +57,7 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData, update, setUpdat
                     chain: unit.style.chain,
                     initSp: unit.style.initSp,
                     morale: unit.style.morale,
+                    supportStyleId: unit.style.supportStyleId,
                     exclusionSkillList: unit.style.exclusionSkillList,
                 }
             }
@@ -132,7 +133,7 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData, update, setUpdat
     for (let i = 0; i < 10; i++) {
         let loadData = loadStorage(i);
         if (loadData) {
-            let dataName = loadData.dataName || loadData.data_name ;
+            let dataName = loadData.dataName || loadData.data_name;
             save.push(dataName);
         } else {
             if (mode === "save") {
@@ -171,6 +172,7 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData, update, setUpdat
 
 export default ModalSaveLoad;
 
+// 旧形式から新形式に変更
 const converSaveData = (saveData) => {
     if (saveData.unit_data_list) {
         saveData.unitDataList = saveData.unit_data_list.map((item, index) => {
@@ -182,6 +184,7 @@ const converSaveData = (saveData) => {
                 chain: item.chain,
                 initSp: item.init_sp,
                 morale: 0,
+                supportStyleId: 0,
                 exclusionSkillList: item.exclusion_skill_list || [],
             };
         });

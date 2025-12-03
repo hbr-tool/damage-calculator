@@ -340,6 +340,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
                 memberInfo.chain = unitData.chain;
                 memberInfo.initSp = unitData.initSp;
                 memberInfo.morale = unitData.morale;
+                memberInfo.supportStyleId = unitData.supportStyleId;
                 memberInfo.exclusionSkillList = unitData.exclusionSkillList || unitData.exclusion_skill_list;
                 updatedStyleList[index] = memberInfo;
             } else {
