@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.ad469d2a.css",
-    "main.js": "/static/js/main.2ecd648a.js",
+    "main.js": "/static/js/main.e05437cf.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -208,6 +208,7 @@
     "static/media/FMikotoXmas2024_R3_Select.webp": "/static/media/FMikotoXmas2024_R3_Select.0143d46d9744e9eb7a89.webp",
     "static/media/IRedmayneIdyllic_R3_Select.webp": "/static/media/IRedmayneIdyllic_R3_Select.c34d621b0d33622ab37d.webp",
     "static/media/IMinaseHR_R3_Select.webp": "/static/media/IMinaseHR_R3_Select.4087f3031ee3e1dfe9ba.webp",
+    "static/media/AKanzakiEvil_R3_Select.webp": "/static/media/AKanzakiEvil_R3_Select.92e0ee8c89746ec99cf7.webp",
     "static/media/SHanamuraConductor_R3_Select.webp": "/static/media/SHanamuraConductor_R3_Select.7143f911fac06414f906.webp",
     "static/media/SKuraSwim2025_R3_Select.webp": "/static/media/SKuraSwim2025_R3_Select.8b4d39611509a4e585fa.webp",
     "static/media/EAoiSwim2025_R3_Select.webp": "/static/media/EAoiSwim2025_R3_Select.2fafbcbd96d2b718db5e.webp",
@@ -335,6 +336,7 @@
     "static/media/LShanhuaBride_R3_Thumbnail.webp": "/static/media/LShanhuaBride_R3_Thumbnail.31fb89e0ef051c469756.webp",
     "static/media/BIYamawakiDaydream_R3_Thumbnail.webp": "/static/media/BIYamawakiDaydream_R3_Thumbnail.05b9241a5ce3248b37cf.webp",
     "static/media/MTsukishiroSwim2025_R2_Thumbnail.webp": "/static/media/MTsukishiroSwim2025_R2_Thumbnail.0c015c9c6a69d3f3a661.webp",
+    "static/media/AKanzakiEvil_R3_Thumbnail.webp": "/static/media/AKanzakiEvil_R3_Thumbnail.47233e2f900298a821a0.webp",
     "static/media/SHanamuraConductor_R3_Thumbnail.webp": "/static/media/SHanamuraConductor_R3_Thumbnail.534d27fb152cd87c238d.webp",
     "static/media/TTojoSwim2022_R3_Thumbnail.webp": "/static/media/TTojoSwim2022_R3_Thumbnail.30ce90d3c012d957452d.webp",
     "static/media/MYanagiWhiteSuit_R3_Thumbnail.webp": "/static/media/MYanagiWhiteSuit_R3_Thumbnail.5dc802e95365f1ebc68a.webp",
@@ -346,6 +348,7 @@
     "static/media/YIzumiDefault_R3_Thumbnail.webp": "/static/media/YIzumiDefault_R3_Thumbnail.e0d99df301471c4ea6c7.webp",
     "static/media/YBungoDefault_R1_Thumbnail.webp": "/static/media/YBungoDefault_R1_Thumbnail.e1948cc84dd4fa8e74ec.webp",
     "static/media/IrOhshimaYukata2023_R3_Select.webp": "/static/media/IrOhshimaYukata2023_R3_Select.d90afad06b7a8eeb81db.webp",
+    "static/media/MSatsukiDefault_R2_Thumbnail.webp": "/static/media/MSatsukiDefault_R2_Thumbnail.2f9f5a0020646f18d02e.webp",
     "static/media/AKanzakiAgent_R3_Thumbnail.webp": "/static/media/AKanzakiAgent_R3_Thumbnail.f8ddd997112dcc04939f.webp",
     "static/media/TKunimiNewYear2023_R3_Thumbnail.webp": "/static/media/TKunimiNewYear2023_R3_Thumbnail.2e8aae5d3ee1be3aedd1.webp",
     "static/media/IRedmayneSteam_R3_Thumbnail.webp": "/static/media/IRedmayneSteam_R3_Thumbnail.30bd39d14eeed00a6aaa.webp",
@@ -782,6 +785,6 @@
   },
   "entrypoints": [
     "static/css/main.ad469d2a.css",
-    "static/js/main.2ecd648a.js"
+    "static/js/main.e05437cf.js"
   ]
 }
