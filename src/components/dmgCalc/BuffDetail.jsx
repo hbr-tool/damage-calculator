@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    BUFF, EFFECT, STATUS_KBN, JEWEL_EXPLAIN, ATTRIBUTE
+    BUFF, EFFECT, STATUS_KBN, JEWEL_EXPLAIN, ATTRIBUTE, COST_TYPE
 } from "utils/const";
 import {
     DEBUFF_LIST, KIND_ATTACKUP, KIND_DEFENSEDOWN,
@@ -110,7 +110,10 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     }
 
     // 消費SP
-    let spCost = getCostVariable(skillInfo.sp_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap)
+    let spCost = 0;
+    if (skillInfo.cost_type === COST_TYPE.SP) {
+        spCost = getCostVariable(skillInfo.use_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap);
+    }
 
     // バフ強化
     let strengthen = false;

@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { useStyleList } from "components/StyleListProvider";
 import skillAttack from "data/skillAttack";
 import { getCharaData, getSkillData } from "utils/common";
-import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN } from 'utils/const';
+import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN, COST_TYPE } from 'utils/const';
 import { getCharaIdToMember, getSkillPower, getStatUp, getApplyGradient, getCostVariable, getStatus } from "./logic";
 import attribute from 'assets/attribute';
 import { AttackLineChart } from "./SimpleLineChart";
@@ -251,7 +251,10 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, sta
         jewelLv = memberInfo.jewelLv;
     }
     // 消費SP
-    let spCost = getCostVariable(skillInfo.sp_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap);
+    let spCost = 0;
+    if (skillInfo.cost_type === COST_TYPE.SP) {
+        spCost = getCostVariable(skillInfo.use_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap);
+    }
     return (
         <div className="modal text-left mx-auto p-6">
             <div>

@@ -1,6 +1,6 @@
 import React from "react";
-import { getCharaData } from "utils/common";
-import { SKILL_ID, ABILITY_ID, BUFF, ROLE, ATTRIBUTE, SKILL } from "utils/const";
+import { getCharaData, getSkillData } from "utils/common";
+import { SKILL_ID, ABILITY_ID, BUFF, ROLE, ATTRIBUTE, SKILL, COST_TYPE } from "utils/const";
 import { PHYSICAL_NAME, ELEMENT_NAME, ABILIRY_TIMING } from "./const";
 import BuffIconComponent from "./BuffIconComponent";
 import { getSkillIdToAttackInfo, getSpCost, checkAbilityExist } from "./logic";
@@ -10,29 +10,29 @@ import { changeStyle } from "utils/const";
 import changeIcon from 'assets/img/IconSwitchSkill.png';
 
 const UnitSp = ({ unit }) => {
-    let unit_sp;
-    let unit_ep = unit.ep;
-    if (unit.sp_cost >= 90) {
-        unit_sp = 0;
+    let unitSp;
+    let unitEp = unit.ep;
+    let skill = getSkillData(unit.selectSkillId);
+    if (unit.spCost >= 90) {
+        unitSp = 0;
     } else {
-        unit_sp = unit.sp + unit.overDriveSp;
-        if (unit_sp > 99) unit_sp = 99;
+        unitSp = unit.sp + unit.overDriveSp;
+        if (unitSp > 99) unitSp = 99;
 
-        // ノヴァエリミネーション
-        if (unit.selectSkillId === SKILL_ID.NOVA_ELIMINATION) {
-            unit_ep -= unit.sp_cost;
+        if (skill.cost_type === COST_TYPE.EP) {
+            unitEp -= skill.use_cost;
         } else {
-            unit_sp -= unit.sp_cost;
+            unitSp -= unit.spCost;
         }
     }
 
-    let className = "unit_sp" + (unit_sp < 0 ? " minus" : "");
+    let className = "unit_sp" + (unitSp < 0 ? " minus" : "");
     return (
         <>
             <div className={className}>
-                <span>{unit_sp + (unit.addSp > 0 ? ("+" + unit.addSp) : "")}</span>
+                <span>{unitSp + (unit.addSp > 0 ? ("+" + unit.addSp) : "")}</span>
                 {
-                    (unit.ep !== 0 ? <span className="unit_ep">{`EP${unit_ep}`}</span> : "")
+                    (unit.ep !== 0 ? <span className="unit_ep">{`EP${unitEp}`}</span> : "")
                 }
             </div>
         </>
@@ -50,7 +50,7 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     if (placeNo < 3) {
         skillList = skillList.filter(skill => {
             // 夜醒,謀略,ごきげんダンス
-            const ADDTIONAL_SKILL_ID = [SKILL_ID.WAKING_NIGHT, SKILL_ID.CONSPIRACY, SKILL_ID.SUNNY_DANCE];
+            const ADDTIONAL_SKILL_ID = [SKILL_ID.WAKING_NIGHT, SKILL_ID.CONSPIRACY];
             if (ADDTIONAL_SKILL_ID.includes(skill.skill_id)) {
                 return !turn.additionalTurn;
             }
@@ -104,20 +104,31 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     return (<select className={className} onChange={(e) => chengeSkill(Number(e.target.value), placeNo)} value={unit.selectSkillId} >
         {skillList.filter((obj) => obj.skill_id === unit.selectSkillId || !isCapturing).map(skill => {
             let text = skill.skill_name;
-            const attackInfo = getSkillIdToAttackInfo(turn, skill.skill_id);
-            let sp_cost = 0;
+            let spCost = 0;
             if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
                 text += `(${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[unit.normalAttackElement]})`;
             } else if (skill.skill_id === 0 || skill.skill_id === 2) {
             } else if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
             } else if (skill.skill_attribute === ATTRIBUTE.PURSUIT) {
                 text += `(${PHYSICAL_NAME[physical]})`;
-            } else if (attackInfo) {
-                sp_cost = getSpCost(turn, skill, unit);
-                text += `(${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[attackInfo.attack_element]}/${sp_cost})`;
             } else {
-                sp_cost = getSpCost(turn, skill, unit);
-                text += `(${sp_cost})`;
+                let attack = "";
+                const attackInfo = getSkillIdToAttackInfo(turn, skill.skill_id);
+                if (attackInfo) {
+                    attack = `${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[attackInfo.attack_element]}/`;
+                }
+                if (skill.cost_type === COST_TYPE.EP) {
+                    text += `(${attack}EP${skill.use_cost})`;
+                } else if (skill.cost_type === COST_TYPE.CT) {
+                    text += `(${attack}CT${skill.use_cost}T)`;
+                } else if (skill.cost_type === COST_TYPE.OVERDRIVE) {
+                    text += `(${attack}OD${skill.use_cost}%)`;
+                } else if (skill.cost_type === COST_TYPE.TOKEN) {
+                    text += `(${attack}token${skill.use_cost})`;
+                } else {
+                    spCost = getSpCost(turn, skill, unit);
+                    text += `(${attack}${spCost})`;
+                }
             }
             return (<option value={skill.skill_id} key={`skill${skill.skill_id}${skill.attack_id}`}>{text}</option>)
         }

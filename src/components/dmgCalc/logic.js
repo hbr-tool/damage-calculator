@@ -2,10 +2,11 @@ import {
     ELEMENT, BUFF, RANGE, CHARA_ID, EFFECT, ENEMY_CLASS, CONDITIONS
     , ALONE_ACTIVATION_BUFF_KIND, ALONE_ACTIVATION_ABILITY_LIST
     , STYLE_ID, SKILL_ID, ABILITY_ID, JEWEL_TYPE, STATUS_KBN
+    , COST_TYPE
 } from 'utils/const';
 import enemyList from "data/enemyList";
 import scoreBonusList from "data/scoreBonus";
-import { getCharaData, getBuffIdToBuff, getPassiveInfo, getAbilityInfo } from "utils/common";
+import { getCharaData, getBuffIdToBuff, getPassiveInfo, getAbilityInfo, getSkillData } from "utils/common";
 
 export const BUFF_KBN = {
     0: "power_up",
@@ -334,7 +335,11 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
                 // モロイウオ、静かなプレッシャー
                 const COST_UNDER_8 = [ABILITY_ID.MOROIUO, ABILITY_ID.QUIET_PRESSURE];
                 if (COST_UNDER_8.includes(ability.ability_id)) {
-                    let spCost = getCostVariable(buff.sp_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap)
+                    let spCost = 0;
+                    let skillInfo = getSkillData(buff.skill_id);
+                    if (skillInfo.cost_type === COST_TYPE.SP) {
+                        spCost = getCostVariable(skillInfo.use_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap)
+                    }
                     if (spCost > 8) {
                         return false;
                     }
@@ -517,7 +522,7 @@ export function getBestBuffKeys(buffKind, kindBuffList, buffSettingMap) {
     const sortedNormalBuffs = [...normalBuffs].sort(
         (a, b) => {
             if (buffSettingMap[buffKind][0][b.key]?.effect_size === buffSettingMap[buffKind][0][a.key]?.effect_size) {
-                return b.sp_cost - a.sp_cost
+                return b.use_cost - a.use_cost
             }
             return buffSettingMap[buffKind][0][b.key]?.effect_size - buffSettingMap[buffKind][0][a.key]?.effect_size
         });
@@ -1040,7 +1045,11 @@ function getSumAbilityEffectSize(handlers, effectType) {
                 if (UNDER_SP8.includes(abilityId)) {
                     // キレアジ
                     const attackInfo = handlers.attackInfo;
-                    let spCost = getCostVariable(attackInfo.sp_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap)
+                    let spCost = 0;
+                    let skillInfo = getSkillData(attackInfo.skill_id);
+                    if (skillInfo.cost_type === COST_TYPE.SP) {
+                        spCost = getCostVariable(skillInfo.use_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap)
+                    }
                     if (spCost > 8) {
                         effectSize = 0;
                     }

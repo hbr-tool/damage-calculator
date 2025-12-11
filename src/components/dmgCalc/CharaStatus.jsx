@@ -5,7 +5,7 @@ import ModalSkillSelectList from "components/ModalSkillSelectList";
 import ModalStyleSelection from "components/ModalStyleSelection";
 import StyleIcon from "components/StyleIcon";
 import { getBuffIdToBuff, getSkillData } from "utils/common";
-import { SKILL_ID, STATUS_KBN } from "utils/const";
+import { SKILL_ID, STATUS_KBN, COST_TYPE } from "utils/const";
 import { checkPawapuroExist, getCostVariable } from "./logic";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import editIcon from 'assets/img/edit.png';
@@ -291,14 +291,14 @@ const CharaStatus = ({ argument: {
                             let morale = style ? style.morale ? style.morale : 0 : 0;
                             let motivation = style ? style.motivation ? style.motivation : 0 : 0;
                             let results = [];
-                            let spCost = {};
+                            let useSpCost = {};
                             if (attackInfo && attackInfo.chara_id === charaId) {
                                 for (let i = 1; i <= 3; i++) {
                                     if (STATUS_KBN[attackInfo["ref_status_" + i]]) {
                                         results.push(STATUS_KBN[attackInfo["ref_status_" + i]]);
                                     }
                                 }
-                                spCost[attackInfo.skill_id] = [attackInfo.collect];
+                                useSpCost[attackInfo.skill_id] = [attackInfo.collect];
                             }
                             for (const values of Object.values(selectBuffKeyMap)) {
                                 let tempCount = {};
@@ -326,9 +326,9 @@ const CharaStatus = ({ argument: {
                                     }
                                 }
                                 for (const [skillId, collects] of Object.entries(tempCount)) {
-                                    if (!spCost[skillId] || spCost[skillId].length < collects.length ||
-                                        getSortKey(spCost[skillId][0]) > getSortKey(collects[0]) || getSortKey(spCost[skillId][1]) > getSortKey(collects[1])) {
-                                        spCost[skillId] = collects;
+                                    if (!useSpCost[skillId] || useSpCost[skillId].length < collects.length ||
+                                        getSortKey(useSpCost[skillId][0]) > getSortKey(collects[0]) || getSortKey(useSpCost[skillId][1]) > getSortKey(collects[1])) {
+                                        useSpCost[skillId] = collects;
                                     }
                                 }
                             };
@@ -338,23 +338,25 @@ const CharaStatus = ({ argument: {
                             let mndClassName = "status " + (results.includes("mnd") ? "status_active" : "");
                             let intClassName = "status " + (results.includes("int") ? "status_active" : "");
                             let lukClassName = "status " + (results.includes("luk") ? "status_active" : "");
-                            let sp_cost = 0;
+                            let spCost = 0;
                             function getSortKey(collect) {
                                 if (!collect) return 0; // undefined の場合
                                 if (collect.sphalf) return 1;
                                 if (collect.spzero) return 2;
                                 return 0; // どちらも false
                             }
-                            for (const [key, values] of Object.entries(spCost)) {
+                            for (const [key, values] of Object.entries(useSpCost)) {
                                 let skill = getSkillData(key);
                                 if (skill) {
                                     for (const collect of values
                                         .slice()
                                         .sort((a, b) => getSortKey(a) - getSortKey(b))
                                         .slice(0, 2)) {
-                                        sp_cost += Math.floor(
-                                            getCostVariable(skill.sp_cost, collect, style, abilitySettingMap, passiveSettingMap)
-                                        );
+                                        if (skill.cost_type === COST_TYPE.SP) {
+                                            spCost += Math.floor(
+                                                getCostVariable(skill.use_cost, collect, style, abilitySettingMap, passiveSettingMap)
+                                            );
+                                        }
                                     }
                                 }
                             }
@@ -401,7 +403,7 @@ const CharaStatus = ({ argument: {
                                     }
                                     <input className="status show_skill" defaultValue="設定" type="button" onClick={() => showSkillList(index)} />
                                     <div>
-                                        <span>{sp_cost}</span>
+                                        <span>{spCost}</span>
                                     </div>
                                 </div>
                             )

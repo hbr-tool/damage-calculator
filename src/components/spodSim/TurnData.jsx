@@ -269,7 +269,7 @@ const TurnData = React.memo(({ turn, index, activeTurnNumber, isLastTurn, hideMo
         if (selectionConditions.includes(skillInfo.conditions)) {
             if (unit.buffEffectSelectType >= 1) {
                 let spCost = getSpCost(turn, skillInfo, unit)
-                unit.sp_cost = spCost;
+                unit.spCost = spCost;
             }
         }
         reRender(turn.userOperation, true);

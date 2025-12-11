@@ -4,7 +4,7 @@ import {
 } from "./const";
 import {
     CHARA_ID, SKILL_ID, ABILITY_ID, SKILL, ELEMENT, BUFF, RANGE, FIELD, EFFECT, CONDITIONS, ATTRIBUTE, KIND,
-    ALONE_ACTIVATION_BUFF_KIND, changeStyle
+    ALONE_ACTIVATION_BUFF_KIND, COST_TYPE, changeStyle
 } from "utils/const";
 import {
     getCharaData, getSkillData, getAbilityInfo, getAttackInfo, getBuffList, deepClone, getStyleData
@@ -76,9 +76,9 @@ export const skillUpdate = (turnData, skillId, placeNo) => {
     const unit = turnData.unitList.filter(unit => unit.placeNo === placeNo)[0];
     unit.selectSkillId = skillId;
     if (skillId !== 0) {
-        unit.sp_cost = getSpCost(turnData, getSkillData(skillId), unit);
+        unit.spCost = getSpCost(turnData, getSkillData(skillId), unit);
     } else {
-        unit.sp_cost = 0;
+        unit.spCost = 0;
     }
 }
 
@@ -384,9 +384,9 @@ export function startAction(turnData) {
     for (const skill_data of seq) {
         let skillInfo = skill_data.skillInfo;
         let unitData = getUnitData(turnData, skill_data.placeNo);
-        let sp_cost = unitData.sp_cost;
+        let spCost = unitData.spCost;
         // SP消費してから行動
-        payCost(unitData);
+        payCost(unitData, skillInfo);
 
         let buffList = getBuffList(skillInfo.skill_id);
         for (let i = 0; i < buffList.length; i++) {
@@ -401,7 +401,7 @@ export function startAction(turnData) {
         } else {
             attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
             if (attackInfo) {
-                frontCostList.push(sp_cost);
+                frontCostList.push(spCost);
             }
             // アビリティ(スキル使用)
             abilityActionUnit(turnData, ABILIRY_TIMING.SKILL_USE, unitData);
@@ -469,7 +469,7 @@ export function startAction(turnData) {
             let attackInfo = getSkillIdToAttackInfo(turnData, skillId);
             if (attackInfo) {
                 // SP消費してから行動
-                payCost(unitData);
+                payCost(unitData, skillInfo);
 
                 let buffList = getBuffList(skillInfo.skill_id);
                 for (let i = 0; i < buffList.length; i++) {
@@ -607,7 +607,7 @@ export const getOverDrive = (turn) => {
                 default:
                     break;
             }
-            frontCostList.push(unitData.sp_cost);
+            frontCostList.push(unitData.spCost);
             if (!isResist(turn.enemyInfo, physical, attackInfo.attack_element, attackId)) {
                 let enemyTarget = enemyCount;
                 if (attackInfo.range_area === 1) {
@@ -706,7 +706,11 @@ export function getSpCost(turnData, skillInfo, unit) {
     if (NON_ACTION_ATTRIBUTE.includes(skillInfo.skill_attribute)) {
         return 0;
     }
-    let spCost = skillInfo.sp_cost;
+
+    if (skillInfo.cost_type !== COST_TYPE.SP) {
+        return 0;
+    }
+    let spCost = skillInfo.use_cost;
     if (spCost === 0) {
         return spCost;
     }
@@ -1134,7 +1138,7 @@ function skillHealSp(turnData, targetNo, addSp, limitSp, usePlaceNo, isRecursion
     let minusSp = 0;
     // クレール・ド・リュンヌ(＋)、収穫祭+は消費SPを加味する。
     if (buffId === 120 || buffId === 121 || buffId === 229) {
-        minusSp = unitData.sp_cost;
+        minusSp = unitData.spCost;
     }
     unitSp += addSp;
     limitSp = unitData.limitSp > limitSp ? unitData.limitSp : limitSp;
@@ -1745,7 +1749,7 @@ export const startOverDrive = (turn, overDriveLevel) => {
     let sp_list = [0, 5, 12, 20];
     unitLoop(function (unit) {
         unit.overDriveSp = sp_list[overDriveLevel];
-        unit.sp_cost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
+        unit.spCost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
     }, turn.unitList);
     abilityAction(ABILIRY_TIMING.OD_START, turn);
     turn.triggerOverDrive = true;
@@ -1759,7 +1763,7 @@ export const removeOverDrive = (turn) => {
 
     unitLoop(function (unit) {
         unit.overDriveSp = 0;
-        unit.sp_cost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
+        unit.spCost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
     }, turn.unitList);
     turn.triggerOverDrive = false;
 }
@@ -1848,7 +1852,7 @@ function targetCountInclude(turnData, targetElement) {
 export const setInitSkill = (unit) => {
     if (unit.placeNo < 3) {
         unit.selectSkillId = unit.initSkillId;
-        unit.sp_cost = 0;
+        unit.spCost = 0;
     } else {
         if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], 1530)) {
             // 湯めぐり
@@ -1856,7 +1860,7 @@ export const setInitSkill = (unit) => {
         } else {
             unit.selectSkillId = SKILL.NONE;
         }
-        unit.sp_cost = 0;
+        unit.spCost = 0;
     }
     unit.buffEffectSelectType = null;
     unit.buffTargetCharaId = null;
@@ -1902,18 +1906,18 @@ const buffSort = (unit) => {
     });
 }
 
-const payCost = (unit) => {
+const payCost = (unit, skill) => {
     // OD上限突破
     if (unit.sp + unit.overDriveSp > 99) {
         unit.sp = 99 - unit.overDriveSp;
     }
-    if (unit.selectSkillId === 591) {
-        // ノヴァエリミネーション
-        unit.ep -= unit.sp_cost;
+    if (skill.cost_type === COST_TYPE.EP) {
+        unit.ep -= skill.use_cost;
     } else {
-        unit.sp -= unit.sp_cost;
+        // SPは可変なので計算済みの値を使用
+        unit.sp -= unit.spCost;
+        unit.spCost = 0;
     }
-    unit.sp_cost = 0;
 }
 
 const getearringEffectSize = (hitCount, unit) => {

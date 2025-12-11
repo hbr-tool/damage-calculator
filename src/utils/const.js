@@ -31,7 +31,6 @@ export const SKILL_ID = {
     MEDITATION: 501, // メディテーション
     SAIO_RENRI: 546, // 彩鳳連理
     MARUYAMA_MEMBER: 547, // 行くぞ！丸山部隊
-    NOVA_ELIMINATION: 591, // ノヴァエリミネーション
     MEGA_DESTROYER: 623, // メガデストロイヤー
     CAT_JET_SHOOTING: 633, // ネコジェットシャテキ
     RUBY_PERFUME: 635, // ルビー・パヒューム
@@ -40,7 +39,6 @@ export const SKILL_ID = {
     CONSPIRACY: 669, // 謀略
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
-    SUNNY_DANCE: 669, // ごきげんダンス
 }
 
 export const BUFF_ID = {
@@ -67,6 +65,14 @@ export const ABILITY_ID = {
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
     BRAVE_FIGURE: 1150, // 勇姿
+}
+
+export const COST_TYPE = {
+    SP: "SP",
+    EP: "EP",
+    TOKEN: "TK",
+    CT: "CT",
+    OVERDRIVE: "OD",
 }
 
 export const STATUS_KBN = ["", "str", "dex", "con", "mnd", "int", "luk"];

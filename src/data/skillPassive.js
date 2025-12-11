@@ -25,6 +25,8 @@ const skillPassive = [
     {"skill_id":668,"passive_name":"名探偵は明るく照らす","passive_explan":"自身が敵のバフを解除したときオーバードライブゲージ+30%","passive_short_explan":"","effect_type":0,"activation_timing":0,"activation_place":0,"range_area":0,"target_element":0},
     {"skill_id":683,"passive_name":"怪物球威","passive_explan":"行動開始時 前衛にいると敵の防御力を10%下げる","passive_short_explan":"前衛にいると敵の防御力を10%下げる","effect_type":2,"activation_timing":2,"activation_place":1,"range_area":2,"target_element":0,"effect_size":10},
     {"skill_id":685,"passive_name":"速攻◯","passive_explan":"バトル開始時【掴め栄冠！グランドスラム！】の消費SP8（2ターン）","passive_short_explan":"","effect_type":99,"activation_timing":0,"activation_place":3,"range_area":7,"target_element":0,"effect_size":8},
+    {"skill_id":705,"passive_name":"お客様ハッピーデー","passive_explan":"行動開始時に前衛にいると前衛の氷属性のスキル攻撃力+12%","passive_short_explan":"前衛の氷属性のスキル攻撃力+12%","effect_type":1,"activation_timing":2,"activation_place":1,"range_area":4,"target_element":2,"effect_size":12},
+    {"skill_id":708,"passive_name":"獣牙粉砕","passive_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","passive_short_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","effect_type":4,"activation_timing":1,"activation_place":2,"range_area":7,"target_element":0,"effect_size":20},
 ];
 
 export default skillPassive;

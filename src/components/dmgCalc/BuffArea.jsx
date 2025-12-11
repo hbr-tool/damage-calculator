@@ -27,6 +27,7 @@ const TARGET_KIND = [
     EFFECT.DEFFENCEDOWN, // 防御力ダウン
     EFFECT.DAMAGERATEUP, // 破壊率上昇
     EFFECT.CRITICALRATEUP, // クリティカル率アップ
+    EFFECT.CRITICAL_DAMAGE_UP, // クリティカルダメージアップ
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開
     EFFECT.STATUSUP_VALUE, // 能力固定上昇
     EFFECT.STATUSUP_RATE, // 能力%上昇
