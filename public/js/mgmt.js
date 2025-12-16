@@ -350,7 +350,7 @@ let baseColumns = [
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
             let chara_id = Number(rowData["chara_id"]);
-            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 ||chara_id == 93 ||chara_id == 107) {
+            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 || chara_id == 93 || chara_id == 107) {
                 $(td).addClass("underLine");
             }
         },
@@ -504,7 +504,8 @@ let titleHeaders = [
         { label: 'オーブ<br>取得', rowspan: 2, class: 'htMiddle' },
         { label: 'スコア<br>アタック', rowspan: 2, class: 'htMiddle' },
         { label: '戦闘<br>回数', rowspan: 2, class: 'htMiddle' },
-        { label: 'ダンジョン', rowspan: 2, class: 'htMiddle' },
+        { label: 'ダン<br>ジョン', rowspan: 2, class: 'htMiddle' },
+        { label: 'セラフ<br>遭遇戦', rowspan: 2, class: 'htMiddle' },
         { label: '異時層', colspan: 10, class: 'htMiddle' },
     ],
     [
@@ -618,6 +619,17 @@ function getExp(rowData) {
                 { threshold: 500, exp: 2000 },
                 { threshold: 750, exp: 2500 },
                 { threshold: 1000, exp: 3000 },
+            ]
+        },
+        {
+            value: rowData["encounter_battle"],
+            increments: [
+                { threshold: 10_000, exp: 50 },
+                { threshold: 20_000, exp: 50 },
+                { threshold: 40_000, exp: 100 },
+                { threshold: 60_000, exp: 200 },
+                { threshold: 80_000, exp: 500 },
+                { threshold: 100_000, exp: 1000 },
             ]
         },
         {
@@ -757,6 +769,17 @@ function getExp(rowData) {
             ]
         },
         {
+            value: rowData["encounter_battle"],
+            increments: [
+                { threshold: 10_000, exp: 50 },
+                { threshold: 20_000, exp: 50 },
+                { threshold: 40_000, exp: 100 },
+                { threshold: 60_000, exp: 200 },
+                { threshold: 80_000, exp: 500 },
+                { threshold: 100_000, exp: 1000 },
+            ]
+        },
+        {
             value: rowData["deathSlag"],
             increments: [
                 { threshold: 1, exp: 200 },
@@ -847,8 +870,8 @@ function getTitleColumns() {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 let rowData = instance.getSourceData()[row];
                 let chara_id = Number(rowData["chara_id"]);
-                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 ||chara_id == 93 ||chara_id == 107) {
-                        $(td).addClass("underLine");
+                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 || chara_id == 93 || chara_id == 107) {
+                    $(td).addClass("underLine");
                 }
             },
             width: 35,
@@ -1014,7 +1037,7 @@ function getTitleColumns() {
                     $(td).addClass("achievement1");
                 }
             },
-            width: 70,
+            width: 65,
         },
         {
             data: "battle_count",
@@ -1061,7 +1084,31 @@ function getTitleColumns() {
                     $(td).addClass("achievement2");
                 }
             },
-            width: 60,
+            width: 40,
+        },
+        {
+            data: "encounter_battle",
+            className: "htCenter rightLine",
+            type: "numeric",
+            numericFormat: {
+                pattern: "0,000"
+                , culture: "ja-JP"
+            },
+            renderer: function (instance, td, row, column, prop, value, cellProperties) {
+                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                if (value >= 100_000) {
+                    $(td).addClass("achievement7");
+                } else if (value >= 80_000) {
+                    $(td).addClass("achievement6");
+                } else if (value >= 60_000) {
+                    $(td).addClass("achievement5");
+                } else if (value >= 40_000) {
+                    $(td).addClass("achievement4");
+                } else if (value >= 20_000) {
+                    $(td).addClass("achievement2");
+                }
+            },
+            width: 55,
         },
     ];
     const HARD_LAYER = ["deathSlag", "rotaryMoll", "redCrimson", "filler", "flatHand3rd", "ultimateFiller", "flatHand4th", "dessertDendron", "skullFeather", "skullFeather2nd"];
@@ -1080,7 +1127,7 @@ function getTitleColumns() {
                         cellProperties.readOnly = true;
                         return;
                     }
-                } 
+                }
                 if (value == "1") {
                     $(td).addClass("achievement7");
                     value = "○";
