@@ -1095,7 +1095,7 @@ function getTitleColumns() {
                 , culture: "ja-JP"
             },
             renderer: function (instance, td, row, column, prop, value, cellProperties) {
-                Handsontable.renderers.TextRenderer.apply(this, arguments);
+                Handsontable.renderers.NumericRenderer.apply(this, arguments);
                 if (value >= 100_000) {
                     $(td).addClass("achievement7");
                 } else if (value >= 80_000) {
