@@ -10,6 +10,7 @@ const SHOW_TROOPS_LIST = {
     "4": ["31A", "31D", "31E", "31F"],
     "6": ["31A", "31E", "31F", "31X"],
     "7": ["31A", "31D", "31X", "30G"],
+    "8": ["31A", "31B", "31F", "30G"],
 }
 const MAX_TROOPS_ARTS_COUNT = 24;
 const TROOPS_ARTS_COUNT = {
@@ -96,6 +97,7 @@ const ArtsList = () => {
                             <option value="4">ENDLESSシーズン4,5</option>
                             <option value="6">ENDLESSシーズン6</option>
                             <option value="7">ENDLESSシーズン7</option>
+                            <option value="8">ENDLESSシーズン8</option>
                         </select>
                     </div>
                     <div className="grid grid-cols-1 xl:grid-cols-2">
