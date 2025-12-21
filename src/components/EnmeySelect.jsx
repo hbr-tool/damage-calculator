@@ -41,6 +41,7 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
                     <option value="4">時計塔(H)</option>
                     <option value="5">宝珠の迷宮</option>
                     <option value="6">スコアアタック</option>
+                    <option value="14">セラフ遭遇戦</option>
                     <option value="7">プリズムバトル</option>
                     <option value="13">イベントプリズム</option>
                     <option value="8">恒星掃戦線</option>
