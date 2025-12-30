@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.ad469d2a.css",
-    "main.js": "/static/js/main.64670a25.js",
+    "main.js": "/static/js/main.5eee18cd.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -179,6 +179,7 @@
     "static/media/AliceCDefault_R2_Select.webp": "/static/media/AliceCDefault_R2_Select.0f5446e39404d7a9f5de.webp",
     "static/media/CReaperDate_R3_Select.webp": "/static/media/CReaperDate_R3_Select.452889b56ac9e75b86de.webp",
     "static/media/MKiryuGothic_R3_Select.webp": "/static/media/MKiryuGothic_R3_Select.bc8b67b184c9227a02f2.webp",
+    "static/media/YShirakawaArmor_R3_Select.webp": "/static/media/YShirakawaArmor_R3_Select.5185ffc7e44518e283eb.webp",
     "static/media/RKayamoriHR_R3_Select.webp": "/static/media/RKayamoriHR_R3_Select.fb6e5b7ac59f564f6daa.webp",
     "static/media/SHiguchiSwim2025_R3_Select.webp": "/static/media/SHiguchiSwim2025_R3_Select.7d3a3faba06267cab010.webp",
     "static/media/MKurosawaDefault_R3_Select.webp": "/static/media/MKurosawaDefault_R3_Select.a12a967d4ce28107ceee.webp",
@@ -333,6 +334,7 @@
     "static/media/MiOhshimaDefault_R3_Thumbnail.webp": "/static/media/MiOhshimaDefault_R3_Thumbnail.e697a0b54926855f09fc.webp",
     "static/media/MuOhshimaFurisode2024_R3_Select.webp": "/static/media/MuOhshimaFurisode2024_R3_Select.47255e435326aa9b9cb8.webp",
     "static/media/MTsukishiroRugged_R3_Select.webp": "/static/media/MTsukishiroRugged_R3_Select.5384dc95508ee9f27794.webp",
+    "static/media/YShirakawaArmor_R3_Thumbnail.webp": "/static/media/YShirakawaArmor_R3_Thumbnail.d7a38f6ae242bc0d67fe.webp",
     "static/media/LShanhuaBride_R3_Thumbnail.webp": "/static/media/LShanhuaBride_R3_Thumbnail.31fb89e0ef051c469756.webp",
     "static/media/BIYamawakiDaydream_R3_Thumbnail.webp": "/static/media/BIYamawakiDaydream_R3_Thumbnail.05b9241a5ce3248b37cf.webp",
     "static/media/MTsukishiroSwim2025_R2_Thumbnail.webp": "/static/media/MTsukishiroSwim2025_R2_Thumbnail.0c015c9c6a69d3f3a661.webp",
@@ -400,6 +402,7 @@
     "static/media/IIshiiBride_R3_Thumbnail.webp": "/static/media/IIshiiBride_R3_Thumbnail.c4729db76c62aa1b64cf.webp",
     "static/media/BIYamawakiEvil_R3_Thumbnail.webp": "/static/media/BIYamawakiEvil_R3_Thumbnail.09330c4839ac9a9c1a7e.webp",
     "static/media/LShanhuaDefault_R2a_Thumbnail.webp": "/static/media/LShanhuaDefault_R2a_Thumbnail.04f2c2986a9c0cf16f7e.webp",
+    "static/media/RKayamoriWhiteSuit_R3_Select.webp": "/static/media/RKayamoriWhiteSuit_R3_Select.77ffaed379115b994abf.webp",
     "static/media/CReaperDefault_R1_Thumbnail.webp": "/static/media/CReaperDefault_R1_Thumbnail.ee7294b1e64715dc02fc.webp",
     "static/media/IrOhshimaDefault_R3_Thumbnail.webp": "/static/media/IrOhshimaDefault_R3_Thumbnail.2ef57b7edf1f751bfce9.webp",
     "static/media/HOgasawaraDefault_R1_Thumbnail.webp": "/static/media/HOgasawaraDefault_R1_Thumbnail.af1d061c5c10a254a8c5.webp",
@@ -411,6 +414,7 @@
     "static/media/SMinaseAutumn2025_R3_Thumbnail.webp": "/static/media/SMinaseAutumn2025_R3_Thumbnail.154ed66dadd6a2d1c02d.webp",
     "static/media/MKurosawaDefault_R1_Thumbnail.webp": "/static/media/MKurosawaDefault_R1_Thumbnail.8d00e5902c2ee1707b40.webp",
     "static/media/INatsumeButterfly_R3_Select.webp": "/static/media/INatsumeButterfly_R3_Select.7de0f7c2961a53a854c6.webp",
+    "static/media/RKayamoriWhiteSuit_R3_Thumbnail.webp": "/static/media/RKayamoriWhiteSuit_R3_Thumbnail.f60beab6d7322a3cb668.webp",
     "static/media/angelbeats.webp": "/static/media/angelbeats.359fbb2afdbdcf12e723.webp",
     "static/media/CSugaharaDefault_R1_Thumbnail.webp": "/static/media/CSugaharaDefault_R1_Thumbnail.ea9d1f026f56eac75c6b.webp",
     "static/media/YBungoDefault_R2a_Thumbnail.webp": "/static/media/YBungoDefault_R2a_Thumbnail.340d6354ec7c36f6fa68.webp",
@@ -785,6 +789,6 @@
   },
   "entrypoints": [
     "static/css/main.ad469d2a.css",
-    "static/js/main.64670a25.js"
+    "static/js/main.5eee18cd.js"
   ]
 }
