@@ -6,7 +6,7 @@ import {
     , CHARA_ID, STYLE_ID, BUFF_ID, ABILITY_ID
 } from "utils/const";
 import {
-    DEBUFF_LIST, TROOP_KBN, BUFF_KBN,
+    DEBUFF_LIST, TROOP_KBN, BUFF_KBN, TRANSCEND_LIST,
     getCharaIdToMember, getEffectSize, getSumEffectSize,
     getBuffKey, getBestBuffKeys, checkDuplicationChara,
     isOnlyUse, isAloneActivation, isOnlyBuff, filteredBuffList, filteredOrb,
@@ -706,7 +706,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
             });
             buffList.push(...newStyleBuffList);
 
-            const addBuffAbility = (kbn, skillId, charaId, skillName, buffKind, fieldElement, effectSize) => {
+            const addBuffAbility = (kbn, skillId, charaId, skillName, buffKind, fieldElement, effectSize, effectCount = 0) => {
                 buffList.push({
                     key: `${kbn}_${skillId}_${charaId}`,
                     skill_id: skillId,
@@ -716,6 +716,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     buff_element: fieldElement,
                     chara_name: charaName,
                     max_power: effectSize,
+                    effect_count: effectCount,
                     max_lv: 1,
                     kbn: kbn
                 });
@@ -730,7 +731,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                 "10": memberInfo.styleInfo.ability10
             };
             if (memberInfo.styleInfo.role === ROLE.ADMIRAL) {
-                styleAbility["00"] = ABILITY_ID.ADMIRAL_COMMON;
+                styleAbility["ADMIRAL"] = ABILITY_ID.ADMIRAL_COMMON;
             }
 
             Object.keys(styleAbility).forEach(key => {
@@ -761,6 +762,16 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     if (abilityInfo.target_element !== 0 &&
                         abilityInfo.target_element !== attackMemberInfo.styleInfo.element &&
                         abilityInfo.target_element !== attackMemberInfo.styleInfo.element2) return;
+
+                    // 超越ゲージ
+                    if (TRANSCEND_LIST.includes(abilityInfo.ability_id)) {
+                        if ((abilityInfo.target_element === attackMemberInfo.styleInfo.element ||
+                            abilityInfo.target_element === attackMemberInfo.styleInfo.element2) &&
+                            abilityInfo.target_element === attackInfo?.attack_element) {
+                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALRATEUP, 0, 100, 5);
+                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALDAMAGEUP, 0, 100, 5);
+                        }
+                    }
                 }
 
                 const buffType = buffTypeMap[abilityInfo.effect_type];
@@ -883,6 +894,11 @@ const AbilityDetail = ({ buffInfo, closeModal }) => {
             break;
         case BUFF.SHADOW_CLONE: // 影分身
             effectSize = 30;
+            break;
+        case BUFF.CRITICALRATEUP:
+        case BUFF.CRITICALDAMAGEUP:
+            // 超越ゲージ
+            effectSize = 100;
             break;
         default:
             break;

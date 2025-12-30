@@ -714,7 +714,7 @@ export function getSpCost(turnData, skillInfo, unit) {
     if (spCost === 0) {
         return spCost;
     }
-    let spCostDown = 0;
+    let spCostDown = unit.spCostDown ? unit.spCostDown : 0;
     let spCostUp = 0;
     if (harfSpSkill(turnData, skillInfo, unit)) {
         spCost = Math.ceil(spCost / 2);
@@ -756,17 +756,9 @@ export function getSpCost(turnData, skillInfo, unit) {
             spCostDown = 2;
         }
     }
-    // ハイブースト
-    if (checkBuffExist(unit.buffList, BUFF.HIGH_BOOST)) {
-        spCostUp = 2;
-    }
 
     turnData.unitList.forEach((unitData) => {
         if (!unitData.blank) {
-            // 蒼天
-            if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.BLUE_SKY)) {
-                spCostDown = 1;
-            }
             // 彩鳳連理
             if (CHARA_ID.MEMBER_31E.includes(unit.style.styleInfo.chara_id)
                 && checkPassiveExist(unitData.passiveSkillList, SKILL_ID.SAIO_RENRI)) {
@@ -784,7 +776,10 @@ export function getSpCost(turnData, skillInfo, unit) {
             }
         }
     })
-
+    // ハイブースト
+    if (checkBuffExist(unit.buffList, BUFF.HIGH_BOOST)) {
+        spCostUp = 2;
+    }
     // カラスの鳴き声で
     if (skillInfo.skill_id === 578) {
         const count = unit.useSkillList.filter(value => value === 578).length;
@@ -2258,6 +2253,12 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                     unit.additionalTurn = true;
                     turnData.additionalTurn = true;
                 }
+                break;
+            case EFFECT.COST_SP_DOWN: // SPコストダウン
+                targetList.forEach(function (target_no) {
+                    let unitData = getUnitData(turnData, target_no);
+                    unitData.spCostDown = Math.max(unitData.spCostDown, ability.effect_size);
+                });
                 break;
             default:
                 break;

@@ -48,6 +48,8 @@ export const BUFF_ID = {
 }
 
 export const ABILITY_ID = {
+    TRANSCEND_FIRE: 25, // 超越(火)
+    TRANSCEND_ICE: 26, // 超越(氷)
     MOROIUO: 506, // モロイウオ
     EVIL_ARMY: 511, // 悪の軍団は最強でゲス！
     KIREAJI: 602, // キレアジ

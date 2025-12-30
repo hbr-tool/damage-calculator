@@ -9,9 +9,13 @@ const BuffField = ({ buffKey, index, rowSpan, buffDef, attackInfo,
 
     let isAlone = false;
     if (selectedKey[0]) {
-        let buffId = Number(selectedKey[0].split('_')[1]);
-        let buffInfo = getBuffIdToBuff(buffId);
-        isAlone = isAloneActivation(buffInfo);
+        if (selectedKey[0].split('_')[0] !== "buff") {
+            isAlone = true;
+        } else {
+            let buffId = Number(selectedKey[0].split('_')[1]);
+            let buffInfo = getBuffIdToBuff(buffId);
+            isAlone = isAloneActivation(buffInfo);
+        }
     }
     const buffName = buffDef.name;
     const buffKind = buffDef.kind;

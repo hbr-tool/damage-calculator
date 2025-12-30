@@ -53,6 +53,9 @@ export const TROOP_KBN = {
     SUB: "2",
 }
 
+// 超越ゲージ
+export const TRANSCEND_LIST = [ABILITY_ID.TRANSCEND_FIRE, ABILITY_ID.TRANSCEND_ICE];
+
 // 倍率表示
 function convertToPercentage(value) {
     // 引数×100を計算し、小数点以下2桁目以降を四捨五入してパーセント記号を付ける
@@ -244,6 +247,10 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
                 return 40;
             case BUFF.SHADOW_CLONE: // 影分身
                 return 30;
+            case BUFF.CRITICALRATEUP:
+            case BUFF.CRITICALDAMAGEUP:
+                // 超越ゲージ
+                return 100;
             default:
                 break;
         }
@@ -259,10 +266,21 @@ export function getCostVariable(spCost, collect, memberInfo, abilitySettingMap, 
     } else if (collect?.spzero || spCost === 0) {
         return 0;
     }
-    // 蒼天
-    const blueSky = Object.values(abilitySettingMap)
-        .filter(ability => ability.ability_id === ABILITY_ID.BLUE_SKY)
-        .filter(ability => ability.checked).length > 0;
+    // COSTダウン
+    const maxCostDown = Object.values(abilitySettingMap)
+        .filter(ability => ability.checked)
+        .map(ability => ({
+            ability,
+            info: getAbilityInfo(ability.ability_id)
+        }))
+        .filter(({ info }) => info.effect_type === EFFECT.COST_SP_DOWN)
+        .filter(({ info }) => !info.conditions)
+        .filter(({ info }) => info.target_element === 0 ||
+            info.target_element === memberInfo.styleInfo.element)
+        .reduce(
+            (max, { info }) => Math.max(max, info.effect_size),
+            0
+        );
     // ルビー・パヒューム
     const rubyPerfume = Object.values(passiveSettingMap)
         .filter(passive => passive.skill_id === SKILL_ID.RUBY_PERFUME)
@@ -277,7 +295,7 @@ export function getCostVariable(spCost, collect, memberInfo, abilitySettingMap, 
         .filter(passive => passive.skill_id === SKILL_ID.MARUYAMA_MEMBER)
         .filter(passive => passive.checked).length > 0 && isRangeAreaInclude(null, RANGE.MARUYAMA_MEMBER, memberInfo.styleInfo.chara_id);
 
-    if (blueSky || SaihoRenri || maruyama) {
+    if (maxCostDown || SaihoRenri || maruyama) {
         costVariable -= 1;
     }
     if (rubyPerfume) {
@@ -292,18 +310,30 @@ export function getCostVariable(spCost, collect, memberInfo, abilitySettingMap, 
 function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingMap, passiveSettingMap, resonanceList) {
     let charaId = buff.use_chara_id;
     let strengthen = 0;
+
     // 攻撃力アップ/属性攻撃力アップ
     if (KIND_ATTACKUP.includes(buff.buff_kind)) {
-        Object.values(abilitySettingMap)
-            .filter(ability => ability.chara_id === charaId)
+        strengthen += Object.values(abilitySettingMap)
             .filter(ability => ability.checked)
-            .forEach((ability) => {
-                let abilityInfo = getAbilityInfo(ability.ability_id);
-                if (abilityInfo.effect_type === EFFECT.GIVEATTACKBUFFUP) {
-                    strengthen += abilityInfo.effect_size;
-
+            .reduce((sum, ability) => {
+                // 超越ゲージ
+                const abilityInfo = getAbilityInfo(ability.ability_id);
+                if (TRANSCEND_LIST.includes(ability.ability_id)) {
+                    if (abilityInfo.target_element === 0 ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
+                        sum += 20;
+                    }
                 }
-            })
+
+                // 攻撃バフ判定
+                if (ability.chara_id === charaId) {
+                    if (abilityInfo.effect_type === EFFECT.GIVEATTACKBUFFUP) {
+                        sum += abilityInfo.effect_size;
+                    }
+                }
+                return sum;
+            }, 0);
         Object.values(passiveSettingMap)
             .filter(passive => passive.checked)
             .filter(passive => passive.troopKbn === TROOP_KBN.MAIN)
@@ -328,8 +358,7 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
     if (KIND_DEFENSEDOWN.includes(buff.buff_kind)) {
-        Object.values(abilitySettingMap)
-            .filter(ability => ability.chara_id === charaId)
+        strengthen += Object.values(abilitySettingMap)
             .filter(ability => ability.checked)
             .filter(ability => {
                 // モロイウオ、静かなプレッシャー
@@ -345,12 +374,25 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
                     }
                 }
                 return true;
-            }).forEach((ability) => {
-                let abilityInfo = getAbilityInfo(ability.ability_id);
-                if (abilityInfo.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
-                    strengthen += abilityInfo.effect_size;
+            }).reduce((sum, ability) => {
+                // 超越ゲージ
+                const abilityInfo = getAbilityInfo(ability.ability_id);
+                if (TRANSCEND_LIST.includes(ability.ability_id)) {
+                    if (abilityInfo.target_element === 0 ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
+                        sum += 20;
+                    }
                 }
-            })
+                // 防御バフ判定
+                if (ability.chara_id === charaId) {
+                    let abilityInfo = getAbilityInfo(ability.ability_id);
+                    if (abilityInfo.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
+                        sum += abilityInfo.effect_size;
+                    }
+                }
+                return sum;
+            }, 0);
         Object.values(passiveSettingMap)
             .filter(passive => passive.checked)
             .forEach((passive) => {
