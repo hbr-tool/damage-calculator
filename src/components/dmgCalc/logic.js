@@ -424,6 +424,20 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
     }
     // 防御ダウン以外のデバフスキル
     if ([BUFF.FRAGILE, BUFF.RESISTDOWN].includes(buff.buff_kind)) {
+        strengthen += Object.values(abilitySettingMap)
+            .filter(ability => ability.checked)
+            .reduce((sum, ability) => {
+                // 超越ゲージ
+                const abilityInfo = getAbilityInfo(ability.ability_id);
+                if (TRANSCEND_LIST.includes(ability.ability_id)) {
+                    if (abilityInfo.target_element === 0 ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element ||
+                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
+                        sum += 20;
+                    }
+                }
+                return sum;
+            }, 0);
         Object.values(passiveSettingMap)
             .filter(passive => passive.checked)
             .forEach((passive) => {
@@ -528,6 +542,23 @@ export function isSelectBuff(buffInfo) {
     if (buffInfo.conditions === CONDITIONS.ENEMY_COUNT) {
         return true;
     }
+    return false;
+}
+
+// 超越ゲージ判定
+export function isTranscend(abilitySettingMap, attackInfo, attackMemberInfo) {
+    Object.values(abilitySettingMap)
+        .filter(ability => ability.checked)
+        .forEach(ability => {
+            let abilityInfo = getAbilityInfo(ability.ability_id);
+            if (TRANSCEND_LIST.includes(abilityInfo.ability_id)) {
+                if ((abilityInfo.target_element === attackMemberInfo.styleInfo.element ||
+                    abilityInfo.target_element === attackMemberInfo.styleInfo.element2) &&
+                    abilityInfo.target_element === attackInfo?.attack_element) {
+                    return true;
+                }
+            }
+        });
     return false;
 }
 
