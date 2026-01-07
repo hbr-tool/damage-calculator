@@ -8,7 +8,6 @@ const linkList = [
   { url: '/checker', title: 'スタイル所持率チェッカー' },
   { url: '/artslist', title: 'アーツデッキ画像生成' },
   { url: '/management', title: 'キャラ管理ツール' },
-  { url: '/', title: 'このサイトについて' },
 ];
 
 const HeaderNav = () => {
@@ -21,7 +20,9 @@ const HeaderNav = () => {
   return (
     <div className="header">
       <div className="hamburger">
-        <img className="logo" src={titleLogo} alt="ヘブバン便利ツール" />
+        <Link to="/">
+          <img className="logo" src={titleLogo} alt="ヘブバン便利ツール" />
+        </Link>
 
         <p className="btn-gNav" onClick={toggleNav}>
           <span></span>
@@ -33,7 +34,7 @@ const HeaderNav = () => {
           <ul className="gNav-menu">
             {linkList.map((link, idx) => (
               <li key={idx}>
-                  <Link className='header_link' to={link.url}>{link.title}</Link>
+                <Link className='header_link' to={link.url}>{link.title}</Link>
               </li>
             ))}
           </ul>

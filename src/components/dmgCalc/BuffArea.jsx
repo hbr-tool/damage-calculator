@@ -796,6 +796,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
 
             stylePassiveList.forEach(skill => {
                 const passive = getPassiveInfo(skill.skill_id);
+                if (!attackInfo) return;
                 if (!passive || !TARGET_KIND.includes(passive.effect_type)) return;
                 if (troopKbn === TROOP_KBN.SUB) {
                     // 他部隊のアビリティは一部のみ許可
@@ -804,6 +805,12 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     }
                 }
 
+                if (passive.element !== 0 && passive.element !== attackInfo.attack_element) return;
+                if (attackMemberInfo) {
+                    if (passive.target_element !== 0 &&
+                        passive.target_element !== attackMemberInfo.styleInfo.element &&
+                        passive.target_element !== attackMemberInfo.styleInfo.element2) return;
+                }
                 if (passive.range_area === RANGE.FIELD) {
                     addBuffAbility("passive", passive.skill_id, charaId, passive.passive_name, BUFF.FIELD, 0, passive.effect_size);
                 } else {

@@ -18,7 +18,7 @@ div.footer {
 .display_area {
     width: 1085px;
     display: flex;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
 }
 
 .adjust_width {
@@ -480,13 +480,14 @@ table td.kind {
 }
 
 .strengthen {
-    height: 19px;
+    white-space: nowrap;
+    height: 20px;
     width: 100%;
 }
 
 select.buff {
     width: 100%;
-    height: 21px;
+    height: 22px;
 }
 
 .buff_area {
@@ -564,7 +565,7 @@ div.lv::before {
 
 div.lv select {
     text-align: center;
-    height: 21px;
+    height: 22px;
 }
 
 
@@ -585,29 +586,25 @@ td[class*="block_style_id-"] {
     background-color: rgba(255, 0, 0, 0.3)
 }
 
-.strengthen {
-    white-space: nowrap;
-}
-
 /* ダメージ詳細 */
 #damage_result {
     width: 560px;
 }
 
 .damage_label {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 18px;
 }
 
 .damage {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 30px;
     width: 200px;
     height: 30px;
 }
 
 .min_damage {
-    font-weight: bold;
+    font-weight: 500;
     font-size: 16px;
     width: 100px;
 }
@@ -701,11 +698,11 @@ input[type="button"].durability_reflection {
 
 /* スコアアタック */
 .score_attack {
-    width: 90%;
+    width: 95%;
 }
 
 #score_turn {
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 #half_tab>input[type="radio"] {

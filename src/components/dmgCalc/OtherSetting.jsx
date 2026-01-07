@@ -21,7 +21,7 @@ const OtherSetting = ({ attackInfo, otherSetting, setOtherSetting, bulkSetting }
     return (
         <div className="surround_area mx-auto my-2 adjust_width">
             <label className="area_title">他設定</label>
-            <div className="flex flex-wrap py-1 ml-3 gap-x-4 gap-y-2">
+            <div className="flex flex-wrap py-1 ml-3 gap-x-2 gap-y-2">
                 <div className="flex">
                     <div className="pt-0.5">属性リング</div>
                     <select disabled={attackInfo?.attack_element === 0} value={otherSetting.ring} onChange={(e) => setOtherSetting({ ...otherSetting, ring: e.target.value })}>

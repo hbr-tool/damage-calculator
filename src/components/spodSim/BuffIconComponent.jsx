@@ -9,7 +9,13 @@ const BuffIconComponent = ({ buffList, loopLimit, loopStep, placeNo, turnNumber,
         const scrollContent = scrollContentRef.current;
         if (!scrollContent) return;
 
-        const styleSheet = document.styleSheets[0];
+        const styleSheet = Array.from(document.styleSheets).find(sheet => {
+            try {
+                return sheet.cssRules;
+            } catch {
+                return false;
+            }
+        });
         const animationName = `scroll-${turnNumber}-${placeNo}`;
 
         // 古いアニメーションを削除
