@@ -167,7 +167,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                     if (CONSTRAINTS_ABILITY.includes(abilityInfo.ability_id)) {
                         constraintsAbility.push(abilityInfo.ability_id);
                     }
-                    unit[`ability_${abilityInfo.activation_timing}`].push(abilityInfo);
+                    unit[`ability_${abilityInfo.activation_timing}`].push(deepClone(abilityInfo));
                 }
             });
             unit.passiveSkillList.forEach(skill => {

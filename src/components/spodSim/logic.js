@@ -1823,7 +1823,7 @@ const unitTurnProceed = (unit, turn) => {
         }
         if (checkBuffExist(unit.buffList, BUFF.FIRE_MARK)) {
             // 火の印6人
-            if (targetCountInclude(turn, ELEMENT.FIRE) > 5) {
+            if (targetCountInclude(turn, ELEMENT.FIRE) > 5 && unit.placeNo < 3) {
                 unit.sp += 1;
             }
         }
