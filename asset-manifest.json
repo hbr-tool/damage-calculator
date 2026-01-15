@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.8f7c9c8e.css",
-    "main.js": "/static/js/main.3dde4434.js",
+    "main.js": "/static/js/main.46addf4e.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -258,6 +258,7 @@
     "static/media/YBungoXmas2022_R3_Select.webp": "/static/media/YBungoXmas2022_R3_Select.6e298334b28d0546cb1b.webp",
     "static/media/NiOhshimaPrivate_R3_Select.webp": "/static/media/NiOhshimaPrivate_R3_Select.dc1e1721881125bbdf72.webp",
     "static/media/IrOhshimaNightlife_R3_Select.webp": "/static/media/IrOhshimaNightlife_R3_Select.73daef45ddec180ac82e.webp",
+    "static/media/EAoiWhiteSuit_R3_Select.webp": "/static/media/EAoiWhiteSuit_R3_Select.913266b190096a88c4c5.webp",
     "static/media/CSugaharaBeast_R3_Select.webp": "/static/media/CSugaharaBeast_R3_Select.81fc182fa8231cc268d1.webp",
     "static/media/CSugaharaPurity_R3_Select.webp": "/static/media/CSugaharaPurity_R3_Select.3f94d46cd33e994daed3.webp",
     "static/media/YIzumiYukata2022_R3_Select.webp": "/static/media/YIzumiYukata2022_R3_Select.f67a51cd664e27fe5f73.webp",
@@ -420,6 +421,7 @@
     "static/media/YBungoDefault_R2a_Thumbnail.webp": "/static/media/YBungoDefault_R2a_Thumbnail.340d6354ec7c36f6fa68.webp",
     "static/media/YIzumiDefault_R1_Thumbnail.webp": "/static/media/YIzumiDefault_R1_Thumbnail.9a9cb80372ea0cde1b19.webp",
     "static/media/CSugaharaExcellency_R3_Select.webp": "/static/media/CSugaharaExcellency_R3_Select.90d1985f954ad29d4af0.webp",
+    "static/media/EAoiWhiteSuit_R3_Thumbnail.webp": "/static/media/EAoiWhiteSuit_R3_Thumbnail.e2a542bc04982a45bca5.webp",
     "static/media/CSugaharaBeast_R3_Thumbnail.webp": "/static/media/CSugaharaBeast_R3_Thumbnail.792bcd3610b062e7db97.webp",
     "static/media/VBalakrishnanKitchen_R3_Thumbnail.webp": "/static/media/VBalakrishnanKitchen_R3_Thumbnail.8a5ae05de3513d5913d7.webp",
     "static/media/RKayamoriDefault_R3_Select.webp": "/static/media/RKayamoriDefault_R3_Select.96002ebaaec095fcf865.webp",
@@ -700,6 +702,7 @@
     "static/media/BtnEventBattleActive.webp": "/static/media/BtnEventBattleActive.fd1cc01c8c510ff12cf2.webp",
     "static/media/IconRaritySSR.webp": "/static/media/IconRaritySSR.4f7860c24f653601620d.webp",
     "static/media/IconRaritySS.webp": "/static/media/IconRaritySS.427662a45b52a986d86a.webp",
+    "static/media/IconIceMark.webp": "/static/media/IconIceMark.d8870da511bedad2dac2.webp",
     "static/media/IconCurry.webp": "/static/media/IconCurry.68fce12ee56f10d0e231.webp",
     "static/media/IconHighBoost.webp": "/static/media/IconHighBoost.bab01bca5e0227d6e190.webp",
     "static/media/IconFireMark.webp": "/static/media/IconFireMark.7172ff92dbc227826136.webp",
@@ -789,6 +792,6 @@
   },
   "entrypoints": [
     "static/css/main.8f7c9c8e.css",
-    "static/js/main.3dde4434.js"
+    "static/js/main.46addf4e.js"
   ]
 }
