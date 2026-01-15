@@ -36,6 +36,7 @@ const TARGET_KIND = [
     EFFECT.GIVEDEFFENCEDEBUFFUP, // 防御力デバフ強化
     EFFECT.HIGH_BOOST, // ハイブースト状態
     EFFECT.FIRE_MARK, // 火の印
+    EFFECT.ICE_MARK, // 氷の印
     EFFECT.FUNNEL, // 連撃
     EFFECT.FUNNEL_ALWAYS, // 連撃(永続)
 ]

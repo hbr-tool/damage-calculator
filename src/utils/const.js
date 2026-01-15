@@ -67,6 +67,7 @@ export const ABILITY_ID = {
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
     BRAVE_FIGURE: 1150, // 勇姿
+    ICE_MARK: 101, // 氷の印
 }
 
 export const COST_TYPE = {
@@ -147,6 +148,7 @@ export const BUFF = {
     FIRE_MARK: 43, // 火の印 
     CURRY: 44, // カリー
     SHCHI: 45, // シチー
+    ICE_MARK: 46, // 氷の印
     HEALEP: 52, // EP回復
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
@@ -191,6 +193,7 @@ export const EFFECT = {
     FIRE_MARK: 43, // 火の印 
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
+    ICE_MARK: 46, // 氷の印
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
     ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ

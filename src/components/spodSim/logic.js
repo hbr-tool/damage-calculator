@@ -317,6 +317,9 @@ export function getBuffIconImg(buffInfo) {
         case BUFF.FIRE_MARK: // 火の印
             src += "IconFireMark";
             break;
+        case BUFF.ICE_MARK: // 氷の印
+            src += "IconIceMark";
+            break;
         case BUFF.CURRY: // カリー
             src += "IconCurry";
             break;
@@ -1398,6 +1401,9 @@ export function getBuffKindName(buffInfo) {
         case BUFF.FIRE_MARK:
             buff_kind_name += "火の印";
             break;
+        case BUFF.ICE_MARK:
+            buff_kind_name += "氷の印";
+            break;
         case BUFF.CURRY:
             buff_kind_name += "カリー";
             break;
@@ -1827,6 +1833,12 @@ const unitTurnProceed = (unit, turn) => {
                 unit.sp += 1;
             }
         }
+        if (checkBuffExist(unit.buffList, BUFF.ICE_MARK)) {
+            // 氷の印6人
+            if (targetCountInclude(turn, ELEMENT.ICE) > 5 && unit.placeNo < 3) {
+                unit.sp += 1;
+            }
+        }
         if (unit.sp > unit.limitSp) {
             unit.sp = unit.limitSp
         }
@@ -2052,6 +2064,15 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                     }
                 }
                 break;
+            case "氷の印レベルが6以上":
+                for (let i = 0; i < 6; i++) {
+                    let unit = turnData.unitList[i];
+                    if (unit.blank) return;
+                    if (!checkBuffExist(unit.buffList, BUFF.ICE_MARK)) {
+                        return;
+                    }
+                }
+                break;
             case "ODゲージ使用":
                 let list = getBuffList(unit.selectSkillId)
                     .filter(skill => skill.buff_kind === BUFF.OVERDRIVEPOINTUP)
@@ -2096,8 +2117,8 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 });
                 break;
             case EFFECT.HEALSP: // SP回復
-                // 戦場の華,猛火の進撃
-                const onlyUseSpList = [1528, 1023]
+                // 戦場の華,猛火の進撃,氷嵐の進撃
+                const onlyUseSpList = [1528, 1023, 1031]
                 if (ability.used && onlyUseSpList.includes(ability.ability_id)) {
                     return;
                 }
@@ -2236,6 +2257,9 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 break;
             case EFFECT.FIRE_MARK: // 火の印
                 addAbilityBuffUnit(BUFF.FIRE_MARK, ability.passive_name, -1, targetList, turnData)
+                break;
+            case EFFECT.ICE_MARK: // 氷の印
+                addAbilityBuffUnit(BUFF.ICE_MARK, ability.passive_name, -1, targetList, turnData)
                 break;
             case EFFECT.EX_DOUBLE: // EXスキル連続使用
                 addAbilityBuffUnit(BUFF.EX_DOUBLE, ability.ability_name, -1, targetList, turnData)

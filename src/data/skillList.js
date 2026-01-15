@@ -612,6 +612,8 @@ const skilLlist = [
     {"skill_id":710,"skill_name":"アーク・オブ・ヴィクトリア","chara_id":1,"style_id":193,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
     {"skill_id":711,"skill_name":"神命を宿す瞳","chara_id":43,"style_id":194,"cost_type":"SP","use_cost":9,"skill_active":0,"skill_kind":0},
     {"skill_id":712,"skill_name":"神に捧ぐ、勝旗のラ・ピュセル","chara_id":43,"style_id":194,"cost_type":"SP","use_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"conditions":3},
+    {"skill_id":713,"skill_name":"過去を映す涙","chara_id":7,"style_id":0,"cost_type":"CT","use_cost":3,"skill_active":0,"skill_kind":0},
+    {"skill_id":714,"skill_name":"未来へ繋ぐ蒼の意志","chara_id":7,"style_id":195,"cost_type":"SP","use_cost":14,"skill_active":0,"skill_kind":1},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8003,"skill_name":"連撃＋","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},

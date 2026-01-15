@@ -1151,6 +1151,36 @@ function getSumAbilityEffectSize(handlers, effectType) {
                     }
                 }
             }
+
+            // 氷の印
+            if (abilityId === ABILITY_ID.ICE_MARK &&
+                [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.ICE)) {
+                let iceCount = targetCountInclude(styleList, abilityInfo.target_element);
+                switch (effectType) {
+                    case EFFECT.ATTACKUP:
+                        if (iceCount >= 0) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    case EFFECT.DAMAGERATEUP:
+                        if (iceCount >= 3) {
+                            abilityEffectSize += 10;
+                        }
+                        break;
+                    case EFFECT.CRITICALRATEUP:
+                        if (iceCount >= 4) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    case EFFECT.CRITICAL_DAMAGE_UP:
+                        if (iceCount >= 5) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     })
     abilityEffectSize += activationNoneEffectSize + sumNoneEffectSize
