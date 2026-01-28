@@ -5,8 +5,16 @@ module.exports = {
     "./public/index.html",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: [
+          '"Inter"',
+          '"Noto Sans JP"',
+          'system-ui',
+          'sans-serif',
+        ],
+      },
+    },
   },
   plugins: [],
 }
-
