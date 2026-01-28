@@ -251,7 +251,7 @@ const CharaSetting = ({ setSettingUpdate }) => {
                 <>
                     <div>
                         <span className="label_status">限界突破</span>
-                        <span className="label_status text-xs leading-6 whitespace-nowrap">ドライブピアス</span>
+                        <span className="label_status text-xs leading-6 whitespace-nowrap">ﾄﾞﾗｲﾌﾞﾋﾟｱｽ</span>
                         <span className="label_status text-xs leading-5 whitespace-nowrap">ブレスレット</span>
                         <span className="label_status">チェーン</span>
                         <span className="label_status">初期SP</span>

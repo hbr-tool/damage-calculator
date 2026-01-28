@@ -26,36 +26,39 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
         newSelected[index] = value;
 
         if (value) {
-            const buffId = Number(value.split('_')[1]);
-            let buffInfo = getBuffIdToBuff(buffId);
-            if (isOnlyBuff(attackInfo, buffInfo) && newSelected[index ^ 1] === value) {
-                confirmSet(`${buffInfo.buff_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
-                    handleSelectChange(buffKey, newSelected);
-                });
-                return;
-            }
-            if (isSelectBuff(buffInfo)) {
-                const partnerBuffId = Number(newSelected[index ^ 1]?.split('_')[1]);
-                if (partnerBuffId) {
-                    let partnerBuffInfo = getBuffIdToBuff(partnerBuffId);
-                    if (buffInfo.skill_id === partnerBuffInfo.skill_id) {
-                        let skillInfo = getSkillData(buffInfo.skill_id);
-                        confirmSet(`${skillInfo.skill_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
-                            handleSelectChange(buffKey, newSelected);
-                        });
-                        return;
+            const type = Number(value.split('_')[0]);
+            if (type === "buff") {
+                const buffId = Number(value.split('_')[1]);
+                let buffInfo = getBuffIdToBuff(buffId);
+                if (isOnlyBuff(attackInfo, buffInfo) && newSelected[index ^ 1] === value) {
+                    confirmSet(`${buffInfo.buff_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
+                        handleSelectChange(buffKey, newSelected);
+                    });
+                    return;
+                }
+                if (isSelectBuff(buffInfo)) {
+                    const partnerBuffId = Number(newSelected[index ^ 1]?.split('_')[1]);
+                    if (partnerBuffId) {
+                        let partnerBuffInfo = getBuffIdToBuff(partnerBuffId);
+                        if (buffInfo.skill_id === partnerBuffInfo.skill_id) {
+                            let skillInfo = getSkillData(buffInfo.skill_id);
+                            confirmSet(`${skillInfo.skill_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
+                                handleSelectChange(buffKey, newSelected);
+                            });
+                            return;
+                        }
                     }
                 }
-            }
-            if (isAloneActivation(buffInfo)) {
-                handleSelectChange(buffKey, [value, ""]);
-                return;
-            }
-            if (isOnlyUse(attackInfo, buffInfo)) {
-                confirmSet(`${buffInfo.buff_name}は\r\n通常、他スキルに設定出来ません。\r\n設定してよろしいですか？`, () => {
-                    handleSelectChange(buffKey, newSelected);
-                });
-                return;
+                if (isAloneActivation(buffInfo)) {
+                    handleSelectChange(buffKey, [value, ""]);
+                    return;
+                }
+                if (isOnlyUse(attackInfo, buffInfo)) {
+                    confirmSet(`${buffInfo.buff_name}は\r\n通常、他スキルに設定出来ません。\r\n設定してよろしいですか？`, () => {
+                        handleSelectChange(buffKey, newSelected);
+                    });
+                    return;
+                }
             }
         }
 
