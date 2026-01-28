@@ -13,7 +13,7 @@ function AmazonLink({ url, title }) {
         shadow-md
         transition-colors duration-200
         text-center
-        max-w-xs
+        max-w-2xs
       "
     >
       <span className="block text-sm">{title}</span>
