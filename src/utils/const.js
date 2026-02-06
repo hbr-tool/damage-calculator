@@ -50,6 +50,7 @@ export const BUFF_ID = {
 export const ABILITY_ID = {
     TRANSCEND_FIRE: 25, // 超越(火)
     TRANSCEND_ICE: 26, // 超越(氷)
+    TRANSCEND_THUNDER: 27, // 超越(雷)
     MOROIUO: 506, // モロイウオ
     EVIL_ARMY: 511, // 悪の軍団は最強でゲス！
     KIREAJI: 602, // キレアジ
@@ -67,7 +68,9 @@ export const ABILITY_ID = {
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
     BRAVE_FIGURE: 1150, // 勇姿
+    OVER_GEAR: 1405, // オーバーギア
     ICE_MARK: 101, // 氷の印
+    THUNDER_MARK: 102, // 雷の印
 }
 
 export const COST_TYPE = {
@@ -149,6 +152,7 @@ export const BUFF = {
     CURRY: 44, // カリー
     SHCHI: 45, // シチー
     ICE_MARK: 46, // 氷の印
+    THUNDER_MARK: 47, // 雷の印
     HEALEP: 52, // EP回復
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
@@ -194,9 +198,11 @@ export const EFFECT = {
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
     ICE_MARK: 46, // 氷の印
+    THUNDER_MARK: 47, // 雷の印
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
     ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
+    OVERDRIVE_EP: 54, // EP回復
 }
 
 /** フィールド */

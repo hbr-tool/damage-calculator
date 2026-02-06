@@ -18,6 +18,7 @@ const abilityResonance = [
     {"resonance_id":17,"resonance_name":"ホーリーグレイス","resonance_text":"ターン開始時 前衛にいるとオーバードライブゲージ+{0}%","effect_type":14,"effect_limit_0":5,"effect_limit_1":6,"effect_limit_2":7,"effect_limit_3":8,"effect_limit_4":10,"activation_timing":1,"activation_place":1,"conditions":null,"conditions_id":null},
     {"resonance_id":18,"resonance_name":"ライブブースト","resonance_text":"自身のスキル攻撃力+{0}%","effect_type":1,"effect_limit_0":40,"effect_limit_1":48,"effect_limit_2":56,"effect_limit_3":64,"effect_limit_4":70,"activation_timing":null,"activation_place":null,"conditions":null,"conditions_id":null},
     {"resonance_id":19,"resonance_name":"ブレイズ・エンジン","resonance_text":"OD中に自身がかけるスキル攻撃力アップの効果量+{0}%","effect_type":17,"effect_limit_0":20,"effect_limit_1":33,"effect_limit_2":25,"effect_limit_3":27,"effect_limit_4":30,"activation_timing":null,"activation_place":null,"conditions":4,"conditions_id":null},
+    {"resonance_id":20,"resonance_name":"ディスチャージ","resonance_text":"行動開始時 自身のDPが50％以上のとき 自身がかける防御力ダウンの効果量+{0}%","effect_type":18,"effect_limit_0":20,"effect_limit_1":33,"effect_limit_2":25,"effect_limit_3":27,"effect_limit_4":30,"activation_timing":null,"activation_place":null,"conditions":4,"conditions_id":null},
 ];
 
 export default abilityResonance;

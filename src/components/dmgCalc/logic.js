@@ -54,7 +54,7 @@ export const TROOP_KBN = {
 }
 
 // 超越ゲージ
-export const TRANSCEND_LIST = [ABILITY_ID.TRANSCEND_FIRE, ABILITY_ID.TRANSCEND_ICE];
+export const TRANSCEND_LIST = [ABILITY_ID.TRANSCEND_FIRE, ABILITY_ID.TRANSCEND_ICE, ABILITY_ID.TRANSCEND_THUNDER];
 
 // 倍率表示
 function convertToPercentage(value) {
@@ -1174,6 +1174,36 @@ function getSumAbilityEffectSize(handlers, effectType) {
                         break;
                     case EFFECT.CRITICAL_DAMAGE_UP:
                         if (iceCount >= 5) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+            // 雷の印
+            if (abilityId === ABILITY_ID.THUNDER_MARK &&
+                [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.THUNDER)) {
+                let thunderCount = targetCountInclude(styleList, abilityInfo.target_element);
+                switch (effectType) {
+                    case EFFECT.ATTACKUP:
+                        if (thunderCount >= 0) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    case EFFECT.DAMAGERATEUP:
+                        if (thunderCount >= 3) {
+                            abilityEffectSize += 10;
+                        }
+                        break;
+                    case EFFECT.CRITICALRATEUP:
+                        if (thunderCount >= 4) {
+                            abilityEffectSize += 30;
+                        }
+                        break;
+                    case EFFECT.CRITICAL_DAMAGE_UP:
+                        if (thunderCount >= 5) {
                             abilityEffectSize += 30;
                         }
                         break;

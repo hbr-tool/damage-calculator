@@ -490,7 +490,7 @@ const skilLlist = [
     {"skill_id":588,"skill_name":"国士無双","chara_id":19,"style_id":151,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
     {"skill_id":589,"skill_name":"ソニックブースト","chara_id":91,"style_id":0,"cost_type":"SP","use_cost":7,"skill_active":0,"skill_kind":0},
     {"skill_id":590,"skill_name":"ネオンバースト","chara_id":91,"style_id":0,"cost_type":"SP","use_cost":7,"skill_active":0,"skill_kind":0},
-    {"skill_id":591,"skill_name":"ノヴァエリミネーション","chara_id":91,"style_id":152,"cost_type":"EP","use_cost":7,"skill_active":0,"skill_kind":2},
+    {"skill_id":591,"skill_name":"ノヴァエリミネーション","chara_id":91,"style_id":0,"cost_type":"EP","use_cost":7,"skill_active":0,"skill_kind":2},
     {"skill_id":592,"skill_name":"涙雨","chara_id":4,"style_id":0,"cost_type":"SP","use_cost":12,"skill_active":0,"skill_kind":0},
     {"skill_id":593,"skill_name":"ミラージュ・モーメント","chara_id":4,"style_id":153,"cost_type":"SP","use_cost":14,"skill_active":0,"skill_kind":1},
     {"skill_id":594,"skill_name":"モラール","chara_id":13,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":0},
@@ -614,6 +614,9 @@ const skilLlist = [
     {"skill_id":712,"skill_name":"神に捧ぐ、勝旗のラ・ピュセル","chara_id":43,"style_id":194,"cost_type":"SP","use_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"conditions":3},
     {"skill_id":713,"skill_name":"過去を映す涙","chara_id":7,"style_id":0,"cost_type":"CT","use_cost":3,"skill_active":0,"skill_kind":0},
     {"skill_id":714,"skill_name":"未来へ繋ぐ蒼の意志","chara_id":7,"style_id":195,"cost_type":"SP","use_cost":14,"skill_active":0,"skill_kind":1},
+    {"skill_id":715,"skill_name":"咲き誇る花","chara_id":91,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
+    {"skill_id":716,"skill_name":"宿る想い","chara_id":91,"style_id":196,"cost_type":"SP","use_cost":8,"skill_active":0,"skill_kind":0,"skill_attribute":11,"conditions":3},
+    {"skill_id":717,"skill_name":"祈りの花、風に託して","chara_id":91,"style_id":196,"cost_type":"EP","use_cost":7,"skill_active":0,"skill_kind":1},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8003,"skill_name":"連撃＋","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
@@ -633,6 +636,9 @@ const skilLlist = [
     {"skill_id":9013,"skill_name":"サンダーグラビトン","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
     {"skill_id":9014,"skill_name":"ライトグラビトン","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
     {"skill_id":9015,"skill_name":"ダークグラビトン","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
+    {"skill_id":9016,"skill_name":"ディフェンスブースト","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":7},
+    {"skill_id":9017,"skill_name":"チャージインジェクション","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":7},
+    {"skill_id":9018,"skill_name":"チアーアップ","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":7},
     {"skill_id":9999,"skill_name":"行動無し","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":99},
 ];
 

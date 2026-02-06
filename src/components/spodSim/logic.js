@@ -320,6 +320,9 @@ export function getBuffIconImg(buffInfo) {
         case BUFF.ICE_MARK: // 氷の印
             src += "IconIceMark";
             break;
+        case BUFF.THUNDER_MARK: // 雷の印
+            src += "IconThunderMark";
+            break;
         case BUFF.CURRY: // カリー
             src += "IconCurry";
             break;
@@ -1404,6 +1407,9 @@ export function getBuffKindName(buffInfo) {
         case BUFF.ICE_MARK:
             buff_kind_name += "氷の印";
             break;
+        case BUFF.THUNDER_MARK:
+            buff_kind_name += "雷の印";
+            break;
         case BUFF.CURRY:
             buff_kind_name += "カリー";
             break;
@@ -1750,6 +1756,7 @@ export const startOverDrive = (turn, overDriveLevel) => {
     let sp_list = [0, 5, 12, 20];
     unitLoop(function (unit) {
         unit.overDriveSp = sp_list[overDriveLevel];
+        unit.overDriveEp = 0;
         unit.spCost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
     }, turn.unitList);
     abilityAction(ABILIRY_TIMING.OD_START, turn);
@@ -1764,6 +1771,7 @@ export const removeOverDrive = (turn) => {
 
     unitLoop(function (unit) {
         unit.overDriveSp = 0;
+        unit.overDriveEp = 0;
         unit.spCost = getSpCost(turn, getSkillData(unit.selectSkillId), unit);
     }, turn.unitList);
     turn.triggerOverDrive = false;
@@ -1839,6 +1847,12 @@ const unitTurnProceed = (unit, turn) => {
                 unit.sp += 1;
             }
         }
+        if (checkBuffExist(unit.buffList, BUFF.THUNDER_MARK)) {
+            // 雷の印6人
+            if (targetCountInclude(turn, ELEMENT.THUNDER) > 5 && unit.placeNo < 3) {
+                unit.sp += 1;
+            }
+        }
         if (unit.sp > unit.limitSp) {
             unit.sp = unit.limitSp
         }
@@ -1879,6 +1893,10 @@ const unitOverDriveTurnProceed = (unit) => {
     unit.sp += unit.overDriveSp;
     if (unit.sp > 99) unit.sp = 99;
     unit.overDriveSp = 0;
+
+    unit.ep += unit.overDriveEp;
+    if (unit.ep > 20) unit.ep = 20;
+    unit.overDriveEp = 0;
 }
 
 const buffConsumption = (turnProgress, unit) => {
@@ -2073,6 +2091,15 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                     }
                 }
                 break;
+            case "雷の印レベルが6以上":
+                for (let i = 0; i < 6; i++) {
+                    let unit = turnData.unitList[i];
+                    if (unit.blank) return;
+                    if (!checkBuffExist(unit.buffList, BUFF.THUNDER_MARK)) {
+                        return;
+                    }
+                }
+                break;
             case "ODゲージ使用":
                 let list = getBuffList(unit.selectSkillId)
                     .filter(skill => skill.buff_kind === BUFF.OVERDRIVEPOINTUP)
@@ -2114,6 +2141,12 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 targetList.forEach(function (target_no) {
                     let unitData = getUnitData(turnData, target_no);
                     unitData.overDriveSp += ability.effect_size;
+                });
+                break;
+            case EFFECT.OVERDRIVE_EP: // ODEPアップ
+                targetList.forEach(function (target_no) {
+                    let unitData = getUnitData(turnData, target_no);
+                    unitData.overDriveEp += ability.effect_size;
                 });
                 break;
             case EFFECT.HEALSP: // SP回復
@@ -2190,9 +2223,15 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 });
                 break;
             case EFFECT.HEALEP: // EP回復
-                unit.ep += ability.effect_size;
-                if (unit.ep > 10) {
-                    unit.ep = 10
+                let maxEp = 10;
+                if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
+                    maxEp = 20;
+                }
+                if (unit.ep < maxEp) {
+                    unit.ep += ability.effect_size;
+                    if (unit.ep > maxEp) {
+                        unit.ep = maxEp;
+                    }
                 }
                 break;
             case EFFECT.MORALE: // 士気
@@ -2260,6 +2299,9 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 break;
             case EFFECT.ICE_MARK: // 氷の印
                 addAbilityBuffUnit(BUFF.ICE_MARK, ability.passive_name, -1, targetList, turnData)
+                break;
+            case EFFECT.THUNDER_MARK: // 雷の印
+                addAbilityBuffUnit(BUFF.THUNDER_MARK, ability.passive_name, -1, targetList, turnData)
                 break;
             case EFFECT.EX_DOUBLE: // EXスキル連続使用
                 addAbilityBuffUnit(BUFF.EX_DOUBLE, ability.ability_name, -1, targetList, turnData)

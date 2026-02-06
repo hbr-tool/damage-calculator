@@ -23,6 +23,7 @@ export const NOT_USE_STYLE = [36, 172];
 export const CONSTRAINTS_ABILITY = [
     25, // 超越ゲージ
     26, // 超越ゲージ
+    27, // 超越ゲージ
     1136, // 勝勢
     1138, // ラストリゾート
     1210, // アルゴリズム

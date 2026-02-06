@@ -18,6 +18,7 @@ const UnitSp = ({ unit }) => {
     } else {
         unitSp = unit.sp + unit.overDriveSp;
         if (unitSp > 99) unitSp = 99;
+        unitEp = unit.ep + unit.overDriveEp;
 
         if (skill.cost_type === COST_TYPE.EP) {
             unitEp -= skill.use_cost;
@@ -32,7 +33,7 @@ const UnitSp = ({ unit }) => {
             <div className={className}>
                 <span>{unitSp + (unit.addSp > 0 ? ("+" + unit.addSp) : "")}</span>
                 {
-                    (unit.ep !== 0 ? <span className="unit_ep">{`EP${unitEp}`}</span> : "")
+                    (unit.ep !== 0 ? <span className="unit_ep">{`${unitEp}`}</span> : "")
                 }
             </div>
         </>

@@ -27,6 +27,7 @@ const skillPassive = [
     {"skill_id":685,"passive_name":"速攻◯","passive_explan":"バトル開始時【掴め栄冠！グランドスラム！】の消費SP8（2ターン）","passive_short_explan":"","effect_type":99,"activation_timing":0,"activation_place":3,"range_area":7,"element":0,"target_element":0,"effect_size":8},
     {"skill_id":705,"passive_name":"お客様ハッピーデー","passive_explan":"行動開始時に前衛にいると前衛の氷属性のスキル攻撃力+12%","passive_short_explan":"前衛の氷属性のスキル攻撃力+12%","effect_type":1,"activation_timing":2,"activation_place":1,"range_area":4,"element":2,"target_element":0,"effect_size":12},
     {"skill_id":708,"passive_name":"獣牙粉砕","passive_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","passive_short_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","effect_type":4,"activation_timing":1,"activation_place":2,"range_area":7,"element":0,"target_element":0,"effect_size":20},
+    {"skill_id":715,"passive_name":"咲き誇る花","passive_explan":"ターン開始時自身のEP+1","passive_short_explan":"","effect_type":52,"activation_timing":1,"activation_place":3,"range_area":7,"element":0,"target_element":0,"effect_size":1},
 ];
 
 export default skillPassive;
