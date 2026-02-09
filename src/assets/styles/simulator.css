@@ -5,7 +5,7 @@ div.sim_frame {
     justify-content: center;
     /* 水平方向中央 */
     margin: auto;
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 }
 
 .adjust_width {
@@ -53,6 +53,7 @@ input.troops_btn.selected_troops {
 .unit_setting_area {
     width: 450px;
     font-size: 0.875rem;
+    margin: auto;
 }
 
 #char_list {
@@ -200,6 +201,7 @@ input.troops_btn.selected_troops {
     overflow-y: auto;
     margin-left: 5px;
     margin-right: 5px;
+    min-height: 700px;
 }
 
 #battle_display {

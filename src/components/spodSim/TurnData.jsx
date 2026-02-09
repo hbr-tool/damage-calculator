@@ -335,7 +335,10 @@ const TurnData = React.memo(({ turn, index, activeTurnNumber, isLastTurn, hideMo
                             chageStyle={chageStyle} chengeSkill={chengeSkill} chengeSelectUnit={chengeSelectUnit} clickBuffIcon={clickBuffIcon} hideMode={hideMode} isCapturing={isCapturing} />
                     )}
                     <div>
-                        <select className="action_select" value={turn.userOperation.kbAction || turn.userOperation.kb_action} onChange={(e) => chengeAction(e)}>
+                        <select className="action_select" value={turn.userOperation.kbAction || turn.userOperation.kb_action}
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => chengeAction(e)}>
                             {turn.userOperation.kbAction === KB_NEXT.ACTION || !isCapturing ?
                                 <option value={KB_NEXT.ACTION}>行動開始</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_1 ||
