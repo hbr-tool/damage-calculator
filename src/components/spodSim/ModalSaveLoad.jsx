@@ -178,14 +178,14 @@ const converSaveData = (saveData) => {
         saveData.unitDataList = saveData.unit_data_list.map((item, index) => {
             return {
                 style_id: item.style_id,
-                limitCount: item.limit_count,
+                limitCount: item.limit_count || item.limitCount,
                 earring: item.earring,
                 bracelet: item.bracelet,
                 chain: item.chain,
-                initSp: item.init_sp,
+                initSp: item.init_sp || item.initSp,
                 morale: 0,
                 supportStyleId: 0,
-                exclusionSkillList: item.exclusion_skill_list || [],
+                exclusionSkillList: item.exclusion_skill_list || item.exclusionSkillList || [],
             };
         });
         saveData.userOperationList = saveData.user_operation_list.map((item, index) => {

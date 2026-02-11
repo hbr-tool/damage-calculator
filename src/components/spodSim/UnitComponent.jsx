@@ -102,7 +102,10 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     let not_action = (recoil.length > 0 || !unit.style || (turn.additionalTurn && !unit.additionalTurn && placeNo <= 2))
     let className = "unit_skill " + (not_action ? "invisible" : "");
     let physical = getCharaData(unit.style.styleInfo.chara_id).physical;
-    return (<select className={className} onChange={(e) => chengeSkill(Number(e.target.value), placeNo)} value={unit.selectSkillId} >
+    return (<select className={className}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+        onChange={(e) => chengeSkill(Number(e.target.value), placeNo)} value={unit.selectSkillId} >
         {skillList.filter((obj) => obj.skill_id === unit.selectSkillId || !isCapturing).map(skill => {
             let text = skill.skill_name;
             let spCost = 0;

@@ -331,6 +331,7 @@ input.troops_btn.selected_troops {
 .turn_number {
     font-weight: bold;
     margin-bottom: -3px;
+    white-space: nowrap;
 }
 
 .left {
