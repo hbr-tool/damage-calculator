@@ -228,7 +228,7 @@ const ModalStyleSelection = ({ index, narrowStyle, setNarrowStyle, clickSetMembe
                             };
                         }
                         return charaData.troops === key
-                            && (narrowStyle.rarity[style.rarity])
+                            && (narrowStyle.rarity[style.rarity] || (narrowStyle.rarity[0] && style.rarity === 1 && style.resonance === 1))
                             && (narrowStyle.physical === null || charaData.physical === narrowStyle.physical)
                             && (narrowStyle.element === null || style.element === narrowStyle.element || style.element2 === narrowStyle.element)
                             && (narrowStyle.role === null || style.role === narrowStyle.role);

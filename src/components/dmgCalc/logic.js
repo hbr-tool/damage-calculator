@@ -235,27 +235,44 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
                 break;
         }
     } else {
-        // アビリティ
-        switch (buff.buff_kind) {
-            case BUFF.CHARGE: // チャージ
-                return 30;
-            case BUFF.FIELD: // フィールド
-                return buff.max_power + strengthen;
-            case BUFF.ARROWCHERRYBLOSSOMS: // 桜花の矢
-                return 50;
-            case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
-                return 40;
-            case BUFF.SHADOW_CLONE: // 影分身
-                return 30;
-            case BUFF.CRITICALRATEUP:
-            case BUFF.CRITICALDAMAGEUP:
-                // 超越ゲージ
-                return 100;
+        let abilityId = Number(buff.key.split("_")[1]);
+        return getAbilityEffectSize(abilityId, buff, strengthen);
+    }
+    return effectSize * (1 + strengthen / 100);
+}
+
+export function getAbilityEffectSize(abilityId, buffInfo, strengthen) {
+    if (abilityId === ABILITY_ID.KISHIN) {
+        // 鬼神
+        switch (buffInfo.buff_kind) {
+            case BUFF.MINDEYE: // 心眼
+                return 120;
+            case BUFF.FUNNEL: // 連撃
+                return 75;
             default:
                 break;
         }
     }
-    return effectSize * (1 + strengthen / 100);
+    // アビリティ
+    switch (buffInfo.buff_kind) {
+        case BUFF.CHARGE: // チャージ
+            return 30;
+        case BUFF.FIELD: // フィールド
+            return buffInfo.max_power + strengthen;
+        case BUFF.ARROWCHERRYBLOSSOMS: // 桜花の矢
+            return 50;
+        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
+            return 40;
+        case BUFF.SHADOW_CLONE: // 影分身
+            return 30;
+        case BUFF.CRITICALRATEUP:
+        case BUFF.CRITICALDAMAGEUP:
+            // 超越ゲージ
+            return 100;
+        default:
+            break;
+    }
+    return 0;
 }
 
 // コスト変更
@@ -949,15 +966,32 @@ function getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSett
     const selectedKey = selectBuffKeyMap[funnelKey];
     if (selectedKey) {
         selectedKey.forEach(selectedKey => {
-            let buffId = Number(selectedKey.split('_')[1]);
-            let buffInfo = getBuffIdToBuff(buffId);
-            if (buffInfo) {
-                let loop = buffInfo.max_power;
-                let size = buffInfo.effect_size;
-                for (let i = 0; i < loop; i++) {
-                    funnel_list.push(size);
+            let key = selectedKey.split('_');
+            if (key[0] === "buff") {
+                let buffId = Number(key[1]);
+                let buffInfo = getBuffIdToBuff(buffId);
+                if (buffInfo) {
+                    let loop = buffInfo.max_power;
+                    let size = buffInfo.effect_size;
+                    for (let i = 0; i < loop; i++) {
+                        funnel_list.push(size);
+                    }
+                }
+            } else {
+                let abilityId = Number(key[1]);
+                switch (abilityId) {
+                    case ABILITY_ID.KISHIN:
+                        let loop = 3;
+                        let size = 25;
+                        for (let i = 0; i < loop; i++) {
+                            funnel_list.push(size);
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
+
         })
     }
 
@@ -1181,7 +1215,7 @@ function getSumAbilityEffectSize(handlers, effectType) {
                         break;
                 }
             }
-            
+
             // 雷の印
             if (abilityId === ABILITY_ID.THUNDER_MARK &&
                 [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.THUNDER)) {

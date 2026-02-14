@@ -51,6 +51,7 @@ export const ABILITY_ID = {
     TRANSCEND_FIRE: 25, // 超越(火)
     TRANSCEND_ICE: 26, // 超越(氷)
     TRANSCEND_THUNDER: 27, // 超越(雷)
+    KISHIN: 28, // 鬼神
     MOROIUO: 506, // モロイウオ
     EVIL_ARMY: 511, // 悪の軍団は最強でゲス！
     KIREAJI: 602, // キレアジ
@@ -202,7 +203,8 @@ export const EFFECT = {
     NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
     ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
-    OVERDRIVE_EP: 54, // EP回復
+    OVERDRIVE_EP: 54, // OD時EP回復
+    SP_LIMIT_UP: 55, // SP上限アップ
 }
 
 /** フィールド */

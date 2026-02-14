@@ -7,7 +7,7 @@ import {
 } from "utils/const";
 import {
     DEBUFF_LIST, TROOP_KBN, BUFF_KBN, TRANSCEND_LIST,
-    getCharaIdToMember, getEffectSize, getSumEffectSize,
+    getCharaIdToMember, getEffectSize, getAbilityEffectSize, getSumEffectSize,
     getBuffKey, getBestBuffKeys, checkDuplicationChara,
     isOnlyUse, isAloneActivation, isOnlyBuff, filteredBuffList, filteredOrb,
     getEnemyResist
@@ -637,7 +637,7 @@ function generateResonanceList(styleList, attackInfo) {
             const charaName = getCharaData(charaId).chara_short_name;
 
             // レゾナンス判定
-            if ((memberInfo.styleInfo.rarity === 0 || memberInfo.styleInfo.rarity === 9) && memberInfo.supportStyleId) {
+            if ((memberInfo.styleInfo.resonance === 1) && memberInfo.supportStyleId) {
                 const support = memberInfo.support;
                 if (support.styleInfo.ability_resonance) {
                     const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));
@@ -725,6 +725,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
             };
 
             let styleAbility = {
+                "orgn": memberInfo.styleInfo.ability_orgn,
                 "0": memberInfo.styleInfo.ability0,
                 "00": memberInfo.styleInfo.ability00,
                 "1": memberInfo.styleInfo.ability1,
@@ -774,6 +775,12 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                             addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALDAMAGEUP, 0, 100, 5);
                         }
                     }
+                    // 鬼神
+                    if (abilityInfo.ability_id === ABILITY_ID.KISHIN) {
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.MINDEYE, 0, 90, 3);
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FUNNEL, 0, 3, 25, 3);
+                        return;
+                    }
                 }
 
                 const buffType = buffTypeMap[abilityInfo.effect_type];
@@ -807,6 +814,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     }
                 }
 
+                if (passive.range_area === RANGE.SELF && charaId !== attackCharaId) return;
                 if (passive.element !== 0 && passive.element !== attackInfo.attack_element) return;
                 if (attackMemberInfo) {
                     if (passive.target_element !== 0 &&
@@ -886,32 +894,9 @@ const getCriticalBuffs = function (isElement) {
 }
 
 const AbilityDetail = ({ buffInfo, closeModal }) => {
-    let effectSize = 0;
     // アビリティ
-    switch (buffInfo.buff_kind) {
-        case BUFF.CHARGE: // チャージ
-            effectSize = 30;
-            break;
-        case BUFF.FIELD: // フィールド
-            effectSize = buffInfo.max_power;
-            break;
-        case BUFF.ARROWCHERRYBLOSSOMS: // 桜花の矢
-            effectSize = 50;
-            break;
-        case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
-            effectSize = 40;
-            break;
-        case BUFF.SHADOW_CLONE: // 影分身
-            effectSize = 30;
-            break;
-        case BUFF.CRITICALRATEUP:
-        case BUFF.CRITICALDAMAGEUP:
-            // 超越ゲージ
-            effectSize = 100;
-            break;
-        default:
-            break;
-    }
+    let abilityId = Number(buffInfo.key.split("_")[1]);
+    let effectSize = getAbilityEffectSize(abilityId, buffInfo, 0);
     return (
         <div className="modal text-left p-6 mx-auto">
             <div>
