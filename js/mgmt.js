@@ -139,7 +139,7 @@ function getData2() {
 function replaceCharaData(jsondata) {
     let edited_chara_data = JSON.parse(JSON.stringify(chara_data.filter(function (chara) {
         // chara_idが500以上のものを排除
-        return chara.chara_id < 500 && chara.chara_id != 92 && chara.chara_id != 93;
+        return chara.chara_id < 500 && chara.chara_id != 93;
     })));
 
     // chara_dataのループを行う
