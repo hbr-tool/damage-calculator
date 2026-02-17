@@ -1,5 +1,5 @@
 import React from 'react';
-import { getScoreAttack, NO_BREAK_BONUS, LEVEL_BONUS, TURN_BONUS } from "data/scoreData";
+import { getScoreAttack, NO_BREAK_BONUS, DAMAGE_LIMIT, LEVEL_BONUS, TURN_BONUS } from "data/scoreData";
 
 const PredictionScore = ({ damageResult, state }) => {
     let enemyInfo = state.enemyInfo
@@ -89,7 +89,7 @@ function getDamageBonus(damage, num, scoreAttack, socreEnemyUnit) {
     // ダメージ上限
     damage = damage > 2_000_000_000 ? 2_000_000_000 : damage;
     let damageBonus;
-    let damageLimitValue = scoreAttack["damage_limit"][num];
+    let damageLimitValue = DAMAGE_LIMIT[scoreAttack["max_damage_rate"]][num];
     if (damage <= damageLimitValue) {
         damageBonus = damage;
     } else {

@@ -1,6 +1,6 @@
 /* 全体 */
 div.damage_frame {
-    height: calc(100svh - 180px);
+    height: calc(100svh - 170px);
     overflow-y: scroll;
     border-bottom-width: 1px;
 }
@@ -10,7 +10,7 @@ div.footer {
     left: 0px;
     bottom: 0px;
     width: 100%;
-    height: calc(125px + env(safe-area-inset-bottom));
+    height: calc(115px + env(safe-area-inset-bottom));
     transition: height 0.3s ease;
     background-color: white;
 }
@@ -433,13 +433,13 @@ input[type="range"].result_display::-ms-thumb {
 .prediction {
     display: inline-block;
     width: 210px;
-    font-size: 16px;
+    font-size: 14px;
     white-space: nowrap;
 }
 
 .prediction_value {
     width: 80px;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .prediction_shift {
@@ -593,19 +593,19 @@ td[class*="block_style_id-"] {
 
 .damage_label {
     font-weight: 500;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .damage {
     font-weight: 500;
-    font-size: 30px;
+    font-size: 28px;
     width: 200px;
     height: 30px;
 }
 
 .min_damage {
     font-weight: 500;
-    font-size: 16px;
+    font-size: 14px;
     width: 100px;
 }
 

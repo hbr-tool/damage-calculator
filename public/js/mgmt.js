@@ -870,7 +870,7 @@ function getTitleColumns() {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 let rowData = instance.getSourceData()[row];
                 let chara_id = Number(rowData["chara_id"]);
-                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 92 || chara_id == 93 || chara_id == 107) {
+                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 93 || chara_id == 107) {
                     $(td).addClass("underLine");
                 }
             },

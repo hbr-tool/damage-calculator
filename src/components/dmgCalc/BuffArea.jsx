@@ -851,7 +851,7 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
     );
     const isMiya = attackInfo?.chara_id === CHARA_ID.MIYA;
     const isServant = STYLE_ID.SERVANT.includes(attackInfo?.style_id) || selectStyleList.some(
-        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.UNISON_BUNGO
+        (memberInfo) => STYLE_ID.SERVANT_DANCE.includes(memberInfo?.styleInfo.style_id)
     );
     return [
         { name: "攻撃力UP", kind: BUFF.ATTACKUP, overlap: true },
