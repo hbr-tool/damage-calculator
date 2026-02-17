@@ -6,13 +6,13 @@ import { getScoreAttack, getScoreHpDp, SCORE_STATUS } from "data/scoreData";
 
 const ScoreSetting = ({ state, dispatch }) => {
     const selectHalf = state.score.half
-    const [checkedGrades, setCheckedGrades] = React.useState({});
+    const [checkedGrades, setCheckedGrades] = React.useState(0);
 
     let enemyInfo = state.enemyInfo;
 
     /* eslint-disable react-hooks/exhaustive-deps */
     React.useEffect(() => {
-        setCheckedGrades([]);
+        setCheckedGrades(0);
         handleScoreChange(40);
     }, [enemyInfo.sub_no]);
     /* eslint-enable react-hooks/exhaustive-deps */
@@ -25,7 +25,7 @@ const ScoreSetting = ({ state, dispatch }) => {
 
     // タブ変更
     const handleTabChange = (half) => {
-        setCheckedGrades([]);
+        setCheckedGrades(0);
         dispatch({ type: "RESET_COLLECT", half });
     }
 
@@ -44,20 +44,15 @@ const ScoreSetting = ({ state, dispatch }) => {
     }
 
     // グレード変更
-    const handleGradeChange = (grade, checked) => {
-        // チェック状態の更新
-        const newCheckedGrades = {
-            ...checkedGrades,
-            [grade.grade_no]: checked
-        };
-        setCheckedGrades(newCheckedGrades);
+    const handleGradeChange = (grade) => {
+        setCheckedGrades(grade);
 
         // チェックされているgradeの合計を計算
         const totalGradeRate = halfGrade
-            .filter(g => newCheckedGrades[g.grade_no])
+            .filter(g => g.grade_no === grade)
             .reduce((sum, g) => sum + g.grade_rate, 0);
 
-        dispatch({ type: "SET_COLLECT", grade, checked, totalGradeRate });
+        dispatch({ type: "SET_COLLECT", grade, totalGradeRate });
     };
 
     const getImg = (conditions) => {
@@ -135,13 +130,15 @@ const ScoreSetting = ({ state, dispatch }) => {
                     </select>
                 </span>
                 <div>
+                    <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" value="0" checked={checkedGrades === 0} onChange={() => handleGradeChange(0)} id={`halfGrade0`} />
+                    <label htmlFor={`halfGrade0`}>設定無し</label>
                     {halfGrade.map((grade, index) => (
                         <div key={`grade_${selectHalf}_${index}`}>
-                            <input className={`half_check half_tab_${selectHalf}`} type="checkbox" id={`halfGrade${index}`}
+                            <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" id={`halfGrade${grade.grade_no}`}
                                 data-grade_no={grade.grade_no}
-                                checked={!!checkedGrades[grade.grade_no]}
-                                onChange={(e) => handleGradeChange(grade, e.target.checked)} />
-                            <label className="checkbox01" htmlFor={`halfGrade${index}`}>
+                                checked={checkedGrades === grade.grade_no}
+                                onChange={(e) => handleGradeChange(grade.grade_no)} />
+                            <label htmlFor={`halfGrade${grade.grade_no}`}>
                                 {grade.grade_name}(グレード:{grade.grade_rate})
                             </label>
                         </div>
