@@ -720,6 +720,9 @@ export function getSpCost(turnData, skillInfo, unit) {
     if (spCost === 0) {
         return spCost;
     }
+    if (spCost === 99) {
+        return unit.sp + unit.overDriveSp;
+    }
     let spCostDown = unit.spCostDown ? unit.spCostDown : 0;
     let spCostUp = 0;
     if (harfSpSkill(turnData, skillInfo, unit)) {
@@ -775,11 +778,6 @@ export function getSpCost(turnData, skillInfo, unit) {
                 && checkPassiveExist(unitData.passiveSkillList, SKILL_ID.MARUYAMA_MEMBER)) {
                 spCostDown = 1;
             }
-            // 勇姿
-            if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.SELF_START}`], ABILITY_ID.BRAVE_FIGURE)
-                && checkBuffExist(unit.buffList, BUFF.CHARGE)) {
-                spCostDown = 1;
-            }
         }
     })
     // ハイブースト
@@ -792,14 +790,9 @@ export function getSpCost(turnData, skillInfo, unit) {
         spCost = 8 + 4 * count;
         spCost = spCost > 20 ? 20 : spCost;
     }
-    // SP全消費
-    if (spCost === 99) {
-        spCost = unit.sp + unit.overDriveSp;
-        spCostDown = 0;
-        spCostUp = 0;
-    }
-    unit.spCostUp = spCostUp;
-    unit.spCostDown = spCostDown;
+
+    // unit.spCostUp = spCostUp;
+    // unit.spCostDown = spCostDown;
     spCost += spCostUp - spCostDown;
     return spCost < 0 ? 0 : spCost;
 }
@@ -1592,6 +1585,8 @@ export function initTurn(turnData) {
             abilityAction(ABILIRY_TIMING.SELF_START, turnData);
         }
     }
+    // 毎ターン処理
+    abilityAction(ABILIRY_TIMING.EVERY_TURN, turnData);
 
     // ターンごとに初期化
     turnData.triggerOverDrive = false;
@@ -1801,6 +1796,7 @@ export const abilityAction = (actionKbn, turn) => {
 
 /** UnitDataここから */
 const unitTurnInit = (additionalTurn, unit) => {
+    unit.spCostDown = 0;
     unit.buffEffectSelectType = 0;
     if (!additionalTurn || unit.additionalTurn) {
         setInitSkill(unit);
@@ -2048,6 +2044,12 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 if (!checkBuffExist(unit.buffList, BUFF.CHARGE)) {
                     return;
                 };
+                break;
+            case "対象がチャージ状態":
+                targetList = targetList.filter(function (target_no) {
+                    let unitData = getUnitData(turnData, target_no);
+                    return checkBuffExist(unitData.buffList, BUFF.CHARGE);
+                });
                 break;
             case "SP0以下":
                 if (unit.sp > 0) {
@@ -2323,13 +2325,22 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
             case EFFECT.COST_SP_DOWN: // SPコストダウン
                 targetList.forEach(function (target_no) {
                     let unitData = getUnitData(turnData, target_no);
-                    unitData.spCostDown = Math.max(unitData.spCostDown, ability.effect_size);
+                    if (checkTargetElment(unitData, ability.target_element)) {
+                        unitData.spCostDown = Math.max(unitData.spCostDown, ability.effect_size);
+                    }
                 });
                 break;
             default:
                 break;
         }
     });
+}
+
+export const checkTargetElment = (unit, targetElement) => {
+    if (targetElement === 0) {
+        return true;
+    }
+    return unit.style?.styleInfo?.element === targetElement || unit.style?.styleInfo?.element2 === targetElement;
 }
 
 function addAbilityBuffUnit(buff_kind, ability_name, rest_turn, targetList, turnData) {

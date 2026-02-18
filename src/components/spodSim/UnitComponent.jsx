@@ -124,7 +124,7 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
                 if (skill.cost_type === COST_TYPE.EP) {
                     text += `(${attack}EP${skill.use_cost})`;
                 } else if (skill.cost_type === COST_TYPE.CT) {
-                    text += `(${attack}CT${skill.use_cost}T)`;
+                    text += `(${attack}CT${skill.use_cost})`;
                 } else if (skill.cost_type === COST_TYPE.OVERDRIVE) {
                     text += `(${attack}OD${skill.use_cost}%)`;
                 } else if (skill.cost_type === COST_TYPE.TOKEN) {

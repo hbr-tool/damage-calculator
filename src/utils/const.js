@@ -68,7 +68,6 @@ export const ABILITY_ID = {
     CONQUER_WORLD: 1209,// 世界征服の始まりでゲス！
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
-    BRAVE_FIGURE: 1150, // 勇姿
     OVER_GEAR: 1405, // オーバーギア
     ICE_MARK: 101, // 氷の印
     THUNDER_MARK: 102, // 雷の印

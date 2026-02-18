@@ -640,8 +640,8 @@ const skilLlist = [
     {"skill_id":9014,"skill_name":"ライトグラビトン","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
     {"skill_id":9015,"skill_name":"ダークグラビトン","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
     {"skill_id":9016,"skill_name":"ディフェンスブースト","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":7},
-    {"skill_id":9017,"skill_name":"チャージインジェクション","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":7},
-    {"skill_id":9018,"skill_name":"チアーアップ","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":7},
+    {"skill_id":9017,"skill_name":"チャージインジェクション","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":5,"skill_active":0,"skill_kind":7},
+    {"skill_id":9018,"skill_name":"チアーアップ","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":7},
     {"skill_id":9999,"skill_name":"行動無し","chara_id":0,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":0,"skill_attribute":99},
 ];
 
