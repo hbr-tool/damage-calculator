@@ -618,7 +618,7 @@ const skilLlist = [
     {"skill_id":716,"skill_name":"宿る想い","chara_id":91,"style_id":196,"cost_type":"SP","use_cost":8,"skill_active":0,"skill_kind":0,"skill_attribute":11,"conditions":3},
     {"skill_id":717,"skill_name":"祈りの花、風に託して","chara_id":91,"style_id":196,"cost_type":"EP","use_cost":7,"skill_active":0,"skill_kind":1},
     {"skill_id":718,"skill_name":"一点突破","chara_id":92,"style_id":0,"cost_type":"SP","use_cost":10,"skill_active":0,"skill_kind":0},
-    {"skill_id":719,"skill_name":"天駆の鉄槌","chara_id":92,"style_id":197,"cost_type":"SP","use_cost":12,"skill_active":0,"skill_kind":1},
+    {"skill_id":719,"skill_name":"天駆の鉄槌","chara_id":92,"style_id":197,"cost_type":"SP","use_cost":12,"skill_active":0,"skill_kind":0},
     {"skill_id":720,"skill_name":"トリニティ・ブレイジング","chara_id":92,"style_id":197,"cost_type":"SP","use_cost":99,"skill_active":0,"skill_kind":1},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
