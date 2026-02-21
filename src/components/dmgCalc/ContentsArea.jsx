@@ -3,6 +3,7 @@ import { ENEMY_CLASS } from "utils/const";
 import EnmeySelect from "components/EnmeySelect";
 import EnemyArea from "./EnemyArea";
 import HardLayer from "./HardLayer";
+import HardLayerEx from "./HardLayerEx";
 import ScoreSetting from "./ScoreSetting";
 import { getEnemyInfo } from "utils/common";
 
@@ -24,6 +25,9 @@ const ContentsArea = ({ attackInfo, enemyClass, enemySelect, setEnemyClass, setE
                 }
                 {enemyClass === ENEMY_CLASS.SCORE_ATTACK &&
                     <ScoreSetting state={state} dispatch={dispatch} />
+                }
+                {enemyClass === ENEMY_CLASS.HARD_LAYER_EX &&
+                    <HardLayerEx state={state} dispatch={dispatch} />
                 }
                 {/* <BikePartsComponent enemyInfo={enemyInfo} /> */}
                 {/* <SeraphCardList enemyInfo={enemyInfo} /> */}

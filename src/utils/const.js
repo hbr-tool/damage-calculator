@@ -310,6 +310,7 @@ export const ENEMY_CLASS = {
     CONTROL_BATTLE: 11, // 制圧戦
     SERAPH_ENCOUNTER: 12, // セラフ遭遇戦
     EVENT_PRISMATIC: 13, // イベントプリズム
+    HARD_LAYER_EX: 15, // 異時層EX
     FREE_INPUT: 99, // 自由入力
 }
 

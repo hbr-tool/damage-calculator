@@ -1603,10 +1603,21 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     let enemyInfo = state.enemyInfo;
 
     let tearsOfDreams = 0;
-    // // 夢の泪
+    // 夢の泪
     if (enemyInfo.enemy_class === ENEMY_CLASS.HARD_LAYER) {
         const tearsOfDreamsList = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20]
         tearsOfDreams = tearsOfDreamsList[enemyInfo.enemy_class_no] * Number(state.hard.tearsOfDreams);
+    }
+    // 属性ボーナス
+    let elemetalBonus = 0;
+    if (enemyInfo.enemy_class === ENEMY_CLASS.HARD_LAYER_EX) {
+        state.hardEx.bonusElement.forEach((bonus, index) => {
+            if (bonus) {
+                if (memberInfo.styleInfo.element === index || memberInfo.styleInfo.element2 === index) {
+                    elemetalBonus = 30;
+                }
+            }
+        });
     }
     // スコアタボーナス
     let scoreBonus = 0;
@@ -1643,7 +1654,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
         memberInfo, styleList, abilitySettingMap, passiveSettingMap, state, resonanceList: []
     };
     let passiveStatusUp = getSumAbilityEffectSize(handlers, EFFECT.STATUSUP_VALUE);
-    return tearsOfDreams + scoreBonus + statUp + passiveStatusUp;
+    return tearsOfDreams + scoreBonus + elemetalBonus + statUp + passiveStatusUp;
 }
 
 // カンマ削除

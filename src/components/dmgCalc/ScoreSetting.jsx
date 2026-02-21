@@ -45,11 +45,11 @@ const ScoreSetting = ({ state, dispatch }) => {
 
     // グレード変更
     const handleGradeChange = (grade) => {
-        setCheckedGrades(grade);
+        setCheckedGrades(grade.grade_no);
 
         // チェックされているgradeの合計を計算
         const totalGradeRate = halfGrade
-            .filter(g => g.grade_no === grade)
+            .filter(g => g.grade_no === grade.grade_no)
             .reduce((sum, g) => sum + g.grade_rate, 0);
 
         dispatch({ type: "SET_COLLECT", grade, totalGradeRate });
@@ -130,15 +130,15 @@ const ScoreSetting = ({ state, dispatch }) => {
                     </select>
                 </span>
                 <div>
-                    <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" value="0" checked={checkedGrades === 0} onChange={() => handleGradeChange(0)} id={`halfGrade0`} />
-                    <label htmlFor={`halfGrade0`}>設定無し</label>
+                    <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" value="0" checked={checkedGrades === 0} onChange={() => handleGradeChange({grade_no: 0})} id={`halfGrade0`} />
+                    <label className="ml-1" htmlFor={`halfGrade0`}>設定無し</label>
                     {halfGrade.map((grade, index) => (
                         <div key={`grade_${selectHalf}_${index}`}>
                             <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" id={`halfGrade${grade.grade_no}`}
                                 data-grade_no={grade.grade_no}
                                 checked={checkedGrades === grade.grade_no}
-                                onChange={(e) => handleGradeChange(grade.grade_no)} />
-                            <label htmlFor={`halfGrade${grade.grade_no}`}>
+                                onChange={(e) => handleGradeChange(grade)} />
+                            <label className="ml-1" htmlFor={`halfGrade${grade.grade_no}`}>
                                 {grade.grade_name}(グレード:{grade.grade_rate})
                             </label>
                         </div>

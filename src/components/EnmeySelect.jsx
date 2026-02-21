@@ -39,6 +39,7 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
             <div id="enemy_select">
                 <select id="enemy_class" value={enemyClass} onChange={(e) => handleClassChange(e.target.value)}>
                     <option value="1">異時層</option>
+                    <option value="15">異時層EX</option>
                     <option value="2">オーブボス</option>
                     <option value="3">時計塔(N)</option>
                     <option value="4">時計塔(H)</option>

@@ -1891,7 +1891,7 @@ const unitOverDriveTurnProceed = (unit) => {
     unit.overDriveSp = 0;
 
     unit.ep += unit.overDriveEp;
-    if (unit.ep > 20) unit.ep = 20;
+    if (unit.ep > 99) unit.ep = 99;
     unit.overDriveEp = 0;
 }
 

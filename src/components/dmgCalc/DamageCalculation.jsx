@@ -43,14 +43,14 @@ const setDp = (state, action) => {
 };
 
 const setCollect = (state, action) => {
-    const updated = { ...state.correction };
+    const updated = Object.fromEntries(Object.keys({ ...state.correction }).map(k => [k, 0]))
     let newMaxDamageRate = state.maxDamageRate;
     for (let i = 1; i <= 5; i++) {
         const kind = action.grade[`effect_kind${i}`];
         if (kind) {
             const size = action.grade[`effect_size${i}`];
             const conditions = action.grade[`conditions${i}`];
-            updated[kind] = action.checked ? size : 0;
+            updated[kind] = size;
             if (kind === "destruction_limit") {
                 newMaxDamageRate = state.enemyInfo.destruction_limit + updated.destruction_limit
                     + (state.strongBreak ? 300 : 0) + (state.superDown ? 300 : 0);
@@ -175,6 +175,12 @@ const reducer = (state, action) => {
                 hard: { ...state.hard, skullFeatherDeffense: action.value }
             };
 
+        case "SET_BONUS_ELEMENT":
+            return {
+                ...state,
+                hardEx: { ...state.hardEx, bonusElement: action.value }
+            };
+
         case "SET_RRGIST_DOWN": {
             const newResist = [0, 0, 0, 0, 0, 0];
             newResist[action.element] = Number(action.value);
@@ -251,6 +257,9 @@ const DamageCalculation = () => {
         hard: {
             tearsOfDreams: 0,
             skullFeatherDeffense: 0,
+        },
+        hardEx: {
+            bonusElement: [false, false, false, false, false, false],
         },
         resistDown: [0, 0, 0, 0, 0, 0],
     };
