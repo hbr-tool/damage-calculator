@@ -637,7 +637,7 @@ export const getOverDrive = (turn) => {
         // EXスキル使用
         if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
             // アビリティ（EXスキル使用）
-            abilityActionUnit(turn, ABILIRY_TIMING.EX_SKILL_USE, unitData);
+            abilityActionUnit(tempTurn, ABILIRY_TIMING.EX_SKILL_USE, unitData);
         }
         odPlus += unitOdPlus;
     }
