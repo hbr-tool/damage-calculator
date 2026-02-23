@@ -637,7 +637,9 @@ export const getOverDrive = (turn) => {
         // EXスキル使用
         if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
             // アビリティ（EXスキル使用）
-            abilityActionUnit(tempTurn, ABILIRY_TIMING.EX_SKILL_USE, unitData);
+            let overDriveGauge = tempTurn.overDriveGauge;
+            abilityActionUnit(tempTurn, ABILIRY_TIMING.EX_SKILL_USE, unitData, true);
+            unitOdPlus += tempTurn.overDriveGauge - overDriveGauge;
         }
         odPlus += unitOdPlus;
     }
@@ -2019,7 +2021,7 @@ const getFunnelList = (unit) => {
     return resultList;
 }
 
-const abilityActionUnit = (turnData, actionKbn, unit) => {
+const abilityActionUnit = (turnData, actionKbn, unit, isClac = false) => {
     let actionList = [];
     actionList = unit[`ability_${actionKbn}`];
     // 被ダメージ時
@@ -2282,6 +2284,12 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 const onlyUseList = [ABILITY_ID.V_RECOVERY, ABILITY_ID.CONQUER_WORLD, ABILITY_ID.GREAT_OFFENSIVE]
                 if (ability.used && onlyUseList.includes(ability.ability_id)) {
                     return;
+                }
+                // EXスキル使用時のみ発動のアビリティは計算モード以外では発動させない
+                if (ABILIRY_TIMING.EX_SKILL_USE === actionKbn) {
+                    if (!isClac) {
+                        return;
+                    }
                 }
                 ability.used = true;
                 turnData.overDriveGauge += ability.effect_size;
