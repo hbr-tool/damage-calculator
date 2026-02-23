@@ -19,6 +19,7 @@ const UnitSp = ({ unit }) => {
         unitSp = unit.sp + unit.overDriveSp;
         if (unitSp > 99) unitSp = 99;
         unitEp = unit.ep + unit.overDriveEp;
+        if (unitEp > 20) unitEp = 20;
 
         if (skill.cost_type === COST_TYPE.EP) {
             unitEp -= skill.use_cost;

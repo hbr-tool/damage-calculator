@@ -634,6 +634,11 @@ export const getOverDrive = (turn) => {
                 }
             }
         }
+        // EXスキル使用
+        if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
+            // アビリティ（EXスキル使用）
+            abilityActionUnit(turn, ABILIRY_TIMING.EX_SKILL_USE, unitData);
+        }
         odPlus += unitOdPlus;
     }
     // // 後衛の選択取得
@@ -1076,9 +1081,15 @@ function addBuffUnit(turnData, buffInfo, placeNo, use_unitData) {
             targetList = getTargetList(turnData, buffInfo.range_area, buffInfo.target_element, placeNo, use_unitData.buffTargetCharaId);
             targetList.forEach(function (target_no) {
                 let unitData = getUnitData(turnData, target_no);
-                unitData.ep += buffInfo.min_power;
-                if (unitData.ep > 10) {
-                    unitData.ep = 10
+                let maxEp = Math.max(10, unitData.ep + unitData.overDriveEp);
+                if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OD_START}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
+                    maxEp = 20;
+                }
+                if (unitData.ep < maxEp) {
+                    unitData.ep += buffInfo.min_power;
+                    if (unitData.ep > maxEp) {
+                        unitData.ep = maxEp;
+                    }
                 }
             });
             break;
@@ -1891,7 +1902,7 @@ const unitOverDriveTurnProceed = (unit) => {
     unit.overDriveSp = 0;
 
     unit.ep += unit.overDriveEp;
-    if (unit.ep > 99) unit.ep = 99;
+    if (unit.ep > 20) unit.ep = 20;
     unit.overDriveEp = 0;
 }
 
@@ -2148,7 +2159,11 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
             case EFFECT.OVERDRIVE_EP: // ODEPアップ
                 targetList.forEach(function (target_no) {
                     let unitData = getUnitData(turnData, target_no);
-                    unitData.overDriveEp += ability.effect_size;
+                    if (unitData.ep + ability.effect_size > 20) {
+                        unitData.overDriveEp = 20 - unitData.ep;
+                    } else {
+                        unitData.overDriveEp += ability.effect_size;
+                    }
                 });
                 break;
             case EFFECT.HEALSP: // SP回復
@@ -2225,8 +2240,8 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 });
                 break;
             case EFFECT.HEALEP: // EP回復
-                let maxEp = 10;
-                if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
+                let maxEp = Math.max(10, unit.ep + unit.overDriveEp);
+                if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OD_START}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
                     maxEp = 20;
                 }
                 if (unit.ep < maxEp) {
