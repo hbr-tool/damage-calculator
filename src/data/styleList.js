@@ -195,6 +195,8 @@ const styleList = [
     {"style_id":195,"chara_id":7,"rarity":0,"resonance":1,"style_name":"ツナグ・Legacy","image_url":"EAoiWhiteSuit_R3_Thumbnail","role":4,"element":2,"jewel_type":2,"ability0":101,"ability1":1101,"ability3":1031},
     {"style_id":196,"chara_id":91,"rarity":0,"resonance":1,"style_name":"約束は暁の彼方で","image_url":"NNanasePure_R3_Thumbnail","role":8,"element":3,"jewel_type":3,"ability_orgn":27,"ability0":1405,"ability1":521,"ability3":414},
     {"style_id":197,"chara_id":92,"rarity":0,"resonance":1,"style_name":"希望の暁","image_url":"STezukaSoldier_R3_Thumbnail","role":1,"element":3,"jewel_type":1,"ability_orgn":28,"ability0":1032,"ability00":278,"ability1":1101,"ability3":1406},
+    {"style_id":198,"chara_id":3,"rarity":0,"resonance":1,"style_name":"スペシャルナイト・ガールズジャム","image_url":"MAikawaSession_R3_Thumbnail","role":6,"element":2,"element2":3,"jewel_type":4,"ability0":1033,"ability1":1101,"ability3":502,"ability4":2006},
+    {"style_id":199,"chara_id":13,"rarity":1,"resonance":0,"style_name":"孤高のロンリネス","image_url":"BIYamawakiEvil_R3a_Thumbnail","role":5,"element":0,"jewel_type":3,"ability1":23,"ability3":1149},
     {"style_id":5001,"chara_id":1,"rarity":2,"resonance":0,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"resonance":0,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"resonance":0,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail","role":4,"element":0,"jewel_type":2,"ability3":1109},

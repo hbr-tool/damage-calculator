@@ -348,6 +348,7 @@ const BuffArea = ({ argument: {
             let resistKey = {};
             resistKey[getBuffKey(BUFF.MINDEYE)] = []
             resistKey[getBuffKey(BUFF.FRAGILE)] = []
+            resistKey[getBuffKey(BUFF.ETERNAL_FRAGILE)] = []
             selectBestBuff(resistKey);
         }
     }, [isWeak]);
@@ -879,6 +880,7 @@ const getDefenseDownBuffs = function (isElement, isWeak, isDp) {
         { name: "防御力DOWN(永)", kind: BUFF.ETERNAL_DEFENSEDOWN, overlap: true },
         ...(isElement ? [{ name: "属性防御力DOWN(永)", kind: BUFF.ELEMENT_ETERNAL_DEFENSEDOWN, overlap: true },] : []),
         ...(isWeak ? [{ name: "脆弱", kind: BUFF.FRAGILE, overlap: true },] : []),
+        ...(isWeak ? [{ name: "永続脆弱", kind: BUFF.ETERNAL_FRAGILE, overlap: true },] : []),
         ...(isElement ? [{ name: "耐性ダウン", kind: BUFF.RESISTDOWN, overlap: true },] : []),
     ];
 }

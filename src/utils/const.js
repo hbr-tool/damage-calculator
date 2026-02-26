@@ -153,6 +153,7 @@ export const BUFF = {
     SHCHI: 45, // シチー
     ICE_MARK: 46, // 氷の印
     THUNDER_MARK: 47, // 雷の印
+    ETERNAL_FRAGILE: 48, // 永続脆弱
     HEALEP: 52, // EP回復
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
@@ -317,8 +318,8 @@ export const ENEMY_CLASS = {
 /** スキル種類 */
 export const KIND = {
     PURPOSE: 0, // 汎用
-    EX_GENERATE: 1, // EX(ジェネライズ)
-    EX_EXCLUSIVE: 2, // EX(専用)
+    EX_EXCLUSIVE: 1, // EX(専用)
+    EX_GENERATE: 2, // EX(ジェネライズ)
     MASTER: 5, // マスター
     ORB: 7, // オーブ
     OTHER: 9, // その他

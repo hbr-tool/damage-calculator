@@ -3,7 +3,7 @@ import ReactModal from "react-modal";
 import { useStyleList } from "components/StyleListProvider";
 import skillAttack from "data/skillAttack";
 import { getCharaData, getSkillData } from "utils/common";
-import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN, COST_TYPE } from 'utils/const';
+import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN, COST_TYPE, KIND } from 'utils/const';
 import { getCharaIdToMember, getSkillPower, getStatUp, getApplyGradient, getCostVariable, getStatus } from "./logic";
 import attribute from 'assets/attribute';
 import { AttackLineChart } from "./SimpleLineChart";
@@ -42,9 +42,12 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
             const styleId = memberInfo.styleInfo.style_id;
             const matchedSkill = skillAttack.filter(skill =>
                 skill.chara_id === charaId &&
-                (skill.style_id === styleId || skill.style_id === 0) &&
-                (!checkSpecial || skill.attack_id < 1000)
+                (skill.style_id === styleId || skill.style_id === 0) 
             ).filter(skill => !(memberInfo.exclusionSkillList.includes(skill.skill_id))
+            ).filter(skill => {
+                const skillInfo = getSkillData(skill.skill_id);
+                return !checkSpecial || [KIND.EX_GENERATE, KIND.EX_EXCLUSIVE].includes(skillInfo.skill_kind);
+            }
             ).sort((x, y) => y.style_id - x.style_id || y.skill_id - x.skill_id);
             if (matchedSkill.length > 0) {
                 memberAttackList.push(...matchedSkill);

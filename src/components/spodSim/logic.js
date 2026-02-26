@@ -230,6 +230,7 @@ export function getBuffIconImg(buffInfo) {
             src += "IconBuffDefense";
             break;
         case BUFF.FRAGILE: // 脆弱
+        case BUFF.ETERNAL_FRAGILE: // 永続脆弱
             src += "IconFragile";
             break;
         case BUFF.CRITICALRATEUP:	// クリティカル率アップ
@@ -1050,6 +1051,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, use_unitData) {
         case BUFF.DEFENSEDOWN: // 防御力ダウン
         case BUFF.ELEMENT_DEFENSEDOWN: // 属性防御力ダウン
         case BUFF.FRAGILE: // 脆弱
+        case BUFF.ETERNAL_FRAGILE: // 永続脆弱
         case BUFF.DEFENSEDP: // DP防御力ダウン
         case BUFF.RESISTDOWN: // 耐性ダウン
         case BUFF.ETERNAL_DEFENSEDOWN: // 永続防御ダウン
@@ -1357,7 +1359,10 @@ export function getBuffKindName(buffInfo) {
             break;
         case BUFF.ETERNAL_DEFENSEDOWN: // 永続防御ダウン
         case BUFF.ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
-            buff_kind_name += "防御力ダウン";
+            buff_kind_name += "永続防御力ダウン";
+            break;
+        case BUFF.ETERNAL_FRAGILE: // 永続脆弱
+            buff_kind_name += "永続脆弱";
             break;
         case BUFF.RECOIL: // 行動不能
             buff_kind_name += "行動不能";

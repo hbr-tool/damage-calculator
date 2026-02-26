@@ -37,6 +37,7 @@ export const BUFF_KBN = {
     41: "shadow_clone",
     44: "curry",
     45: "shchi",
+    48: "eternal_fragile",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -44,7 +45,7 @@ export const ATTACK_BUFF_LIST = [
     BUFF.CRITICALRATEUP, BUFF.CRITICALDAMAGEUP, BUFF.ELEMENT_CRITICALRATEUP, BUFF.ELEMENT_CRITICALDAMAGEUP];
 export const DEBUFF_LIST = [
     BUFF.DEFENSEDOWN, BUFF.ELEMENT_DEFENSEDOWN,
-    BUFF.DEFENSEDP, BUFF.ETERNAL_DEFENSEDOWN, BUFF.ELEMENT_ETERNAL_DEFENSEDOWN, BUFF.FRAGILE, BUFF.RESISTDOWN];
+    BUFF.DEFENSEDP, BUFF.ETERNAL_DEFENSEDOWN, BUFF.ELEMENT_ETERNAL_DEFENSEDOWN, BUFF.FRAGILE, BUFF.RESISTDOWN, BUFF.ETERNAL_FRAGILE];
 
 export const KIND_ATTACKUP = [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP]
 export const KIND_DEFENSEDOWN = [BUFF.DEFENSEDOWN, BUFF.ELEMENT_DEFENSEDOWN, BUFF.DEFENSEDP, BUFF.ETERNAL_DEFENSEDOWN, BUFF.ELEMENT_ETERNAL_DEFENSEDOWN]
@@ -212,6 +213,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.RESISTDOWN: // 耐性ダウン
             case BUFF.ETERNAL_DEFENSEDOWN: // 永続防御ダウン
             case BUFF.ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
+            case BUFF.ETERNAL_FRAGILE: // 永続脆弱
                 effectSize = getDebuffEffectSize(styleList, buff, buffSetting, memberInfo, state, abilitySettingMap, passiveSettingMap);
                 break;
             case BUFF.FUNNEL: // 連撃
@@ -440,7 +442,7 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
             })
     }
     // 防御ダウン以外のデバフスキル
-    if ([BUFF.FRAGILE, BUFF.RESISTDOWN].includes(buff.buff_kind)) {
+    if ([BUFF.FRAGILE, BUFF.ETERNAL_FRAGILE, BUFF.RESISTDOWN].includes(buff.buff_kind)) {
         strengthen += Object.values(abilitySettingMap)
             .filter(ability => ability.checked)
             .reduce((sum, ability) => {
@@ -678,7 +680,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
 
     let debuff = getSumDebuffEffectSize(handlers);
     let debuffDp = getSumEffectSize(selectBuffKeyMap, buffSettingMap, [BUFF.DEFENSEDP]) / 100;
-    let fragile = isWeak ? getSumEffectSize(selectBuffKeyMap, buffSettingMap, [BUFF.FRAGILE]) / 100 : 0;
+    let fragile = isWeak ? getSumEffectSize(selectBuffKeyMap, buffSettingMap, [BUFF.FRAGILE, BUFF.ETERNAL_FRAGILE]) / 100 : 0;
     debuff += fragile;
 
     let damageRateUp = getDamagerateEffectSize(handlers, attackInfo.hit_count);

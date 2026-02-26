@@ -15,10 +15,11 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
     };
 
     let classList = enemyList.filter((obj) => obj.enemy_class === enemyClass);
-    if (enemyClass === ENEMY_CLASS.SCORE_ATTACK) {
+    const reverseClass = [ENEMY_CLASS.SCORE_ATTACK, ENEMY_CLASS.EVENT_PRISMATIC];
+    if (reverseClass.includes(Number(enemyClass))) {
         classList.reverse();
     }
-    let enemyInfo = enemyList.filter((obj) => obj.enemy_class === enemyClass && obj.enemy_class_no === enemySelect)[0];
+    let enemyInfo = classList.filter((obj) => obj.enemy_class === enemyClass && obj.enemy_class_no === enemySelect)[0];
     if (!enemyInfo) {
         enemyInfo = enemyList[0];
     }
