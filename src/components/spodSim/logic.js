@@ -850,9 +850,9 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
         case CONDITIONS.OVER_DRIVE: // オーバードライブ中
             return turnData.overDriveMaxTurn > 0;
         case CONDITIONS.DEFFENCE_DOWN: // 防御ダウン
-            return checkBuffExist(turnData.enemyDebuffList, BUFF.DEFENSEDOWN);
+            return checkBuffExist(turnData.enemyDebuffList, BUFF.DEFENSEDOWN) || checkBuffExist(turnData.enemyDebuffList, BUFF.ETERNAL_DEFENSEDOWN);
         case CONDITIONS.FRAGILE: // 脆弱
-            return checkBuffExist(turnData.enemyDebuffList, BUFF.FRAGILE);
+            return checkBuffExist(turnData.enemyDebuffList, BUFF.FRAGILE) || checkBuffExist(turnData.enemyDebuffList, BUFF.ETERNAL_FRAGILE);
         case CONDITIONS.TARGET_COVER: // 集中・挑発状態
             return checkBuffExist(turnData.enemyDebuffList, BUFF.PROVOKE) || checkBuffExist(turnData.enemyDebuffList, BUFF.COVER);
         case CONDITIONS.FIELD_NONE: // フィールド無し
