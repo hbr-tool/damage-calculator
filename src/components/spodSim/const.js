@@ -19,12 +19,13 @@ export const ABILIRY_TIMING = {
 }
 
 // 使用不可スタイル
-export const NOT_USE_STYLE = [36, 197];
+export const NOT_USE_STYLE = [197];
 // 制限アビリティ
 export const CONSTRAINTS_ABILITY = [
     25, // 超越ゲージ
     26, // 超越ゲージ
     27, // 超越ゲージ
+    250, // 演舞
     1136, // 勝勢
     1138, // ラストリゾート
     1210, // アルゴリズム
