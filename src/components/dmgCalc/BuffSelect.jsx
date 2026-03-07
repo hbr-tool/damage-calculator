@@ -26,7 +26,7 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
         newSelected[index] = value;
 
         if (value) {
-            const type = Number(value.split('_')[0]);
+            const type = value.split('_')[0];
             if (type === "buff") {
                 const buffId = Number(value.split('_')[1]);
                 let buffInfo = getBuffIdToBuff(buffId);
