@@ -19,6 +19,9 @@ const abilityResonance = [
     {"resonance_id":18,"resonance_name":"ライブブースト","resonance_text":"自身のスキル攻撃力+{0}%","effect_type":1,"effect_limit_0":40,"effect_limit_1":48,"effect_limit_2":56,"effect_limit_3":64,"effect_limit_4":70,"activation_timing":null,"activation_place":null,"conditions":null,"conditions_id":null},
     {"resonance_id":19,"resonance_name":"ブレイズ・エンジン","resonance_text":"OD中に自身がかけるスキル攻撃力アップの効果量+{0}%","effect_type":17,"effect_limit_0":20,"effect_limit_1":33,"effect_limit_2":25,"effect_limit_3":27,"effect_limit_4":30,"activation_timing":null,"activation_place":null,"conditions":4,"conditions_id":null},
     {"resonance_id":20,"resonance_name":"ディスチャージ","resonance_text":"行動開始時 自身のDPが50％以上のとき 自身がかける防御力ダウンの効果量+{0}%","effect_type":18,"effect_limit_0":20,"effect_limit_1":33,"effect_limit_2":25,"effect_limit_3":27,"effect_limit_4":30,"activation_timing":null,"activation_place":null,"conditions":4,"conditions_id":null},
+    {"resonance_id":21,"resonance_name":"忠義","resonance_text":"初戦開始時 自身を山脇様のしもべ状態にし 防御力を常時+{0}%","effect_type":39,"effect_limit_0":10,"effect_limit_1":11,"effect_limit_2":12,"effect_limit_3":13,"effect_limit_4":15,"activation_timing":0,"activation_place":0,"conditions":null,"conditions_id":null},
+    {"resonance_id":22,"resonance_name":"フレンチフライ","resonance_text":"バトル勝利時 味方全体の雷属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)","effect_type":null,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5,"activation_timing":null,"activation_place":null,"conditions":null,"conditions_id":null},
+    {"resonance_id":23,"resonance_name":"エスプレッソ","resonance_text":"バトル勝利時 味方全体の光属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)","effect_type":null,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5,"activation_timing":null,"activation_place":null,"conditions":null,"conditions_id":null},
 ];
 
 export default abilityResonance;

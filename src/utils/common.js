@@ -5,8 +5,10 @@ import skillList from "data/skillList";
 import skillAttack from "data/skillAttack";
 import skillBuff from "data/skillBuff";
 import enemyList from 'data/enemyList';
-import skillPassive from "data/skillPassive";
 import abilityList from "data/abilityList";
+import abilityEffect from "data/abilityEffect";
+import passiveList from "data/passiveList";
+import passiveEffect from "data/passiveEffect";
 import abilityResonance from "data/abilityResonance";
 
 // キャラ名取得
@@ -58,10 +60,23 @@ export function getAbilityInfo(abilityId) {
   return filteredAbility.length > 0 ? filteredAbility[0] : undefined;
 }
 
+// アビリティリスト取得
+export function getAbilityEffectList(abilityId) {
+  return abilityEffect.filter((obj) => obj.ability_id === Number(abilityId));
+}
+
 // パッシブ情報取得
 export function getPassiveInfo(skillId) {
-  const filteredPassive = skillPassive.filter((obj) => obj.skill_id === Number(skillId));
+  const filteredPassive = passiveList.filter((obj) => obj.skill_id === Number(skillId));
   return filteredPassive.length > 0 ? filteredPassive[0] : undefined;
+}
+
+// パッシブスト取得
+export function getPassiveEffectList(skillId) {
+  return passiveEffect.filter((obj) => obj.skill_id === Number(skillId));
+}
+
+export function checkStyleElement(style, element) {
 }
 
 // パッシブ情報取得

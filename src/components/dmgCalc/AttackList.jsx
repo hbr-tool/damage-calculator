@@ -42,7 +42,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
             const styleId = memberInfo.styleInfo.style_id;
             const matchedSkill = skillAttack.filter(skill =>
                 skill.chara_id === charaId &&
-                (skill.style_id === styleId || skill.style_id === 0) 
+                (skill.style_id === styleId || skill.style_id === 0)
             ).filter(skill => !(memberInfo.exclusionSkillList.includes(skill.skill_id))
             ).filter(skill => {
                 const skillInfo = getSkillData(skill.skill_id);
@@ -256,7 +256,13 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, sta
     // 消費SP
     let spCost = 0;
     if (skillInfo.cost_type === COST_TYPE.SP) {
-        spCost = getCostVariable(skillInfo.use_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap);
+        const handlers = {
+            collect: attackInfo.collect,
+            skillInfo, styleList,
+            memberInfo,
+            abilitySettingMap, passiveSettingMap
+        };
+        spCost = getCostVariable(handlers);
     }
     return (
         <div className="modal text-left mx-auto p-6">

@@ -353,8 +353,15 @@ const CharaStatus = ({ argument: {
                                         .sort((a, b) => getSortKey(a) - getSortKey(b))
                                         .slice(0, 2)) {
                                         if (skill.cost_type === COST_TYPE.SP) {
+                                            const handlers = {
+                                                collect,
+                                                skillInfo: skill,
+                                                memberInfo: style,
+                                                styleList,
+                                                abilitySettingMap, passiveSettingMap
+                                            };
                                             spCost += Math.floor(
-                                                getCostVariable(skill.use_cost, collect, style, abilitySettingMap, passiveSettingMap)
+                                                getCostVariable(handlers)
                                             );
                                         }
                                     }

@@ -4,7 +4,7 @@ import ReactModal from "react-modal";
 import { ROLE, BUFF, RANGE } from "utils/const";
 import { ABILIRY_TIMING, NOT_USE_STYLE, CONSTRAINTS_ABILITY, CONSTRAINTS_PASSIVE } from "./const";
 import { checkPassiveExist, recreateTurnData, initTurn, abilityAction, setUserOperation } from "./logic";
-import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, getResonanceInfo, deepClone } from "utils/common";
+import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, getPassiveEffectList, getAbilityEffectList, getResonanceInfo, deepClone } from "utils/common";
 import { useStyleList } from "components/StyleListProvider";
 import skillList from "data/skillList";
 import CharaSetting from "./CharaSetting";
@@ -112,6 +112,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             buffTargetCharaId: null,
             buffEffectSelectType: 0,
             spCostDown: 0,
+            spCostUp: 0,
             nextTurnMinSp: -1,
             selectSkillId: 0,
             initSkillId: 0,
@@ -161,28 +162,44 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             ["0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
                 const num = parseInt(numStr, 10);
                 if (member.styleInfo[`ability${numStr}`] && num <= member.limitCount) {
+                    let abilityId = member.styleInfo[`ability${numStr}`];
+                    if (CONSTRAINTS_ABILITY.includes(abilityId)) {
+                        constraintsAbility.push(abilityId);
+                    }
                     let abilityInfo = getAbilityInfo(member.styleInfo[`ability${numStr}`]);
                     if (!abilityInfo) {
                         return;
                     }
-                    if (CONSTRAINTS_ABILITY.includes(abilityInfo.ability_id)) {
-                        constraintsAbility.push(abilityInfo.ability_id);
-                    }
-                    unit[`ability_${abilityInfo.activation_timing}`].push(deepClone(abilityInfo));
+
+                    let abilityList = getAbilityEffectList(abilityId);
+                    abilityList.forEach(abilityEffect => {
+                        abilityEffect = {
+                            ...abilityEffect,
+                            ...abilityInfo
+                        };
+                        unit[`ability_${abilityInfo.activation_timing}`].push(abilityEffect);
+                    });
                 }
             });
             unit.passiveSkillList.forEach(skill => {
+                if (CONSTRAINTS_PASSIVE.includes(skill.skill_id)) {
+                    constraintsPassive.push(skill.skill_id);
+                }
                 let passiveInfo = getPassiveInfo(skill.skill_id);
                 if (!passiveInfo) {
                     return;
                 }
-                if (CONSTRAINTS_PASSIVE.includes(skill.skill_id)) {
-                    constraintsPassive.push(skill.skill_id);
-                }
-                unit[`ability_${passiveInfo.activation_timing}`].push(passiveInfo);
+                let passiveList = getPassiveEffectList(skill.skill_id);
+                passiveList.forEach(passiveEffect => {
+                    passiveEffect = {
+                        ...passiveEffect,
+                        ...passiveInfo
+                    };
+                    unit[`ability_${passiveInfo.activation_timing}`].push(passiveEffect);
+                });
             });
             // レゾナンス判定
-            if ((member.styleInfo.rarity === 0 || member.styleInfo.rarity === 9) && member.supportStyleId) {
+            if (member.styleInfo.resonance === 1 && member.supportStyleId) {
                 const support = member.support;
                 if (support?.styleInfo.ability_resonance) {
                     const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));

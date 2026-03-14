@@ -1,12 +1,12 @@
 import {
     ELEMENT, BUFF, RANGE, CHARA_ID, EFFECT, ENEMY_CLASS, CONDITIONS
     , ALONE_ACTIVATION_BUFF_KIND, ALONE_ACTIVATION_ABILITY_LIST
-    , STYLE_ID, SKILL_ID, ABILITY_ID, JEWEL_TYPE, STATUS_KBN
+    , STYLE_ID, ABILITY_ID, JEWEL_TYPE, STATUS_KBN
     , COST_TYPE
 } from 'utils/const';
 import enemyList from "data/enemyList";
 import scoreBonusList from "data/scoreBonus";
-import { getCharaData, getBuffIdToBuff, getPassiveInfo, getAbilityInfo, getSkillData } from "utils/common";
+import * as common from "utils/common";
 
 export const BUFF_KBN = {
     0: "power_up",
@@ -38,6 +38,8 @@ export const BUFF_KBN = {
     44: "curry",
     45: "shchi",
     48: "eternal_fragile",
+    53: "steak",
+    54: "gelato",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -103,8 +105,7 @@ function getChainEffectSize(otherSetting, type) {
 
 // パワプロ存在チェック
 export function checkPawapuroExist(selectStyleList) {
-    return checkStyleExist(selectStyleList,
-        [STYLE_ID.PAWAPURO_RUKA, STYLE_ID.PAWAPURO_ICHIGO, STYLE_ID.PAWAPURO_HISAME]);
+    return checkStyleExist(selectStyleList, STYLE_ID.PAWAPURO);
 }
 
 // スタイル存在チェック
@@ -184,8 +185,15 @@ export const filteredOrb = (buffList, isOrb) => {
 
 // 効果量取得
 export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, abilitySettingMap, passiveSettingMap, resonanceList) {
+    const handlers = {
+        collect: buffSetting.collect,
+        skillInfo: common.getSkillData(buff.skill_id),
+        memberInfo,
+        styleList,
+        abilitySettingMap, passiveSettingMap
+    };
     // バフ強化
-    let strengthen = getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingMap, passiveSettingMap, resonanceList);
+    let strengthen = getStrengthen(handlers, buff, resonanceList);
     let effectSize = 0;
     if (buff.kbn === "buff") {
         // バフ
@@ -230,8 +238,9 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.ARROWCHERRYBLOSSOMS: // 桜花の矢
                 return 50;
             case BUFF.CURRY: // カリー
-                return 50;
             case BUFF.SHCHI: // シチー
+            case BUFF.STEAK: // ステーキ
+            case BUFF.GELATO: // ジェラート
                 return 50;
             default:
                 break;
@@ -278,93 +287,132 @@ export function getAbilityEffectSize(abilityId, buffInfo, strengthen) {
 }
 
 // コスト変更
-export function getCostVariable(spCost, collect, memberInfo, abilitySettingMap, passiveSettingMap) {
-    let costVariable = 0;
+export function getCostVariable(handlers) {
+    let collect = handlers.collect;
+    let skillInfo = handlers.skillInfo;
+    let spCost = skillInfo.use_cost;
+    let abilitySettingMap = handlers.abilitySettingMap;
+    let passiveSettingMap = handlers.passiveSettingMap;
+
     if (collect?.sphalf) {
         spCost = Math.ceil(spCost / 2);
     } else if (collect?.spzero || spCost === 0) {
         return 0;
     }
-    // COSTダウン
-    const maxCostDown = Object.values(abilitySettingMap)
-        .filter(ability => ability.checked)
-        .map(ability => ({
-            ability,
-            info: getAbilityInfo(ability.ability_id)
-        }))
-        .filter(({ info }) => info.effect_type === EFFECT.COST_SP_DOWN)
-        .filter(({ info }) => !info.conditions)
-        .filter(({ info }) => info.target_element === 0 ||
-            info.target_element === memberInfo.styleInfo.element)
-        .reduce(
-            (max, { info }) => Math.max(max, info.effect_size),
-            0
-        );
-    // ルビー・パヒューム
-    const rubyPerfume = Object.values(passiveSettingMap)
-        .filter(passive => passive.skill_id === SKILL_ID.RUBY_PERFUME)
-        .filter(passive => passive.troopKbn === TROOP_KBN.MAIN)
-        .filter(passive => passive.checked).length > 0;
-    // 彩鳳連理
-    const SaihoRenri = Object.values(passiveSettingMap)
-        .filter(passive => passive.skill_id === SKILL_ID.SAIO_RENRI)
-        .filter(passive => passive.checked).length > 0 && isRangeAreaInclude(null, RANGE.MEMBER_31E, memberInfo.styleInfo.chara_id);
-    // 行くぞ！丸山部隊
-    const maruyama = Object.values(passiveSettingMap)
-        .filter(passive => passive.skill_id === SKILL_ID.MARUYAMA_MEMBER)
-        .filter(passive => passive.checked).length > 0 && isRangeAreaInclude(null, RANGE.MARUYAMA_MEMBER, memberInfo.styleInfo.chara_id);
+    let costSpDown = 0;
+    let costSpUp = 0;
 
-    if (maxCostDown || SaihoRenri || maruyama) {
-        costVariable -= 1;
-    }
-    if (rubyPerfume) {
-        costVariable += 2;
-    }
-    spCost += costVariable;
+    // COSTダウン
+    abilityLoop((abilityEffect) => {
+        costSpDown = Math.max(costSpDown, abilityEffect.effect_size);
+    }, abilitySettingMap, EFFECT.COST_SP_DOWN, handlers);
+
+    passiveLoop((passiveEffect) => {
+        costSpDown = Math.max(costSpDown, passiveEffect.effect_size);
+    }, passiveSettingMap, EFFECT.COST_SP_DOWN, handlers);
+
+    passiveLoop((passiveEffect) => {
+        costSpUp = Math.max(costSpUp, passiveEffect.effect_size);
+    }, passiveSettingMap, EFFECT.COST_SP_UP, handlers);
+
+    spCost += costSpUp - costSpDown;
     spCost = spCost < 0 ? 0 : spCost;
     return spCost;
 }
 
+const abilityLoop = (func, abilitySettingMap, effectType, handlers) => {
+    Object.values(abilitySettingMap)
+        .filter(ability => ability.checked)
+        .forEach((ability) => {
+            const abilityInfo = common.getAbilityInfo(ability.ability_id);
+            for (const abilityEffect of common.getAbilityEffectList(ability.ability_id)) {
+                if (judgeEffect(ability.chara_id, abilityInfo, abilityEffect, effectType, handlers)) {
+                    func(abilityEffect, ability)
+                }
+            }
+        })
+}
+
+const passiveLoop = (func, passiveSettingMap, effectType, handlers) => {
+    Object.values(passiveSettingMap)
+        .filter(passive => passive.checked)
+        .forEach((passive) => {
+            const passiveInfo = common.getPassiveInfo(passive.skill_id);
+            for (const passiveEffect of common.getPassiveEffectList(passive.skill_id)) {
+                if (judgeEffect(passive.chara_id, passiveInfo, passiveEffect, effectType, handlers)) {
+                    func(passiveEffect, passive)
+                }
+            }
+        })
+}
+
+const judgeEffect = (charaId, info, effect, effectType, handlers) => {
+    let styleInfo = handlers.memberInfo.styleInfo;
+    if (Array.isArray(effectType)
+        ? !effectType.includes(effect.effect_type)
+        : effect.effect_type !== effectType) {
+        return false;
+    }
+    if (!isRangeAreaInclude(charaId, info.range_area, styleInfo.chara_id)) {
+        return false;
+    }
+    if (!isElementInclude(styleInfo, info.target_element)) {
+        return false;
+    }
+    if (!judgmentCondition(effect, handlers)) {
+        return false;
+    }
+    return true;
+}
+
+function judgmentCondition(effect, handlers) {
+    const skillInfo = handlers.skillInfo;
+    const styleList = handlers.styleList;
+
+    let spCost = 0;
+    switch (Number(effect.conditions)) {
+        case CONDITIONS.FIRE_STYLE: // 火属性スタイル
+            let fireCount = targetCountInclude(styleList, ELEMENT.FIRE);
+            return fireCount >= effect.conditions_id;
+        case CONDITIONS.ICE_STYLE: // 氷属性スタイル
+            let iceCount = targetCountInclude(styleList, ELEMENT.ICE);
+            return iceCount >= effect.conditions_id;
+        case CONDITIONS.THUNDER_STYLE: // 雷属性スタイル
+            let thunderCount = targetCountInclude(styleList, ELEMENT.THUNDER);
+            return thunderCount >= effect.conditions_id;
+        case CONDITIONS.COST_SP_OVER: // 消費SP指定値以上
+            if (skillInfo.cost_type === COST_TYPE.SP) {
+                spCost = getCostVariable(handlers)
+            }
+            return spCost >= effect.conditions_id;
+        case CONDITIONS.COST_SP_UNDER: // 消費SP指定値以下
+            if (skillInfo.cost_type === COST_TYPE.SP) {
+                spCost = getCostVariable(handlers)
+            }
+            return spCost <= effect.conditions_id;
+        default:
+            break;
+    }
+    return true;
+}
+
 // バフ強化効果量取得
-function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingMap, passiveSettingMap, resonanceList) {
+function getStrengthen(handlers, buff, resonanceList) {
     let charaId = buff.use_chara_id;
     let strengthen = 0;
+    let abilitySettingMap = handlers.abilitySettingMap;
+    let passiveSettingMap = handlers.passiveSettingMap;
 
     // 攻撃力アップ/属性攻撃力アップ
     if (KIND_ATTACKUP.includes(buff.buff_kind)) {
-        strengthen += Object.values(abilitySettingMap)
-            .filter(ability => ability.checked)
-            .reduce((sum, ability) => {
-                // 超越ゲージ
-                const abilityInfo = getAbilityInfo(ability.ability_id);
-                if (TRANSCEND_LIST.includes(ability.ability_id)) {
-                    if (abilityInfo.target_element === 0 ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
-                        sum += 20;
-                    }
-                }
+        abilityLoop((abilityEffect) => {
+            strengthen += abilityEffect.effect_size;
+        }, abilitySettingMap, EFFECT.GIVEATTACKBUFFUP, handlers);
 
-                // 攻撃バフ判定
-                if (ability.chara_id === charaId) {
-                    if (abilityInfo.effect_type === EFFECT.GIVEATTACKBUFFUP) {
-                        sum += abilityInfo.effect_size;
-                    }
-                }
-                return sum;
-            }, 0);
-        Object.values(passiveSettingMap)
-            .filter(passive => passive.checked)
-            .filter(passive => passive.troopKbn === TROOP_KBN.MAIN)
-            .forEach((passive) => {
-                switch (passive.skill_id) {
-                    case SKILL_ID.RUBY_PERFUME: // ハイブースト状態
-                        strengthen += 20;
-                        break;
-                    default:
-                        break;
-                }
-            })
+        passiveLoop((passiveEffect) => {
+            strengthen += passiveEffect.effect_size;
+        }, passiveSettingMap, EFFECT.GIVEATTACKBUFFUP, handlers);
+
         resonanceList
             .filter(resonance => resonance.charaId === charaId)
             .forEach(resonance => {
@@ -377,60 +425,22 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
     }
     // 防御力ダウン/属性防御力ダウン/DP防御力ダウン/永続防御ダウン/永続属性防御ダウン
     if (KIND_DEFENSEDOWN.includes(buff.buff_kind)) {
-        strengthen += Object.values(abilitySettingMap)
-            .filter(ability => ability.checked)
-            .filter(ability => {
-                // モロイウオ、静かなプレッシャー
-                const COST_UNDER_8 = [ABILITY_ID.MOROIUO, ABILITY_ID.QUIET_PRESSURE];
-                if (COST_UNDER_8.includes(ability.ability_id)) {
-                    let spCost = 0;
-                    let skillInfo = getSkillData(buff.skill_id);
-                    if (skillInfo.cost_type === COST_TYPE.SP) {
-                        spCost = getCostVariable(skillInfo.use_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap)
-                    }
-                    if (spCost > 8) {
-                        return false;
-                    }
-                }
-                return true;
-            }).reduce((sum, ability) => {
-                // 超越ゲージ
-                const abilityInfo = getAbilityInfo(ability.ability_id);
-                if (TRANSCEND_LIST.includes(ability.ability_id)) {
-                    if (abilityInfo.target_element === 0 ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
-                        sum += 20;
-                    }
-                }
-                // 防御バフ判定
-                if (ability.chara_id === charaId) {
-                    let abilityInfo = getAbilityInfo(ability.ability_id);
-                    if (abilityInfo.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
-                        sum += abilityInfo.effect_size;
-                    }
-                }
-                return sum;
-            }, 0);
-        Object.values(passiveSettingMap)
-            .filter(passive => passive.checked)
-            .forEach((passive) => {
-                if (passive.chara_id === charaId) {
-                    let passiveInfo = getPassiveInfo(passive.skill_id);
-                    if (passiveInfo.effect_type === EFFECT.GIVEDEFFENCEDEBUFFUP) {
-                        strengthen += passiveInfo.effect_size;
-                    }
-                }
-                switch (passive.skill_id) {
-                    case SKILL_ID.RUBY_PERFUME: // ハイブースト状態
-                        if (getCharaIdToTroopKbn(styleList, charaId) === passive.troopKbn) {
-                            strengthen += 20;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            })
+        abilityLoop((abilityEffect) => {
+            strengthen += abilityEffect.effect_size;
+        }, abilitySettingMap, EFFECT.GIVEDEFFENCEDEBUFFUP, handlers);
+
+        abilityLoop((abilityEffect) => {
+            strengthen += abilityEffect.effect_size;
+        }, abilitySettingMap, EFFECT.GIVEDEBUFFUP, handlers);
+
+        passiveLoop((passiveEffect) => {
+            strengthen += passiveEffect.effect_size;
+        }, passiveSettingMap, EFFECT.GIVEDEFFENCEDEBUFFUP, handlers);
+
+        passiveLoop((passiveEffect) => {
+            strengthen += passiveEffect.effect_size;
+        }, passiveSettingMap, EFFECT.GIVEDEBUFFUP, handlers);
+
         resonanceList
             .filter(resonance => resonance.charaId === charaId)
             .forEach(resonance => {
@@ -443,57 +453,26 @@ function getStrengthen(styleList, buff, buffSetting, memberInfo, abilitySettingM
     }
     // 防御ダウン以外のデバフスキル
     if ([BUFF.FRAGILE, BUFF.ETERNAL_FRAGILE, BUFF.RESISTDOWN].includes(buff.buff_kind)) {
-        strengthen += Object.values(abilitySettingMap)
-            .filter(ability => ability.checked)
-            .reduce((sum, ability) => {
-                // 超越ゲージ
-                const abilityInfo = getAbilityInfo(ability.ability_id);
-                if (TRANSCEND_LIST.includes(ability.ability_id)) {
-                    if (abilityInfo.target_element === 0 ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element ||
-                        abilityInfo.target_element === memberInfo.styleInfo.element2) {
-                        sum += 20;
-                    }
-                }
-                return sum;
-            }, 0);
-        Object.values(passiveSettingMap)
-            .filter(passive => passive.checked)
-            .forEach((passive) => {
-                switch (passive.skill_id) {
-                    case SKILL_ID.RUBY_PERFUME: // ハイブースト状態
-                        if (getCharaIdToTroopKbn(styleList, charaId) === passive.troopKbn) {
-                            strengthen += 20;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            })
+        abilityLoop((abilityEffect) => {
+            strengthen += abilityEffect.effect_size;
+        }, abilitySettingMap, EFFECT.GIVEDEBUFFUP, handlers);
+
+        passiveLoop((passiveEffect) => {
+            strengthen += passiveEffect.effect_size;
+        }, passiveSettingMap, EFFECT.GIVEDEBUFFUP, handlers);
     }
 
     // フィールド強化
     if (BUFF.FIELD === buff.buff_kind) {
-        Object.values(abilitySettingMap)
-            .filter(ability => ability.chara_id === charaId)
-            .filter(ability => ability.checked)
-            .forEach((ability) => {
-                let abilityInfo = getAbilityInfo(ability.ability_id);
-                if (abilityInfo.effect_type === EFFECT.FIELD_STRENGTHEN) {
-                    strengthen += abilityInfo.effect_size;
-                }
-            })
-        Object.values(passiveSettingMap)
-            .filter(passive => passive.chara_id === charaId)
-            .filter(passive => passive.checked)
-            .forEach((passive) => {
-                let passiveInfo = getPassiveInfo(passive.skill_id);
-                if (passiveInfo.effect_type === EFFECT.FIELD_STRENGTHEN) {
-                    strengthen += passiveInfo.effect_size;
-                }
-            })
+        abilityLoop((abilityEffect) => {
+            strengthen += abilityEffect.effect_size;
+        }, abilitySettingMap, EFFECT.FIELD_STRENGTHEN, handlers);
+
+        passiveLoop((passiveEffect) => {
+            strengthen += passiveEffect.effect_size;
+        }, passiveSettingMap, EFFECT.FIELD_STRENGTHEN, handlers);
     }
-    if (buffSetting.collect?.strengthen) {
+    if (handlers.collect?.strengthen) {
         strengthen += 20;
     }
     return strengthen;
@@ -561,23 +540,6 @@ export function isSelectBuff(buffInfo) {
     if (buffInfo.conditions === CONDITIONS.ENEMY_COUNT) {
         return true;
     }
-    return false;
-}
-
-// 超越ゲージ判定
-export function isTranscend(abilitySettingMap, attackInfo, attackMemberInfo) {
-    Object.values(abilitySettingMap)
-        .filter(ability => ability.checked)
-        .forEach(ability => {
-            let abilityInfo = getAbilityInfo(ability.ability_id);
-            if (TRANSCEND_LIST.includes(abilityInfo.ability_id)) {
-                if ((abilityInfo.target_element === attackMemberInfo.styleInfo.element ||
-                    abilityInfo.target_element === attackMemberInfo.styleInfo.element2) &&
-                    abilityInfo.target_element === attackInfo?.attack_element) {
-                    return true;
-                }
-            }
-        });
     return false;
 }
 
@@ -667,6 +629,8 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     // 引数のfuntionをまとめる
     const memberInfo = attackMemberInfo;
     const handlers = {
+        collect: attackInfo.collect,
+        skillInfo: common.getSkillData(attackInfo.skill_id),
         attackInfo, memberInfo, styleList,
         selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting, state
     };
@@ -684,7 +648,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     debuff += fragile;
 
     let damageRateUp = getDamagerateEffectSize(handlers, attackInfo.hit_count);
-    let funnelList = getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSettingMap);
+    let funnelList = getSumFunnelEffectList(handlers);
 
     let token = getSumTokenEffectSize(attackInfo, attackMemberInfo);
     let enemyDefenceRate = getEnemyDefenceRate(state);
@@ -925,7 +889,7 @@ function getSumBuffEffectSize(handlers) {
     // スキルバフ合計
     let sumBuff = getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap,
         [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.CHARGE, BUFF.ARROWCHERRYBLOSSOMS,
-        BUFF.ETERNAL_OARH, BUFF.BABIED, BUFF.SHADOW_CLONE, BUFF.CURRY, BUFF.SHCHI]);
+        BUFF.ETERNAL_OARH, BUFF.BABIED, BUFF.SHADOW_CLONE, BUFF.CURRY, BUFF.SHCHI, BUFF.STEAK, BUFF.GELATO]);
     // 攻撃力アップアビリティ
     sumBuff += getSumAbilityEffectSize(handlers, EFFECT.ATTACKUP);
     // 属性リング(0%-10%)
@@ -942,8 +906,6 @@ function getSumBuffEffectSize(handlers) {
     if (state.correction[`element_power_up_${attackInfo.attack_element}`]) {
         sumBuff += state.correction[`element_power_up_${attackInfo.attack_element}`];
     }
-    // // 制圧戦
-    // sum_buff += getBikePartsEffectSize("buff");
     return 1 + sumBuff / 100;
 }
 
@@ -954,14 +916,15 @@ function getSumDebuffEffectSize(handlers) {
         [BUFF.DEFENSEDOWN, BUFF.ELEMENT_DEFENSEDOWN, BUFF.ETERNAL_DEFENSEDOWN, BUFF.ELEMENT_ETERNAL_DEFENSEDOWN]);
     // // 防御ダウンアビリティ
     sumBuff += getSumAbilityEffectSize(handlers, EFFECT.DEFFENCEDOWN);
-    // // 制圧戦
-    // sum_debuff += getBikePartsEffectSize("debuff");
     return 1 + sumBuff / 100;
 }
 
 // 合計連撃効果量取得
-function getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSettingMap) {
+function getSumFunnelEffectList(handlers) {
     let funnel_list = [];
+    let selectBuffKeyMap = handlers.selectBuffKeyMap;
+    let abilitySettingMap = handlers.abilitySettingMap;
+    let passiveSettingMap = handlers.passiveSettingMap;
 
     // スキルデバフ合計
     const funnelKey = getBuffKey(BUFF.FUNNEL);
@@ -971,7 +934,7 @@ function getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSett
             let key = selectedKey.split('_');
             if (key[0] === "buff") {
                 let buffId = Number(key[1]);
-                let buffInfo = getBuffIdToBuff(buffId);
+                let buffInfo = common.getBuffIdToBuff(buffId);
                 if (buffInfo) {
                     let loop = buffInfo.max_power;
                     let size = buffInfo.effect_size;
@@ -998,35 +961,23 @@ function getSumFunnelEffectList(selectBuffKeyMap, abilitySettingMap, passiveSett
     }
 
     const EFFECT_FUNNEL = [EFFECT.FUNNEL, EFFECT.FUNNEL_ALWAYS];
-    Object.keys(passiveSettingMap).forEach(function (key) {
-        let data = passiveSettingMap[key];
-        if (data.checked) {
-            let skillId = Number(data.skill_id)
-            let passiveInfo = getPassiveInfo(skillId);
-            if (EFFECT_FUNNEL.includes(passiveInfo.effect_type)) {
-                let size = passiveInfo.effect_size;
-                let loop = passiveInfo.effect_count;
-                for (let i = 0; i < loop; i++) {
-                    funnel_list.push(size);
-                }
+    passiveLoop((passiveEffect) => {
+        if (EFFECT_FUNNEL.includes(passiveEffect.effect_type)) {
+            let size = passiveEffect.effect_size;
+            let loop = passiveEffect.effect_count;
+            for (let i = 0; i < loop; i++) {
+                funnel_list.push(size);
             }
         }
-    })
+    }, passiveSettingMap, EFFECT_FUNNEL, handlers);
 
-    Object.keys(abilitySettingMap).forEach(function (key) {
-        let data = abilitySettingMap[key];
-        if (data.checked) {
-            let abilityId = Number(data.ability_id)
-            let abilityInfo = getAbilityInfo(abilityId);
-            if (EFFECT_FUNNEL.includes(abilityInfo.effect_type)) {
-                let size = abilityInfo.effect_size;
-                let loop = abilityInfo.effect_count;
-                for (let i = 0; i < loop; i++) {
-                    funnel_list.push(size);
-                }
-            }
+    abilityLoop((abilityEffect) => {
+        let size = abilityEffect.effect_size;
+        let loop = abilityEffect.effect_count;
+        for (let i = 0; i < loop; i++) {
+            funnel_list.push(size);
         }
-    })
+    }, abilitySettingMap, EFFECT_FUNNEL, handlers);
 
     // 降順でソート
     funnel_list.sort(function (a, b) {
@@ -1047,8 +998,6 @@ function getDamagerateEffectSize(handlers, hitCount) {
     destructionEffectSize += getEarringEffectSize(otherSetting, "blast", 11 - hitCount);
     destructionEffectSize += getChainEffectSize(otherSetting, "skill");
 
-    // // 制圧戦
-    // destruction_effect_size += getBikePartsEffectSize("destruction_rate");
     // スコアタグレード
     if (state.correction.destruction) {
         destructionEffectSize += state.correction.destruction;
@@ -1076,8 +1025,6 @@ function getCriticalRate(handlers) {
         criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.CHARGE)]?.[0] ?? 0) ? 20 : 0;
         // 永遠なる誓い
         criticalRate += (selectBuffKeyMap[getBuffKey(BUFF.ETERNAL_OARH)]?.[0] ?? 0) ? 100 : 0;
-        // // 制圧戦
-        // critical_rate += getBikePartsEffectSize("critical_rate");
     }
     return criticalRate > 100 ? 100 : criticalRate;
 }
@@ -1090,12 +1037,6 @@ function getCriticalBuff(handlers) {
         [BUFF.CRITICALDAMAGEUP, BUFF.ELEMENT_CRITICALDAMAGEUP],
         memberInfo.styleInfo.charaId);
     criticalBuff += getSumAbilityEffectSize(handlers, EFFECT.CRITICAL_DAMAGE_UP);
-    // // 制圧戦
-    // critical_buff += getBikePartsEffectSize("critical_buff");
-    // // セラフ遭遇戦
-    // if ($("#enemy_class").val() === ENEMY_CLASS.SERAPH_ENCOUNTER) {
-    //     critical_buff += getCardEffect("CLIRICAL_DAMAGE");
-    // }
     return 1 + criticalBuff / 100;
 }
 // トークン効果量
@@ -1113,17 +1054,12 @@ function getSumTokenAbilirySize(handlers, effectType) {
     const styleList = handlers.styleList;
     const abilitySettingMap = handlers.abilitySettingMap;
     let sum = 0;
-    Object.keys(abilitySettingMap).forEach(function (key) {
-        let data = abilitySettingMap[key];
-        if (data.checked) {
-            let abilityId = data.ability_id;
-            let memberInfo = getCharaIdToMember(styleList, data.chara_id);
-            let abilityInfo = getAbilityInfo(abilityId);
-            if (abilityInfo.effect_type === effectType && memberInfo) {
-                sum = abilityInfo.effect_size * (memberInfo.token ? memberInfo.token : 0);
-            }
+    abilityLoop((abilityEffect, setting) => {
+        let memberInfo = getCharaIdToMember(styleList, setting.chara_id);
+        if (abilityEffect.effect_type === effectType && memberInfo) {
+            sum = abilityEffect.effect_size * (memberInfo.token ? memberInfo.token : 0);
         }
-    })
+    }, abilitySettingMap, effectType, handlers);
     return sum;
 }
 
@@ -1143,172 +1079,45 @@ function getSumAbilityEffectSize(handlers, effectType) {
     let activationPhysicalEffectSize = 0;
     let activationElementEffectSize = 0;
 
-    Object.keys(abilitySettingMap).forEach(function (key) {
-        let data = abilitySettingMap[key];
-        if (data.checked) {
-            let abilityId = Number(data.ability_id)
-            let abilityInfo = getAbilityInfo(abilityId);
-            if (abilityInfo.effect_type === effectType) {
-                let effectSize = abilityInfo.effect_size;
-                const UNDER_SP8 = [ABILITY_ID.KIREAJI, ABILITY_ID.EVIL_ARMY];
-                if (UNDER_SP8.includes(abilityId)) {
-                    // キレアジ
-                    const attackInfo = handlers.attackInfo;
-                    let spCost = 0;
-                    let skillInfo = getSkillData(attackInfo.skill_id);
-                    if (skillInfo.cost_type === COST_TYPE.SP) {
-                        spCost = getCostVariable(skillInfo.use_cost, attackInfo.collect, memberInfo, abilitySettingMap, passiveSettingMap)
-                    }
-                    if (spCost > 8) {
-                        effectSize = 0;
-                    }
-                }
-                // スペシャルタッグ
-                if (abilityId === ABILITY_ID.SPECIAL_TAG) {
-                    let goodCondition = targetCountMotivation(styleList, 1);
-                    effectSize = Math.min(goodCondition * 10, 30);
-
-                }
-                if (ALONE_ACTIVATION_ABILITY_LIST.includes(abilityId)) {
-                    if (abilityInfo.element !== 0) {
-                        activationElementEffectSize = Math.max(activationElementEffectSize, effectSize);
-                    } else if (abilityInfo.physical !== 0) {
-                        activationPhysicalEffectSize = Math.max(activationPhysicalEffectSize, effectSize);
-                    } else {
-                        activationNoneEffectSize = Math.max(activationNoneEffectSize, effectSize);
-                    }
-                } else {
-                    if (abilityInfo.element !== 0) {
-                        sumElementEffectSize += effectSize;
-                    } else if (abilityInfo.physical !== 0) {
-                        sumPhysicalEffectSize += effectSize;
-                    } else {
-                        sumNoneEffectSize += effectSize;
-                    }
-                }
+    abilityLoop((abilityEffect) => {
+        let abilityId = abilityEffect.ability_id;
+        let effectSize = abilityEffect.effect_size;
+        // スペシャルタッグ
+        if (abilityId === ABILITY_ID.SPECIAL_TAG) {
+            let goodCondition = targetCountMotivation(styleList, 1);
+            effectSize = Math.min(goodCondition * 10, 30);
+        }
+        if (ALONE_ACTIVATION_ABILITY_LIST.includes(abilityId)) {
+            if (abilityEffect.element !== 0) {
+                activationElementEffectSize = Math.max(activationElementEffectSize, effectSize);
+            } else if (abilityEffect.physical !== 0) {
+                activationPhysicalEffectSize = Math.max(activationPhysicalEffectSize, effectSize);
+            } else {
+                activationNoneEffectSize = Math.max(activationNoneEffectSize, effectSize);
             }
-
-            // 氷の印
-            if (abilityId === ABILITY_ID.ICE_MARK &&
-                [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.ICE)) {
-                let iceCount = targetCountInclude(styleList, abilityInfo.target_element);
-                switch (effectType) {
-                    case EFFECT.ATTACKUP:
-                        if (iceCount >= 0) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.DAMAGERATEUP:
-                        if (iceCount >= 3) {
-                            abilityEffectSize += 10;
-                        }
-                        break;
-                    case EFFECT.CRITICALRATEUP:
-                        if (iceCount >= 4) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.CRITICAL_DAMAGE_UP:
-                        if (iceCount >= 5) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            // 雷の印
-            if (abilityId === ABILITY_ID.THUNDER_MARK &&
-                [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.THUNDER)) {
-                let thunderCount = targetCountInclude(styleList, abilityInfo.target_element);
-                switch (effectType) {
-                    case EFFECT.ATTACKUP:
-                        if (thunderCount >= 0) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.DAMAGERATEUP:
-                        if (thunderCount >= 3) {
-                            abilityEffectSize += 10;
-                        }
-                        break;
-                    case EFFECT.CRITICALRATEUP:
-                        if (thunderCount >= 4) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.CRITICAL_DAMAGE_UP:
-                        if (thunderCount >= 5) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    default:
-                        break;
-                }
+        } else {
+            if (abilityEffect.element !== 0) {
+                sumElementEffectSize += effectSize;
+            } else if (abilityEffect.physical !== 0) {
+                sumPhysicalEffectSize += effectSize;
+            } else {
+                sumNoneEffectSize += effectSize;
             }
         }
-    })
+    }, abilitySettingMap, effectType, handlers);
+
     abilityEffectSize += activationNoneEffectSize + sumNoneEffectSize
         + activationPhysicalEffectSize + sumPhysicalEffectSize
         + activationElementEffectSize + sumElementEffectSize;
 
-    Object.keys(passiveSettingMap).forEach(function (key) {
-        let data = passiveSettingMap[key];
-        if (data.checked) {
-            let skillId = Number(data.skill_id)
-            let passiveInfo = getPassiveInfo(skillId);
-            let effectSize = 0;
-            if (passiveInfo.effect_type === effectType) {
-                let targetCharaId = memberInfo.styleInfo.chara_id;
-                if (isRangeAreaInclude(data.chara_id, passiveInfo.range_area, targetCharaId)) {
-                    effectSize = passiveInfo.effect_size;
-                }
-            }
-            // ハイブースト状態
-            if (skillId === SKILL_ID.RUBY_PERFUME && effectType === EFFECT.ATTACKUP && data.troopKbn === TROOP_KBN.MAIN) {
-                abilityEffectSize += 180;
-            } else {
-                abilityEffectSize += effectSize;
-            }
-
-            // 火の印
-            if (skillId === SKILL_ID.SUMMER_FINE_WEATHER &&
-                [memberInfo.styleInfo.element, memberInfo.styleInfo.element2].includes(ELEMENT.FIRE)) {
-                let fireCount = targetCountInclude(styleList, passiveInfo.target_element);
-                switch (effectType) {
-                    case EFFECT.ATTACKUP:
-                        if (fireCount >= 0) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.DAMAGERATEUP:
-                        if (fireCount >= 3) {
-                            abilityEffectSize += 10;
-                        }
-                        break;
-                    case EFFECT.CRITICALRATEUP:
-                        if (fireCount >= 4) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    case EFFECT.CRITICAL_DAMAGE_UP:
-                        if (fireCount >= 5) {
-                            abilityEffectSize += 30;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    });
+    passiveLoop((passiveEffect) => {
+        abilityEffectSize += passiveEffect.effect_size;
+    }, passiveSettingMap, effectType, handlers);
 
     resonanceList
         .filter(resonance => resonance.charaId === memberInfo.styleInfo.chara_id)
         .forEach(resonance => {
-            if (resonance.effect_type === effectType ||
-                ([EFFECT.ATTACKUP, EFFECT.DAMAGERATEUP].includes(effectType) && (resonance.effect_type === EFFECT.ATTACKUP_AND_DAMAGERATEUP))) {
+            if (resonance.effect_type === effectType) {
                 const limitCount = resonance.limitCount;
                 const effectSize = resonance[`effect_limit_${limitCount}`];
                 abilityEffectSize += effectSize;
@@ -1342,11 +1151,22 @@ function isRangeAreaInclude(charaId, rangeArea, targetCharaId) {
 function targetCountInclude(styleList, targetElement) {
     let count = 0;
     styleList.selectStyleList.forEach((style) => {
-        if (style?.styleInfo.element === targetElement || style?.styleInfo.element2 === targetElement) {
+        if (isElementInclude(style?.styleInfo, targetElement)) {
             count++;
         }
     })
     return count;
+}
+
+// 属性判定
+export function isElementInclude(styleInfo, targetElement) {
+    if (!styleInfo) {
+        return false;
+    }
+    if (targetElement === 0) {
+        return true;
+    }
+    return styleInfo.element === targetElement || styleInfo.element2 === targetElement;
 }
 
 // やるき対象数判定
@@ -1377,9 +1197,6 @@ export function getCharaIdToMember(styleList, charaId) {
     if (!member) {
         member = filteredMember(styleList.subStyleList)
     }
-    // if (!member) {
-    //     member = filtered_member(support_style_list)
-    // }
     return member;
 }
 
@@ -1615,7 +1432,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     if (enemyInfo.enemy_class === ENEMY_CLASS.HARD_LAYER_EX) {
         state.hardEx.bonusElement.forEach((bonus, index) => {
             if (bonus) {
-                if (memberInfo.styleInfo.element === index || memberInfo.styleInfo.element2 === index) {
+                if (isElementInclude(memberInfo.styleInfo, index)) {
                     elemetalBonus = 30;
                 }
             }
@@ -1625,7 +1442,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     let scoreBonus = 0;
     if (enemyInfo.enemy_class === ENEMY_CLASS.SCORE_ATTACK) {
         const selectHalf = state.score.half
-        let physical = getCharaData(memberInfo.styleInfo.chara_id).physical;
+        let physical = common.getCharaData(memberInfo.styleInfo.chara_id).physical;
         const targetConditions = [`element_${memberInfo.styleInfo.element}`, `element_${memberInfo.styleInfo.element2}`, `physical_${physical}`];
 
         scoreBonusList

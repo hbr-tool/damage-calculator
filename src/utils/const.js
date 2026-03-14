@@ -15,13 +15,13 @@ export const STYLE_ID = {
     ONLY_MOON_LIGHT: 145,   // 月光月歌
     WEDING_SHARO: 123,  // ウェディングシャロ
     SERVANT_DANCE: [161, 189],  // ユニソン豊後、魔王山脇
-    SERVANT: [162, 163, 178, 189],    // 下僕天音、聖羅、マリ、魔王
+    SERVANT: [162, 163, 178, 189, 192],    // 下僕天音、聖羅、マリ、魔王、神崎
     UNISON_KARENCHAN: 177,  // ユニソンカレンチャン
     KITCHEN_VRITIKA: 181,  // キッチンヴリティカ
     KITCHEN_SHARO: 182,  // キッチンシャロ
-    PAWAPURO_RUKA: 183,  // パワプロルカ
-    PAWAPURO_ICHIGO: 184,  // パワプロいちご
-    PAWAPURO_HISAME: 5092,  // パワプロ緋雨
+    KITCHEN_CAROLE: 200,  // キッチンキャロル
+    KITCHEN_MARIA: 201,  // キッチンマリア
+    PAWAPURO: [183, 184, 5092],  // パワプロ月歌、いちご、緋雨
 }
 
 export const SKILL_ID = {
@@ -29,8 +29,7 @@ export const SKILL_ID = {
     PIRATES_CANON: 478, // 豪快！パイレーツキャノン
     WAKING_NIGHT: 495, // 夜醒
     MEDITATION: 501, // メディテーション
-    SAIO_RENRI: 546, // 彩鳳連理
-    MARUYAMA_MEMBER: 547, // 行くぞ！丸山部隊
+    SOUND_OF_CROWS: 578, // カラスの鳴き声で
     MEGA_DESTROYER: 623, // メガデストロイヤー
     CAT_JET_SHOOTING: 633, // ネコジェットシャテキ
     RUBY_PERFUME: 635, // ルビー・パヒューム
@@ -42,9 +41,12 @@ export const SKILL_ID = {
 }
 
 export const BUFF_ID = {
+    TRICK_CANNON: 2,   // トリック・カノン
     MOON_LIGHT: 2607,   // 月光
     MEGA_DESTROYER5: 235,   // メガデストロイヤー5人
     MEGA_DESTROYER6: 236,   // メガデストロイヤー5人
+    PERFECT_COLOR: 557,   // 極彩色
+    BRIGHT_RED: 1037,   // 茜色
 }
 
 export const ABILITY_ID = {
@@ -52,16 +54,12 @@ export const ABILITY_ID = {
     TRANSCEND_ICE: 26, // 超越(氷)
     TRANSCEND_THUNDER: 27, // 超越(雷)
     KISHIN: 28, // 鬼神
-    MOROIUO: 506, // モロイウオ
-    EVIL_ARMY: 511, // 悪の軍団は最強でゲス！
-    KIREAJI: 602, // キレアジ
-    QUIET_PRESSURE: 515, // 静かなプレッシャー
     ADMIRAL_COMMON: 299, // 指揮行動
-    BLUE_SKY: 510, // 蒼天
-    QUICK_RECAST: 1506, // クイックリキャスト
     DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530, // 自動追撃,
     SPECIAL_TAG: 277, // スペシャルタッグ
+    HEAVEN_AND_EARTH: 603, // 天長地久
+    FORTUNES_OF_WAR: 606, // 武運長久
     ENGAGE_LINK: 1204, // エンゲージリンク
     V_RECOVERY: 1207,  // V字回復,
     DESTROY_WORLD: 1140, // 世界を滅ぼすお手伝いでゲス！
@@ -69,8 +67,6 @@ export const ABILITY_ID = {
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
     LETS_MARCH: 1149, // いざ進軍！
     OVER_GEAR: 1405, // オーバーギア
-    ICE_MARK: 101, // 氷の印
-    THUNDER_MARK: 102, // 雷の印
 }
 
 export const COST_TYPE = {
@@ -155,6 +151,8 @@ export const BUFF = {
     THUNDER_MARK: 47, // 雷の印
     ETERNAL_FRAGILE: 48, // 永続脆弱
     HEALEP: 52, // EP回復
+    STEAK: 53, // ステーキ
+    GELATO: 54, // ジェラート
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
@@ -179,6 +177,7 @@ export const EFFECT = {
     MORALE: 16, // 士気
     GIVEATTACKBUFFUP: 17, // 攻撃力バフ強化
     GIVEDEFFENCEDEBUFFUP: 18, // 防御力デバフ強化
+    GIVEDEBUFFUP: 19, // デバフ強化
     BREAK_GUARD: 20, // ブレイクガード
     STUN: 21, // スタン
     MISFORTUNE: 22, // 厄
@@ -205,6 +204,7 @@ export const EFFECT = {
     ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
+    COST_SP_UP: 56, // 消費SPアップ
 }
 
 /** フィールド */
@@ -268,6 +268,8 @@ export const CONDITIONS = {
     TARGET_COVER: 13, // 集中・挑発状態
     FIELD_NONE: 14, // フィールドなし
     FIELD_ELEMENT: 15, // 属性フィールド
+    ICE_STYLE: 16, // 氷属性スタイル
+    THUNDER_STYLE: 17, // 雷属性スタイル
     HAS_ABILITY: 20, // アビリティ発動中
     HAS_CHARGE: 21, // チャージ中
     HAS_SHADOW: 22, // 影分身中
@@ -276,7 +278,7 @@ export const CONDITIONS = {
     DP_OVER_100: 25, // DP100％以上
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
     SARVANT_OVER: 27, // 山脇様のしもべ
-    FIRE_MARK: 28, // 火の印
+    FIRE_STYLE: 28, // 火属性スタイル
     NOT_ADDITIONAL_TURN: 29, // 追加ターン以外
     MORALE_OVER_LV: 30, // 士気Lv以上
     OVER_31A_3: 31, // 31A3人以上
@@ -292,6 +294,8 @@ export const CONDITIONS = {
     HAS_MAEKUP: 45, // メイクアップ状態
     HAS_PASSIVE: 47, // パッシブ発動中
     MOTIVATION: 46, // やる気状態
+    COST_SP_UNDER: 47, // 消費SP指定値以下
+    COST_SP_OVER: 48, // 消費SP指定値以上
     ENEMY_COUNT: 51, // 敵数指定
     USE_COUNT: 52, // 回数以降
 }
@@ -360,6 +364,14 @@ export const JEWEL_TYPE = {
     FOCUS_DAMAGE_DOWN: 6,
     DAMAGE_DOWN: 7,
 }
+export const RANGE_ALL_ABILITY = [
+    EFFECT.COST_SP_DOWN,
+    EFFECT.COST_SP_UP,
+    EFFECT.GIVEATTACKBUFFUP,
+    EFFECT.GIVEDEFFENCEDEBUFFUP,
+    EFFECT.GIVEDEBUFFUP,
+    EFFECT.FIELD_STRENGTHEN,
+];
 
 export const JEWEL_EXPLAIN = {
     1: "スキルダメージの威力を上げる",

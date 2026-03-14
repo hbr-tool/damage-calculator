@@ -6,7 +6,7 @@ import {
     DEBUFF_LIST, KIND_ATTACKUP, KIND_DEFENSEDOWN,
     getCharaIdToMember, getCharaIdToTroopKbn, getEffectSize, getStatUp, getStatus, getCostVariable
 } from "./logic";
-import { getSkillData, getPassiveInfo, getAbilityInfo } from "utils/common";
+import { getSkillData, getPassiveInfo, getPassiveEffectList, getAbilityInfo, getAbilityEffectList } from "utils/common";
 import { BuffLineChart, DebuffLineChart } from "./SimpleLineChart";
 import { CHARA_ID, JEWEL_TYPE } from "utils/const";
 
@@ -75,8 +75,12 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
                 return Object.values(abilitySettingMap)
                     .filter(ability => ability.chara_id === charaId)
                     .filter(ability => {
-                        const abilityInfo = getAbilityInfo(ability.ability_id);
-                        return abilityInfo.effect_type === effectType;
+                        for (const abilityEffect of getAbilityEffectList(ability.ability_id)) {
+                            if (abilityEffect.effect_type === effectType) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
             }
         }
@@ -89,8 +93,12 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
                 return Object.values(passiveSettingMap)
                     .filter(passive => passive.chara_id === charaId)
                     .filter(passive => {
-                        const passiveInfo = getPassiveInfo(passive.skill_id);
-                        return passiveInfo.effect_type === effectType;
+                        for (const passiveEffect of getPassiveEffectList(passive.passive_id)) {
+                            if (passiveEffect.effect_type === effectType) {
+                                return true;
+                            }
+                        }
+                        return false;
                     });
             }
         }
@@ -112,7 +120,13 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     // 消費SP
     let spCost = 0;
     if (skillInfo.cost_type === COST_TYPE.SP) {
-        spCost = getCostVariable(skillInfo.use_cost, buffSetting.collect, memberInfo, abilitySettingMap, passiveSettingMap);
+        const handlers = {
+            collect: buffSetting.collect,
+            skillInfo, styleList,
+            memberInfo,
+            abilitySettingMap, passiveSettingMap
+        };
+        spCost = getCostVariable(handlers);
     }
 
     // バフ強化
