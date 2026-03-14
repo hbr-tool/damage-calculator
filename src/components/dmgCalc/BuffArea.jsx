@@ -769,6 +769,10 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                             continue;
                         }
                     }
+                    if (abilityEffect.effect_type === EFFECT.FIELD_DEPLOYMENT) {
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FIELD, 0, abilityEffect.effect_size);
+                        continue;
+                    }
                     if (!constants.RANGE_ALL_ABILITY.includes(abilityEffect.effect_type)) {
                         if (abilityInfo.range_area === RANGE.SELF && charaId !== attackCharaId) continue;
                     }
@@ -804,10 +808,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                 if (attackMemberInfo) {
                     if (!logic.isElementInclude(attackMemberInfo.styleInfo, passiveInfo.target_element)) return;
                 }
-                if (passiveInfo.effect_type === EFFECT.FIELD_DEPLOYMENT) {
-                    addBuffAbility("passive", skill.skill_id, charaId, passiveInfo.passive_name, BUFF.FIELD, 0, passiveInfo.effect_size);
-                    return
-                }
+
                 const passiveEffectList = common.getPassiveEffectList(skill.skill_id);
                 let isAddPassive = false;
                 for (const passiveEffect of passiveEffectList) {
@@ -820,6 +821,10 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                         if (!SUB_TARGET_KIND.includes(passiveEffect.effect_type)) {
                             continue;
                         }
+                    }
+                    if (passiveEffect.effect_type === EFFECT.FIELD_DEPLOYMENT) {
+                        addBuffAbility("passive", skill.skill_id, charaId, passiveInfo.passive_name, BUFF.FIELD, 0, passiveEffect.effect_size);
+                        continue;
                     }
                     isAddPassive = true;
                 }
