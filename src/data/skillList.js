@@ -629,6 +629,7 @@ const skilLlist = [
     {"skill_id":728,"skill_name":"サーブド・アメイジング","chara_id":37,"style_id":200,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
     {"skill_id":729,"skill_name":"至高のポーノ","chara_id":41,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
     {"skill_id":730,"skill_name":"感嘆必至のボナペティート","chara_id":41,"style_id":201,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
+    {"skill_id":731,"skill_name":"丹精","chara_id":48,"style_id":0,"cost_type":"SP","use_cost":6,"skill_active":0,"skill_kind":0},
     {"skill_id":8001,"skill_name":"チャージ","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8002,"skill_name":"心眼","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
     {"skill_id":8003,"skill_name":"連撃＋","chara_id":501,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":0,"skill_kind":9},
