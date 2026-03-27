@@ -1,0 +1,27 @@
+const resonanceList = [
+    {"resonance_id":1,"resonance_name":"Beat Down, Rise Up","resonance_text":"バトル開始時、自身のDPを{0}%まで回復(出撃中1回)"},
+    {"resonance_id":2,"resonance_name":"Love and Peace","resonance_text":"開幕3ターン目まで 自身の防御力+{0}%"},
+    {"resonance_id":3,"resonance_name":"Failure Is Not an Option","resonance_text":"敵にダメージを与えるスキルの使用回数+{0}(回数限定除く)"},
+    {"resonance_id":4,"resonance_name":"Faith","resonance_text":"バトル開始時 自身の士気レベルを{0}上昇(最大レベル10)"},
+    {"resonance_id":5,"resonance_name":"Fly High!","resonance_text":"自身の破壊率上昇量+{0}%かつ スキル攻撃力+{1}%"},
+    {"resonance_id":6,"resonance_name":"Get it together!","resonance_text":"自身がかける防御力ダウンの効果量+{0}%"},
+    {"resonance_id":7,"resonance_name":"We Live Better","resonance_text":"自身がかけるスキル攻撃力アップの効果量+{0}%"},
+    {"resonance_id":8,"resonance_name":"Excelsior","resonance_text":"自身の攻撃で敵をブレイクしたとき ODゲージ+{0}%"},
+    {"resonance_id":9,"resonance_name":"暗躍","resonance_text":"自身のスキル攻撃力+{0}%"},
+    {"resonance_id":10,"resonance_name":"ムクワス","resonance_text":"バトル勝利時 味方全体の氷属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
+    {"resonance_id":11,"resonance_name":"ザクースカ","resonance_text":"バトル勝利時 味方全体の火属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
+    {"resonance_id":12,"resonance_name":"つめとぎ","resonance_text":"自身のスキル攻撃力+{0}%"},
+    {"resonance_id":13,"resonance_name":"素敵な夜","resonance_text":"バトル開始時 自身をモクテル状態にする(回復量{0}%)"},
+    {"resonance_id":14,"resonance_name":"Q.E.D. ","resonance_text":"自身以外の味方のアクティブスキルによって自身のSPが上昇したとき ODゲージ+{0}%"},
+    {"resonance_id":15,"resonance_name":"フィーバー・サマータイム","resonance_text":"ターン開始時自身のDPが50％以上のとき、自身がかけるスキル攻撃力アップの効果量+{0}%"},
+    {"resonance_id":16,"resonance_name":"毛づくろい","resonance_text":"OD中に自身がかける防御力ダウンの効果量+{0}%"},
+    {"resonance_id":17,"resonance_name":"ホーリーグレイス","resonance_text":"ターン開始時 前衛にいるとオーバードライブゲージ+{0}%"},
+    {"resonance_id":18,"resonance_name":"ライブブースト","resonance_text":"自身のスキル攻撃力+{0}%"},
+    {"resonance_id":19,"resonance_name":"ブレイズ・エンジン","resonance_text":"OD中に自身がかけるスキル攻撃力アップの効果量+{0}%"},
+    {"resonance_id":20,"resonance_name":"ディスチャージ","resonance_text":"行動開始時 自身のDPが50％以上のとき 自身がかける防御力ダウンの効果量+{0}%"},
+    {"resonance_id":21,"resonance_name":"忠義","resonance_text":"初戦開始時 自身を山脇様のしもべ状態にし 防御力を常時+{1}%"},
+    {"resonance_id":22,"resonance_name":"フレンチフライ","resonance_text":"バトル勝利時 味方全体の雷属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
+    {"resonance_id":23,"resonance_name":"エスプレッソ","resonance_text":"バトル勝利時 味方全体の光属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
+];
+
+export default resonanceList;

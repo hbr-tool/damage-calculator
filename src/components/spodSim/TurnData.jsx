@@ -233,7 +233,7 @@ const TurnData = React.memo(({ turn, index, activeTurnNumber, isLastTurn, hideMo
         let turnData = deepClone(turn);
         startAction(turnData);
         // ターン開始処理
-        handlers.proceedTurn(turnData, true);
+        handlers.proceedTurn(turnData);
     };
 
     /* eslint-disable react-hooks/exhaustive-deps */

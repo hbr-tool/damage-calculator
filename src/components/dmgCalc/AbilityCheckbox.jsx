@@ -5,45 +5,48 @@ import * as common from 'utils/common';
 const AbilityCheckbox = ({ attackInfo, abilityList, abilitySettingMap, handleAbilityChange, rengeArea }) => {
     if (!attackInfo) return null;
     const kindAbilityList = abilityList.filter(ability => {
-        if (common.getAbilityEffectList(ability.ability_id).some(effect => constants.RANGE_ALL_ABILITY.includes(effect.effect_type))) {
+        const abilityEffectList = common.getAbilityEffectList(ability.ability_id);
+        if (abilityEffectList.some(effect => { constants.RANGE_ALL_ABILITY.includes(effect.effect_type) })) {
             return rengeArea === 3;
         }
-        switch (ability.range_area) {
-            case constants.RANGE.SELF:
-                if (rengeArea !== 0) {
-                    return false;
-                }
-                break;
-            case constants.RANGE.ALLY_FRONT:
-            case constants.RANGE.ALLY_BACK:
-            case constants.RANGE.ALLY_ALL:
-            case constants.RANGE.ENEMY_ALL:
-            case constants.RANGE.OTHER:
-                switch (ability.activation_place) {
-                    case 1: // 前衛
-                        if (rengeArea !== 1) {
-                            return false;
-                        }
-                        break;
-                    case 2: // 後衛
-                        if (rengeArea !== 2) {
-                            return false;
-                        }
-                        break;
-                    case 3: // 全体
-                    case 0: // その他
-                        if (rengeArea !== 3) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            default:
-                break;
-        }
-        return true;
+        return abilityEffectList.some(effect => {
+            switch (effect.range_area) {
+                case constants.RANGE.SELF:
+                    if (rengeArea !== 0) {
+                        return false;
+                    }
+                    break;
+                case constants.RANGE.ALLY_FRONT:
+                case constants.RANGE.ALLY_BACK:
+                case constants.RANGE.ALLY_ALL:
+                case constants.RANGE.ENEMY_ALL:
+                case constants.RANGE.OTHER:
+                    switch (ability.activation_place) {
+                        case 1: // 前衛
+                            if (rengeArea !== 1) {
+                                return false;
+                            }
+                            break;
+                        case 2: // 後衛
+                            if (rengeArea !== 2) {
+                                return false;
+                            }
+                            break;
+                        case 3: // 全体
+                        case 0: // その他
+                            if (rengeArea !== 3) {
+                                return false;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        });
     });
 
     return (

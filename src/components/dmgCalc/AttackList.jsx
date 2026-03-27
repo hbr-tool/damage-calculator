@@ -128,7 +128,9 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
                     <label className="checkbox01" htmlFor="skill_special_display">
                         EXスキル以外を非表示にする
                     </label>
-                    <input type="button" className="w-20 ml-12 default" value="スキル詳細" onClick={() => setModal(true)} />
+                    {attackInfo &&
+                        <input type="button" className="w-20 ml-12 default" value="スキル詳細" onClick={() => setModal(true)} />
+                    }
                 </div>
                 <SkillUnique attackInfo={attackInfo} setAttackInfo={setAttackInfo} />
             </div>

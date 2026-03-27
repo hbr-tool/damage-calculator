@@ -29,6 +29,8 @@ export const SKILL_ID = {
     PIRATES_CANON: 478, // 豪快！パイレーツキャノン
     WAKING_NIGHT: 495, // 夜醒
     MEDITATION: 501, // メディテーション
+    GOOD_PAIN: 524, // 痛気持ちいぃ～！
+    RICE_FIELD: 525, // いつの日かここで
     SOUND_OF_CROWS: 578, // カラスの鳴き声で
     MEGA_DESTROYER: 623, // メガデストロイヤー
     CAT_JET_SHOOTING: 633, // ネコジェットシャテキ
@@ -60,12 +62,9 @@ export const ABILITY_ID = {
     SPECIAL_TAG: 277, // スペシャルタッグ
     HEAVEN_AND_EARTH: 603, // 天長地久
     FORTUNES_OF_WAR: 606, // 武運長久
-    ENGAGE_LINK: 1204, // エンゲージリンク
     V_RECOVERY: 1207,  // V字回復,
-    DESTROY_WORLD: 1140, // 世界を滅ぼすお手伝いでゲス！
     CONQUER_WORLD: 1209,// 世界征服の始まりでゲス！
     GREAT_OFFENSIVE: 1215, // 魔王軍の大攻勢！
-    LETS_MARCH: 1149, // いざ進軍！
     OVER_GEAR: 1405, // オーバーギア
 }
 
@@ -90,7 +89,7 @@ export const ROLE = {
     DEFENDER: 7,
     ADMIRAL: 8,
 }
-/** フィールド */
+/** 属性 */
 export const ELEMENT = {
     NORMAL: 0, // 通常
     FIRE: 1, // 火
@@ -98,6 +97,11 @@ export const ELEMENT = {
     THUNDER: 3, // 雷
     LIGHT: 4, // 光
     DARK: 5, // 闇
+    NOT_FIRE: 11, // 火以外
+    NOT_ICE: 12, // 氷以外
+    NOT_THUNDER: 13, // 雷以外
+    NOT_LIGHT: 14, // 光以外
+    NOT_DARK: 15, // 闇以外
 }
 
 /** バフ種別 */
@@ -150,6 +154,8 @@ export const BUFF = {
     ICE_MARK: 46, // 氷の印
     THUNDER_MARK: 47, // 雷の印
     ETERNAL_FRAGILE: 48, // 永続脆弱
+    LIGHT_MARK: 49, // 光の印
+    DARK_MARK: 50, // 闇の印
     HEALEP: 52, // EP回復
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
@@ -166,7 +172,7 @@ export const EFFECT = {
     DAMAGERATEUP: 5, // 破壊率上昇量アップ
     FUNNEL: 6, // 連撃数アップ
     FIELD_DEPLOYMENT: 7, // フィールド展開
-    CHARGE: 8, // チャージ
+    GRANT_BUFF: 8, // バフ付与
     OVERDRIVE_SP: 9, // ODSPアップ
     FUNNEL_ALWAYS: 10, // 連撃数(永続)アップ
     DEFFENCEUP: 11, // 防御力アップ
@@ -181,7 +187,6 @@ export const EFFECT = {
     BREAK_GUARD: 20, // ブレイクガード
     STUN: 21, // スタン
     MISFORTUNE: 22, // 厄
-    ARROWCHERRYBLOSSOMS: 23, // 桜花の矢
     SHADOW_CLONE: 24, // 影分身
     STATUSUP_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
@@ -192,16 +197,10 @@ export const EFFECT = {
     TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
     YAMAWAKI_SERVANT: 39, // 山脇様のしもべ
-    HIGH_BOOST: 40, // ハイブースト状態
-    MAKEUP: 41, // メイクアップ
-    FIRE_MARK: 43, // 火の印 
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
-    ICE_MARK: 46, // 氷の印
-    THUNDER_MARK: 47, // 雷の印
-    NEGATIVE: 51, // ネガティブ
     HEALEP: 52, // EP回復
-    ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
+    // ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
@@ -268,17 +267,18 @@ export const CONDITIONS = {
     TARGET_COVER: 13, // 集中・挑発状態
     FIELD_NONE: 14, // フィールドなし
     FIELD_ELEMENT: 15, // 属性フィールド
-    ICE_STYLE: 16, // 氷属性スタイル
-    THUNDER_STYLE: 17, // 雷属性スタイル
+    ICE_STYLE: 16, // 氷属性スタイルN人以上
+    THUNDER_STYLE: 17, // 雷属性スタイルN人以上
+    LIGHT_STYLE: 18, // 光属性スタイルN人以上
+    DARK_STYLE: 19, // 闇属性スタイルN人以上
     HAS_ABILITY: 20, // アビリティ発動中
-    HAS_CHARGE: 21, // チャージ中
     HAS_SHADOW: 22, // 影分身中
     HAS_DODGE: 23, // 回避状態
     TOKEN_OVER: 24, // トークン4つ以上
     DP_OVER_100: 25, // DP100％以上
     SP_UNDER_0_ALL: 26, // SP0以下の味方がいる
-    SARVANT_OVER: 27, // 山脇様のしもべ
-    FIRE_STYLE: 28, // 火属性スタイル
+    SARVANT_OVER: 27, // 山脇様のしもべN人以上
+    FIRE_STYLE: 28, // 火属性スタイルN人以上
     NOT_ADDITIONAL_TURN: 29, // 追加ターン以外
     MORALE_OVER_LV: 30, // 士気Lv以上
     OVER_31A_3: 31, // 31A3人以上
@@ -291,13 +291,16 @@ export const CONDITIONS = {
     DIVA_BLESS: 42, // 歌姫の加護
     NOT_DIVA_BLESS: 43, // 歌姫の加護以外
     NOT_NEGATIVE: 44, // ネガティブ以外
-    HAS_MAEKUP: 45, // メイクアップ状態
-    HAS_PASSIVE: 47, // パッシブ発動中
+    HAS_PASSIVE: 45, // パッシブ発動中
     MOTIVATION: 46, // やる気状態
     COST_SP_UNDER: 47, // 消費SP指定値以下
     COST_SP_OVER: 48, // 消費SP指定値以上
+    HAS_BUFF_TARGET: 49, // バフ発動中の味方を対象
+    HAS_BUFF: 50, // バフ発動中
     ENEMY_COUNT: 51, // 敵数指定
     USE_COUNT: 52, // 回数以降
+    SP_UNDER: 53, // 現在SP指定値以下
+    SP_OVER: 54, // 現在SP指定値以上
 }
 
 /** 敵リスト*/

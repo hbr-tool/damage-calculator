@@ -1,10 +1,11 @@
 
 import React, { useState } from "react";
 import ReactModal from "react-modal";
-import { ROLE, BUFF, RANGE } from "utils/const";
+import { ROLE, BUFF } from "utils/const";
+import * as constants from "utils/const";
+import * as common from "utils/common";
 import { ABILIRY_TIMING, NOT_USE_STYLE, CONSTRAINTS_ABILITY, CONSTRAINTS_PASSIVE } from "./const";
-import { checkPassiveExist, recreateTurnData, initTurn, abilityAction, setUserOperation } from "./logic";
-import { getCharaData, getEnemyInfo, getPassiveInfo, getAbilityInfo, getPassiveEffectList, getAbilityEffectList, getResonanceInfo, deepClone } from "utils/common";
+import { checkPassiveExist, recreateTurnData, startTurn, abilityAction, setUserOperation } from "./logic";
 import { useStyleList } from "components/StyleListProvider";
 import skillList from "data/skillList";
 import CharaSetting from "./CharaSetting";
@@ -49,7 +50,7 @@ const reducer = (state, action) => {
         }
         case "UPDATE_TURN":
             let turnList = [...state.turnList];
-            turnList[action.payload] = deepClone(action.turnData);
+            turnList[action.payload] = common.deepClone(action.turnData);
             return {
                 ...state,
                 turnList: turnList
@@ -81,7 +82,14 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         finishAction: false,
         field: 0,
         fieldTurn: 0,
-        userOperation: {}
+        userOperation: {},
+        log: [],
+        setLog: function (msg) {
+            this.log.push(msg);
+        },
+        setInitTurn: function (msg) {
+            this.log.push(msg);
+        },
     }
     let unitList = [];
     let constraintsAbility = [];
@@ -123,7 +131,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         if (member) {
             saveStyle(member);
 
-            unit.style = deepClone(member);
+            unit.style = common.deepClone(member);
             unit.sp = member.initSp;
             unit.sp += member.chain + initSpAdd;
             unit.normalAttackElement = member.bracelet;
@@ -134,7 +142,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                 obj.skill_active === 0 &&
                 !member.exclusionSkillList.includes(obj.skill_id)
             ).map(obj => {
-                const copiedObj = deepClone(obj);
+                const copiedObj = common.deepClone(obj);
                 if (copiedObj.chara_id === 0) {
                     copiedObj.chara_id = member.styleInfo.chara_id;
                 }
@@ -159,25 +167,28 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             Object.values(ABILIRY_TIMING).forEach(timing => {
                 unit[`ability_${timing}`] = [];
             });
-            ["0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
-                const num = parseInt(numStr, 10);
+            ["_orgn", "0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
+                let num = parseInt(numStr, 10);
+                if (!num) {
+                    num = 0;
+                }
                 if (member.styleInfo[`ability${numStr}`] && num <= member.limitCount) {
                     let abilityId = member.styleInfo[`ability${numStr}`];
                     if (CONSTRAINTS_ABILITY.includes(abilityId)) {
                         constraintsAbility.push(abilityId);
                     }
-                    let abilityInfo = getAbilityInfo(member.styleInfo[`ability${numStr}`]);
+                    let abilityInfo = common.getAbilityInfo(member.styleInfo[`ability${numStr}`]);
                     if (!abilityInfo) {
                         return;
                     }
 
-                    let abilityList = getAbilityEffectList(abilityId);
+                    let abilityList = common.getAbilityEffectList(abilityId);
                     abilityList.forEach(abilityEffect => {
                         abilityEffect = {
                             ...abilityEffect,
                             ...abilityInfo
                         };
-                        unit[`ability_${abilityInfo.activation_timing}`].push(abilityEffect);
+                        unit[`ability_${abilityEffect.activation_timing}`].push(abilityEffect);
                     });
                 }
             });
@@ -185,29 +196,34 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                 if (CONSTRAINTS_PASSIVE.includes(skill.skill_id)) {
                     constraintsPassive.push(skill.skill_id);
                 }
-                let passiveInfo = getPassiveInfo(skill.skill_id);
+                let passiveInfo = common.getPassiveInfo(skill.skill_id);
                 if (!passiveInfo) {
                     return;
                 }
-                let passiveList = getPassiveEffectList(skill.skill_id);
+                let passiveList = common.getPassiveEffectList(skill.skill_id);
                 passiveList.forEach(passiveEffect => {
                     passiveEffect = {
                         ...passiveEffect,
                         ...passiveInfo
                     };
-                    unit[`ability_${passiveInfo.activation_timing}`].push(passiveEffect);
+                    unit[`ability_${passiveEffect.activation_timing}`].push(passiveEffect);
                 });
             });
             // レゾナンス判定
             if (member.styleInfo.resonance === 1 && member.supportStyleId) {
                 const support = member.support;
                 if (support?.styleInfo.ability_resonance) {
-                    const resonance = deepClone(getResonanceInfo(support.styleInfo.ability_resonance));
-                    if (resonance.activation_timing !== null) {
-                        resonance.ability_name = resonance.resonance_name;
-                        resonance.range_area = RANGE.SELF;
-                        resonance.effect_size = resonance[`effect_limit_${support.limitCount}`];
-                        unit[`ability_${resonance.activation_timing}`].push(resonance);
+                    let resonanceInfo = common.getResonanceInfo(support.styleInfo.ability_resonance);
+                    let resonanceList = common.getResonanceEffectList(support.styleInfo.ability_resonance);
+                    for (let resonanceEffect of resonanceList) {
+                        if (resonanceEffect.activation_timing !== undefined) {
+                            const resonance = common.deepClone(resonanceEffect);
+                            resonance.ability_name = resonanceInfo.resonance_name;
+                            resonance.element = constants.ELEMENT.NORMAL;
+                            resonance.range_area = constants.RANGE.SELF;
+                            resonance.effect_size = resonanceEffect[`effect_limit_${support.limitCount}`];
+                            unit[`ability_${resonanceEffect.activation_timing}`].push(resonance);
+                        }
                     }
                 }
             }
@@ -250,6 +266,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
     turnInit.unitList = unitList;
     turnInit.enemyInfo = enemyInfo;
     // 戦闘開始アビリティ
+    turnInit.setLog("■戦闘開始");
     abilityAction(ABILIRY_TIMING.BATTLE_START, turnInit);
     setUserOperation(turnInit);
 
@@ -262,7 +279,7 @@ const checkStartBattle = (styleList) => {
     for (let i = 0; i < styleList.selectStyleList.length; i++) {
         let style = styleList.selectStyleList[i]?.styleInfo;
         if (NOT_USE_STYLE.includes(style?.style_id)) {
-            let chara_data = getCharaData(style.chara_id);
+            let chara_data = common.getCharaData(style.chara_id);
             alert(`[${style.style_name}]${chara_data.chara_name}は現在使用できません。`);
             return false;
         }
@@ -299,7 +316,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         turnList: [],
         enemyInfo: {}
     });
-    let enemyInfo = getEnemyInfo(enemyClass, enemySelect);
+    let enemyInfo = common.getEnemyInfo(enemyClass, enemySelect);
 
     // 戦闘開始前処理
     const startBattle = (update, setUpdate, setConstraintsAbility, setConstraintsPassive) => {
@@ -314,7 +331,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         // 制約事項更新
         setUpdate(update + 1);
         // 初期処理
-        initTurn(turnInit, true);
+        startTurn(turnInit);
         let turnList = [turnInit];
         dispatch({ type: "INIT_TURN_LIST", turnList: turnList });
         setSettingUpdate(true);
@@ -376,6 +393,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         recreateTurnData(turnList, turnInit, saveData.userOperationList, true);
         // 画面反映
         dispatch({ type: "INIT_TURN_LIST", turnList: turnList });
+        setSettingUpdate(true);
     }
 
     const [detailSetting, setDetailSetting] = React.useState({

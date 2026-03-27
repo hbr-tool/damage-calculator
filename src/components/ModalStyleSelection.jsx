@@ -64,18 +64,18 @@ const ModalStyleSelection = ({ index, narrowStyle, setNarrowStyle, clickSetMembe
         if (!CHECK_BUFF_LIST.includes(buff_info.buff_kind)) {
             return true;
         }
-        let target_out_range = []
+        let targetOutRange = []
         switch (narrowStyle.target) {
             case "self":
-                target_out_range = [RANGE.SELF_OTHER, RANGE.ALLY_BACK, RANGE.FRONT_OTHER, RANGE.OTHER_UNIT];
+                targetOutRange = [RANGE.SELF_OTHER, RANGE.ALLY_BACK, RANGE.FRONT_OTHER, RANGE.OTHER_UNIT];
                 break;
             case "other":
-                target_out_range = [RANGE.SELF, RANGE.FRONT_OTHER];
+                targetOutRange = [RANGE.SELF, RANGE.FRONT_OTHER];
                 break;
             default:
                 break;
         }
-        return !target_out_range.includes(buff_info.range_area);
+        return !targetOutRange.includes(buff_info.range_area);
     }
 
     return (

@@ -1,17 +1,22 @@
 import React from 'react';
+import * as common from "utils/common";
 
-const Resonance = ({ resonanceList}) => {
+const Resonance = ({ resonanceList }) => {
     return (
         <>
             {resonanceList.map((resonance, index) => {
                 const name = resonance.charaName;
                 const limitCount = resonance.limitCount;
-                const text = resonance.resonance_text;
-                const effectSize = resonance[`effect_limit_${limitCount}`];
+                const resonanceEffectList = common.getResonanceEffectList(resonance.resonance_id);
+                let effectText = resonance.resonance_text;
+                for (const resonanceEffect of resonanceEffectList) {
+                    const placeholder = `{${resonanceEffect.item_no}}`;
+                    effectText = effectText.replaceAll(placeholder, resonanceEffect[`effect_limit_${limitCount}`]);
+                }
                 return (
                     <div key={index}>
                         <label >
-                            {`${name}: ${resonance.resonance_name} (${text.replaceAll("{0}", effectSize)})`}
+                            {`${name}: ${resonance.resonance_name} (${effectText})`}
                         </label>
                     </div>
                 )

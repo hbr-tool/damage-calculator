@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactModal from "react-modal";
 import TurnData from "./TurnData";
 import ModalSaveLoad from "./ModalSaveLoad";
-import { initTurn } from "./logic";
+import ModalLogHistory from "./ModalLogHistory";
+import { startTurn } from "./logic";
 import domtoimage from 'dom-to-image';
 
 const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData, update, setUpdate }) => {
@@ -84,9 +85,9 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
     };
 
     // ターンを進める
-    const proceedTurn = (turnData, isInitTurn) => {
+    const proceedTurn = (turnData) => {
         // ターン開始処理
-        initTurn(turnData, isInitTurn);
+        startTurn(turnData);
         // 次ターン追加
         dispatch({ type: 'ADD_TURN_LIST', payload: turnData });
     }
@@ -141,6 +142,7 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                             <input type="checkbox" className="switch" id="mode_switch" onChange={(e) => changeHideMode(e)} /><label htmlFor="mode_switch">設定画面を隠す</label>
                         </div>
                         <div>
+                            <input type="button" id="btnSave" value="ログ" onClick={() => openModal("log")} />
                             <input type="button" id="btnSave" value="保存" onClick={() => openModal("save")} />
                             <input type="button" id="btnLoad" value="読込" onClick={() => openModal("load")} />
                             <input type="button" id="btnDownload" value="画像として保存" onClick={clickDownload} />
@@ -161,7 +163,12 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                     className={"modal-content modal-narrwow " + (modal.isOpen ? "modal-content-open" : "")}
                     overlayClassName={"modal-overlay " + (modal.isOpen ? "modal-overlay-open" : "")}
                 >
-                    <ModalSaveLoad mode={modal.mode} handleClose={closeModal} turnList={turnList} loadData={loadData} update={update} setUpdate={setUpdate} />
+                    {
+                        modal.mode === "log" && <ModalLogHistory turnData={turnList[activeTurnNumber - 1]} />
+                    }
+                    {
+                        modal.mode !== "log" && <ModalSaveLoad mode={modal.mode} handleClose={closeModal} turnList={turnList} loadData={loadData} update={update} setUpdate={setUpdate} />
+                    }
                 </ReactModal>
             }
         </div>
