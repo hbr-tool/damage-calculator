@@ -1012,6 +1012,9 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
                 });
             });
             break;
+        case BUFF.OVERDRIVEPOINTUP: // OD増加
+            isLogOutput = false;
+            break;
         default:
             break;
     }
@@ -2174,6 +2177,53 @@ const getConditionName = (targetElement, conditions, conditionsId) => {
 
     if (!conditions) return "";
     switch (Number(conditions)) {
+        case CONDITIONS.FIRST_TURN:
+            return `1ターン目のみ`;
+        case CONDITIONS.SKILL_INIT:
+            return `初回のみ`;
+        case CONDITIONS.ADDITIONAL_TURN:
+            return `追加ターン中`;
+        case CONDITIONS.OVER_DRIVE:
+            return `オーバードライブ中`;
+        case CONDITIONS.DESTRUCTION_OVER_200:
+            return `破壊率200%以上の時`;
+        case CONDITIONS.BREAK:
+            return `ブレイク時`;
+        case CONDITIONS.PERCENTAGE_30:
+            return `確率30%で`;
+        case CONDITIONS.BUFF_DISPEL:
+            return `バフ解除時`;
+        case CONDITIONS.FIELD_NONE:
+            return `フィールド無しの時`;
+        case CONDITIONS.FIELD_ELEMENT:
+            return `属性フィールド展開中の時`;
+        case CONDITIONS.HAS_ABILITY:
+            const ability = common.getAbilityInfo(conditionsId);
+            return `${ability.ability_name}が発動している時`;
+        case CONDITIONS.HAS_SHADOW:
+            return `影分身の時`;
+        case CONDITIONS.HAS_DODGE:
+            return `回避状態の時`;
+        case CONDITIONS.TOKEN_OVER:
+            return `トークンが${conditionsId}個以上の時`;
+        case CONDITIONS.SARVANT_OVER:
+            return `山脇様のしもべ${conditionsId}人以上の時`;
+        case CONDITIONS.NOT_ADDITIONAL_TURN:
+            return `追加ターン中でない時`;
+        case CONDITIONS.MORALE_OVER_LV:
+            return `士気Lv${conditionsId}以上の時`;
+        case CONDITIONS.OVER_31C_3:
+            return `31Cが3人以上の時`;
+        case CONDITIONS.SELECT_31A:
+            return `31Aを選択した時`;
+        case CONDITIONS.SELECT_CHARA:
+            const chara = common.getCharaData(conditionsId);
+            return `${chara.chara_short_name}を選択した時`;
+        case CONDITIONS.NOT_DIVA_BLESS:
+            return `歌姫の加護でない時`;
+        case CONDITIONS.MOTIVATION:
+            const motivation = ["絶不調", "不調", "普通", "好調", "絶好調"][conditionsId];
+            return `やる気が${motivation}以上の時`;
         case CONDITIONS.ICE_STYLE:
             return `氷属性スタイルの味方${conditionsId}人以上の時`;
         case CONDITIONS.THUNDER_STYLE:
@@ -2184,16 +2234,16 @@ const getConditionName = (targetElement, conditions, conditionsId) => {
             return `光属性スタイルの味方${conditionsId}人以上の時`;
         case CONDITIONS.DARK_STYLE:
             return `闇属性スタイルの味方${conditionsId}人以上の時`;
-        case CONDITIONS.SARVANT_OVER:
-            return `山脇様のしもべ${conditionsId}人以上の時`;
         case CONDITIONS.HAS_BUFF_TARGET:
             return `${common.getBuffKind(conditionsId).buff_name}発動中の`;
         case CONDITIONS.HAS_BUFF:
             return `${common.getBuffKind(conditionsId).buff_name}状態の時`;
-        case CONDITIONS.FIELD_ELEMENT:
-            return `属性フィールド展開中の時`;
         case CONDITIONS.SP_UNDER:
             return `SPが${conditionsId}以下の時`;
+        case CONDITIONS.ENEMY_COUNT:
+            return `敵の数が${conditionsId}の時`;
+        case CONDITIONS.USE_COUNT:
+            return `使用回数が${conditionsId}回以上の時`;
         default:
             return conditions;
     }
