@@ -579,7 +579,7 @@ const getODPlus = (skillData, turnData, frontCostList) => {
         // 連撃、オギャり状態、チャージ処理
         const PROC_KIND = [BUFF.BABIED, BUFF.CHARGE];
         if (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind) || PROC_KIND.includes(buffInfo.buff_kind)) {
-            addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData);
+            addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData, false);
         }
     }
     let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
@@ -614,7 +614,7 @@ const getODPlus = (skillData, turnData, frontCostList) => {
                 buffList.forEach(function (buffInfo) {
                     // 連撃のみ処理
                     if (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind)) {
-                        addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData);
+                        addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData, false);
                     }
                 });
                 let funnelList = getFunnelList(unitData);
@@ -783,7 +783,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
         case CONDITIONS.THUNDER_STYLE: // 雷属性スタイルN人以上
             let thunderCount = targetCountInclude(turnData, ELEMENT.THUNDER);
             return thunderCount >= conditionsId;
-        case CONDITIONS.ICE_STYLE: // 光属性スタイルN人以上
+        case CONDITIONS.LIGHT_STYLE: // 光属性スタイルN人以上
             let lightCount = targetCountInclude(turnData, ELEMENT.LIGHT);
             return lightCount >= conditionsId;
         case CONDITIONS.DARK_STYLE: // 闇属性スタイルN人以上
@@ -814,7 +814,7 @@ function getFieldElement(turnData) {
 }
 
 // バフを追加
-function addBuffUnit(turnData, buffInfo, placeNo, useUnitData) {
+function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = true) {
     // 条件判定
     if (buffInfo.conditions) {
         if (!judgmentCondition(buffInfo.conditions, buffInfo.conditions_id, turnData, useUnitData, buffInfo.skill_id)) {
@@ -1016,22 +1016,23 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData) {
             break;
     }
 
-    let effectDesc = common.getBuffKind(buffInfo.buff_kind).buff_name;
-    let rangeName = getRangeName(buffInfo.range_area);
-    let conditionName = getConditionName(buffInfo.target_element, buffInfo.conditions, Number(buffInfo.conditions_id));
-    let log = `　${conditionName}${effectDesc}`;
-    if (rangeName) {
-        log = `　${conditionName}${rangeName}に${effectDesc}`;
+    if (isLogOutput) {
+        let effectDesc = common.getBuffKind(buffInfo.buff_kind).buff_name;
+        let rangeName = getRangeName(buffInfo.range_area);
+        let conditionName = getConditionName(buffInfo.target_element, buffInfo.conditions, Number(buffInfo.conditions_id));
+        let log = `　${conditionName}${effectDesc}`;
+        if (rangeName) {
+            log = `　${conditionName}${rangeName}に${effectDesc}`;
+        }
+        if (targetList.length > 0) {
+            let nameList = targetList.map(function (target_no) {
+                let unitData = getUnitData(turnData, target_no);
+                return getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
+            });
+            log += `(対象：${nameList.join(", ")})`;
+        }
+        turnData.setLog(log);
     }
-    if (targetList.length > 0) {
-        let nameList = targetList.map(function (target_no) {
-            let unitData = getUnitData(turnData, target_no);
-            return getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
-        });
-        log += `(対象：${nameList.join(", ")})`;
-    }
-    turnData.setLog(log);
-
 }
 
 function addMoraleBuffUnit(unitData, buffInfo, useUnitData) {

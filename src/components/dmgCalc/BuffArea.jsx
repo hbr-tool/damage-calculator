@@ -696,7 +696,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
             });
             buffList.push(...newStyleBuffList);
 
-            const addBuffAbility = (kbn, skillId, charaId, skillName, buffKind, fieldElement, effectSize, effectCount = 0) => {
+            const addBuffAbility = (kbn, skillId, charaId, skillName, buffKind, fieldElement, rangeArea, effectSize, effectCount = 0) => {
                 buffList.push({
                     key: `${kbn}_${skillId}_${charaId}`,
                     skill_id: skillId,
@@ -707,7 +707,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     chara_name: charaName,
                     max_power: effectSize,
                     effect_count: effectCount,
-                    range_area: constants.RANGE.SELF,
+                    range_area: rangeArea,
                     max_lv: 1,
                     kbn: kbn
                 });
@@ -743,14 +743,14 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     if (logic.TRANSCEND_LIST.includes(abilityInfo.ability_id)) {
                         if (logic.isElementInclude(attackMemberInfo.styleInfo, abilityInfo.target_element) &&
                             abilityInfo.target_element === attackInfo?.attack_element) {
-                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALRATEUP, 0, 100, 5);
-                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALDAMAGEUP, 0, 100, 5);
+                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALRATEUP, 0, constants.RANGE.ALLY_ALL, 100, 5);
+                            addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.CRITICALDAMAGEUP, 0, constants.RANGE.ALLY_ALL, 100, 5);
                         }
                     }
                     // 鬼神
                     if (abilityInfo.ability_id === ABILITY_ID.KISHIN) {
-                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.MINDEYE, 0, 90, 3);
-                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FUNNEL, 0, 3, 25, 3);
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.MINDEYE, 0, constants.RANGE.SELF, 90, 3);
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FUNNEL, 0, constants.RANGE.SELF, 3, 25, 3);
                         return;
                     }
                 }
@@ -764,7 +764,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                         }
                     }
                     if (abilityEffect.effect_type === EFFECT.FIELD_DEPLOYMENT) {
-                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FIELD, 0, abilityEffect.effect_size);
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, BUFF.FIELD, 0, abilityEffect.range_area, abilityEffect.effect_size);
                         continue;
                     }
                     if (!constants.RANGE_ALL_ABILITY.includes(abilityEffect.effect_type)) {
@@ -772,7 +772,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     }
                     const buffType = judgeBuffType(abilityEffect);
                     if (buffType) {
-                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, buffType, abilityEffect.element, abilityEffect.effect_size);
+                        addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, buffType, abilityEffect.element, abilityEffect.range_area, abilityEffect.effect_size);
                         continue;
                     }
                     isAddAbility = true;
@@ -817,7 +817,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                         }
                     }
                     if (passiveEffect.effect_type === EFFECT.FIELD_DEPLOYMENT) {
-                        addBuffAbility("passive", skill.skill_id, charaId, passiveInfo.passive_name, BUFF.FIELD, 0, passiveEffect.effect_size);
+                        addBuffAbility("passive", skill.skill_id, charaId, passiveInfo.passive_name, BUFF.FIELD, 0, passiveEffect.range_area, passiveEffect.effect_size);
                         continue;
                     }
                     isAddPassive = true;
@@ -840,7 +840,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     const resonanceEffectList = common.getResonanceEffectList(resonanceInfo.resonance_id);
                     for (const resonanceEffect of resonanceEffectList) {
                         if (judgeBuffType(resonanceEffect)) {
-                            addBuffAbility("ability", 0, charaId, resonanceInfo.resonance_name, constants.BUFF.YAMAWAKI_SERVANT, resonanceEffect.element, resonanceEffect.effect_size);
+                            addBuffAbility("ability", 0, charaId, resonanceInfo.resonance_name, constants.BUFF.YAMAWAKI_SERVANT, resonanceEffect.element, constants.RANGE.SELF, resonanceEffect.effect_size);
                         }
                     }
                 }
