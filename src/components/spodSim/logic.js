@@ -260,6 +260,8 @@ export function getSkillIdToAttackInfo(turnData, skillId) {
 
 // 行動開始
 export function startAction(turnData) {
+    let seq = sortActionSeq(turnData);
+
     // 追加ターンフラグ削除
     if (turnData.additionalTurn) {
         turnData.additionalTurn = false;
@@ -279,8 +281,6 @@ export function startAction(turnData) {
         turnData.fieldTurn = 0;
         turnData.oldField = selectField;
     }
-
-    let seq = sortActionSeq(turnData);
     let turnOverDriveGauge = 0;
     // 攻撃後に付与されるバフ種
     const ATTACK_AFTER_LIST = [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.CRITICALRATEUP, BUFF.CRITICALDAMAGEUP, BUFF.ELEMENT_CRITICALRATEUP,
@@ -1434,6 +1434,8 @@ export const startTurn = (turnData) => {
             // ターン開始時
             abilityAction(ABILIRY_TIMING.SELF_START, turnData);
         }
+        // ターン跨ぎ時
+        abilityAction(ABILIRY_TIMING.STEP_TURN, turnData);
     }
     // 毎ターン処理
     abilityAction(ABILIRY_TIMING.EVERY_TURN, turnData);

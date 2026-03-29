@@ -190,7 +190,7 @@ const abilityEffect = [
     {"ability_id":605,"range_area":6,"activation_timing":99,"effect_type":1,"effect_size":100,"conditions":"48","conditions_id":15},
     {"ability_id":606,"range_area":6,"activation_timing":99,"effect_type":27,"effect_size":15,"conditions":"30","conditions_id":6},
     {"ability_id":607,"range_area":7,"activation_timing":99,"effect_type":0,"effect_size":0,"conditions":""},
-    {"ability_id":608,"range_area":6,"activation_timing":13,"effect_type":15,"effect_size":1,"conditions":"49","conditions_id":10},
+    {"ability_id":608,"range_area":6,"activation_timing":14,"effect_type":15,"effect_size":1,"conditions":"49","conditions_id":10},
     {"ability_id":609,"range_area":7,"activation_timing":13,"effect_type":15,"effect_size":2,"conditions":"3"},
     {"ability_id":610,"range_area":7,"activation_timing":13,"effect_type":15,"effect_size":2,"conditions":"3"},
     {"ability_id":611,"range_area":7,"activation_timing":13,"effect_type":15,"effect_size":2,"conditions":"3"},

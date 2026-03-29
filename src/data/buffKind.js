@@ -46,7 +46,7 @@ const buffKind = [
     {"buff_kbn":45,"ref_status_1":5,"ref_status_2":0,"replace_name":"SHCHI","buff_name":"シチー","buff_icon":"IconShchi"},
     {"buff_kbn":46,"ref_status_1":0,"ref_status_2":0,"replace_name":"ICE_MARK","buff_name":"氷の印","buff_icon":"IconIceMark"},
     {"buff_kbn":47,"ref_status_1":0,"ref_status_2":0,"replace_name":"THUNDER_MARK","buff_name":"雷の印","buff_icon":"IconThunderMark"},
-    {"buff_kbn":48,"ref_status_1":6,"ref_status_2":5,"replace_name":"ETERNAL_FRAGILE","buff_name":"永続脆弱","buff_icon":""},
+    {"buff_kbn":48,"ref_status_1":6,"ref_status_2":5,"replace_name":"ETERNAL_FRAGILE","buff_name":"永続脆弱","buff_icon":"IconFragile"},
     {"buff_kbn":49,"ref_status_1":0,"ref_status_2":0,"replace_name":"LIGHT_MARK","buff_name":"光の印","buff_icon":"IconLightMark"},
     {"buff_kbn":50,"ref_status_1":0,"ref_status_2":0,"replace_name":"DARK_MARK","buff_name":"闇の印","buff_icon":"IconDarkMark"},
     {"buff_kbn":52,"ref_status_1":0,"ref_status_2":0,"replace_name":"HEALEP","buff_name":"EP回復","buff_icon":""},

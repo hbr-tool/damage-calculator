@@ -15,6 +15,7 @@ export const ABILIRY_TIMING = {
     SKILL_USE: 11,
     HEAL_SP: 12,
     EVERY_TURN: 13,
+    STEP_TURN: 14,
     OTHER: 99,
 }
 
