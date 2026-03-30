@@ -303,7 +303,7 @@ export function startAction(turnData) {
                 addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData);
             }
         }
-        const unitOdPlus = getODPlus(skillData, turnData, frontCostList);
+        const unitOdPlus = getODPlus(skillData, turnData, frontCostList, false);
         if (unitOdPlus > 0) {
             log = `　OverDriveゲージ+${unitOdPlus}%`;
             turnData.setLog(log);
@@ -472,7 +472,7 @@ export const getOverDrive = (turn) => {
     const frontCostList = [];
 
     for (const skillData of seq) {
-        const unitOdPlus = getODPlus(skillData, tempTurn, frontCostList);
+        const unitOdPlus = getODPlus(skillData, tempTurn, frontCostList, true);
         odPlus += unitOdPlus;
         // EXスキル使用アビリティにOD増加がある場合は加算する
         if (common.isSkillEx(skillData.skillInfo, skillData.skillInfo.skill_id)) {
@@ -549,7 +549,7 @@ export const getOverDrive = (turn) => {
     return odPlus;
 }
 
-const getODPlus = (skillData, turnData, frontCostList) => {
+const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
     const enemyCount = turnData.enemyCount;
     const skillInfo = skillData.skillInfo;
     const unitData = getUnitData(turnData, skillData.placeNo);
@@ -568,7 +568,6 @@ const getODPlus = (skillData, turnData, frontCostList) => {
                 continue;
             }
             // 可変ODはいったん非対応
-
             let correction = 1;
             // 補正はのプラスの時のみ
             if (buffInfo.max_power > 0) {
@@ -578,7 +577,7 @@ const getODPlus = (skillData, turnData, frontCostList) => {
         }
         // 連撃、オギャり状態、チャージ処理
         const PROC_KIND = [BUFF.BABIED, BUFF.CHARGE];
-        if (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind) || PROC_KIND.includes(buffInfo.buff_kind)) {
+        if (isBuffAdd && (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind) || PROC_KIND.includes(buffInfo.buff_kind))) {
             addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData, false);
         }
     }
