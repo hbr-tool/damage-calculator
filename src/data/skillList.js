@@ -581,7 +581,7 @@ const skilLlist = [
     {"skill_id":679,"skill_name":"スイート・ブレイク","chara_id":41,"style_id":0,"cost_type":"SP","use_cost":10,"skill_active":0,"skill_kind":0},
     {"skill_id":680,"skill_name":"ぬくもりの手料理","chara_id":42,"style_id":182,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
     {"skill_id":681,"skill_name":"召し上がれミラーシュカ","chara_id":42,"style_id":182,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
-    {"skill_id":682,"skill_name":"捕球の極意","chara_id":47,"style_id":5092,"cost_type":"SP","use_cost":9,"skill_active":1,"skill_kind":0},
+    {"skill_id":682,"skill_name":"捕球の極意","chara_id":47,"style_id":5092,"cost_type":"SP","use_cost":9,"skill_active":0,"skill_kind":0},
     {"skill_id":683,"skill_name":"怪物球威","chara_id":1,"style_id":183,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
     {"skill_id":684,"skill_name":"燃やせ青春！マリンボール！","chara_id":1,"style_id":183,"cost_type":"SP","use_cost":16,"skill_active":0,"skill_kind":1,"skill_attribute":11,"conditions":46,"conditions_id":4},
     {"skill_id":685,"skill_name":"速攻◯","chara_id":8,"style_id":184,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
