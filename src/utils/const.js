@@ -288,7 +288,6 @@ export const CONDITIONS = {
     SELECT_31A: 37, // 31A選択
     SELECT_CHARA: 38, // 特定キャラを選択
     FIELD_NOT_FIRE: 41, // 火属性以外フィールド
-    // DIVA_BLESS: 42, // 歌姫の加護
     NOT_DIVA_BLESS: 43, // 歌姫の加護以外
     NOT_NEGATIVE: 44, // ネガティブ以外
     HAS_PASSIVE: 45, // パッシブ発動中

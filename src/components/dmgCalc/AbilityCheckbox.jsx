@@ -6,7 +6,9 @@ const AbilityCheckbox = ({ attackInfo, abilityList, abilitySettingMap, handleAbi
     if (!attackInfo) return null;
     const kindAbilityList = abilityList.filter(ability => {
         const abilityEffectList = common.getAbilityEffectList(ability.ability_id);
-        if (abilityEffectList.some(effect => { constants.RANGE_ALL_ABILITY.includes(effect.effect_type) })) {
+        if (abilityEffectList.some(effect => { 
+            return constants.RANGE_ALL_ABILITY.includes(effect.effect_type) 
+        })) {
             return rengeArea === 3;
         }
         return abilityEffectList.some(effect => {

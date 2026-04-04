@@ -759,8 +759,6 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             return unitData.buffTargetCharaId === conditionsId;
         case CONDITIONS.FIELD_NOT_FIRE: // 火属性フィールド以外
             return turnData.field !== FIELD.FIRE && turnData.field !== FIELD.NORMAL;
-        case CONDITIONS.DIVA_BLESS: // 歌姫の加護
-            return checkBuffExist(unitData.buffList, BUFF.DIVA_BLESS);
         case CONDITIONS.NOT_DIVA_BLESS: // 歌姫の加護以外
             return !checkBuffExist(unitData.buffList, BUFF.DIVA_BLESS);
         case CONDITIONS.NOT_NEGATIVE: // ネガティブ以外
@@ -1439,13 +1437,14 @@ export const startTurn = (turnData) => {
     // 毎ターン処理
     abilityAction(ABILIRY_TIMING.EVERY_TURN, turnData);
 
+    // 初期OD値はアビリティ終了後を反映
+    turnData.startOverDriveGauge = turnData.overDriveGauge;
     setUserOperation(turnData);
 }
 
 // ターンごとに初期化
 const turnInit = (turnData, turnProgress) => {
     turnData.triggerOverDrive = false;
-    turnData.startOverDriveGauge = turnData.overDriveGauge;
     turnData.oldField = turnData.field;
     turnData.seqTurn++;
     turnData.setLog(`■${getTurnNumber(turnData)}`);
