@@ -501,10 +501,12 @@ export const getOverDrive = (turn) => {
         }
         // 追撃
         if (skill_id === SKILL.PURSUIT) {
-            let chara_data = getCharaData(unitData.style.styleInfo.chara_id);
-            if (!isResist(turn.enemyInfo, chara_data.physical, 0, 0)) {
-                odPlus += chara_data.pursuit * 2.5;
-            }
+            const unitOdPlus = getODPlus(skillData, tempTurn, frontCostList, true);
+            odPlus += unitOdPlus;
+            // let chara_data = getCharaData(unitData.style.styleInfo.chara_id);
+            // if (!isResist(turn.enemyInfo, chara_data.physical, 0, 0)) {
+            //     odPlus += chara_data.pursuit * 2.5;
+            // }
             return true;
         }
         let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;

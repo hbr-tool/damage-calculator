@@ -352,6 +352,7 @@ const resonaceLoop = (func, resonanceList, effectType, handlers) => {
         .forEach(resonance => {
             const resonanceInfo = common.getResonanceInfo(resonance.resonance_id);
             for (const resonanceEffect of common.getResonanceEffectList(resonance.resonance_id)) {
+                resonanceInfo.target_element = resonance.targetElement;
                 resonanceEffect.range_area = constants.RANGE.SELF;
                 if (judgeEffect(resonance.charaId, resonanceInfo, resonanceEffect, effectType, handlers)) {
                     func(resonanceEffect, resonance)

@@ -639,6 +639,7 @@ function generateResonanceList(styleList) {
                     resonance.charaId = charaId;
                     resonance.charaName = charaName;
                     resonance.limitCount = support.limitCount;
+                    resonance.targetElement = support.styleInfo.element;
                     resonanceList.push(resonance);
                 }
             }
