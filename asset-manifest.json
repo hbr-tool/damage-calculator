@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.6ab7beea.css",
-    "main.js": "/static/js/main.e1b8914d.js",
+    "main.js": "/static/js/main.c69e9afd.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -812,6 +812,6 @@
   },
   "entrypoints": [
     "static/css/main.6ab7beea.css",
-    "static/js/main.e1b8914d.js"
+    "static/js/main.c69e9afd.js"
   ]
 }
