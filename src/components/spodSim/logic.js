@@ -293,8 +293,7 @@ export function startAction(turnData) {
         payCost(unitData, skillInfo);
 
         let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
-        let log = `${charaName}の${skillInfo.skill_name}`;
-        turnData.setLog(log);
+        turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
 
         let buffList = getBuffList(skillInfo.skill_id);
         for (let i = 0; i < buffList.length; i++) {
@@ -305,11 +304,9 @@ export function startAction(turnData) {
         }
         const unitOdPlus = getODPlus(skillData, turnData, frontCostList, false);
         if (unitOdPlus > 0) {
-            log = `　OverDriveゲージ+${unitOdPlus}%`;
-            turnData.setLog(log);
+            turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
         } else if (unitOdPlus < 0) {
-            log = `　OverDriveゲージ${unitOdPlus}%`;
-            turnData.setLog(log);
+            turnData.setLog(`　OverDriveゲージ${unitOdPlus}%`);
         }
         turnOverDriveGauge += unitOdPlus;
 
@@ -357,7 +354,7 @@ export function startAction(turnData) {
 
     // 後衛の選択取得
     [3, 4, 5].forEach(function (placeNo) {
-        let unitData = getUnitData(turnData, placeNo);
+        const unitData = getUnitData(turnData, placeNo);
         if (unitData.blank) {
             return;
         }
@@ -366,12 +363,21 @@ export function startAction(turnData) {
         if (skillId === SKILL.NONE) {
             return true;
         }
+        let skillName = common.getSkillData(skillId).skill_name;
+        let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
+        turnData.setLog(`${charaName}の${skillName}`);
+        const unitOdPlus = getODBackPlus(unitData, turnData, frontCostList);
+        if (unitOdPlus > 0) {
+            turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
+        } else if (unitOdPlus < 0) {
+            turnData.setLog(`　OverDriveゲージ${unitOdPlus}%`);
+        }
+        turnOverDriveGauge += unitOdPlus;
         // 追撃
         if (skillId === SKILL.PURSUIT) {
             abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, unitData)
             return true;
         }
-
         // 自動追撃
         if (skillId === SKILL.AUTO_PURSUIT) {
             frontCostList.filter(cost => cost <= 8).forEach(cost => {
@@ -466,7 +472,6 @@ function origin(turnData, skillInfo, unitData) {
 export const getOverDrive = (turn) => {
     // OD上昇量取得
     const seq = sortActionSeq(turn);
-    const enemyCount = turn.enemyCount;
     let odPlus = 0;
     const tempTurn = deepClone(turn);
     const frontCostList = [];
@@ -495,58 +500,7 @@ export const getOverDrive = (turn) => {
         if (unitData.blank) {
             return;
         }
-        let skill_id = unitData.selectSkillId;
-        if (skill_id === SKILL.NONE) {
-            return true;
-        }
-        // 追撃
-        if (skill_id === SKILL.PURSUIT) {
-            const unitOdPlus = getODPlus(skillData, tempTurn, frontCostList, true);
-            odPlus += unitOdPlus;
-            // let chara_data = getCharaData(unitData.style.styleInfo.chara_id);
-            // if (!isResist(turn.enemyInfo, chara_data.physical, 0, 0)) {
-            //     odPlus += chara_data.pursuit * 2.5;
-            // }
-            return true;
-        }
-        let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
-        // 自動追撃
-        if (skill_id === SKILL.AUTO_PURSUIT) {
-            if (!isResist(turn.enemyInfo, physical, 0, 0)) {
-                let chara_data = getCharaData(unitData.style.styleInfo.chara_id)
-                frontCostList.filter(cost => cost <= 8).forEach(cost => {
-                    odPlus += chara_data.pursuit * 2.5;
-                });
-            }
-            return true;
-        }
-
-        let skillInfo = getSkillData(skill_id)
-        if (skillInfo) {
-            const attackInfo = getSkillIdToAttackInfo(turn, skill_id);
-            if (attackInfo) {
-                let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
-                const earring = attackInfo.attack_id ? getearringEffectSize(attackInfo.hit_count, unitData) : 0;
-                if (!isResist(turn.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)) {
-                    let enemyTarget = enemyCount;
-                    if (attackInfo.range_area === constants.RANGE.ENEMY_UNIT) {
-                        enemyTarget = 1;
-                    }
-                    let funnelList = getFunnelList(unitData);
-                    odPlus += calcODGain(attackInfo.hit_count, enemyTarget, badies, earring, funnelList.length);
-                }
-            }
-            if (skill_id === SKILL_ID.CAT_JET_SHOOTING) {
-                // ネコジェット・シャテキ後自動追撃
-                if (!isResist(turn.enemyInfo, physical, 0, 0)) {
-                    let chara_data = getCharaData(unitData.style.styleInfo.chara_id)
-                    const validCosts = frontCostList.filter(cost => cost <= 8);
-                    validCosts.slice(0, Math.max(validCosts.length - 1, 0)).forEach(() => {
-                        odPlus += chara_data.pursuit * 2.5;
-                    });
-                }
-            }
-        }
+        odPlus += getODBackPlus(unitData, tempTurn, frontCostList);
     });
     return odPlus;
 }
@@ -624,6 +578,60 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
         }
     }
     return unitOdPlus;
+}
+
+// 後衛のOD数値
+const getODBackPlus = (unitData, turnData, frontCostList) => {
+    let odPlus = 0;
+    const skillId = unitData.selectSkillId;
+    if (skillId === SKILL.NONE) {
+        return odPlus;
+    }
+    const charaData = getCharaData(unitData.style.styleInfo.chara_id);
+    // 追撃
+    if (skillId === SKILL.PURSUIT) {
+        if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
+            odPlus += charaData.pursuit * 2.5;
+        }
+        return odPlus;
+    }
+    // 自動追撃
+    if (skillId === SKILL.AUTO_PURSUIT) {
+        if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
+            frontCostList.filter(cost => cost <= 8).forEach(cost => {
+                odPlus += charaData.pursuit * 2.5;
+            });
+        }
+        return odPlus;
+    }
+
+    let skillInfo = getSkillData(skillId)
+    if (skillInfo) {
+        const enemyCount = turnData.enemyCount;
+        const attackInfo = getSkillIdToAttackInfo(turnData, skillId);
+        if (attackInfo) {
+            let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
+            const earring = attackInfo.attack_id ? getearringEffectSize(attackInfo.hit_count, unitData) : 0;
+            if (!isResist(turnData.enemyInfo, charaData.physical, attackInfo.attack_element, attackInfo.attack_id)) {
+                let enemyTarget = enemyCount;
+                if (attackInfo.range_area === constants.RANGE.ENEMY_UNIT) {
+                    enemyTarget = 1;
+                }
+                let funnelList = getFunnelList(unitData);
+                odPlus += calcODGain(attackInfo.hit_count, enemyTarget, badies, earring, funnelList.length);
+            }
+        }
+        if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
+            // ネコジェット・シャテキ後自動追撃
+            if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
+                const validCosts = frontCostList.filter(cost => cost <= 8);
+                validCosts.slice(0, Math.max(validCosts.length - 1, 0)).forEach(() => {
+                    odPlus += charaData.pursuit * 2.5;
+                });
+            }
+        }
+    }
+    return odPlus;
 }
 
 // OD計算
