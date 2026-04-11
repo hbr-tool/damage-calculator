@@ -9,6 +9,7 @@ const BuffDetailLabelComponent = ({ buff }) => {
     let buffText = buff.buff_name;
     switch (buff.buff_kind) {
         case BUFF.MORALE: // 士気
+        case BUFF.DISASTER: // 禍
             buffText += `(Lv${buff.lv})`;
             break;
         default:
@@ -19,7 +20,7 @@ const BuffDetailLabelComponent = ({ buff }) => {
     }
     return (
         < div className="flex detail_line_height" >
-            <img className="icon_buff_detail" src={img} alt={buffKindName}/>
+            <img className="icon_buff_detail" src={img} alt={buffKindName} />
             <label>
                 {buffKindName}
                 <br />

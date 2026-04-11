@@ -49,6 +49,7 @@ const buffKind = [
     {"buff_kbn":48,"ref_status_1":6,"ref_status_2":5,"replace_name":"ETERNAL_FRAGILE","buff_name":"永続脆弱","buff_icon":"IconFragile"},
     {"buff_kbn":49,"ref_status_1":0,"ref_status_2":0,"replace_name":"LIGHT_MARK","buff_name":"光の印","buff_icon":"IconLightMark"},
     {"buff_kbn":50,"ref_status_1":0,"ref_status_2":0,"replace_name":"DARK_MARK","buff_name":"闇の印","buff_icon":"IconDarkMark"},
+    {"buff_kbn":51,"ref_status_1":0,"ref_status_2":0,"replace_name":"DISASTER","buff_name":"禍","buff_icon":"IconDisaster"},
     {"buff_kbn":52,"ref_status_1":0,"ref_status_2":0,"replace_name":"HEALEP","buff_name":"EP回復","buff_icon":""},
     {"buff_kbn":53,"ref_status_1":5,"ref_status_2":0,"replace_name":"STEAK","buff_name":"ステーキ","buff_icon":"IconSteak"},
     {"buff_kbn":54,"ref_status_1":5,"ref_status_2":0,"replace_name":"GELATO","buff_name":"ジェラート","buff_icon":"IconGelato"},

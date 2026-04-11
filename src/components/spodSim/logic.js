@@ -963,6 +963,10 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
                 turnData.enemyDebuffList.push(debuff);
             }
             break;
+        case BUFF.DISASTER: // 禍
+            // デバフ追加
+            addDisasterDebuffUnit(turnData.enemyDebuffList, buffInfo, useUnitData);
+            break;
         case BUFF.HEALSP: // SP追加
             targetList.forEach(function (target_no) {
                 skillHealSp(turnData, target_no, buffInfo.min_power, buffInfo.max_power, placeNo, false, buffInfo.buff_id);
@@ -1045,6 +1049,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
     }
 }
 
+// 士気バフ追加
 function addMoraleBuffUnit(unitData, buffInfo, useUnitData) {
     let existList = unitData.buffList.filter(function (buffInfo) {
         return buffInfo.buff_kind === BUFF.MORALE;
@@ -1057,6 +1062,21 @@ function addMoraleBuffUnit(unitData, buffInfo, useUnitData) {
         unitData.buffList.push(buff);
     }
     buff.lv = Math.min(buff.lv + buffInfo.effect_size, 10);
+}
+
+// 禍デバフ追加
+function addDisasterDebuffUnit(debuffList, buffInfo, useUnitData) {
+    let existList = debuffList.filter(function (buffInfo) {
+        return buffInfo.buff_kind === BUFF.DISASTER;
+    });
+    let debuff;
+    if (existList.length > 0) {
+        debuff = existList[0];
+    } else {
+        debuff = createBuffData(buffInfo, useUnitData);
+        debuffList.push(debuff);
+    }
+    debuff.lv = Math.min(debuff.lv + buffInfo.effect_size, 10);
 }
 
 function skillHealSp(turnData, targetNo, addSp, limitSp, usePlaceNo, isRecursion, buffId) {
@@ -2056,11 +2076,6 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 let buffKind = common.getBuffKind(ability.effect_no);
                 effectDesc = `${buffKind.buff_name}を付与`;
                 break;
-            // case EFFECT.YAMAWAKI_SERVANT: // 山脇様のしもべ
-            //     // レゾナンス用
-            //     addAbilityBuffUnit(BUFF.YAMAWAKI_SERVANT, ability.ability_name, -1, targetList, turnData)
-            //     effectDesc = `山脇様のしもべを付与`;
-            //     break;
             case EFFECT.SP_LIMIT_UP: // SP上限アップ
                 targetList.forEach(function (target_no) {
                     let unit = getUnitData(turnData, target_no);

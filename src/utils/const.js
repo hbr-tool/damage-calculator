@@ -56,6 +56,8 @@ export const ABILITY_ID = {
     TRANSCEND_ICE: 26, // 超越(氷)
     TRANSCEND_THUNDER: 27, // 超越(雷)
     KISHIN: 28, // 鬼神
+    TRANSCEND_LIGHT: 29, // 超越(光)
+    TRANSCEND_DARK: 30, // 超越(闇)
     ADMIRAL_COMMON: 299, // 指揮行動
     DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530, // 自動追撃,
@@ -156,6 +158,7 @@ export const BUFF = {
     ETERNAL_FRAGILE: 48, // 永続脆弱
     LIGHT_MARK: 49, // 光の印
     DARK_MARK: 50, // 闇の印
+    DISASTER: 51, // 禍
     HEALEP: 52, // EP回復
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
@@ -187,6 +190,7 @@ export const EFFECT = {
     BREAK_GUARD: 20, // ブレイクガード
     STUN: 21, // スタン
     MISFORTUNE: 22, // 厄
+    DISASTER: 23, // 禍
     SHADOW_CLONE: 24, // 影分身
     STATUSUP_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
@@ -196,7 +200,6 @@ export const EFFECT = {
     TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
     TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
-    YAMAWAKI_SERVANT: 39, // 山脇様のしもべ
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
     HEALEP: 52, // EP回復
