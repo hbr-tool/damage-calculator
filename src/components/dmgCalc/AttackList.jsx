@@ -236,10 +236,8 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, sta
 
     let statUp = getStatUp(styleList, state, memberInfo, attackInfo.collect, abilitySettingMap, passiveSettingMap);
     let enemyStatDown = 0;
-    if (attackInfo.collect?.hacking) {
-        enemyStatDown = 100;
-    } else if (attackInfo.collect?.misfortune) {
-        enemyStatDown = 20;
+    if (attackInfo.collect?.statDown) {
+        enemyStatDown = Number(attackInfo.collect.statDown);
     }
     let criticalStatDown = Math.max(enemyStatDown, 50);
     let skillPower = getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, enemyInfo, enemyStatDown);
@@ -360,17 +358,15 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, sta
                         onChange={(e) => setAttackInfo({ ...attackInfo, collect: { ...attackInfo.collect, fightingspirit: e.target.checked } })} />
                     <label htmlFor="fightingspirit" className="checkbox01"></label>
                 </div>
-                <span>厄</span>
-                <div className="text-center status_checkbox">
-                    <input type="checkbox" id="misfortune" checked={attackInfo.collect?.misfortune}
-                        onChange={(e) => setAttackInfo({ ...attackInfo, collect: { ...attackInfo.collect, misfortune: e.target.checked } })} />
-                    <label htmlFor="misfortune" className="checkbox01"></label>
-                </div>
-                <span>ハッキング</span>
-                <div className="text-center status_checkbox">
-                    <input type="checkbox" id="hacking" checked={attackInfo.collect?.hacking}
-                        onChange={(e) => setAttackInfo({ ...attackInfo, collect: { ...attackInfo.collect, hacking: e.target.checked } })} />
-                    <label htmlFor="hacking" className="checkbox01"></label>
+                <span>敵ステータス低下</span>
+                <div className="flex justify-center items-center">
+                    <select className="text-center w-16" id="bulkStatDown" value={attackInfo.collect?.statDown}
+                        onChange={(e) => setAttackInfo({ ...attackInfo, collect: { ...attackInfo.collect, statDown: e.target.value } })} >
+                        <option value="0">未設定</option>
+                        <option value="20">-20</option>
+                        <option value="70">-70</option>
+                        <option value="100">-100</option>
+                    </select>
                 </div>
             </div>
             <div className="mt-2">

@@ -10,6 +10,7 @@ import PredictionScore from "./PredictionScore";
 import DamageResult from "./DamageResult";
 import BuffArea from "./BuffArea";
 import { ENEMY_CLASS } from "utils/const";
+import * as logic from "./logic";
 
 const setEnemy = (state, action) => {
     const enemy = action.enemyInfo;
@@ -277,8 +278,7 @@ const DamageCalculation = () => {
         overdrive: "0",
         collect: {
             fightingspirit: false,
-            misfortune: false,
-            hacking: false,
+            statDown: "0",
         },
     });
 
@@ -296,15 +296,18 @@ const DamageCalculation = () => {
         const newBuffSettingMap = { ...buffSettingMap };
         Object.keys(newBuffSettingMap).forEach(key =>
             newBuffSettingMap[key].forEach((buffList, index) => {
-                Object.keys(buffList).forEach(buffKey => {
-                    const buffSetting = buffList[buffKey];
+                let buffKey = logic.getBuffKey(key);
+                if (!selectBuffKeyMap[buffKey] || selectBuffKeyMap[buffKey].length <= index) return;
+                let buffSelect = selectBuffKeyMap[buffKey][index];
+                if (buffSelect) {
+                    const buffSetting = buffList[buffSelect];
                     let buffInfo = buffSetting.buffInfo;
                     const charaId = buffInfo.use_chara_id;
                     const memberInfo = getCharaIdToMember(styleList, charaId);
                     buffSetting["collect"] = collect;
                     buffSetting.effect_size = getEffectSize(styleList, buffInfo, buffSetting, memberInfo, state,
                         abilitySettingMap, passiveSettingMap, resonanceList);
-                })
+                }
             })
         );
         setBuffSettingMap(newBuffSettingMap);

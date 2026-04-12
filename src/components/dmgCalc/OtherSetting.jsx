@@ -10,9 +10,7 @@ const OtherSetting = ({ attackInfo, otherSetting, setOtherSetting, bulkSetting }
     }, [attackInfo?.attack_element, otherSetting.ring]);
     /* eslint-enable react-hooks/exhaustive-deps */
 
-
-    const changeBulkSetting = (e, name) => {
-        const value = e.target.checked;
+    const changeBulkSetting = (name, value) => {
         let newSetting = { ...otherSetting, collect: { ...otherSetting.collect, [name]: value } };
         setOtherSetting(newSetting);
         bulkSetting(newSetting.collect);
@@ -75,22 +73,21 @@ const OtherSetting = ({ attackInfo, otherSetting, setOtherSetting, bulkSetting }
             <label className="area_title">一括設定</label>
             <div className="flex flex-wrap py-1 ml-3 gap-x-4 gap-y-2">
                 <div className="flex">
-                    <input className="ml-3 pt-0.5" id="bulkFightingspirit" type="checkbox"
+                    <input className="ml-3" id="bulkFightingspirit" type="checkbox"
                         value={otherSetting.collect.fightingspirit}
-                        onChange={(e) => changeBulkSetting(e, "fightingspirit")} />
-                    <label className="checkbox01" htmlFor="bulkFightingspirit">闘志</label>
+                        onChange={(e) => changeBulkSetting("fightingspirit", e.target.checked)} />
+                    <label className="checkbox01" style={{ paddingTop: '2px' }} htmlFor="bulkFightingspirit">闘志</label>
                 </div>
                 <div className="flex">
-                    <input className="ml-3 pt-0.5" id="bulkMisfortune" type="checkbox"
-                        value={otherSetting.collect.misfortune}
-                        onChange={(e) => changeBulkSetting(e, "misfortune")} />
-                    <label className="checkbox01" htmlFor="bulkMisfortune">厄</label>
-                </div>
-                <div className="flex">
-                    <input className="ml-3 pt-0.5" id="bulkHacking" type="checkbox"
-                        value={otherSetting.collect.hacking}
-                        onChange={(e) => changeBulkSetting(e, "hacking")} />
-                    <label className="checkbox01" htmlFor="bulkHacking">ハッキング</label>
+                    <label className="pt-0.5" htmlFor="bulkStatDown">敵ステータス低下</label>
+                    <select className="text-center w-16" id="bulkStatDown"
+                        value={otherSetting.collect.statDown}
+                        onChange={(e) => changeBulkSetting("statDown", e.target.value)} >
+                        <option value="0">未設定</option>
+                        <option value="20">-20</option>
+                        <option value="70">-70</option>
+                        <option value="100">-100</option>
+                    </select>
                 </div>
             </div>
         </div>

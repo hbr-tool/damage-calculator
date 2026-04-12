@@ -50,10 +50,8 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     let enemyStat = 0;
     if (isDebuff) {
         enemyStat = enemyInfo.enemy_stat;
-        if (buffSetting.collect?.hacking) {
-            enemyStatDown = 100;
-        } else if (buffSetting.collect?.misfortune) {
-            enemyStatDown = 20;
+        if (buffSetting.collect?.statDown) {
+            enemyStatDown = Number(buffSetting.collect.statDown);
         }
     }
     let status = getStatus(buffInfo, memberInfo, statUp)
@@ -245,19 +243,15 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
                             </div>
                             {isDebuff &&
                                 <>
-                                    <span>厄</span>
-                                    <div className="text-center status_checkbox">
-                                        <input type="checkbox" id="misfortune" checked={buffSetting.collect?.misfortune}
-                                            onChange={(e) => changeBuffSetting("misfortune", e.target.checked)}
-                                        />
-                                        <label htmlFor="misfortune" className="checkbox01"></label>
-                                    </div>
-                                    <span>ハッキング</span>
-                                    <div className="text-center status_checkbox">
-                                        <input type="checkbox" id="hacking" checked={buffSetting.collect?.hacking}
-                                            onChange={(e) => changeBuffSetting("hacking", e.target.checked)}
-                                        />
-                                        <label htmlFor="hacking" className="checkbox01"></label>
+                                    <span>敵ステータス低下</span>
+                                    <div className="flex justify-center items-center">
+                                        <select className="text-center w-16" id="bulkStatDown" value={buffSetting.collect?.statDown}
+                                            onChange={(e) => changeBuffSetting("statDown", e.target.value)} >
+                                            <option value="0">未設定</option>
+                                            <option value="20">-20</option>
+                                            <option value="70">-70</option>
+                                            <option value="100">-100</option>
+                                        </select>
                                     </div>
                                 </>
                             }

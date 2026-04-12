@@ -631,12 +631,10 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
 
     // ステータスアップ
     let statUp = getStatUp(styleList, state, attackMemberInfo, attackInfo.collect, abilitySettingMap, passiveSettingMap);
-    // 厄orハッキング
+    // ステータスダウン
     let enemyStatDown = 0;
-    if (attackInfo.collect?.hacking) {
-        enemyStatDown = 100;
-    } else if (attackInfo.collect?.misfortune) {
-        enemyStatDown = 20;
+    if (attackInfo.collect?.statDown) {
+        enemyStatDown = Number(attackInfo.collect.statDown);
     }
     let criticalStatDown = Math.max(enemyStatDown, 50);
 
@@ -1340,10 +1338,8 @@ function getDebuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state
     let enemyInfo = state.enemyInfo;
     let enemyStat = Number(enemyInfo.enemy_stat);
     let enemyStatDown = 0;
-    if (buffSetting.collect?.hacking) {
-        enemyStatDown = 100;
-    } else if (buffSetting.collect?.misfortune) {
-        enemyStatDown = 20;
+    if (buffSetting.collect?.statDown) {
+        enemyStatDown = Number(buffSetting.collect.statDown);
     }
     enemyStat = Math.max(enemyStat - enemyStatDown, 0);
 
