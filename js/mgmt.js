@@ -279,9 +279,9 @@ let baseHeaders = [
         { label: '転生<br>回数', rowspan: 2, class: 'htMiddle' },
         { label: 'スキル<br>Lv', rowspan: 2, class: 'htMiddle' },
         { label: 'ジェネ<br>ライズ', rowspan: 2, class: 'htMiddle' },
-        { label: 'エグゾウォッチャー', colspan: 5, class: 'htMiddle', id: "1" },
-        { label: 'レクタス/シニスター', colspan: 5, class: 'htMiddle', id: "2" },
-        { label: 'アモン', colspan: 5, class: 'htMiddle', id: "3" },
+        { label: 'エグゾウォッチャー', colspan: 6, class: 'htMiddle', id: "1" },
+        { label: 'レクタス/シニスター', colspan: 6, class: 'htMiddle', id: "2" },
+        { label: 'アモン', colspan: 6, class: 'htMiddle', id: "3" },
     ],
     [
         { label: 'R', },
@@ -289,16 +289,19 @@ let baseHeaders = [
         { label: 'Y', },
         { label: 'W', },
         { label: 'P', },
+        { label: 'Ω', },
         { label: 'R', },
         { label: 'B', },
         { label: 'Y', },
         { label: 'W', },
         { label: 'P', },
+        { label: 'Ω', },
         { label: 'R', },
         { label: 'B', },
         { label: 'Y', },
         { label: 'W', },
         { label: 'P', },
+        { label: 'Ω', },
     ]
 ];
 
@@ -437,6 +440,11 @@ let baseColumns = [
     },
     {
         data: "Exo_P",
+        className: "htCenter",
+        width: 25,
+    },
+    {
+        data: "Exo_omega",
         className: "htCenter rightLine",
         width: 25,
     },
@@ -462,6 +470,11 @@ let baseColumns = [
     },
     {
         data: "Rectus_P",
+        className: "htCenter",
+        width: 25,
+    },
+    {
+        data: "Rectus_omega",
         className: "htCenter rightLine",
         width: 25,
     },
@@ -487,9 +500,15 @@ let baseColumns = [
     },
     {
         data: "Amon_P",
+        className: "htCenter",
+        width: 25,
+    },
+    {
+        data: "Amon_omega",
         className: "htCenter rightLine",
         width: 25,
     },
+
 ];
 
 let titleHeaders = [
