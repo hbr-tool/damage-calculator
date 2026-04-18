@@ -623,7 +623,7 @@ const skilLlist = [
     {"skill_id":721,"skill_name":"まだまだ行くで！ ","chara_id":3,"style_id":0,"cost_type":"DP","use_cost":50,"skill_active":0,"skill_kind":0},
     {"skill_id":722,"skill_name":"最高潮！アオハルオンステージ(氷)","chara_id":3,"style_id":198,"cost_type":"SP","use_cost":15,"skill_active":0,"skill_kind":1},
     {"skill_id":723,"skill_name":"最高潮！アオハルオンステージ(雷)","chara_id":3,"style_id":198,"cost_type":"SP","use_cost":15,"skill_active":0,"skill_kind":1},
-    {"skill_id":725,"skill_name":"魔王の御前","chara_id":13,"style_id":199,"cost_type":"SP","use_cost":4,"skill_active":0,"skill_kind":0},
+    {"skill_id":725,"skill_name":"魔王の御前","chara_id":13,"style_id":0,"cost_type":"SP","use_cost":4,"skill_active":0,"skill_kind":0},
     {"skill_id":726,"skill_name":"トリック・オア・トリート+","chara_id":16,"style_id":0,"cost_type":"SP","use_cost":11,"skill_active":0,"skill_kind":2},
     {"skill_id":727,"skill_name":"荒野式フルチャージ","chara_id":37,"style_id":0,"cost_type":"SP","use_cost":0,"skill_active":1,"skill_kind":0},
     {"skill_id":728,"skill_name":"サーブド・アメイジング","chara_id":37,"style_id":200,"cost_type":"SP","use_cost":13,"skill_active":0,"skill_kind":1},
