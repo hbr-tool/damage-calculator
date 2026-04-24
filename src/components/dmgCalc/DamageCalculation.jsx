@@ -58,7 +58,7 @@ const setCollect = (state, action) => {
             }
             if (kind === "defense_rate") {
                 updated[kind] = {
-                    size: action.checked ? size : 0,
+                    size: size,
                     conditions: conditions
                 }
             }

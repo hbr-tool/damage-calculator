@@ -78,6 +78,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         stepOverDriveGauge: 0,
         overDriveGauge: 0,
         addOverDriveGauge: 0,
+        overDriveGaugeMultiplier: 100,
         enemyCount: 1,
         finishAction: false,
         field: 0,
@@ -249,19 +250,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         turnInit.fieldTurn = -1;
     }
     turnInit.overDriveGauge = Number(detailSetting.initOverDrive);
-    turnInit.stepTurnOverDrive = Number(detailSetting.stepTurnOverDrive);
-    turnInit.stepOverDriveGauge = Number(detailSetting.stepOverDriveGauge);
-    turnInit.stepTurnSp = Number(detailSetting.stepTurnSp);
-    turnInit.stepSpFrontAdd = Number(detailSetting.stepSpFrontAdd);
-    turnInit.stepSpBackAdd = Number(detailSetting.stepSpBackAdd);
-    turnInit.stepSpAllAdd = Number(detailSetting.stepSpAllAdd);
-    turnInit.ordinalTurnOverDrive = Number(detailSetting.ordinalTurnOverDrive);
-    turnInit.ordinalOverDriveGauge = Number(detailSetting.ordinalOverDriveGauge);
-    turnInit.ordinalTurnSp = Number(detailSetting.ordinalTurnSp);
-    turnInit.ordinalSpFrontAdd = Number(detailSetting.ordinalSpFrontAdd);
-    turnInit.ordinalSpBackAdd = Number(detailSetting.ordinalSpBackAdd);
-    turnInit.ordinalSpAllAdd = Number(detailSetting.ordinalSpAllAdd);
-
+    assignNumberProperties(turnInit, detailSetting);
     turnInit.enemyCount = Number(enemyInfo.enemy_count);
     turnInit.unitList = unitList;
     turnInit.enemyInfo = enemyInfo;
@@ -273,6 +262,28 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
     setConstraintsAbility(constraintsAbility);
     setConstraintsPassive(constraintsPassive);
     return turnInit;
+}
+
+const assignNumberProperties = (turnInit, detailSetting) => {
+    const TURN_INIT_KEYS = [
+        'initOverDrive',
+        'stepTurnOverDrive',
+        'stepOverDriveGauge',
+        'stepTurnSp',
+        'stepSpFrontAdd',
+        'stepSpBackAdd',
+        'stepSpAllAdd',
+        'ordinalTurnOverDrive',
+        'ordinalOverDriveGauge',
+        'ordinalTurnSp',
+        'ordinalSpFrontAdd',
+        'ordinalSpBackAdd',
+        'ordinalSpAllAdd',
+        'overDriveGaugeMultiplier'
+    ];
+    TURN_INIT_KEYS.forEach(key => {
+        turnInit[key] = Number(detailSetting[key]);
+    });
 }
 
 const checkStartBattle = (styleList) => {
@@ -418,6 +429,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         ordinalSpAllAdd: 0,
         ordinalSpFrontAdd: 0,
         ordinalSpBackAdd: 0,
+        overDriveGaugeMultiplier: 100
     });
 
     return (

@@ -33,7 +33,7 @@ const buffKind = [
     {"buff_kbn":32,"ref_status_1":0,"ref_status_2":0,"replace_name":"EX_DOUBLE","buff_name":"EXスキル連続使用","buff_icon":"IconDoubleActionExtraSkill"},
     {"buff_kbn":33,"ref_status_1":0,"ref_status_2":0,"replace_name":"BABIED","buff_name":"オギャり","buff_icon":"IconBabied"},
     {"buff_kbn":34,"ref_status_1":0,"ref_status_2":0,"replace_name":"MORALE","buff_name":"士気","buff_icon":"IconMorale"},
-    {"buff_kbn":35,"ref_status_1":0,"ref_status_2":0,"replace_name":"HACKING","buff_name":"ハッキング","buff_icon":""},
+    {"buff_kbn":35,"ref_status_1":0,"ref_status_2":0,"replace_name":"HACKING","buff_name":"ハッキング","buff_icon":"IconHacking"},
     {"buff_kbn":36,"ref_status_1":0,"ref_status_2":0,"replace_name":"DIVA_BLESS","buff_name":"歌姫の加護","buff_icon":"IconDivaBress"},
     {"buff_kbn":37,"ref_status_1":0,"ref_status_2":0,"replace_name":"SHREDDING","buff_name":"速弾き","buff_icon":"IconShredding"},
     {"buff_kbn":38,"ref_status_1":0,"ref_status_2":0,"replace_name":"NEGATIVE","buff_name":"ネガティブ","buff_icon":"IconNegativeMind"},
@@ -53,6 +53,7 @@ const buffKind = [
     {"buff_kbn":52,"ref_status_1":0,"ref_status_2":0,"replace_name":"HEALEP","buff_name":"EP回復","buff_icon":""},
     {"buff_kbn":53,"ref_status_1":5,"ref_status_2":0,"replace_name":"STEAK","buff_name":"ステーキ","buff_icon":"IconSteak"},
     {"buff_kbn":54,"ref_status_1":5,"ref_status_2":0,"replace_name":"GELATO","buff_name":"ジェラート","buff_icon":"IconGelato"},
+    {"buff_kbn":55,"ref_status_1":0,"ref_status_2":0,"replace_name":"UNDERMINE","buff_name":"蝕","buff_icon":"IconUndermine"},
     {"buff_kbn":90,"ref_status_1":0,"ref_status_2":0,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":""},
     {"buff_kbn":116,"ref_status_1":5,"ref_status_2":0,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
 ];

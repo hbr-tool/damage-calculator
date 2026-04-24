@@ -127,6 +127,11 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
                     <input id="ordinalSpBackAdd" className="step_od_gauge step_sp" value={detailSetting.ordinalSpBackAdd}
                         max="30" min="-30" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />
                 </li>
+                <li>
+                    オーバードライブ上昇量
+                    <input id="overDriveGaugeMultiplier" className="step_od_gauge w-[70px]" value={detailSetting.overDriveGaugeMultiplier}
+                        max="100" min="0" step="1" type="number" onChange={(e) => { checkNumber(e); updateDetailSetting(e) }} />%
+                </li>
             </ul>
         </div>
     )

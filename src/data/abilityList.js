@@ -14,7 +14,7 @@ const abilityList = [
     {"ability_id":13,"ability_name":"直属の使い魔でゲス！","ability_explan":"バトル開始時自身を山脇様のしもべ状態にする。","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
     {"ability_id":14,"ability_name":"…魔王様直属の大魔道士です","ability_explan":"バトル開始時自身を山脇様のしもべ状態にする。","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
     {"ability_id":15,"ability_name":"魔王様直属のネクロマンサーだ！","ability_explan":"バトル開始時自身を山脇様のしもべ状態にする。","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
-    {"ability_id":16,"ability_name":"開幕","ability_explan":"バトル開始時前衛にいると自身をチャージ(スキルを強化)する","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
+    {"ability_id":16,"ability_name":"開幕","ability_explan":"バトル開始時前衛にいると自身のSP+3さらに自身をチャージ(スキルを強化)する","ability_short_explan":"バトル開始時前衛にいると自身のSP+3さらに自身をチャージ(スキルを強化)する","activation_place":1,"physical":0,"element":0,"target_element":0},
     {"ability_id":17,"ability_name":"ウィスパーボイス","ability_explan":"バトル開始時味方全体をチャージ(スキルを強化)する","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
     {"ability_id":18,"ability_name":"徒桜の一矢","ability_explan":"バトル開始時自身に桜花の矢(1回)を付与する","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
     {"ability_id":19,"ability_name":"忍法・影分身！","ability_explan":"バトル開始時自身に影分身(2回)を付与する","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},

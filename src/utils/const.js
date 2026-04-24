@@ -162,6 +162,7 @@ export const BUFF = {
     HEALEP: 52, // EP回復
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
+    UNDERMINE: 55, // 蝕
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

@@ -511,6 +511,7 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
     const unitData = getUnitData(turnData, skillData.placeNo);
     const buffList = getBuffList(skillInfo.skill_id);
     const attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
+    const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
     let unitOdPlus = 0;
     // オギャり状態
     let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
@@ -541,7 +542,7 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
     if (skillInfo.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
         // 通常攻撃
         if (!isResist(turnData.enemyInfo, physical, unitData.normalAttackElement, null)) {
-            unitOdPlus += calcODGain(3, 1, badies);
+            unitOdPlus += calcODGain(3, 1, overDriveGaugeMultiplier, badies);
         }
     } else if (attackInfo) {
         // 攻撃IDの変換(暫定)
@@ -563,7 +564,7 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
                 enemyTarget = 1;
             }
             let funnelList = getFunnelList(unitData);
-            unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, badies, earring, funnelList.length);
+            unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
             // EXスキル連続使用
             if (checkBuffExist(unitData.buffList, BUFF.EX_DOUBLE) && (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE)) {
                 buffList.forEach(function (buffInfo) {
@@ -573,7 +574,7 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
                     }
                 });
                 let funnelList = getFunnelList(unitData);
-                unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, badies, earring, funnelList.length);
+                unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
             }
         }
     }
@@ -588,10 +589,12 @@ const getODBackPlus = (unitData, turnData, frontCostList) => {
         return odPlus;
     }
     const charaData = getCharaData(unitData.style.styleInfo.chara_id);
+    const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
+
     // 追撃
     if (skillId === SKILL.PURSUIT) {
         if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
-            odPlus += charaData.pursuit * 2.5;
+            odPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
         }
         return odPlus;
     }
@@ -599,7 +602,7 @@ const getODBackPlus = (unitData, turnData, frontCostList) => {
     if (skillId === SKILL.AUTO_PURSUIT) {
         if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
             frontCostList.filter(cost => cost <= 8).forEach(cost => {
-                odPlus += charaData.pursuit * 2.5;
+                odPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
             });
         }
         return odPlus;
@@ -618,7 +621,7 @@ const getODBackPlus = (unitData, turnData, frontCostList) => {
                     enemyTarget = 1;
                 }
                 let funnelList = getFunnelList(unitData);
-                odPlus += calcODGain(attackInfo.hit_count, enemyTarget, badies, earring, funnelList.length);
+                odPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
             }
         }
         if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
@@ -626,7 +629,7 @@ const getODBackPlus = (unitData, turnData, frontCostList) => {
             if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
                 const validCosts = frontCostList.filter(cost => cost <= 8);
                 validCosts.slice(0, Math.max(validCosts.length - 1, 0)).forEach(() => {
-                    odPlus += charaData.pursuit * 2.5;
+                    odPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
                 });
             }
         }
@@ -635,9 +638,9 @@ const getODBackPlus = (unitData, turnData, frontCostList) => {
 }
 
 // OD計算
-const calcODGain = (hitCount, enemyTarget, badies = 0, earring = 0, funnelCount = 0) => {
+const calcODGain = (hitCount, enemyTarget, overDriveGaugeMultiplier, badies = 0, earring = 0, funnelCount = 0) => {
     const correction = 1 + (badies + earring) / 100;
-    const hitOd = Math.floor(2.5 * correction * 100) / 100;
+    const hitOd = Math.floor(2.5 * correction * overDriveGaugeMultiplier * 100) / 100;
     return (hitCount * hitOd * enemyTarget) + (funnelCount * hitOd * enemyTarget);
 };
 
