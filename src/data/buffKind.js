@@ -54,6 +54,7 @@ const buffKind = [
     {"buff_kbn":53,"ref_status_1":5,"ref_status_2":0,"replace_name":"STEAK","buff_name":"ステーキ","buff_icon":"IconSteak"},
     {"buff_kbn":54,"ref_status_1":5,"ref_status_2":0,"replace_name":"GELATO","buff_name":"ジェラート","buff_icon":"IconGelato"},
     {"buff_kbn":55,"ref_status_1":0,"ref_status_2":0,"replace_name":"UNDERMINE","buff_name":"蝕","buff_icon":"IconUndermine"},
+    {"buff_kbn":56,"ref_status_1":0,"ref_status_2":0,"replace_name":"RUSH","buff_name":"ラッシュ","buff_icon":"IconByakkoDoubleActionAttackSkill"},
     {"buff_kbn":90,"ref_status_1":0,"ref_status_2":0,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":""},
     {"buff_kbn":116,"ref_status_1":5,"ref_status_2":0,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
 ];

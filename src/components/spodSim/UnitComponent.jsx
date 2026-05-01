@@ -101,7 +101,7 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
 
     const recoil = unit.buffList.filter((obj) => obj.buff_kind === BUFF.RECOIL);
     let not_action = (recoil.length > 0 || !unit.style || (turn.additionalTurn && !unit.additionalTurn && placeNo <= 2))
-    let className = "unit_skill " + (not_action ? "invisible" : "");
+    let className = "unit_skill align_left " + (not_action ? "invisible" : "");
     let physical = getCharaData(unit.style.styleInfo.chara_id).physical;
     return (<select className={className}
         onMouseDown={(e) => e.stopPropagation()}

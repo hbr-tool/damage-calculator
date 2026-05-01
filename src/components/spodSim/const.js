@@ -40,6 +40,7 @@ export const CONSTRAINTS_ABILITY = [
     1213, // 絶好調女
     1028, // 魔界騎兵起動！
     2006, // リバーブレーション
+    1216, // ラッシュモード
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [

@@ -79,7 +79,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
         <div className="attack_area surround_area mx-auto mt-2 adjust_width">
             <label className="area_title">攻 撃</label>
             <div className="flex">
-                <select className="ml-6" id="attack_list" value={attackInfo?.attack_id} onChange={e => handleChangeAttackId(Number(e.target.value))}>
+                <select className="ml-6 align_left" id="attack_list" value={attackInfo?.attack_id} onChange={e => handleChangeAttackId(Number(e.target.value))}>
                     {styleList.selectStyleList.filter(memberInfo => memberInfo).map((memberInfo, index) => {
                         let charaData = getCharaData(memberInfo.styleInfo.chara_id)
                         return (

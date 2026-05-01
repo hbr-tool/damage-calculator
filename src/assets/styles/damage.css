@@ -73,6 +73,11 @@ select {
     border-radius: 5px;
 }
 
+select.align_left {
+    text-align: left;
+    padding-right: 15px;
+}
+
 /* 部隊/ステータス */
 input.troops_btn {
     width: 40px;
