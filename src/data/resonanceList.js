@@ -22,6 +22,8 @@ const resonanceList = [
     {"resonance_id":21,"resonance_name":"忠義","resonance_text":"初戦開始時 自身を山脇様のしもべ状態にし 防御力を常時+{1}%"},
     {"resonance_id":22,"resonance_name":"フレンチフライ","resonance_text":"バトル勝利時 味方全体の雷属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
     {"resonance_id":23,"resonance_name":"エスプレッソ","resonance_text":"バトル勝利時 味方全体の光属性スタイルのスキル回数を{0}回復する(スキル回数の回復スキルを除く)"},
+    {"resonance_id":24,"resonance_name":"ポテンシエート","resonance_text":"ターン開始時自身のDPが50％以上のとき、自身がかけるスキル攻撃力アップの効果量+{0}%"},
+    {"resonance_id":25,"resonance_name":"パトラ","resonance_text":"ターン開始時自身のDPを{0}％回復 さらに自身がスタン状態のとき自身のスタン状態を解除"},
 ];
 
 export default resonanceList;

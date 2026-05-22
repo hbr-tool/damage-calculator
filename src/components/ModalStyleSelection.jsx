@@ -19,7 +19,7 @@ const ModalStyleSelection = ({ index, narrowStyle, setNarrowStyle, clickSetMembe
     const TROOP_LIST = {
         "31A": "DioramaStamp31a", "31B": "DioramaStamp31b", "31C": "DioramaStamp31c",
         "31D": "DioramaStamp31d", "31E": "DioramaStamp31e", "31F": "DioramaStamp31f", "31X": "DioramaStamp31x",
-        "30G": "DioramaStamp30g", "SRP": "seraphIcon", "AB!": "angelbeats"
+        "30G": "DioramaStamp30g", "SRP": "seraphIcon", "AB!": "angelbeats", "P5R": "persona5r"
     };
     const BUFF_LIST = [
         [0, "攻撃UP"],

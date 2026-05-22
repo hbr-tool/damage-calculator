@@ -422,10 +422,6 @@ input.troops_btn.selected_troops {
     }
 }
 
-.unit_skill {
-    font-size: 12px;
-}
-
 .action_select {
     margin-top: 10px;
     font-size: 12px;
@@ -440,7 +436,8 @@ input.troops_btn.selected_troops {
         -2px 2px 10px #000,
         2px -2px 10px #000,
         -2px -2px 10px #000;
-    margin-top: -56px;
+    position: relative;
+    top: -47px;
     text-align: right;
     pointer-events: none;
     white-space: nowrap;
@@ -466,9 +463,13 @@ input.troops_btn.selected_troops {
     pointer-events: none;
 }
 
-.front_area,
+/* .front_area,
 .back_area {
     height: 72px;
+} */
+
+.active_turn .front_area {
+    height: initial;
 }
 
 .back_area .unit_sp {

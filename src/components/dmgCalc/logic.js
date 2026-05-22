@@ -1175,7 +1175,12 @@ export function isElementInclude(styleInfo, targetElement) {
     if (targetElement === 0) {
         return true;
     }
-    return styleInfo.element === targetElement || styleInfo.element2 === targetElement;
+    if (targetElement < 10) {
+        return styleInfo.element === targetElement || styleInfo.element2 === targetElement;
+    } else {
+        targetElement -= 10;
+        return styleInfo.element !== targetElement && styleInfo.element2 !== targetElement;
+    }
 }
 
 // やるき対象数判定

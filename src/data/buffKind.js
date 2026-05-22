@@ -16,6 +16,7 @@ const buffKind = [
     {"buff_kbn":14,"ref_status_1":0,"ref_status_2":0,"replace_name":"FIGHTINGSPIRIT","buff_name":"闘志","buff_icon":"IconFightingSpirit"},
     {"buff_kbn":15,"ref_status_1":0,"ref_status_2":0,"replace_name":"MISFORTUNE","buff_name":"厄","buff_icon":"IconMisfortune"},
     {"buff_kbn":16,"ref_status_1":5,"ref_status_2":0,"replace_name":"FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
+    {"buff_kbn":17,"ref_status_1":0,"ref_status_2":0,"replace_name":"TOKEN_UP","buff_name":"トークンアップ","buff_icon":""},
     {"buff_kbn":18,"ref_status_1":0,"ref_status_2":0,"replace_name":"STRONG_BREAK","buff_name":"強ブレイク","buff_icon":""},
     {"buff_kbn":19,"ref_status_1":5,"ref_status_2":6,"replace_name":"DEFENSEDP","buff_name":"DP防御ダウン","buff_icon":"IconBuffDefenseDP"},
     {"buff_kbn":20,"ref_status_1":5,"ref_status_2":6,"replace_name":"RESISTDOWN","buff_name":"耐性ダウン","buff_icon":"IconResistElement"},

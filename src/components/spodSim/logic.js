@@ -87,14 +87,14 @@ export const skillUpdate = (turnData, skillId, placeNo) => {
 // ユーザ操作の取得
 const updateUserOperation = (userOperationList, turnData) => {
     let filtered = userOperationList.filter((item) =>
-        compereUserOperation(item, turnData) === 0
+        compareUserOperation(item, turnData) === 0
     );
     let userOperation = turnData.userOperation;
     if (filtered.length === 0) {
         turnData.userOperation.kbAction = KB_NEXT.ACTION;
         userOperationList.push(turnData.userOperation);
         // 表示確認用
-        userOperationList.sort((a, b) => compereUserOperation(a, b));
+        userOperationList.sort((a, b) => compareUserOperation(a, b));
     } else {
         userOperation = filtered[0];
         turnData.userOperation = userOperation;
@@ -122,7 +122,11 @@ export const changeStyleInfo = (unit, styleId) => {
     Object.values(ABILIRY_TIMING).forEach(timing => {
         unit[`ability_${timing}`] = [];
     });
-    ["0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
+    let abilitylimitList = ["_orgn", "0", "00", "1", "3", "4", "5", "10"];
+    if (member.limitCount === 2) {
+        abilitylimitList = ["_orgn", "0", "00", "1", "2"];
+    }
+    abilitylimitList.forEach(numStr => {
         const num = parseInt(numStr, 10);
         if (styleInfo[`ability${numStr}`] && num <= member.limitCount) {
             let abilityInfo = common.getAbilityInfo(styleInfo[`ability${numStr}`]);
@@ -204,7 +208,7 @@ const reflectUserOperation = (turnData, isLoadMode) => {
 }
 
 // ユーザ操作の比較
-const compereUserOperation = (comp1, comp2) => {
+export const compareUserOperation = (comp1, comp2) => {
     if (comp1.turnNumber !== comp2.turnNumber) {
         return comp1.turnNumber - comp2.turnNumber;
     }
@@ -315,11 +319,22 @@ export function startAction(turnData) {
             attackInfo = { "attack_id": 0, "attack_element": unitData.normalAttackElement };
         } else {
             attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
-            // アビリティ(スキル使用)
-            abilityActionUnit(turnData, ABILIRY_TIMING.SKILL_USE, unitData);
+            if (attackInfo) {
+                // アビリティ(スキル使用)
+                abilityActionUnit(turnData, ABILIRY_TIMING.SKILL_USE, unitData);
+            }
         }
 
         if (attackInfo) {
+            // アビリティ(与ダメージ時)
+            let effectSize = 1;
+            if (attackInfo.range_area === constants.RANGE.ENEMY_ALL || checkPassiveExist(unitData.passiveSkillList, constants.SKILL_ID.DAWN)) {
+                // 戦勲
+                effectSize = turnData.enemyCount;
+            }
+            let params = { effectSize };
+            abilityActionUnit(turnData, ABILIRY_TIMING.DEAL_DAMAGE, unitData, params);
+            // バフ消費
             consumeBuffUnit(turnData, unitData, attackInfo, skillInfo);
         }
 
@@ -530,7 +545,11 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
             if (buffInfo.max_power > 0) {
                 correction += (badies + earring) / 100;
             }
-            unitOdPlus += Math.floor(buffInfo.max_power * correction * 100) / 100;
+            let point = buffInfo.max_power;
+            if (buffInfo.token_power_up === 1) {
+                point *= unitData.tokenCost;
+            }
+            unitOdPlus += Math.floor(point * correction * 100) / 100;
         }
         // 連撃、オギャり状態、チャージ処理
         const PROC_KIND = [BUFF.BABIED, BUFF.CHARGE];
@@ -780,6 +799,8 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             return checkSp(turnData, RANGE.ALLY_ALL, 0);
         case CONDITIONS.SP_UNDER: // SP指定値以下
             return checkSp(turnData, RANGE.SELF, conditionsId, unitData.placeNo);
+        case CONDITIONS.OD_UNDER: // OD指定値未満
+            return turnData.overDriveGauge < conditionsId;
         case CONDITIONS.SARVANT_OVER: // 山脇様のしもべN人以上
             return turnData.unitList.filter((unit) =>
                 checkBuffExist(unit.buffList, BUFF.YAMAWAKI_SERVANT)
@@ -801,14 +822,20 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             return darkCount >= conditionsId;
         case CONDITIONS.USE_COUNT: // 回数以降
             return (conditionsId - 1) <= unitData.useSkillList.filter(id => id === skill_id).length;
-        case CONDITIONS.MOTIVATION: // やる気
         case CONDITIONS.TOKEN_OVER: // トークン
+            return unitData.token >= conditionsId;
+        case CONDITIONS.MOTIVATION: // やる気
             return unitData.buffEffectSelectType >= conditionsId;
         case CONDITIONS.HAS_PASSIVE: // パッシブ所持
             if (conditionsId === SKILL_ID.FAST_SHOT && turnData.turnNumber > 2) {
                 return false
             }
             return checkPassiveExist(unitData.passiveSkillList, conditionsId);
+        case CONDITIONS.IS_WEAK: // 弱点を突いている
+            // 弱点のみ消費
+            let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
+            let attackInfo = getSkillIdToAttackInfo(turnData, unitData.selectSkillId);
+            return isWeak(turnData.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)
         default:
             break;
     }
@@ -1028,6 +1055,21 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
             break;
         case BUFF.OVERDRIVEPOINTUP: // OD増加
             isLogOutput = false;
+            break;
+        case BUFF.TOKEN_UP: // トークン増加
+            targetList.forEach(function (target_no) {
+                let unitData = getUnitData(turnData, target_no);
+                if (unitData.blank) {
+                    return;
+                }
+                // トークンは最大10まで
+                if (unitData.token < 10) {
+                    unitData.token += buffInfo.max_power;
+                    if (unitData.token > 10) {
+                        unitData.token = 10;
+                    }
+                }
+            });
             break;
         default:
             break;
@@ -1425,10 +1467,10 @@ const sortActionSeq = (turnData) => {
 export const recreateTurnData = (turnList, turnData, userOperationList, isLoadMode) => {
     // ユーザ操作リストのチェック
     userOperationList.forEach((item) => {
-        item.used = compereUserOperation(item, turnData) <= 0;
+        item.used = compareUserOperation(item, turnData) <= 0;
     })
 
-    while (compereUserOperation(turnData.userOperation, userOperationList[userOperationList.length - 1]) < 0) {
+    while (compareUserOperation(turnData.userOperation, userOperationList[userOperationList.length - 1]) < 0) {
         // 現ターン処理
         turnData = deepClone(turnData);
         if (!isLoadMode || turnList.length > 0) {
@@ -1453,12 +1495,24 @@ export const startTurn = (turnData) => {
         // 追加ターン開始
         abilityAction(ABILIRY_TIMING.ADDITIONALTURN, turnData);
     } else {
-        let kbAction = turnData.userOperation.kbAction || turnData.userOperation.kb_action;
+        let kbAction = turnData.userOperation.kbAction;
         if (kbAction === KB_NEXT.ACTION) {
             // 行動開始時
             abilityAction(ABILIRY_TIMING.ACTION_START, turnData);
         }
-        let turnProgress = turnProceed(kbAction, turnData);
+        // 最初のターンはターン移行無し
+        let turnProgress = true;
+        if (turnData.seqTurn >= 0) {
+            turnProgress = turnProceed(kbAction, turnData);
+            if (turnProgress) {
+                // 敵のターン
+                // abilityAction(ABILIRY_TIMING.RECEIVE_DAMAGE, turnData);
+            }
+        }
+        if (turnProgress) {
+            // ターン進行
+            nextTurn(turnData);
+        }
         turnInit(turnData, turnProgress);
         if (turnProgress) {
             // ターン開始時
@@ -1528,12 +1582,10 @@ const turnProceed = (kbNext, turn) => {
                 turn.endDriveTriggerCount++;
                 if (turn.finishAction) {
                     turnProgress = true;
-                    nextTurn(turn);
                 }
             }
         } else {
             turnProgress = true;
-            nextTurn(turn);
         }
         turn.additionalCount = 0;
     } else if (kbNext === KB_NEXT.ADDITIONALTURN) {
@@ -1590,7 +1642,6 @@ const nextTurn = (turn) => {
     turn.turnNumber++;
     turn.finishAction = false;
     turn.endDriveTriggerCount = 0;
-    abilityAction(ABILIRY_TIMING.RECEIVE_DAMAGE, turn);
     if (turn.turnNumber % turn.stepTurnOverDrive === 0) {
         turn.overDriveGauge += turn.stepOverDriveGauge;
     }
@@ -1672,13 +1723,13 @@ const debuffConsumption = (turn) => {
     }
 }
 
-export const abilityAction = (actionKbn, turn) => {
-    unitOrderLoop(function (unit) {
-        if (actionKbn === ABILIRY_TIMING.ADDITIONALTURN && !unit.additionalTurn) {
+export const abilityAction = (actionKbn, turnData) => {
+    unitOrderLoop(function (unitData) {
+        if (actionKbn === ABILIRY_TIMING.ADDITIONALTURN && !unitData.additionalTurn) {
             return;
         }
-        abilityActionUnit(turn, actionKbn, unit);
-    }, turn.unitList);
+        abilityActionUnit(turnData, actionKbn, unitData);
+    }, turnData.unitList);
 }
 
 /** TurnDataここまで */
@@ -1799,17 +1850,31 @@ const buffSort = (unit) => {
     });
 }
 
+
 const payCost = (unit, skill) => {
     // OD上限突破
     if (unit.sp + unit.overDriveSp > 99) {
         unit.sp = 99 - unit.overDriveSp;
     }
-    if (skill.cost_type === COST_TYPE.EP) {
-        unit.ep -= skill.use_cost;
-    } else {
-        // SPは可変なので計算済みの値を使用
-        unit.sp -= unit.spCost;
-        unit.spCost = 0;
+
+    switch (skill.cost_type) {
+        case COST_TYPE.SP:
+            // SPは可変なので計算済みの値を使用
+            unit.sp -= unit.spCost;
+            unit.spCost = 0;
+            break;
+        case COST_TYPE.EP:
+            unit.ep -= skill.use_cost;
+            break;
+        case COST_TYPE.TOKEN:
+            if (skill.use_cost === 99) {
+                unit.token -= unit.tokenCost;
+            } else {
+                unit.token -= skill.use_cost;
+            }
+            break;
+        default:
+            break;
     }
 }
 
@@ -1880,27 +1945,27 @@ const getFunnelList = (unit) => {
     return resultList;
 }
 
-const abilityActionUnit = (turnData, actionKbn, unit) => {
-    let actionList = unit[`ability_${actionKbn}`];
+const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
+    let actionList = unitData[`ability_${actionKbn}`];
     // 被ダメージ時
     if (actionKbn === ABILIRY_TIMING.RECEIVE_DAMAGE) {
         // 前衛のみ
-        if (unit.placeNo >= 3) {
+        if (unitData.placeNo >= 3) {
             actionList = [];
         }
     }
     actionList.forEach((ability, index) => {
         // 前衛
-        if (ability.activation_place === 1 && unit.placeNo >= 3) {
+        if (ability.activation_place === 1 && unitData.placeNo >= 3) {
             return true;
         }
         // 後衛
-        if (ability.activation_place === 2 && unit.placeNo < 3) {
+        if (ability.activation_place === 2 && unitData.placeNo < 3) {
             return true;
         }
-        let targetList = getTargetList(turnData, ability.range_area, ability.target_element, unit.placeNo, null);
+        let targetList = getTargetList(turnData, ability.range_area, ability.target_element, unitData.placeNo, null);
         let buff;
-        if (!judgmentCondition(Number(ability.conditions), ability.conditions_id, turnData, unit, null)) {
+        if (!judgmentCondition(Number(ability.conditions), ability.conditions_id, turnData, unitData, null)) {
             return true;
         }
         // 対象がバフを所持
@@ -1916,23 +1981,8 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                     return;
                 }
                 break;
-            case "SP0以下":
-                if (unit.sp > 0) {
-                    return;
-                }
-                break;
-            case "OD100%未満":
-                if (turnData.overDriveGauge >= 100) {
-                    return;
-                }
-                break;
-            case "OD0%未満":
-                if (turnData.overDriveGauge >= 0) {
-                    return;
-                }
-                break;
             case "ODゲージ使用":
-                let list = getBuffList(unit.selectSkillId)
+                let list = getBuffList(unitData.selectSkillId)
                     .filter(skill => skill.buff_kind === BUFF.OVERDRIVEPOINTUP)
                     .filter(skill => skill.min_power < 0);
                 if (list.length === 0) {
@@ -1945,7 +1995,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
             case "ブレイク中":
                 return;
             case CONDITIONS.FIELD_ELEMENT: // フィールド属性
-                if (!judgmentCondition(ability.conditions, ability.conditions_id, turnData, unit, null)) {
+                if (!judgmentCondition(ability.conditions, ability.conditions_id, turnData, unitData, null)) {
                     return true;
                 }
                 break;
@@ -1968,7 +2018,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 if (ability.effect_type === EFFECT.FUNNEL_ALWAYS) {
                     buff.always = true;
                 }
-                unit.buffList.push(buff);
+                unitData.buffList.push(buff);
                 effectDesc = "連撃数アップ";
                 break;
             case EFFECT.OVERDRIVE_SP: // ODSPアップ
@@ -1990,9 +2040,8 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 effectDesc = `OD時EPアップ${ability.effect_size}`;
                 break;
             case EFFECT.HEALSP: // SP回復
-                // 戦場の華,猛火の進撃,氷嵐の進撃
-                const onlyUseSpList = [1528, 1023, 1031]
-                if (ability.used && onlyUseSpList.includes(ability.ability_id)) {
+                // 初回のみ
+                if (ability.used && constants.ONLY_USE_EFFECT.includes(ability.ability_id)) {
                     return;
                 }
                 ability.used = true;
@@ -2000,32 +2049,21 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                     let unitData = getUnitData(turnData, target_no);
                     if (unitData.sp + unitData.overDriveSp < unitData.limitSp) {
                         if (ability.ability_id) {
-                            switch (ability.ability_id) {
-                                case 1109: // 吉報
-                                case 1119: // 旺盛
-                                case 1213: // 絶好調女
-                                case 1214: // 怪童
-                                    unitData.addSp += ability.effect_size;
-                                    break;
-                                case 1112: // 好機
-                                    if (unitData.sp <= 3) {
-                                        unitData.sp += ability.effect_size;
-                                    }
-                                    break;
-                                default:
-                                    unitData.sp += ability.effect_size;
-                                    break;
+                            if (constants.ADD_SP_ABILITY.includes(ability.ability_id)) {
+                                unitData.addSp += ability.effect_size;
+                            } else {
+                                unitData.sp += ability.effect_size;
                             }
                         }
                         if (ability.skill_id) {
-                            switch (ability.skill_id) {
-                                case constants.SKILL_ID.GOOD_PAIN: // 痛気持ちいぃ～！
-                                    unitData.addSp += ability.effect_size;
-                                    break;
-                                default:
-                                    unitData.sp += ability.effect_size;
-                                    break;
-                            }
+                            // switch (ability.skill_id) {
+                            //     case constants.SKILL_ID.GOOD_PAIN: // 痛気持ちいぃ～！
+                            //         unitData.addSp += ability.effect_size;
+                            //         break;
+                            //     default:
+                            unitData.sp += ability.effect_size;
+                            //         break;
+                            // }
                         }
                         if (unitData.sp + unitData.overDriveSp > unitData.limitSp) {
                             unitData.sp = unitData.limitSp - unitData.overDriveSp;
@@ -2035,17 +2073,32 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 effectDesc = `SP+${ability.effect_size}`;
                 break;
             case EFFECT.HEALEP: // EP回復
-                let maxEp = Math.max(10, unit.ep + unit.overDriveEp);
-                if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OD_START}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
+                let maxEp = Math.max(10, unitData.ep + unitData.overDriveEp);
+                if (checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OD_START}`], ABILITY_ID.OVER_GEAR) && turnData.overDriveNumber > 0) {
                     maxEp = 20;
                 }
-                if (unit.ep < maxEp) {
-                    unit.ep += ability.effect_size;
-                    if (unit.ep > maxEp) {
-                        unit.ep = maxEp;
+                if (unitData.ep < maxEp) {
+                    unitData.ep += ability.effect_size;
+                    if (unitData.ep > maxEp) {
+                        unitData.ep = maxEp;
                     }
                 }
                 effectDesc = `EP+${ability.effect_size}`;
+                break;
+            case EFFECT.TOKEN_UP: // トークン回復
+                let effectSize = ability.effect_size;
+                if (ability.ability_id === ABILITY_ID.WAR_HONOR) {
+                    // 戦勲
+                    effectSize = params.effectSize;
+                }
+                targetList.forEach(function (target_no) {
+                    let unitData = getUnitData(turnData, target_no);
+                    unitData.token += effectSize;
+                    if (unitData.token > 10) {
+                        unitData.token = 10;
+                    }
+                });
+                effectDesc = `トークン+${effectSize}`;
                 break;
             case EFFECT.MORALE: // 士気
                 targetList.forEach(function (target_no) {
@@ -2063,8 +2116,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 effectDesc = `士気+${ability.effect_size}`;
                 break;
             case EFFECT.OVERDRIVEPOINTUP: // ODアップ
-                const onlyUseList = [ABILITY_ID.V_RECOVERY, ABILITY_ID.CONQUER_WORLD, ABILITY_ID.GREAT_OFFENSIVE]
-                if (ability.used && onlyUseList.includes(ability.ability_id)) {
+                if (ability.used && constants.ONLY_USE_EFFECT.includes(ability.ability_id)) {
                     return;
                 }
                 ability.used = true;
@@ -2081,8 +2133,8 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 break;
             case EFFECT.SP_LIMIT_UP: // SP上限アップ
                 targetList.forEach(function (target_no) {
-                    let unit = getUnitData(turnData, target_no);
-                    unit.limitSp = ability.effect_size;
+                    let unitData = getUnitData(turnData, target_no);
+                    unitData.limitSp = ability.effect_size;
                 })
                 effectDesc = `SP上限${ability.effect_size}にアップ`;
                 break;
@@ -2097,7 +2149,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
                 break;
             case EFFECT.ADDITIONALTURN: // 追加ターン
                 if (turnData.additionalCount === 0) {
-                    unit.additionalTurn = true;
+                    unitData.additionalTurn = true;
                     turnData.additionalTurn = true;
                 }
                 effectDesc = `追加ターン`;
@@ -2126,7 +2178,7 @@ const abilityActionUnit = (turnData, actionKbn, unit) => {
         if (effectDesc) {
             let abilityName = ability.ability_name || ability.passive_name;
             let rangeName = getRangeName(ability.range_area);
-            let charaName = getCharaData(unit.style.styleInfo.chara_id).chara_short_name;
+            let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
             let conditionName = getConditionName(ability.target_element, ability.conditions, Number(ability.conditions_id));
             let log = `${charaName}：${abilityName}(${conditionName}${effectDesc})が発動`;
             if (rangeName) {

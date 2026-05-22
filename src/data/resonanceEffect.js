@@ -24,6 +24,8 @@ const resonanceEffect = [
     {"resonance_id":21,"item_no":1,"effect_limit_0":10,"effect_limit_1":11,"effect_limit_2":12,"effect_limit_3":13,"effect_limit_4":15,"activation_timing":0,"activation_place":0},
     {"resonance_id":22,"item_no":0,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5},
     {"resonance_id":23,"item_no":0,"effect_limit_0":1,"effect_limit_1":2,"effect_limit_2":3,"effect_limit_3":4,"effect_limit_4":5},
+    {"resonance_id":24,"item_no":0,"effect_type":17,"effect_limit_0":20,"effect_limit_1":23,"effect_limit_2":25,"effect_limit_3":27,"effect_limit_4":30,"conditions":4},
+    {"resonance_id":25,"item_no":0,"effect_limit_0":2,"effect_limit_1":3,"effect_limit_2":4,"effect_limit_3":5,"effect_limit_4":6},
 ];
 
 export default resonanceEffect;

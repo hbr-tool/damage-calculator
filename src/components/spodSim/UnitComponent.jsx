@@ -129,7 +129,12 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
                 } else if (skill.cost_type === COST_TYPE.OVERDRIVE) {
                     text += `(${attack}OD${skill.use_cost}%)`;
                 } else if (skill.cost_type === COST_TYPE.TOKEN) {
-                    text += `(${attack}token${skill.use_cost})`;
+                    let tokenCost = skill.use_cost;
+                    if (skill.use_cost === 99) {
+                        tokenCost = unit.token;
+                        unit.tokenCost = unit.token;
+                    }
+                    text += `(${attack}token${tokenCost})`;
                 } else {
                     spCost = getSpCost(turn, skill, unit);
                     text += `(${attack}${spCost})`;
@@ -149,7 +154,8 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
         && prevProps.isCapturing === nextProps.isCapturing;
 });
 
-const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill, chengeSelectUnit, hideMode, isCapturing, clickBuffIcon }) => {
+const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill, chengeSelectUnit,
+    hideMode, isActiveTurn, isCapturing, clickBuffIcon, clickUnitConfig }) => {
     const filterUnit = turn.unitList.filter(unit => unit.placeNo === placeNo);
     const unit = filterUnit[0];
 
@@ -158,7 +164,7 @@ const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill
     if (hideMode) {
         loopLimit = 4;
     }
-    let className = "relative unit_select " + (placeNo === selectedPlaceNo ? "unit_selected" : "");
+    let className = "flex " + (placeNo === selectedPlaceNo ? "unit_selected" : "");
     const selectSkill = turn.userOperation.selectSkill[placeNo];
     let targetIcon = undefined;
     if (selectSkill && selectSkill.skill_id && selectSkill.buffTargetCharaId) {
@@ -167,10 +173,10 @@ const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill
     }
 
     return (
-        <div className={className} onClick={(e) => { chengeSelectUnit(e, placeNo) }}>
+        <div className="relative unit_select text-xs">
             <UnitSkillSelect turn={turn} field={turn.field}
                 unit={unit} placeNo={placeNo} chengeSkill={chengeSkill} selectSkillId={unit.selectSkillId} triggerOverDrive={turn.triggerOverDrive} isCapturing={isCapturing} />
-            <div className="flex">
+            <div className={className} style={{ height: '48px' }} onClick={(e) => { chengeSelectUnit(e, placeNo) }}>
                 <div>
                     <img className="unit_style" src={icon} alt="" />
                     {
@@ -178,14 +184,14 @@ const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill
                     }
                     {changeStyle[unit?.style?.styleInfo.style_id] &&
                         <img
-                            className="absolute style_change bottom-[0px] left-[0px] w-[24px] h-[24px] cursor-grab"
+                            className="absolute style_change mt-[-40px] left-[0px] w-[24px] h-[24px] cursor-grab"
                             src={changeIcon}
                             alt={"変更"}
                             onClick={() => { chageStyle(placeNo, changeStyle[unit?.style?.styleInfo.style_id]) }}
                         />
                     }
                     {targetIcon &&
-                        <div className="absolute bottom-0 left-[24px] w-[24px] h-[24px] rounded-full ring-2 ring-red-500 overflow-hidden">
+                        <div className="absolute mt-[-40px] left-[24px] w-[24px] h-[24px] rounded-full ring-2 ring-red-500 overflow-hidden">
                             <img
                                 className="absolute style_change"
                                 src={targetIcon}
@@ -194,11 +200,41 @@ const UnitComponent = ({ turn, placeNo, selectedPlaceNo, chageStyle, chengeSkill
                         </div>
                     }
                 </div>
-                {placeNo <= 2 || hideMode ?
+                {(placeNo <= 2 || hideMode) &&
                     <BuffIconComponent buffList={unit.buffList} loopLimit={loopLimit} loopStep={2} placeNo={placeNo} turnNumber={turn.turnNumber} clickBuffIcon={clickBuffIcon} />
-                    : null
                 }
             </div>
+            {isActiveTurn && !unit.blank ?
+                <>
+                    <div className="ml-2">
+                        <input type="button" value="調整" onClick={() => clickUnitConfig(placeNo)} />
+                    </div>
+                    {unit.token !== 0 &&
+                        <div className="flex text-sm">
+                            <span>
+                                Token {unit.token}
+                            </span>
+                        </div>
+                    }
+                    {/* <div>
+                                敵行動
+                            </div>
+                            <div className="flex text-sm">
+                                <span className="">
+                                    被弾
+                                </span>
+                                <select>
+                                    {[0, 1, 2, 3].map(value => <option value={value} key={`hit${value}`}>{value}</option>)}</select>
+                                回
+                            </div>
+                            <div className="text-sm">
+                                残DP
+                                <input type="number" className="w-12" value={100} min={0} max={150}></input>
+                                %
+                            </div> */}
+                </>
+                : null
+            }
         </div>
     )
 };

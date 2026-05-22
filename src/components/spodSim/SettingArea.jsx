@@ -106,6 +106,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             placeNo: 99,
             sp: 1,
             ep: 0,
+            token: 0,
             overDriveSp: 0,
             overDriveEp: 0,
             addSp: 0,
@@ -161,14 +162,18 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                 unit.initSkillId = 1; // 通常攻撃
             }
             // 曙
-            if (checkPassiveExist(unit.passiveSkillList, 606)) {
+            if (checkPassiveExist(unit.passiveSkillList, constants.SKILL_ID.DAWN)) {
                 unit.normalAttackElement = 4;
             }
             // アビリティ設定
             Object.values(ABILIRY_TIMING).forEach(timing => {
                 unit[`ability_${timing}`] = [];
             });
-            ["_orgn", "0", "00", "1", "3", "4", "5", "10"].forEach(numStr => {
+            let abilitylimitList = ["_orgn", "0", "00", "1", "3", "4", "5", "10"];
+            if (member.limitCount === 2) {
+                abilitylimitList = ["_orgn", "0", "00", "1", "2"];
+            }
+            abilitylimitList.forEach(numStr => {
                 let num = parseInt(numStr, 10);
                 if (!num) {
                     num = 0;
@@ -325,7 +330,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
 
     const [simProc, dispatch] = React.useReducer(reducer, {
         turnList: [],
-        enemyInfo: {}
+        enemyInfo: {},
     });
     let enemyInfo = common.getEnemyInfo(enemyClass, enemySelect);
 
@@ -346,6 +351,7 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         let turnList = [turnInit];
         dispatch({ type: "INIT_TURN_LIST", turnList: turnList });
         setSettingUpdate(true);
+        changeActiveTurn(turnInit);
     };
 
     // 戦闘開始前処理
@@ -432,6 +438,20 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
         overDriveGaugeMultiplier: 100
     });
 
+    const [activeTurn, setActiveTurn] = useState({});
+
+    const changeActiveTurn = (turnData) => {
+        const newActiveTurn =
+        {
+            turnNumber: turnData.turnNumber,
+            finishAction: turnData.finishAction,
+            endDriveTriggerCount: turnData.endDriveTriggerCount,
+            overDriveNumber: turnData.overDriveNumber,
+            additionalCount: turnData.additionalCount,
+        }
+        setActiveTurn(newActiveTurn);
+    }
+
     return (
         <>
             {
@@ -473,7 +493,8 @@ const SettingArea = ({ enemyClass, enemySelect, setEnemyClass, setEnemySelect })
                         </div>
                     </div>
             }
-            <BattleArea hideMode={hideMode} setHideMode={setHideMode} turnList={simProc.turnList} dispatch={dispatch} loadData={loadData} update={update} setUpdate={setUpdate} />
+            <BattleArea hideMode={hideMode} setHideMode={setHideMode} turnList={simProc.turnList} dispatch={dispatch} loadData={loadData} update={update} setUpdate={setUpdate} 
+                activeTurn={activeTurn} changeActiveTurn={changeActiveTurn}/>
         </>
     )
 };

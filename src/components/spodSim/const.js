@@ -16,6 +16,7 @@ export const ABILIRY_TIMING = {
     HEAL_SP: 12,
     EVERY_TURN: 13,
     STEP_TURN: 14,
+    DEAL_DAMAGE: 15,
     OTHER: 99,
 }
 
@@ -27,7 +28,6 @@ export const CONSTRAINTS_ABILITY = [
     26, // 超越ゲージ
     27, // 超越ゲージ
     250, // 演舞
-    1136, // 勝勢
     1138, // ラストリゾート
     1210, // アルゴリズム
     1505, // 激動
@@ -41,11 +41,16 @@ export const CONSTRAINTS_ABILITY = [
     1028, // 魔界騎兵起動！
     2006, // リバーブレーション
     1216, // ラッシュモード
+    1504, // 戦士の祝福
+    1701, // ドMの真髄
+    1702, // 護りの真髄
+    1109, // 吉報
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [
     664, // BeatDown();
     668, // 名探偵は明るく照らす
+    524, // 痛気持ちいぃ～！
 ];
 // 謎の処理順序
 export const ACTION_ORDER = [1, 0, 2, 3, 4, 5];

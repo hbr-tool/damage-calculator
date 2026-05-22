@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ReactModal from "react-modal";
 import TurnData from "./TurnData";
 import ModalSaveLoad from "./ModalSaveLoad";
 import ModalLogHistory from "./ModalLogHistory";
-import { startTurn } from "./logic";
+import * as logic from "./logic";
 import domtoimage from 'dom-to-image';
 
-const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData, update, setUpdate }) => {
+const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, loadData, update, setUpdate, activeTurn, changeActiveTurn }) => {
     const [isCapturing, setIsCapturing] = React.useState(false);  // キャプチャ中の状態を管理
     const elementRef = React.useRef(null); // キャプチャ対象の要素参照
 
@@ -87,9 +87,10 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
     // ターンを進める
     const proceedTurn = (turnData) => {
         // ターン開始処理
-        startTurn(turnData);
+        logic.startTurn(turnData);
         // 次ターン追加
         dispatch({ type: 'ADD_TURN_LIST', payload: turnData });
+        changeActiveTurn(turnData);
     }
 
     // ターンを戻す
@@ -109,18 +110,14 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
         // ターン更新
         dispatch({ type: 'UPDATE_TURN', payload: seqTurn, turnData: turnData });
     }
-    const [activeTurnNumber, setActiveTurnNumber] = useState(1);
 
     // 引数のfuntionをまとめる
-    const handlers = { proceedTurn, returnTurn, recreateTurn, updateTurn, setActiveTurnNumber };
+    const handlers = { proceedTurn, returnTurn, recreateTurn, updateTurn, activeTurn, changeActiveTurn };
 
     const changeHideMode = (e) => {
         const hideMode = e.target.checked;
         setHideMode(hideMode);
     }
-    useEffect(() => {
-        setActiveTurnNumber(turnList.length);
-    }, [turnList.length]);
 
     let display_class = hideMode ? "hide_mode " : "show_mode";
 
@@ -150,7 +147,8 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                     </div>
                     <div id="battle_display" className="text-left" ref={elementRef}>
                         {turnList.map((turn, index) => {
-                            return <TurnData turn={turn} index={index} key={`turn${index}`} activeTurnNumber={activeTurnNumber}
+                            return <TurnData turn={turn} index={index} key={`turn${index}`}
+                                isActiveTurn={logic.compareUserOperation(turn, activeTurn) === 0}
                                 isLastTurn={turnList.length - 1 === index} hideMode={hideMode} isCapturing={isCapturing} handlers={handlers} />
                         })}
                     </div>
@@ -164,7 +162,7 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                     overlayClassName={"modal-overlay " + (modal.isOpen ? "modal-overlay-open" : "")}
                 >
                     {
-                        modal.mode === "log" && <ModalLogHistory turnData={turnList[activeTurnNumber - 1]} />
+                        modal.mode === "log" && <ModalLogHistory turnData={turnList[turnList.length - 1]} />
                     }
                     {
                         modal.mode !== "log" && <ModalSaveLoad mode={modal.mode} handleClose={closeModal} turnList={turnList} loadData={loadData} update={update} setUpdate={setUpdate} />
