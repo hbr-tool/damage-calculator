@@ -178,6 +178,7 @@ export const BUFF = {
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
     UNDERMINE: 55, // 蝕
+    RUSH: 56, // ラッシュ
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

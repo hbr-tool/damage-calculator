@@ -338,21 +338,27 @@ export function startAction(turnData) {
             consumeBuffUnit(turnData, unitData, attackInfo, skillInfo);
         }
 
-        // EXスキル使用
-        if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
-            // EXスキル連続使用
-            if (checkBuffExist(unitData.buffList, BUFF.EX_DOUBLE)) {
-                for (let i = 0; i < buffList.length; i++) {
-                    let buffInfo = buffList[i];
-                    if (!(buffInfo.skill_attack1 === 999 && ATTACK_AFTER_LIST.includes(buffInfo.buff_kind))) {
-                        addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData);
-                    }
+        // スキル連続使用
+        let doubleAttack = false;
+        if (checkBuffExist(unitData.buffList, BUFF.EX_DOUBLE) && (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE)) {
+            doubleAttack = true;
+        }
+        if (checkBuffExist(unitData.buffList, BUFF.RUSH)) {
+            doubleAttack = true;
+        }
+        if (doubleAttack) {
+            for (let i = 0; i < buffList.length; i++) {
+                let buffInfo = buffList[i];
+                if (!(buffInfo.skill_attack1 === 999 && ATTACK_AFTER_LIST.includes(buffInfo.buff_kind))) {
+                    addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData);
                 }
-                if (attackInfo) {
-                    consumeBuffUnit(turnData, unitData, attackInfo, skillInfo);
-                }
-                unitData.buffList = unitData.buffList.filter(obj => obj.buff_kind !== BUFF.EX_DOUBLE);
             }
+            if (attackInfo) {
+                consumeBuffUnit(turnData, unitData, attackInfo, skillInfo);
+            }
+            unitData.buffList = unitData.buffList.filter(obj => obj.buff_kind !== BUFF.EX_DOUBLE);
+        }
+        if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
             // アビリティ（EXスキル使用）
             abilityActionUnit(turnData, ABILIRY_TIMING.EX_SKILL_USE, unitData, false);
         }
@@ -584,8 +590,15 @@ const getODPlus = (skillData, turnData, frontCostList, isBuffAdd) => {
             }
             let funnelList = getFunnelList(unitData);
             unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
-            // EXスキル連続使用
+            // スキル連続使用
+            let doubleAttack = false;
             if (checkBuffExist(unitData.buffList, BUFF.EX_DOUBLE) && (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE)) {
+                doubleAttack = true;
+            }
+            if (checkBuffExist(unitData.buffList, BUFF.RUSH)) {
+                doubleAttack = true;
+            }
+            if (doubleAttack) {
                 buffList.forEach(function (buffInfo) {
                     // 連撃のみ処理
                     if (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind)) {
