@@ -2391,6 +2391,8 @@ const getConditionName = (targetElement, conditions, conditionsId) => {
             return `敵の数が${conditionsId}の時`;
         case CONDITIONS.USE_COUNT:
             return `使用回数が${conditionsId}回以上の時`;
+        case CONDITIONS.IS_WEAK:
+            return `弱点をついた時`;
         default:
             return conditions;
     }

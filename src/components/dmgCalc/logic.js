@@ -1232,6 +1232,23 @@ export function getCharaIdToTroopKbn(styleList, charaId) {
 }
 
 
+// キャラIDがメインかサブか判定
+export function getStyleIdToTroopKbn(styleList, styleId) {
+    const filteredMember = (styleList) => {
+        const filterList = styleList.filter((obj) => obj?.styleInfo?.style_id === styleId);
+        return filterList.length > 0 ? filterList[0] : undefined;
+    }
+    let member = filteredMember(styleList.selectStyleList);
+    if (member) {
+        return TROOP_KBN.MAIN;
+    }
+    member = filteredMember(styleList.subStyleList)
+    if (member) {
+        return TROOP_KBN.SUB;
+    }
+    return undefined;
+}
+
 // 敵ステータス更新
 export function updateEnemyStatus(enemyClassNo, enemyInfo) {
     const enemyClass = 99;

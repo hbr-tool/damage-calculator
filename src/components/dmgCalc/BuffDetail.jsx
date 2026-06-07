@@ -4,11 +4,13 @@ import {
 } from "utils/const";
 import {
     DEBUFF_LIST, KIND_ATTACKUP, KIND_DEFENSEDOWN,
-    getCharaIdToMember, getCharaIdToTroopKbn, getEffectSize, getStatUp, getStatus, getCostVariable
+    getCharaIdToMember, getEffectSize, getStatUp, getStatus, getCostVariable
 } from "./logic";
+import * as logic from "./logic";
 import { getSkillData, getPassiveInfo, getPassiveEffectList, getAbilityInfo, getAbilityEffectList } from "utils/common";
 import { BuffLineChart, DebuffLineChart } from "./SimpleLineChart";
 import { CHARA_ID, JEWEL_TYPE } from "utils/const";
+import * as constant from "utils/const";;
 
 const BUFF_KIND_TO_JEWEL_TYPE = {
     [BUFF.ATTACKUP]: JEWEL_TYPE.SKILL_ATTACKUP,
@@ -130,7 +132,7 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     // バフ強化
     let strengthen = false;
     if ([BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP].includes(buffInfo.buff_kind)) {
-        let troopsBuff = getCharaIdToTroopKbn(styleList, CHARA_ID.STRENGTH_BUFF);
+        let troopsBuff = logic.getCharaIdToTroopKbn(styleList, constant.CHARA_ID.STRENGTH_BUFF);
         if (buffInfo.troopKbn === troopsBuff) {
             strengthen = true;
         }
@@ -139,7 +141,11 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
         if (charaId === CHARA_ID.MIYA) {
             strengthen = true;
         }
-        let troopsDebuff = getCharaIdToTroopKbn(styleList, CHARA_ID.STRENGTH_DEBUFF);
+        let troopsDebuff = logic.getCharaIdToTroopKbn(styleList, constant.CHARA_ID.STRENGTH_DEBUFF);
+        if (buffInfo.troopKbn === troopsDebuff) {
+            strengthen = true;
+        }
+        troopsDebuff = logic.getStyleIdToTroopKbn(styleList, constant.CHARA_ID.STRENGTH_STYLE_DEBUFF);
         if (buffInfo.troopKbn === troopsDebuff) {
             strengthen = true;
         }

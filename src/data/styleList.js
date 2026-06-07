@@ -208,6 +208,8 @@ const styleList = [
     {"style_id":208,"chara_id":4,"rarity":0,"resonance":1,"style_name":"激情のファム・ファタール","image_url":"TTojoTarot_R3_Thumbnail","role":5,"element":1,"jewel_type":4,"ability0":1101,"ability00":1409,"ability1":2102,"ability2":106,"ability3":107},
     {"style_id":209,"chara_id":111,"rarity":1,"resonance":0,"style_name":"黎明の魔術師","image_url":"EmaBDefault_R3_Thumbnail","role":4,"element":0,"jewel_type":2,"ability0":1156,"ability1":2102,"ability2":228,"ability3":229,"ability_resonance":25},
     {"style_id":210,"chara_id":112,"rarity":0,"resonance":1,"style_name":"慧眼の女教皇","image_url":"EmaCDefault_R3_Thumbnail","role":2,"element":0,"jewel_type":1,"ability0":1156,"ability1":2102,"ability2":31,"ability3":32},
+    {"style_id":211,"chara_id":1,"rarity":0,"resonance":1,"style_name":"TAKE YOUR HEART","image_url":"RKayamoriTarot_R3_Thumbnail","role":6,"element":5,"jewel_type":4,"ability0":1101,"ability00":1135,"ability1":2102,"ability2":33,"ability3":34},
+    {"style_id":212,"chara_id":113,"rarity":0,"resonance":1,"style_name":"揺るぎなき信念","image_url":"EmaDDefault_R3_Thumbnail","role":1,"element":4,"jewel_type":1,"ability0":1156,"ability1":2102,"ability2":108,"ability3":109},
     {"style_id":5001,"chara_id":1,"rarity":2,"resonance":0,"style_name":"戦場のフレット","image_url":"RKayamoriDefault_R2_Thumbnail","role":1,"element":0,"jewel_type":1,"ability3":1502},
     {"style_id":5002,"chara_id":3,"rarity":2,"resonance":0,"style_name":"Impact Stream","image_url":"MAikawaDefault_R2_Thumbnail","role":6,"element":0,"jewel_type":4,"ability3":212},
     {"style_id":5003,"chara_id":6,"rarity":2,"resonance":0,"style_name":"ときめきアークライト","image_url":"TKunimiDefault_R2_Thumbnail","role":4,"element":0,"jewel_type":2,"ability3":1109},

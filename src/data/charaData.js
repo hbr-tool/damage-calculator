@@ -1,4 +1,4 @@
-let charaData = [
+const charaData = [
     { "chara_id": 1, "chara_name": "茅森月歌", "chara_short_name": "月歌", "troops": "31A", "physical": 1, "pursuit": 2 },
     { "chara_id": 2, "chara_name": "和泉ユキ", "chara_short_name": "ユキ", "troops": "31A", "physical": 2, "pursuit": 3 },
     { "chara_id": 3, "chara_name": "逢川めぐみ", "chara_short_name": "めぐみ", "troops": "31A", "physical": 3, "pursuit": 2 },
@@ -59,6 +59,8 @@ let charaData = [
     { "chara_id": 107, "chara_name": "岩沢雅美", "chara_short_name": "岩沢", "troops": "AB!", "physical": 2, "pursuit": 3 },
     { "chara_id": 111, "chara_name": "モナ", "chara_short_name": "モナ", "troops": "P5R", "physical": 1, "pursuit": 2 },
     { "chara_id": 112, "chara_name": "クイーン", "chara_short_name": "クイーン", "troops": "P5R", "physical": 3, "pursuit": 2 },
+    { "chara_id": 113, "chara_name": "ヴァイオレット", "chara_short_name": "ヴァイオレット", "troops": "P5R", "physical": 1, "pursuit": 2 },
+    { "chara_id": 501, "chara_name": "七瀬七海", "chara_short_name": "七海", "troops": "HEA", "physical": 0, "pursuit": 0 },
 ];
 
 export default charaData;

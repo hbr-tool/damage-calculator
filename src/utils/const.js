@@ -9,6 +9,7 @@ export const CHARA_ID = {
     MIYA: 45,
     STRENGTH_BUFF: 4,
     STRENGTH_DEBUFF: 11,
+    STRENGTH_STYLE_DEBUFF: 211, // ペルソナ月歌,
 }
 
 export const STYLE_ID = {
