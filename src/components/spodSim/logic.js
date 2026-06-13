@@ -317,7 +317,7 @@ export function startAction(turnData) {
         let unitOdPlus = 0;
 
         turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
-        unitOdPlus = getODPlus(skillData, turnData, false, autoPursuitUnit, spCost);
+        unitOdPlus = getODPlus(skillData, turnData, autoPursuitUnit, spCost);
         if (unitOdPlus > 0) {
             turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
         } else if (unitOdPlus < 0) {
@@ -338,7 +338,7 @@ export function startAction(turnData) {
             }
             if (doubleAttack) {
                 turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
-                unitOdPlus = getODPlus(skillData, turnData, false, autoPursuitUnit, spCost);
+                unitOdPlus = getODPlus(skillData, turnData, autoPursuitUnit, spCost);
                 if (unitOdPlus > 0) {
                     turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
                 } else if (unitOdPlus < 0) {
@@ -547,7 +547,7 @@ export const getOverDrive = (turn) => {
         const spCost = unitData.spCost;
         const attackInfo = getSkillIdToAttackInfo(tempTurn, skillInfo.skill_id);
 
-        let unitOdPlus = getODPlus(skillData, tempTurn, true, autoPursuitUnit, spCost);
+        let unitOdPlus = getODPlus(skillData, tempTurn, autoPursuitUnit, spCost);
 
         // スキル連続使用
         let doubleAttack = false;
@@ -559,7 +559,7 @@ export const getOverDrive = (turn) => {
                 doubleAttack = true;
             }
             if (doubleAttack) {
-                unitOdPlus += getODPlus(skillData, tempTurn, true, autoPursuitUnit, spCost);
+                unitOdPlus += getODPlus(skillData, tempTurn, autoPursuitUnit, spCost);
             }
         }
         odPlus += unitOdPlus;
@@ -592,7 +592,7 @@ export const getOverDrive = (turn) => {
     return odPlus;
 }
 
-const getODPlus = (skillData, turnData, isBuffAdd, autoPursuitUnit, spCost) => {
+const getODPlus = (skillData, turnData, autoPursuitUnit, spCost) => {
     const enemyCount = turnData.enemyCount;
     const skillInfo = skillData.skillInfo;
     const unitData = getUnitData(turnData, skillData.placeNo);
@@ -660,22 +660,20 @@ const getODPlus = (skillData, turnData, isBuffAdd, autoPursuitUnit, spCost) => {
         isSkill = true;
     }
 
-    if (isBuffAdd) {
-        // 自動追撃は計算時のみ処理
-        if (isSkill && spCost <= 8 && autoPursuitUnit) {
-            const skillId = autoPursuitUnit.selectSkillId;
-            const charaData = getCharaData(autoPursuitUnit.style.styleInfo.chara_id);
-            const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
+    // 自動追撃
+    if (isSkill && spCost <= 8 && autoPursuitUnit) {
+        const skillId = autoPursuitUnit.selectSkillId;
+        const charaData = getCharaData(autoPursuitUnit.style.styleInfo.chara_id);
+        const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
 
-            if (skillId === SKILL.AUTO_PURSUIT) {
-                // 自動追撃
-                unitOdPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
-            } else if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
-                // ネコジェットシャテキの処理
-                unitOdPlus += getODBackPlus(autoPursuitUnit, turnData);
-                // 以降は自動追撃として処理
-                autoPursuitUnit.selectSkillId = SKILL.AUTO_PURSUIT;
-            }
+        if (skillId === SKILL.AUTO_PURSUIT) {
+            // 自動追撃
+            unitOdPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
+        } else if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
+            // ネコジェットシャテキの処理
+            unitOdPlus += getODBackPlus(autoPursuitUnit, turnData);
+            // 以降は自動追撃として処理
+            autoPursuitUnit.selectSkillId = SKILL.AUTO_PURSUIT;
         }
     }
     return unitOdPlus;
@@ -801,18 +799,21 @@ function ZeroSpSkill(turnData, skillInfo, unitData) {
 }
 
 // 条件判定
-function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_id) {
+function judgmentCondition(conditions, conditionsId, turnData, unitData, skillId) {
     switch (conditions) {
         case CONDITIONS.FIRST_TURN: // 1ターン目
             return turnData.turnNumber === 1;
         case CONDITIONS.SKILL_INIT: // 初回
-            return !unitData.useSkillList.includes(skill_id)
+            return !unitData.useSkillList.includes(skillId);
         case CONDITIONS.ADDITIONAL_TURN: // 追加ターン
             return turnData.additionalCount > 0;
         case CONDITIONS.NOT_ADDITIONAL_TURN: // 追加ターン以外
             return turnData.additionalCount === 0;
-        case CONDITIONS.DESTRUCTION_OVER_200: // 破壊率200%以上
         case CONDITIONS.BREAK: // ブレイク時
+            const ret = unitData.buffEffectSelectType === 1;
+            unitData.buffEffectSelectType = 0;
+            return ret;
+        case CONDITIONS.DESTRUCTION_OVER_200: // 破壊率200%以上
         case CONDITIONS.HAS_SHADOW: // 影分身
         case CONDITIONS.PERCENTAGE_30: // 確率30%
         case CONDITIONS.DOWN_TURN: // ダウンターン
@@ -884,7 +885,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skill_i
             let darkCount = targetCountInclude(turnData, ELEMENT.DARK);
             return darkCount >= conditionsId;
         case CONDITIONS.USE_COUNT: // 回数以降
-            return (conditionsId - 1) <= unitData.useSkillList.filter(id => id === skill_id).length;
+            return (conditionsId - 1) <= unitData.useSkillList.filter(id => id === skillId).length;
         case CONDITIONS.TOKEN_OVER: // トークン
             return unitData.token >= conditionsId;
         case CONDITIONS.MOTIVATION: // やる気
