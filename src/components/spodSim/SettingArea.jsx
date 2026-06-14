@@ -258,7 +258,11 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
     assignNumberProperties(turnInit, detailSetting);
     turnInit.enemyCount = Number(enemyInfo.enemy_count);
     turnInit.unitList = unitList;
-    turnInit.enemyInfo = enemyInfo;
+    const newEnemyInfo = { ...enemyInfo };
+    for (let i = 0; i <= 5; i++) {
+        newEnemyInfo[`element_${i}`] += Number(detailSetting[`changeElement${i}`]);
+    }
+    turnInit.enemyInfo = newEnemyInfo;
     // 戦闘開始アビリティ
     turnInit.setLog("■戦闘開始");
     abilityAction(ABILIRY_TIMING.BATTLE_START, turnInit);
