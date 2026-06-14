@@ -26,7 +26,7 @@ const DetailSetting = ({ detailSetting, setDetailSetting }) => {
         setDetailSetting(updatedDetailSetting);
     }
 
-    const ELEMENT_WEAK_LIST = [-150, -100, -50, 0, 50, 100, 150];
+    const ELEMENT_WEAK_LIST = [-600, -400, -200, -150, -100, -50, 0, 50, 100, 150];
     return (
         <div className="surround_area mx-auto mt-2 adjust_width" id="detail_setting">
             <label className="area_title">詳細設定</label>
