@@ -302,7 +302,7 @@ const abilityEffect = [
     {"ability_id":1213,"range_area":6,"activation_timing":1,"effect_type":99,"effect_size":1,"conditions":"やる気が絶好調"},
     {"ability_id":1214,"range_area":7,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":"やる気が好調以上"},
     {"ability_id":1215,"range_area":99,"activation_timing":1,"effect_type":14,"effect_size":100,"conditions":"27","conditions_id":6},
-    {"ability_id":1216,"range_area":7,"activation_timing":2,"effect_type":8,"effect_no":56,"effect_size":1,"effect_count":2,"conditions":"DP100%以上"},
+    {"ability_id":1216,"range_area":7,"activation_timing":1,"effect_type":8,"effect_no":56,"effect_size":1,"effect_count":1,"conditions":"DP100%以上"},
     {"ability_id":1302,"range_area":4,"activation_timing":3,"effect_type":11,"effect_size":15,"effect_count":1,"conditions":"DP100%以上"},
     {"ability_id":1303,"range_area":99,"activation_timing":3,"effect_type":99,"effect_size":1,"conditions":"やる気が絶好調"},
     {"ability_id":1304,"range_area":99,"activation_timing":3,"effect_type":99,"effect_size":1,"conditions":"やる気が絶好調"},

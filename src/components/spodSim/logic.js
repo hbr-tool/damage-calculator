@@ -78,7 +78,13 @@ export const skillUpdate = (turnData, skillId, placeNo) => {
     const unit = turnData.unitList.filter(unit => unit.placeNo === placeNo)[0];
     unit.selectSkillId = skillId;
     if (skillId !== 0) {
-        unit.spCost = getSpCost(turnData, getSkillData(skillId), unit);
+        const skillInfo = getSkillData(skillId);
+        if (skillInfo.cost_type === COST_TYPE.TOKEN) {
+            if (skillInfo.use_cost === 99) {
+                unit.tokenCost = unit.token;
+            }
+        }
+        unit.spCost = getSpCost(turnData, skillInfo, unit);
     } else {
         unit.spCost = 0;
     }
@@ -2413,6 +2419,7 @@ function addAbilityBuffUnit(buff_kind, ability_name, rest_turn, targetList, turn
         buff.buff_kind = buff_kind;
         buff.buff_element = 0;
         buff.rest_turn = rest_turn;
+        buff.effect_count = rest_turn;
         buff.buff_name = ability_name;
         unit.buffList.push(buff);
     })

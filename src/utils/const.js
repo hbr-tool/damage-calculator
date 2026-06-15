@@ -377,6 +377,7 @@ export const ALONE_ACTIVATION_BUFF_KIND = [
     BUFF.BABIED,
     BUFF.DIVA_BLESS,
     BUFF.SHREDDING,
+    BUFF.RUSH,
 ]
 /** 単独発動アビリティ */
 export const ALONE_ACTIVATION_ABILITY_LIST = [12, 407, 408];

@@ -132,7 +132,6 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
                     let tokenCost = skill.use_cost;
                     if (skill.use_cost === 99) {
                         tokenCost = unit.token;
-                        unit.tokenCost = unit.token;
                     }
                     text += `(${attack}token${tokenCost})`;
                 } else {
