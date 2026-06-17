@@ -291,45 +291,31 @@ export function startAction(turnData) {
         turnData.fieldTurn = 0;
         turnData.oldField = selectField;
     }
-    let turnOverDriveGauge = 0;
 
     // 自動追撃を事前検知
-    const autoPursuitUnit = [3, 4, 5].map(function (placeNo) {
-        const unitData = getUnitData(turnData, placeNo);
-        if (unitData.blank) {
-            return undefined;
-        }
-        // 自動追撃
-        if (unitData.selectSkillId === SKILL.AUTO_PURSUIT) {
-            return unitData;
-        }
-        // ネコジェットシャテキ
-        if (unitData.selectSkillId === SKILL_ID.CAT_JET_SHOOTING) {
-            return unitData;
-        }
-        return undefined;
-    }).filter(unit => unit !== undefined)[0];
+    const autoPursuitUnit = getAutoPursuitUnit(turnData);
 
     for (const skillData of seq) {
         const skillInfo = skillData.skillInfo;
+        const placeNo = skillData.placeNo;
         const unitData = getUnitData(turnData, skillData.placeNo);
         const spCost = unitData.spCost;
         const attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
 
-        // SP消費してから行動(なんか理由あったはず)
-        payCost(unitData, skillInfo);
+        // // SP消費してから行動(なんか理由あったはず)
+        // payCost(unitData, skillInfo);
 
-        const charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
-        let unitOdPlus = 0;
+        // const charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
+        // let unitOdPlus = 0;
 
-        turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
-        unitOdPlus = getODPlus(skillData, turnData, autoPursuitUnit, spCost);
-        if (unitOdPlus > 0) {
-            turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
-        } else if (unitOdPlus < 0) {
-            turnData.setLog(`　OverDriveゲージ${unitOdPlus.toFixed(2)}%`);
-        }
-        turnOverDriveGauge += unitOdPlus;
+        // turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
+        // unitOdPlus = getODPlus(skillInfo, placeNo, turnData);
+        // if (unitOdPlus > 0) {
+        //     turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
+        // } else if (unitOdPlus < 0) {
+        //     turnData.setLog(`　OverDriveゲージ${unitOdPlus.toFixed(2)}%`);
+        // }
+        // turnData.overDriveGauge += unitOdPlus;
         skillActivation(skillInfo, unitData, turnData, skillData.placeNo, autoPursuitUnit, spCost);
 
         // スキル連続使用
@@ -343,15 +329,15 @@ export function startAction(turnData) {
                 doubleAttack = true;
             }
             if (doubleAttack) {
-                turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
-                unitOdPlus = getODPlus(skillData, turnData, autoPursuitUnit, spCost);
-                if (unitOdPlus > 0) {
-                    turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
-                } else if (unitOdPlus < 0) {
-                    turnData.setLog(`　OverDriveゲージ${unitOdPlus.toFixed(2)}%`);
-                }
-                turnOverDriveGauge += unitOdPlus;
-                skillActivation(skillInfo, unitData, turnData, skillData.placeNo, autoPursuitUnit, spCost);
+                // turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
+                // unitOdPlus = getODPlus(skillInfo, placeNo, turnData);
+                // if (unitOdPlus > 0) {
+                //     turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
+                // } else if (unitOdPlus < 0) {
+                //     turnData.setLog(`　OverDriveゲージ${unitOdPlus.toFixed(2)}%`);
+                // }
+                // turnData.overDriveGauge += unitOdPlus;
+                skillActivation(skillInfo, unitData, turnData, placeNo, autoPursuitUnit, spCost);
             }
         }
         origin(turnData, skillInfo, unitData);
@@ -373,19 +359,18 @@ export function startAction(turnData) {
             let skillName = common.getSkillData(skillId).skill_name;
             let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
             turnData.setLog(`${charaName}の${skillName}`);
-            const unitOdPlus = getODBackPlus(unitData, turnData);
+            const unitOdPlus = getODBackPlus(skillId, unitData, turnData);
             if (unitOdPlus > 0) {
                 turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
             } else if (unitOdPlus < 0) {
                 turnData.setLog(`　OverDriveゲージ${unitOdPlus}%`);
             }
-            turnOverDriveGauge += unitOdPlus;
+            turnData.overDriveGauge += unitOdPlus;
             abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, unitData)
             return true;
         }
     });
 
-    turnData.overDriveGauge += turnOverDriveGauge;
     if (turnData.overDriveGauge > 300) {
         turnData.overDriveGauge = 300;
     }
@@ -395,6 +380,27 @@ export function startAction(turnData) {
     } else if (turnData.fieldTurn === 1) {
         turnData.field = 0;
     }
+}
+
+// 自動追撃取得
+const getAutoPursuitUnit = (turnData) => {
+    return [3, 4, 5].map(function (placeNo) {
+        const unitData = getUnitData(turnData, placeNo);
+        if (unitData.blank) {
+            return undefined;
+        }
+        // 自動追撃
+        if (unitData.selectSkillId === SKILL.AUTO_PURSUIT) {
+            const catJetInfo = getSkillData(constants.SKILL_ID.CAT_JET_SHOOTING);
+            const catJetSp = getSpCost(turnData, catJetInfo, unitData);
+            if (catJetSp <= unitData.sp) {
+                unitData.spCost = catJetSp;
+                unitData.selectSkillId = constants.SKILL_ID.CAT_JET_SHOOTING;
+            }
+            return unitData;
+        }
+        return undefined;
+    }).filter(unit => unit !== undefined)[0];
 }
 
 const skillActivation = (skillInfo, unitData, turnData, placeNo, autoPursuitUnit, spCost) => {
@@ -449,32 +455,42 @@ const skillActivation = (skillInfo, unitData, turnData, placeNo, autoPursuitUnit
         }
     }
 
+    // SP消費
+    payCost(unitData, skillInfo);
+
+    const charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
+    turnData.setLog(`${charaName}の${skillInfo.skill_name}`);
+    let unitOdPlus = getODPlus(skillInfo, placeNo, turnData);
+    if (unitOdPlus > 0) {
+        turnData.setLog(`　OverDriveゲージ+${unitOdPlus.toFixed(2)}%`);
+    } else if (unitOdPlus < 0) {
+        turnData.setLog(`　OverDriveゲージ${unitOdPlus.toFixed(2)}%`);
+    }
+    turnData.overDriveGauge += unitOdPlus;
+
     // 自動追撃
     if (isSkill && spCost <= 8 && autoPursuitUnit) {
         const skillId = autoPursuitUnit.selectSkillId;
-        const skillName = common.getSkillData(skillId).skill_name;
-        const charaData = getCharaData(autoPursuitUnit.style.styleInfo.chara_id);
-        const charaName = charaData.chara_short_name;
-        const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
-
-        if (skillId === SKILL.AUTO_PURSUIT) {
-            // 自動追撃
-            const unitOdPlus = calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
-            turnData.setLog(`${charaName}の${skillName}`);
-            turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
-            abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, autoPursuitUnit);
-        } else if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
-            // ネコジェットシャテキの処理
-            const unitOdPlus = getODBackPlus(autoPursuitUnit, turnData);
-            turnData.setLog(`${charaName}の${skillName}`);
-            turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
-            let skillInfo = getSkillData(skillId)
-            payCost(autoPursuitUnit, skillInfo);
-            consumeBuffUnit(turnData, autoPursuitUnit, attackInfo, skillInfo);
+        if (skillId === constants.SKILL_ID.CAT_JET_SHOOTING) {
+            const catJetInfo = getSkillData(constants.SKILL_ID.CAT_JET_SHOOTING);
+            skillActivation(catJetInfo, autoPursuitUnit, turnData, autoPursuitUnit.placeNo, null, 0);
             // 追撃アビリティ発動
             abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, autoPursuitUnit);
-            // 以降は自動追撃として処理
+            // 以降は自動追撃
             autoPursuitUnit.selectSkillId = SKILL.AUTO_PURSUIT;
+        }
+        if (skillId === SKILL.AUTO_PURSUIT) {
+            // 自動追撃
+            const charaData = getCharaData(autoPursuitUnit.style.styleInfo.chara_id);
+            const charaName = charaData.chara_short_name;
+            const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
+            let unitOdPlus = calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
+            const skillName = common.getSkillData(skillId).skill_name;
+            turnData.setLog(`${charaName}の${skillName}`);
+            turnData.setLog(`　OverDriveゲージ+${unitOdPlus}%`);
+            turnData.overDriveGauge += unitOdPlus;
+            // 追撃アビリティ発動
+            abilityActionUnit(turnData, ABILIRY_TIMING.PURSUIT, autoPursuitUnit);
         }
     }
 }
@@ -529,31 +545,22 @@ export const getOverDrive = (turn) => {
     const seq = sortActionSeq(turn);
     let odPlus = 0;
     const tempTurn = deepClone(turn);
+    let isSkill = false;
 
     // 自動追撃を事前検知
-    const autoPursuitUnit = [3, 4, 5].map(function (placeNo) {
-        const unitData = getUnitData(tempTurn, placeNo);
-        if (unitData.blank) {
-            return undefined;
-        }
-        // 自動追撃
-        if (unitData.selectSkillId === SKILL.AUTO_PURSUIT) {
-            return unitData;
-        }
-        // ネコジェットシャテキ
-        if (unitData.selectSkillId === SKILL_ID.CAT_JET_SHOOTING) {
-            return unitData;
-        }
-        return undefined;
-    }).filter(unit => unit !== undefined)[0];
-
+    const autoPursuitUnit = getAutoPursuitUnit(tempTurn);
     for (const skillData of seq) {
         const unitData = getUnitData(tempTurn, skillData.placeNo);
         const skillInfo = skillData.skillInfo;
+        const placeNo = skillData.placeNo;
         const spCost = unitData.spCost;
         const attackInfo = getSkillIdToAttackInfo(tempTurn, skillInfo.skill_id);
-
-        let unitOdPlus = getODPlus(skillData, tempTurn, autoPursuitUnit, spCost);
+        if (attackInfo) {
+            isSkill = true;
+        }
+        let unitOdPlus = 0;
+        unitOdPlus += getODPlus(skillInfo, placeNo, tempTurn);
+        unitOdPlus += autoPursuitOverDrive(tempTurn, autoPursuitUnit, isSkill, spCost);
 
         // スキル連続使用
         let doubleAttack = false;
@@ -565,7 +572,8 @@ export const getOverDrive = (turn) => {
                 doubleAttack = true;
             }
             if (doubleAttack) {
-                unitOdPlus += getODPlus(skillData, tempTurn, autoPursuitUnit, spCost);
+                unitOdPlus += getODPlus(skillInfo, placeNo, tempTurn);
+                unitOdPlus += autoPursuitOverDrive(tempTurn, autoPursuitUnit, isSkill, spCost);
             }
         }
         odPlus += unitOdPlus;
@@ -591,22 +599,41 @@ export const getOverDrive = (turn) => {
             return;
         }
         // 追撃
-        if (unitData.selectSkillId === SKILL.PURSUIT) {
-            odPlus += getODBackPlus(unitData, tempTurn);
-        }
+        odPlus += getODBackPlus(unitData.selectSkillId, unitData, tempTurn);
     });
     return odPlus;
 }
 
-const getODPlus = (skillData, turnData, autoPursuitUnit, spCost) => {
+// 自動追撃のOD増加量を計算
+const autoPursuitOverDrive = (turnData, unitData, isSkill, spCost) => {
+    let unitOdPlus = 0;
+    // 自動追撃
+    if (isSkill && spCost <= 8 && unitData) {
+        const skillId = unitData.selectSkillId;
+        if (skillId === constants.SKILL_ID.CAT_JET_SHOOTING) {
+            // ネコジェットシャテキの処理
+            const catJetInfo = getSkillData(constants.SKILL_ID.CAT_JET_SHOOTING);
+            unitOdPlus += getODPlus(catJetInfo, unitData.placeNo, turnData)
+            unitData.selectSkillId = SKILL.AUTO_PURSUIT;
+        }
+        if (skillId === SKILL.AUTO_PURSUIT) {
+            // 自動追撃
+            const charaData = getCharaData(unitData.style.styleInfo.chara_id);
+            const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
+            unitOdPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
+        }
+    }
+    return unitOdPlus;
+}
+
+const getODPlus = (skillInfo, placeNo, turnData) => {
     const enemyCount = turnData.enemyCount;
-    const skillInfo = skillData.skillInfo;
-    const unitData = getUnitData(turnData, skillData.placeNo);
+    const unitData = getUnitData(turnData, placeNo);
     const buffList = getBuffList(skillInfo.skill_id);
     const attackInfo = getSkillIdToAttackInfo(turnData, skillInfo.skill_id);
     const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
     let unitOdPlus = 0;
-    let isSkill = false;
+
     // オギャり状態
     let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
     const earring = getearringEffectSize(attackInfo ? attackInfo.hit_count : 1, unitData);
@@ -633,7 +660,7 @@ const getODPlus = (skillData, turnData, autoPursuitUnit, spCost) => {
         // 連撃、オギャり状態、チャージ処理
         const PROC_KIND = [BUFF.BABIED, BUFF.CHARGE];
         if (BUFF_FUNNEL_LIST.includes(buffInfo.buff_kind) || PROC_KIND.includes(buffInfo.buff_kind)) {
-            addBuffUnit(turnData, buffInfo, skillData.placeNo, unitData, false);
+            addBuffUnit(turnData, buffInfo, placeNo, unitData, false);
         }
     }
     let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
@@ -663,63 +690,44 @@ const getODPlus = (skillData, turnData, autoPursuitUnit, spCost) => {
             let funnelList = getFunnelList(unitData);
             unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
         }
-        isSkill = true;
-    }
-
-    // 自動追撃
-    if (isSkill && spCost <= 8 && autoPursuitUnit) {
-        const skillId = autoPursuitUnit.selectSkillId;
-        const charaData = getCharaData(autoPursuitUnit.style.styleInfo.chara_id);
-        const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
-
-        if (skillId === SKILL.AUTO_PURSUIT) {
-            // 自動追撃
-            unitOdPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
-        } else if (skillId === SKILL_ID.CAT_JET_SHOOTING) {
-            // ネコジェットシャテキの処理
-            unitOdPlus += getODBackPlus(autoPursuitUnit, turnData);
-            // 以降は自動追撃として処理
-            autoPursuitUnit.selectSkillId = SKILL.AUTO_PURSUIT;
-        }
     }
     return unitOdPlus;
 }
 
 // 後衛のOD数値
-const getODBackPlus = (unitData, turnData) => {
+const getODBackPlus = (skillId, unitData, turnData) => {
     let odPlus = 0;
-    const skillId = unitData.selectSkillId;
     if (skillId === SKILL.NONE) {
-        return odPlus;
+        return 0;
     }
     const charaData = getCharaData(unitData.style.styleInfo.chara_id);
     const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
 
-    // 追撃/自動追撃
-    if (skillId === SKILL.PURSUIT || skillId === SKILL.AUTO_PURSUIT) {
+    // 追撃
+    if (skillId === SKILL.PURSUIT) {
         if (!isResist(turnData.enemyInfo, charaData.physical, 0, 0)) {
             odPlus += calcODGain(charaData.pursuit, 1, overDriveGaugeMultiplier);
         }
         return odPlus;
     }
 
-    let skillInfo = getSkillData(skillId)
-    if (skillInfo) {
-        const enemyCount = turnData.enemyCount;
-        const attackInfo = getSkillIdToAttackInfo(turnData, skillId);
-        if (attackInfo) {
-            let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
-            const earring = attackInfo.attack_id ? getearringEffectSize(attackInfo.hit_count, unitData) : 0;
-            if (!isResist(turnData.enemyInfo, charaData.physical, attackInfo.attack_element, attackInfo.attack_id)) {
-                let enemyTarget = enemyCount;
-                if (attackInfo.range_area === constants.RANGE.ENEMY_UNIT) {
-                    enemyTarget = 1;
-                }
-                let funnelList = getFunnelList(unitData);
-                odPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
-            }
-        }
-    }
+    // let skillInfo = getSkillData(skillId)
+    // if (skillInfo) {
+    //     const enemyCount = turnData.enemyCount;
+    //     const attackInfo = getSkillIdToAttackInfo(turnData, skillId);
+    //     if (attackInfo) {
+    //         let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
+    //         const earring = attackInfo.attack_id ? getearringEffectSize(attackInfo.hit_count, unitData) : 0;
+    //         if (!isResist(turnData.enemyInfo, charaData.physical, attackInfo.attack_element, attackInfo.attack_id)) {
+    //             let enemyTarget = enemyCount;
+    //             if (attackInfo.range_area === constants.RANGE.ENEMY_UNIT) {
+    //                 enemyTarget = 1;
+    //             }
+    //             let funnelList = getFunnelList(unitData);
+    //             odPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
+    //         }
+    //     }
+    // }
     return odPlus;
 }
 

@@ -91,10 +91,6 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
                 // 追撃
                 return true;
             }
-            if (skill.skill_attribute === ATTRIBUTE.PURSUIT_ONLY) {
-                // 追撃専用
-                return true;
-            }
             return false;
         })
     }
