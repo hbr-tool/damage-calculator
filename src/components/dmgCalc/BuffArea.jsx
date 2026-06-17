@@ -24,15 +24,12 @@ const TARGET_KIND = [
     EFFECT.CRITICALRATEUP, // クリティカル率アップ
     EFFECT.CRITICAL_DAMAGE_UP, // クリティカルダメージアップ
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開
+    EFFECT.GRANT_BUFF, // バフ付与
     EFFECT.STATUSUP_VALUE, // 能力固定上昇
     EFFECT.STATUSUP_RATE, // 能力%上昇
     EFFECT.FIELD_STRENGTHEN, // フィールド強化
     EFFECT.GIVEATTACKBUFFUP, // 攻撃力バフ強化
     EFFECT.GIVEDEFFENCEDEBUFFUP, // 防御力デバフ強化
-    EFFECT.HIGH_BOOST, // ハイブースト状態
-    EFFECT.FIRE_MARK, // 火の印
-    EFFECT.ICE_MARK, // 氷の印
-    EFFECT.THUNDER_MARK, // 雷の印
     EFFECT.FUNNEL, // 連撃
     EFFECT.FUNNEL_ALWAYS, // 連撃(永続)
 ]
@@ -727,7 +724,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                 "5": memberInfo.styleInfo.ability5,
                 "10": memberInfo.styleInfo.ability10
             };
-            if (memberInfo.limitCount == 2) {
+            if (memberInfo.limitCount === 2) {
                 styleAbility = {
                     "orgn": memberInfo.styleInfo.ability_orgn,
                     "0": memberInfo.styleInfo.ability0,
