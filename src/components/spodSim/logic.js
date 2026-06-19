@@ -636,6 +636,7 @@ const getODPlus = (skillInfo, placeNo, turnData) => {
 
     // オギャり状態
     let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
+    badies += checkPassiveExist(unitData.passiveSkillList, constants.SKILL_ID.MOTHERS_LIGHT) ? 5 : 0;
     const earring = getearringEffectSize(attackInfo ? attackInfo.hit_count : 1, unitData);
 
     for (const buffInfo of buffList) {
@@ -2081,13 +2082,13 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 break;
         }
         let effectDesc = "";
-        let name = ability.ability_name || ability.passive_name;
+        let abilityName = ability.ability_name || ability.passive_name;
         switch (ability.effect_type) {
             case EFFECT.FUNNEL: // 連撃数アップ
             case EFFECT.FUNNEL_ALWAYS: // 連撃数(永続)アップ
                 buff = {};
                 buff.buff_kind = BUFF.ABILITY_FUNNEL;
-                buff.buff_name = name;
+                buff.buff_name = abilityName;
                 buff.buff_element = 0;
                 buff.max_power = ability.effect_count;
                 buff.effect_size = ability.effect_size;
@@ -2190,7 +2191,7 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                     }
                     let buffInfo = {
                         buff_kind: BUFF.MORALE,
-                        buff_name: ability.ability_name,
+                        buff_name: abilityName,
                         effect_size: ability.effect_size,
                     };
                     addMoraleBuffUnit(unitData, buffInfo, null)
@@ -2209,7 +2210,7 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 effectDesc = `OverDriveゲージ+${ability.effect_size}`;
                 break;
             case EFFECT.GRANT_BUFF: // バフ付与
-                addAbilityBuffUnit(ability.effect_no, name, ability.effect_count, targetList, turnData)
+                addAbilityBuffUnit(ability.effect_no, abilityName, ability.effect_count, targetList, turnData)
                 let buffKind = common.getBuffKind(ability.effect_no);
                 effectDesc = `${buffKind.buff_name}を付与`;
                 break;
@@ -2258,7 +2259,6 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 break;
         }
         if (effectDesc) {
-            let abilityName = ability.ability_name || ability.passive_name;
             let rangeName = getRangeName(ability.range_area);
             let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
             let conditionName = getConditionName(ability.target_element, ability.conditions, Number(ability.conditions_id));

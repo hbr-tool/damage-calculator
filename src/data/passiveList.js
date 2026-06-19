@@ -29,6 +29,10 @@ const passiveList = [
     {"skill_id":705,"passive_name":"お客様ハッピーデー","passive_explan":"味方全体のスキル攻撃時の破壊率上昇量を常時+7%","passive_short_explan":"味方全体のスキル攻撃時の破壊率上昇量を常時+7%","element":0,"target_element":0,"activation_place":3},
     {"skill_id":708,"passive_name":"獣牙粉砕","passive_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","passive_short_explan":"オーバードライブ中 自身のスキル攻撃時の破壊率上昇量+20%かつ クリティカルダメージ+20%","element":0,"target_element":0,"activation_place":2},
     {"skill_id":715,"passive_name":"咲き誇る花","passive_explan":"ターン開始時自身のEP+1","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
+    {"skill_id":761,"passive_name":"強くなると決めた日","passive_explan":"行動開始時 ダウンターンの敵がいるとき自身のスキル攻撃力+70%","passive_short_explan":"ダウンターンの敵がいるとき自身のスキル攻撃力+70%","element":0,"target_element":0,"activation_place":1},
+    {"skill_id":762,"passive_name":"想念シンクロニシティ","passive_explan":"初戦開始時 味方全体の士気レベルを2上昇","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
+    {"skill_id":764,"passive_name":"母の灯を継いで","passive_explan":"自身のODゲージ上昇量＋5％","passive_short_explan":"","element":0,"target_element":0,"activation_place":0},
+    {"skill_id":765,"passive_name":"無敵KAWAII宣言♡","passive_explan":"常時 自身のクリティカル率+100% クリティカルダメージ+50% 防御力-50%","passive_short_explan":"自身のクリティカル率+100% クリティカルダメージ+50% 防御力-50%","element":0,"target_element":0,"activation_place":3},
 ];
 
 export default passiveList;

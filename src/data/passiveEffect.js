@@ -20,12 +20,12 @@ const passiveEffect = [
     {"skill_id":611,"range_area":7,"activation_timing":1,"effect_type":5,"effect_size":15},
     {"skill_id":615,"range_area":99,"activation_timing":0,"effect_type":14,"effect_size":10},
     {"skill_id":626,"range_area":99,"activation_timing":8,"effect_type":14,"effect_size":10},
-    {"skill_id":635,"range_area":6,"activation_timing":0,"effect_type":8,"effect_no":40,"effect_size":0},
+    {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":55,"effect_size":30},
     {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":1,"effect_size":180},
     {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":17,"effect_size":20},
     {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":19,"effect_size":20},
-    {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":55,"effect_size":30},
     {"skill_id":635,"range_area":6,"activation_timing":13,"effect_type":56,"effect_size":2},
+    {"skill_id":635,"range_area":6,"activation_timing":0,"effect_type":8,"effect_no":40,"effect_size":0},
     {"skill_id":658,"range_area":6,"activation_timing":13,"effect_type":1,"effect_size":30,"conditions":28,"conditions_id":1},
     {"skill_id":658,"range_area":6,"activation_timing":13,"effect_type":5,"effect_size":10,"conditions":28,"conditions_id":3},
     {"skill_id":658,"range_area":6,"activation_timing":13,"effect_type":3,"effect_size":30,"conditions":28,"conditions_id":4},
@@ -42,6 +42,11 @@ const passiveEffect = [
     {"skill_id":708,"range_area":7,"activation_timing":1,"effect_type":4,"effect_size":20},
     {"skill_id":708,"range_area":7,"activation_timing":1,"effect_type":5,"effect_size":20},
     {"skill_id":715,"range_area":7,"activation_timing":1,"effect_type":52,"effect_size":1},
+    {"skill_id":761,"range_area":7,"activation_timing":99,"effect_type":1,"effect_size":70,"conditions":8},
+    {"skill_id":762,"range_area":6,"activation_timing":0,"effect_type":16,"effect_size":2},
+    {"skill_id":764,"range_area":0,"activation_timing":99,"effect_type":46,"effect_size":5},
+    {"skill_id":765,"range_area":7,"activation_timing":0,"effect_type":3,"effect_size":100},
+    {"skill_id":765,"range_area":7,"activation_timing":0,"effect_type":4,"effect_size":50},
 ];
 
 export default passiveEffect;

@@ -42,6 +42,7 @@ export const SKILL_ID = {
     CONSPIRACY: 669, // 謀略
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
+    MOTHERS_LIGHT: 764, // 母の灯を継いで
 }
 
 export const BUFF_ID = {
@@ -220,8 +221,8 @@ export const EFFECT = {
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
+    OVERDRIVE_RATE_UP: 46, // OD増加量アップ
     HEALEP: 52, // EP回復
-    // ATTACKUP_AND_DAMAGERATEUP: 53, // 攻撃力＋破壊率アップ
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
