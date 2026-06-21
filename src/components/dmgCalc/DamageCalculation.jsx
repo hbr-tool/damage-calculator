@@ -45,7 +45,7 @@ const setDp = (state, action) => {
 
 const setCollect = (state, action) => {
     const updated = Object.fromEntries(Object.keys({ ...state.correction }).map(k => [k, 0]))
-    let newMaxDamageRate = state.maxDamageRate;
+    let newMaxDamageRate = state.enemyInfo.destruction_limit + (state.strongBreak ? 300 : 0) + (state.superDown ? 300 : 0);
     for (let i = 1; i <= 5; i++) {
         const kind = action.grade[`effect_kind${i}`];
         if (kind) {
