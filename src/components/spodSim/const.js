@@ -21,7 +21,7 @@ export const ABILIRY_TIMING = {
 }
 
 // 使用不可スタイル
-export const NOT_USE_STYLE = [197];
+export const NOT_USE_STYLE = [197, 213];
 // 制限アビリティ
 export const CONSTRAINTS_ABILITY = [
     25, // 超越ゲージ

@@ -987,6 +987,8 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
         case BUFF.SHCHI: // シチー
         case BUFF.STEAK: // ステーキ
         case BUFF.GELATO: // ジェラート
+        case BUFF.DIM_SUM: // 点心
+        case BUFF.SPRIGHTLY: // 軽快
             // バフ追加
             if (buffInfo.buff_kind === BUFF.ATTACKUP || buffInfo.buff_kind === BUFF.ELEMENT_ATTACKUP) {
                 // 先頭のバフ強化を消費する。

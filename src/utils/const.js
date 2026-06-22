@@ -22,6 +22,7 @@ export const STYLE_ID = {
     KITCHEN_SHARO: 182,  // キッチンシャロ
     KITCHEN_CAROLE: 200,  // キッチンキャロル
     KITCHEN_MARIA: 201,  // キッチンマリア
+    SHANHUA_MARIA: 213,  // キッチン映夏
     PAWAPURO: [183, 184, 5092],  // パワプロ月歌、いちご、緋雨
 }
 
@@ -181,6 +182,8 @@ export const BUFF = {
     GELATO: 54, // ジェラート
     UNDERMINE: 55, // 蝕
     RUSH: 56, // ラッシュ
+    DIM_SUM: 57, // 点心
+    SPRIGHTLY: 58, // 軽快
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

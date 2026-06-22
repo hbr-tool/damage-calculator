@@ -41,6 +41,7 @@ export const BUFF_KBN = {
     48: "eternal_fragile",
     53: "steak",
     54: "gelato",
+    57: "dim_sum",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -242,6 +243,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.SHCHI: // シチー
             case BUFF.STEAK: // ステーキ
             case BUFF.GELATO: // ジェラート
+            case BUFF.DIM_SUM: // 点心
                 return 50;
             default:
                 break;
@@ -903,7 +905,7 @@ function getSumBuffEffectSize(handlers) {
     // スキルバフ合計
     let sumBuff = getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap,
         [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.CHARGE, BUFF.ARROWCHERRYBLOSSOMS,
-        BUFF.ETERNAL_OARH, BUFF.BABIED, BUFF.SHADOW_CLONE, BUFF.CURRY, BUFF.SHCHI, BUFF.STEAK, BUFF.GELATO]);
+        BUFF.ETERNAL_OARH, BUFF.BABIED, BUFF.SHADOW_CLONE, BUFF.CURRY, BUFF.SHCHI, BUFF.STEAK, BUFF.GELATO, BUFF.DIM_SUM]);
     // 攻撃力アップアビリティ
     sumBuff += getSumAbilityEffectSize(handlers, EFFECT.ATTACKUP);
     // 属性リング(0%-10%)
