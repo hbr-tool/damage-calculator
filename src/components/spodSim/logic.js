@@ -931,6 +931,10 @@ function getFieldElement(turnData) {
 
 // バフを追加
 function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = true) {
+    if (buffInfo.buff_kind === BUFF.OVERDRIVEPOINTUP) {
+        return;
+    }
+
     // 条件判定
     if (buffInfo.conditions) {
         if (!judgmentCondition(buffInfo.conditions, buffInfo.conditions_id, turnData, useUnitData, buffInfo.skill_id)) {
@@ -1133,9 +1137,6 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
                     return buffInfo.buff_kind !== BUFF.RECOIL && buffInfo.buff_kind !== BUFF.NAGATIVE;
                 });
             });
-            break;
-        case BUFF.OVERDRIVEPOINTUP: // OD増加
-            isLogOutput = false;
             break;
         case BUFF.TOKEN_UP: // トークン増加
             targetList.forEach(function (target_no) {
