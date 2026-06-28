@@ -126,12 +126,12 @@ function getData(isBadge) {
 }
 function getData1(isBadge) {
     return data.filter(function (item) {
-        return item["chara_id"] <= 24 || 100 < item["chara_id"];
+        return item["chara_id"] <= 24 || (100 < item["chara_id"] && item["chara_id"] < 110);
     });
 }
 function getData2() {
     return data.filter(function (item) {
-        return item["chara_id"] > 24 && item["chara_id"] <= 99;
+        return (item["chara_id"] > 24 && item["chara_id"] <= 99) || item["chara_id"] >= 110;
     });
 }
 
@@ -353,7 +353,7 @@ let baseColumns = [
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
             let chara_id = Number(rowData["chara_id"]);
-            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 93 || chara_id == 107) {
+            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 93 || chara_id == 107 || chara_id == 113) {
                 $(td).addClass("underLine");
             }
         },
