@@ -58,6 +58,7 @@ const buffKind = [
     {"buff_kbn":56,"replace_name":"RUSH","buff_name":"ラッシュ","buff_icon":"IconByakkoDoubleActionAttackSkill","effect_type":45,"effect_no":null,"effect_size":null,"ref_status_1":0,"ref_status_2":0},
     {"buff_kbn":57,"replace_name":"DIM_SUM","buff_name":"点心","buff_icon":"IconDimSum","effect_type":1,"effect_no":null,"effect_size":50,"ref_status_1":5,"ref_status_2":0},
     {"buff_kbn":58,"replace_name":"SPRIGHTLY","buff_name":"軽快","buff_icon":"IconSprightly","effect_type":0,"effect_no":null,"effect_size":null,"ref_status_1":0,"ref_status_2":0},
+    {"buff_kbn":59,"replace_name":"CAMP_DEPLOYMENT","buff_name":"陣展開","buff_icon":"","effect_type":0,"effect_no":null,"effect_size":null,"ref_status_1":0,"ref_status_2":0},
     {"buff_kbn":90,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":"","effect_type":0,"effect_no":null,"effect_size":null,"ref_status_1":0,"ref_status_2":0},
     {"buff_kbn":116,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel","effect_type":0,"effect_no":null,"effect_size":null,"ref_status_1":5,"ref_status_2":0},
 ];

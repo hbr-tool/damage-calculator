@@ -23,6 +23,7 @@ export const STYLE_ID = {
     KITCHEN_CAROLE: 200,  // キッチンキャロル
     KITCHEN_MARIA: 201,  // キッチンマリア
     SHANHUA_MARIA: 213,  // キッチン映夏
+    YUKATA_SHIKI: 215,  // 浴衣シッキー
     PAWAPURO: [183, 184, 5092],  // パワプロ月歌、いちご、緋雨
 }
 
@@ -184,6 +185,7 @@ export const BUFF = {
     RUSH: 56, // ラッシュ
     DIM_SUM: 57, // 点心
     SPRIGHTLY: 58, // 軽快
+    CAMP_DEPLOYMENT: 59, // 陣展開
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
@@ -222,6 +224,7 @@ export const EFFECT = {
     TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
     TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
     TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
+    CAMP_DEPLOYMENT: 40, // 陣展開
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
     OVERDRIVE_RATE_UP: 46, // OD増加量アップ
@@ -272,6 +275,7 @@ export const ATTRIBUTE = {
     PURSUIT_ONLY: 5, // 追撃のみ発動可能
     SP_HALF: 11, // SP消費半減
     SP_ZERO: 12, // SP消費0
+    SP_MITIGATION_3: 13, // SP消費軽減3
     NOT_ACTION: 99, // 行動無し
 }
 
@@ -312,6 +316,7 @@ export const CONDITIONS = {
     OVER_31E_3: 35, // 31E3人以上
     SELECT_31A: 37, // 31A選択
     SELECT_CHARA: 38, // 特定キャラを選択
+    CAMP_DEPLOYMENT: 40, // 陣展開中
     FIELD_NOT_FIRE: 41, // 火属性以外フィールド
     NOT_DIVA_BLESS: 43, // 歌姫の加護以外
     NOT_NEGATIVE: 44, // ネガティブ以外

@@ -255,6 +255,7 @@ const abilityList = [
     {"ability_id":1155,"ability_name":"クッキートッピング","ability_explan":"ターン開始時に前衛にいると前衛の光属性スタイルの味方のSP+1","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":4},
     {"ability_id":1156,"ability_name":"小気功","ability_explan":"ターン開始時に前衛にいると前衛のSP+1","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
     {"ability_id":1157,"ability_name":"至極の甘味餡","ability_explan":"ターン開始時に前衛にいると前衛の闇属性スタイルの味方のSP+1","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":5},
+    {"ability_id":1158,"ability_name":"納涼","ability_explan":"ターン開始時 晩夏の陣が展開されていると味方全体のデバフを1つ解除する","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
     {"ability_id":1203,"ability_name":"防御態勢","ability_explan":"行動開始時に前衛&DP100%以上のとき自身の防御力+50%","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
     {"ability_id":1204,"ability_name":"エンゲージリンク","ability_explan":"ターン開始時前衛にいると自身を含む永遠なる誓い状態の味方のSP+1","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
     {"ability_id":1205,"ability_name":"イノセント・ヴェール","ability_explan":"ターン開始時自身を含む永遠なる誓い状態の味方のDP+15%","ability_short_explan":"","activation_place":3,"physical":0,"element":0,"target_element":0},
@@ -354,6 +355,8 @@ const abilityList = [
     {"ability_id":2014,"ability_name":"花茶","ability_explan":"初戦開始時 自身が前衛かつ闇属性スタイルの味方が4体以上のとき 前衛の闇属性スタイルを軽快(小)状態にする","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":5},
     {"ability_id":2101,"ability_name":"トップアップ","ability_explan":"自身がODゲージを消費するスキルを使用したとき自身に追加ターン(追加ターン中を除く)","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
     {"ability_id":2102,"ability_name":"1MORE","ability_explan":"自身のアクティブスキルで敵の弱点をついたとき自身に追加ターン(追加ターン中を除く)","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
+    {"ability_id":2103,"ability_name":"残響(小)","ability_explan":"晩夏の陣が展開されているとき【フレッダメンテ】使用後自身に追加ターン(追加ターン中を除く)(出撃中1回)","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
+    {"ability_id":2104,"ability_name":"残響[アビリティ強化]","ability_explan":"晩夏の陣が展開されているとき【フレッダメンテ】使用後自身に追加ターン(追加ターン中を除く)(出撃中1回)","ability_short_explan":"","activation_place":1,"physical":0,"element":0,"target_element":0},
 ];
 
 export default abilityList;

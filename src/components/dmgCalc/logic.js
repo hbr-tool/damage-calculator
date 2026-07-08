@@ -42,6 +42,7 @@ export const BUFF_KBN = {
     53: "steak",
     54: "gelato",
     57: "dim_sum",
+    59: "camp",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -231,6 +232,8 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
                 break;
             case BUFF.FIELD: // フィールド
                 return buff.max_power + strengthen;
+            case BUFF.CAMP_DEPLOYMENT: // 晩夏の陣
+                return 250;
             case BUFF.BABIED: // オギャり
                 return 30;
             case BUFF.ETERNAL_OARH: // 永遠なる誓い
@@ -1455,7 +1458,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     let tearsOfDreams = 0;
     // 夢の泪
     if (enemyInfo.enemy_class === ENEMY_CLASS.HARD_LAYER) {
-        const tearsOfDreamsList = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20]
+        const tearsOfDreamsList = [0, 12, 12, 12, 12, 15, 15, 15, 15, 15, 20, 20, 20, 20, 20, 20]
         tearsOfDreams = tearsOfDreamsList[enemyInfo.enemy_class_no] * Number(state.hard.tearsOfDreams);
     }
     // 属性ボーナス

@@ -895,6 +895,9 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
     const isShanhuaMaria = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.SHANHUA_MARIA
     );
+    const isYukataShiki = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.YUKATA_SHIKI
+    );
     const isRisa = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
     );
@@ -933,6 +936,7 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
         ...(isKitchenCarole ? [{ name: "ステーキ", kind: BUFF.STEAK, overlap: false },] : []),
         ...(isKitchenMaria ? [{ name: "ジェラート", kind: BUFF.GELATO, overlap: false },] : []),
         ...(isShanhuaMaria ? [{ name: "点心", kind: BUFF.DIM_SUM, overlap: false },] : []),
+        ...(isYukataShiki ? [{ name: "晩夏の陣", kind: BUFF.CAMP_DEPLOYMENT, overlap: false },] : []),
         ...(isWeak ? [{ name: "心眼", kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
         { name: "連撃", kind: BUFF.FUNNEL, overlap: true },

@@ -273,7 +273,7 @@ const abilityEffect = [
     {"ability_id":1118,"range_area":7,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":"50","conditions_id":10},
     {"ability_id":1119,"range_area":7,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":"DP101以上のとき"},
     {"ability_id":1120,"range_area":6,"activation_timing":1,"effect_type":0,"effect_size":0,"conditions":"拘束状態"},
-    {"ability_id":1131,"range_area":4,"activation_timing":1,"effect_type":14,"effect_size":5,"conditions":"火属性フィールド"},
+    {"ability_id":1131,"range_area":99,"activation_timing":1,"effect_type":14,"effect_size":5,"conditions":"火属性フィールド"},
     {"ability_id":1132,"range_area":4,"activation_timing":1,"effect_type":14,"effect_size":10,"conditions":"DP50%以下"},
     {"ability_id":1133,"range_area":4,"activation_timing":1,"effect_type":12,"effect_size":2,"conditions":"50","conditions_id":36},
     {"ability_id":1134,"range_area":4,"activation_timing":1,"effect_type":13,"effect_size":5,"conditions":""},
@@ -299,6 +299,7 @@ const abilityEffect = [
     {"ability_id":1155,"range_area":4,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":""},
     {"ability_id":1156,"range_area":7,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":""},
     {"ability_id":1157,"range_area":4,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":""},
+    {"ability_id":1158,"range_area":6,"activation_timing":1,"effect_type":99,"effect_size":1,"conditions":""},
     {"ability_id":1203,"range_area":7,"activation_timing":2,"effect_type":11,"effect_size":50,"effect_count":1,"conditions":"DP100%以上"},
     {"ability_id":1204,"range_area":6,"activation_timing":1,"effect_type":12,"effect_size":1,"conditions":"50","conditions_id":31},
     {"ability_id":1205,"range_area":99,"activation_timing":1,"effect_type":13,"effect_size":15,"conditions":"50","conditions_id":31},
@@ -398,6 +399,8 @@ const abilityEffect = [
     {"ability_id":2014,"range_area":6,"activation_timing":0,"effect_type":8,"effect_no":58,"conditions":"19","conditions_id":4},
     {"ability_id":2101,"range_area":7,"activation_timing":11,"effect_type":29,"conditions":"ODゲージ使用"},
     {"ability_id":2102,"range_area":7,"activation_timing":11,"effect_type":29,"conditions":"60"},
+    {"ability_id":2103,"range_area":7,"activation_timing":11,"effect_type":29,"conditions":""},
+    {"ability_id":2104,"range_area":7,"activation_timing":11,"effect_type":29,"conditions":""},
 ];
 
 export default abilityEffect;
