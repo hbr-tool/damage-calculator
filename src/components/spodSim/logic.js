@@ -2045,6 +2045,10 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
         if (ability.activation_place === 2 && unitData.placeNo < 3) {
             return true;
         }
+        // 初回のみ
+        if (ability.used && ability.first_only === 1) {
+            return true;
+        }
         let targetList = getTargetList(turnData, ability.range_area, ability.target_element, unitData.placeNo, null);
         let buff;
         if (!judgmentCondition(Number(ability.conditions), ability.conditions_id, turnData, unitData, null)) {
@@ -2122,11 +2126,6 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 effectDesc = `OD時EPアップ${ability.effect_size}`;
                 break;
             case EFFECT.HEALSP: // SP回復
-                // 初回のみ
-                if (ability.used && constants.ONLY_USE_EFFECT.includes(ability.ability_id)) {
-                    return;
-                }
-                ability.used = true;
                 let limitSp = unitData.limitSp;
                 if (ability.effect_no) {
                     limitSp = ability.effect_no;
@@ -2202,10 +2201,6 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 effectDesc = `士気+${ability.effect_size}`;
                 break;
             case EFFECT.OVERDRIVEPOINTUP: // ODアップ
-                if (ability.used && constants.ONLY_USE_EFFECT.includes(ability.ability_id)) {
-                    return;
-                }
-                ability.used = true;
                 turnData.overDriveGauge += ability.effect_size;
                 if (turnData.overDriveGauge > 300) {
                     turnData.overDriveGauge = 300;
@@ -2261,6 +2256,7 @@ const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
             default:
                 break;
         }
+        ability.used = true;
         if (effectDesc) {
             let rangeName = getRangeName(ability.range_area);
             let charaName = getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
@@ -2405,12 +2401,18 @@ const getConditionName = (targetElement, conditions, conditionsId) => {
             return `${common.getBuffKind(conditionsId).buff_name}状態の時`;
         case CONDITIONS.SP_UNDER:
             return `SPが${conditionsId}以下の時`;
+        case CONDITIONS.SP_OVER:
+            return `SPが${conditionsId}以上の時`;
         case CONDITIONS.ENEMY_COUNT:
             return `敵の数が${conditionsId}の時`;
         case CONDITIONS.USE_COUNT:
             return `使用回数が${conditionsId}回以上の時`;
         case CONDITIONS.IS_WEAK:
             return `弱点をついた時`;
+        case CONDITIONS.OD_UNDER:
+            return `OverDriveゲージが${conditionsId}%以下の時`;
+        case CONDITIONS.OD_OVER:
+            return `OverDriveゲージが${conditionsId}%以上の時`;
         default:
             return conditions;
     }

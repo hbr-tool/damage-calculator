@@ -56,14 +56,6 @@ export const BUFF_ID = {
     BRIGHT_RED: 1037,   // 茜色
 }
 
-// 初回のみ
-export const ONLY_USE_EFFECT = [
-    // 戦場の華,猛火の進撃,氷嵐の進撃
-    1528, 1023, 1031,
-    // V字回復,世界征服の始まりでゲス！,魔王軍の大攻勢！
-    1207, 1209, 1215
-]
-
 // 追加SPアビリティ
 export const ADD_SP_ABILITY = [
     1109, // 吉報
@@ -244,6 +236,13 @@ export const FIELD = {
     DARK: 5, // 闇
     RICE: 6, // 稲穂
     SANDSTORM: 7, // 砂嵐
+}
+
+/** 陣 */
+export const CAMP = {
+    0: "無",
+    1: "再生の陣",
+    2: "晩夏の陣",
 }
 
 /** 対象 */

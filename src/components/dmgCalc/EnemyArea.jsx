@@ -79,10 +79,10 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
             <div className="flex">
                 <div className="flex flex-wrap gap-1 w-40">
                     <div className="text-right enemy_label">防御値</div>
-                    <input type="number" className="w-10 text-center" value={enemyStat} id="enemy_stat" readOnly={!isFreeInput}
+                    <input type="number" className="w-12 text-center" value={enemyStat} id="enemy_stat" readOnly={!isFreeInput}
                         onChange={(e) => handleEnemyChange("enemy_stat", e.target.value)} />
                     <div className="text-right enemy_label">破壊率上限</div>
-                    <input type="number" className="w-10 text-center" value={state.maxDamageRate} id="enemy_destruction_limit" readOnly={!isFreeInput}
+                    <input type="number" className="w-12 text-center" value={state.maxDamageRate} id="enemy_destruction_limit" readOnly={!isFreeInput}
                         onChange={(e) => handleMaxDamageRate(e.target.value)} />
                     <div className="text-right enemy_label">破壊率</div>
                     <input type="number" className="text-center" id="enemy_destruction_rate" min="100" value={state.damageRate}
