@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.5ab9af37.css",
-    "main.js": "/static/js/main.72ab9818.js",
+    "main.js": "/static/js/main.b7856fca.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -202,6 +202,7 @@
     "static/media/IRedmayneSteam_R3_Select.webp": "/static/media/IRedmayneSteam_R3_Select.3c915aa3a7371f8439b2.webp",
     "static/media/DioramaStamp31x.webp": "/static/media/DioramaStamp31x.a4bdacd95942c76ccbe8.webp",
     "static/media/YIzumiCombat2023_R3_Select.webp": "/static/media/YIzumiCombat2023_R3_Select.351818a425174784c53a.webp",
+    "static/media/YoOhshimaSwim2026_R3_Select.webp": "/static/media/YoOhshimaSwim2026_R3_Select.1aac93182b7db6e83e0e.webp",
     "static/media/KMaruyamaCommander_R3_Select.webp": "/static/media/KMaruyamaCommander_R3_Select.e38ff9e7b5df1cf20a6c.webp",
     "static/media/NNanaseRider_R3_Select.webp": "/static/media/NNanaseRider_R3_Select.0d6c9033059f04cc8ecc.webp",
     "static/media/AKanzakiAgent_R3_Select.webp": "/static/media/AKanzakiAgent_R3_Select.81d03d3863c4e6eed818.webp",
@@ -213,6 +214,7 @@
     "static/media/KHiiragiWaitress_R3_Select.webp": "/static/media/KHiiragiWaitress_R3_Select.75f6a9cb76ecd595931d.webp",
     "static/media/HOgasawaraEaster_R3_Select.webp": "/static/media/HOgasawaraEaster_R3_Select.eac2cc91905205d71ed5.webp",
     "static/media/MAikawaSession_R3_Select.webp": "/static/media/MAikawaSession_R3_Select.4aca162a5c8a8a4df7c2.webp",
+    "static/media/IcOhshimaSwim2026_R3_Select.webp": "/static/media/IcOhshimaSwim2026_R3_Select.4a1f464c8061f9688663.webp",
     "static/media/STezukaSoldier_R3_Select.webp": "/static/media/STezukaSoldier_R3_Select.833bafcc39b5df2e5d8e.webp",
     "static/media/MKiryuDefault_R3_Select.webp": "/static/media/MKiryuDefault_R3_Select.6a038852c3def700c2b5.webp",
     "static/media/ADateDefault_R3_Select.webp": "/static/media/ADateDefault_R3_Select.fd45d16c861926ead640.webp",
@@ -372,6 +374,7 @@
     "static/media/LShanhuaKitchen_R3_Thumbnail.webp": "/static/media/LShanhuaKitchen_R3_Thumbnail.95543e3e8196dd87ef1a.webp",
     "static/media/SHanamuraConductor_R3_Thumbnail.webp": "/static/media/SHanamuraConductor_R3_Thumbnail.534d27fb152cd87c238d.webp",
     "static/media/TTojoSwim2022_R3_Thumbnail.webp": "/static/media/TTojoSwim2022_R3_Thumbnail.30ce90d3c012d957452d.webp",
+    "static/media/IcOhshimaSwim2026_R3_Thumbnail.webp": "/static/media/IcOhshimaSwim2026_R3_Thumbnail.5effa293f054ca636dca.webp",
     "static/media/MYanagiWhiteSuit_R3_Thumbnail.webp": "/static/media/MYanagiWhiteSuit_R3_Thumbnail.5dc802e95365f1ebc68a.webp",
     "static/media/VBalakrishnanDefault_R2b_Thumbnail.webp": "/static/media/VBalakrishnanDefault_R2b_Thumbnail.8db39cd18e4aa828a20d.webp",
     "static/media/EAoiSwim2025_R3_Thumbnail.webp": "/static/media/EAoiSwim2025_R3_Thumbnail.b760491500bf03d893a8.webp",
@@ -392,6 +395,7 @@
     "static/media/BIYamawakiWhiteSuit_R3_Thumbnail.webp": "/static/media/BIYamawakiWhiteSuit_R3_Thumbnail.5e68a2caca71bd2f01fd.webp",
     "static/media/BIYamawakiDefault_R3_Select.webp": "/static/media/BIYamawakiDefault_R3_Select.4e199031c6a671b75f0d.webp",
     "static/media/AliceBDefault_R3_Select.webp": "/static/media/AliceBDefault_R3_Select.9bd599f787adf5c13b5d.webp",
+    "static/media/YoOhshimaSwim2026_R3_Thumbnail.webp": "/static/media/YoOhshimaSwim2026_R3_Thumbnail.ec5fe8c839d937ab5978.webp",
     "static/media/KMaruyamaDefault_R3_Thumbnail.webp": "/static/media/KMaruyamaDefault_R3_Thumbnail.f25788f94a9f9af4079c.webp",
     "static/media/CSkopovskayaBride_R3_Thumbnail.webp": "/static/media/CSkopovskayaBride_R3_Thumbnail.0635782dfc8712a453cb.webp",
     "static/media/IcOhshimaDefault_R3_Select.webp": "/static/media/IcOhshimaDefault_R3_Select.f78304ca19694edd41a8.webp",
@@ -847,6 +851,6 @@
   },
   "entrypoints": [
     "static/css/main.5ab9af37.css",
-    "static/js/main.72ab9818.js"
+    "static/js/main.b7856fca.js"
   ]
 }
