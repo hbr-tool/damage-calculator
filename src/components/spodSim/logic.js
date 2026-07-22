@@ -634,10 +634,12 @@ const getODPlus = (skillInfo, placeNo, turnData) => {
     const overDriveGaugeMultiplier = turnData.overDriveGaugeMultiplier / 100;
     let unitOdPlus = 0;
 
+    let odRateUp = unitData.overDriveRateUp;
     // オギャり状態
-    let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
-    badies += checkPassiveExist(unitData.passiveSkillList, constants.SKILL_ID.MOTHERS_LIGHT) ? 5 : 0;
+    odRateUp += checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
+    // odRateUp += checkPassiveExist(unitData.passiveSkillList, constants.SKILL_ID.MOTHERS_LIGHT) ? 5 : 0;
     const earring = getearringEffectSize(attackInfo ? attackInfo.hit_count : 1, unitData);
+
 
     for (const buffInfo of buffList) {
         // OD増加
@@ -650,7 +652,7 @@ const getODPlus = (skillInfo, placeNo, turnData) => {
             let correction = 1;
             // 補正はのプラスの時のみ
             if (buffInfo.max_power > 0) {
-                correction += (badies + earring) / 100;
+                correction += (odRateUp + earring) / 100;
             }
             let point = buffInfo.max_power;
             if (buffInfo.token_power_up === 1) {
@@ -668,7 +670,7 @@ const getODPlus = (skillInfo, placeNo, turnData) => {
     if (skillInfo.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
         // 通常攻撃
         if (!isResist(turnData.enemyInfo, physical, unitData.normalAttackElement, null)) {
-            unitOdPlus += calcODGain(3, 1, overDriveGaugeMultiplier, badies);
+            unitOdPlus += calcODGain(3, 1, overDriveGaugeMultiplier, odRateUp);
         }
     } else if (attackInfo) {
         // 攻撃IDの変換(暫定)
@@ -689,7 +691,7 @@ const getODPlus = (skillInfo, placeNo, turnData) => {
         }
         if (!isResist(turnData.enemyInfo, physical, attackInfo.attack_element, attackId)) {
             let funnelList = getFunnelList(unitData);
-            unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
+            unitOdPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, odRateUp, earring, funnelList.length);
         }
     }
     return unitOdPlus;
@@ -711,30 +713,12 @@ const getODBackPlus = (skillId, unitData, turnData) => {
         }
         return odPlus;
     }
-
-    // let skillInfo = getSkillData(skillId)
-    // if (skillInfo) {
-    //     const enemyCount = turnData.enemyCount;
-    //     const attackInfo = getSkillIdToAttackInfo(turnData, skillId);
-    //     if (attackInfo) {
-    //         let badies = checkBuffExist(unitData.buffList, BUFF.BABIED) ? 20 : 0;
-    //         const earring = attackInfo.attack_id ? getearringEffectSize(attackInfo.hit_count, unitData) : 0;
-    //         if (!isResist(turnData.enemyInfo, charaData.physical, attackInfo.attack_element, attackInfo.attack_id)) {
-    //             let enemyTarget = enemyCount;
-    //             if (attackInfo.range_area === constants.RANGE.ENEMY_UNIT) {
-    //                 enemyTarget = 1;
-    //             }
-    //             let funnelList = getFunnelList(unitData);
-    //             odPlus += calcODGain(attackInfo.hit_count, enemyTarget, overDriveGaugeMultiplier, badies, earring, funnelList.length);
-    //         }
-    //     }
-    // }
     return odPlus;
 }
 
 // OD計算
-const calcODGain = (hitCount, enemyTarget, overDriveGaugeMultiplier, badies = 0, earring = 0, funnelCount = 0) => {
-    const correction = 1 + (badies + earring) / 100;
+const calcODGain = (hitCount, enemyTarget, overDriveGaugeMultiplier, odRateUp = 0, earring = 0, funnelCount = 0) => {
+    const correction = 1 + (odRateUp + earring) / 100;
     const hitOd = Math.floor(2.5 * correction * overDriveGaugeMultiplier * 100) / 100;
     return (hitCount * hitOd * enemyTarget) + (funnelCount * hitOd * enemyTarget);
 };

@@ -123,6 +123,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             buffEffectSelectType: 0,
             spCostDown: 0,
             spCostUp: 0,
+            overDriveRateUp: 0,
             nextTurnMinSp: -1,
             selectSkillId: 0,
             initSkillId: 0,
@@ -233,6 +234,12 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
                     }
                 }
             }
+
+            unit[`ability_${ABILIRY_TIMING.PASSIVE}`].forEach(abilityEffect => {
+                if (abilityEffect.effect_type === constants.EFFECT.OVERDRIVE_RATE_UP) {
+                    unit.overDriveRateUp += abilityEffect.effect_size;
+                }
+            });
             if (member.morale > 0) {
                 let morale = {
                     buff_kind: BUFF.MORALE,

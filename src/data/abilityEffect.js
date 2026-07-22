@@ -146,7 +146,7 @@ const abilityEffect = [
     {"ability_id":260,"range_area":6,"activation_timing":1,"effect_type":31,"effect_size":3,"conditions":""},
     {"ability_id":261,"range_area":4,"activation_timing":1,"effect_type":4,"effect_size":10,"effect_count":1,"conditions":""},
     {"ability_id":262,"range_area":4,"activation_timing":1,"effect_type":4,"effect_size":10,"effect_count":1,"conditions":""},
-    {"ability_id":263,"range_area":6,"activation_timing":1,"effect_type":4,"effect_size":10,"effect_count":1,"conditions":""},
+    {"ability_id":263,"range_area":6,"activation_timing":1,"effect_type":4,"effect_size":25,"effect_count":1,"conditions":""},
     {"ability_id":264,"range_area":4,"activation_timing":1,"effect_type":4,"effect_size":10,"effect_count":1,"conditions":""},
     {"ability_id":266,"range_area":4,"activation_timing":1,"effect_type":4,"effect_size":8,"effect_count":1,"conditions":""},
     {"ability_id":267,"range_area":4,"activation_timing":1,"effect_type":4,"effect_size":8,"effect_count":1,"conditions":""},

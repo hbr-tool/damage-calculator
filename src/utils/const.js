@@ -44,7 +44,7 @@ export const SKILL_ID = {
     CONSPIRACY: 669, // 謀略
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
-    MOTHERS_LIGHT: 764, // 母の灯を継いで
+    // MOTHERS_LIGHT: 764, // 母の灯を継いで
 }
 
 export const BUFF_ID = {
