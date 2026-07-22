@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.5ab9af37.css",
-    "main.js": "/static/js/main.b7856fca.js",
+    "main.js": "/static/js/main.074001e9.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -756,6 +756,7 @@
     "static/media/IconThunderMark.webp": "/static/media/IconThunderMark.f9e35a9907d2abf045ce.webp",
     "static/media/IconIceMark.webp": "/static/media/IconIceMark.d8870da511bedad2dac2.webp",
     "static/media/IconByakkoDoubleActionAttackSkill.webp": "/static/media/IconByakkoDoubleActionAttackSkill.6f7f59851a2bf5354c38.webp",
+    "static/media/IconLightMark.webp": "/static/media/IconLightMark.2cd97220fee90fd5fd9f.webp",
     "static/media/IconCurry.webp": "/static/media/IconCurry.68fce12ee56f10d0e231.webp",
     "static/media/IconHighBoost.webp": "/static/media/IconHighBoost.bab01bca5e0227d6e190.webp",
     "static/media/IconDarkMark.webp": "/static/media/IconDarkMark.f0b7ed905e7dbd227f28.webp",
@@ -851,6 +852,6 @@
   },
   "entrypoints": [
     "static/css/main.5ab9af37.css",
-    "static/js/main.b7856fca.js"
+    "static/js/main.074001e9.js"
   ]
 }
