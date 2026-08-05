@@ -16,7 +16,7 @@ select {
 }
 
 td, th {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 @media screen and (max-width:1024px) {

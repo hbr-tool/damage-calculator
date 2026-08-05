@@ -63,7 +63,7 @@ function updateHeight() {
         const calculatedHeight = windowHeight - 125;
         hot1.updateSettings({ height: calculatedHeight });
     } else {
-        hot1.updateSettings({ height: 800 });
+        hot1.updateSettings({ height: 870 });
     }
 }
 
@@ -253,7 +253,8 @@ function getGridOptions(data, width, columns) {
     return {
         data: data,
         colHeaders: true,
-        height: 800,
+        height: 870,
+        rowHeights: 20,
         width: width,
         columns: columns,
         columnHeaderHeight: 50,
@@ -353,7 +354,7 @@ let baseColumns = [
             Handsontable.renderers.TextRenderer.apply(this, arguments);
             let rowData = instance.getSourceData()[row];
             let chara_id = Number(rowData["chara_id"]);
-            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 93 || chara_id == 107 || chara_id == 113) {
+            if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 53 || chara_id == 92 || chara_id == 107 || chara_id == 113) {
                 $(td).addClass("underLine");
             }
         },
@@ -525,7 +526,7 @@ let titleHeaders = [
         { label: '戦闘<br>回数', rowspan: 2, class: 'htMiddle' },
         { label: 'ダン<br>ジョン', rowspan: 2, class: 'htMiddle' },
         { label: 'セラフ<br>遭遇戦', rowspan: 2, class: 'htMiddle' },
-        { label: '異時層', colspan: 10, class: 'htMiddle' },
+        { label: '異時層', colspan: 11, class: 'htMiddle' },
     ],
     [
         { label: '<img src="img/BadgeStoryHardMode_DeathSlug.webp">', },
@@ -538,6 +539,7 @@ let titleHeaders = [
         { label: '<img src="img/BadgeStoryHardMode_DesertDendron.webp">', },
         { label: '<img src="img/BadgeStoryHardMode_SkullFeatherHeadTail.webp">', },
         { label: '<img src="img/BadgeStoryHardMode_SkullFeatherHead2nd.webp">', },
+        { label: '<img src="img/BadgeStoryHardMode_BrackenKnot.webp">', },
     ]
 ];
 
@@ -711,6 +713,12 @@ function getExp(rowData) {
                 { threshold: 1, exp: 1000 },
             ]
         },
+        {
+            value: rowData["brackenKnot"],
+            increments: [
+                { threshold: 1, exp: 1500 },
+            ]
+        },
     ];
 
     // 経験値の増分データ
@@ -858,6 +866,12 @@ function getExp(rowData) {
                 { threshold: 1, exp: 1000 },
             ]
         },
+        {
+            value: rowData["brackenKnot"],
+            increments: [
+                { threshold: 1, exp: 1500 },
+            ]
+        },
     ];
 
     // 各データに対して経験値を計算
@@ -889,7 +903,7 @@ function getTitleColumns() {
                 Handsontable.renderers.TextRenderer.apply(this, arguments);
                 let rowData = instance.getSourceData()[row];
                 let chara_id = Number(rowData["chara_id"]);
-                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 91 || chara_id == 93 || chara_id == 107 || chara_id == 113) {
+                if ((chara_id < 50 && chara_id % 6 == 0) || chara_id == 53 || chara_id == 92 || chara_id == 107 || chara_id == 113) {
                     $(td).addClass("underLine");
                 }
             },
@@ -898,7 +912,7 @@ function getTitleColumns() {
         {
             data: "chara_name",
             readOnly: true,
-            width: 150,
+            width: 130,
         },
         {
             data: "title_rank",
@@ -1056,7 +1070,7 @@ function getTitleColumns() {
                     $(td).addClass("achievement1");
                 }
             },
-            width: 65,
+            width: 60,
         },
         {
             data: "battle_count",
@@ -1082,7 +1096,7 @@ function getTitleColumns() {
                     $(td).addClass("achievement1");
                 }
             },
-            width: 50,
+            width: 45,
         },
         {
             data: "dungeon_count",
@@ -1127,10 +1141,11 @@ function getTitleColumns() {
                     $(td).addClass("achievement2");
                 }
             },
-            width: 55,
+            width: 50,
         },
     ];
-    const HARD_LAYER = ["deathSlag", "rotaryMoll", "redCrimson", "filler", "flatHand3rd", "ultimateFiller", "flatHand4th", "dessertDendron", "skullFeather", "skullFeather2nd"];
+    const HARD_LAYER = ["deathSlag", "rotaryMoll", "redCrimson", "filler", "flatHand3rd", "ultimateFiller", "flatHand4th", 
+        "dessertDendron", "skullFeather", "skullFeather2nd", "brackenKnot"];
     $.each(HARD_LAYER, function (index, enemy_name) {
         let column = {
             className: "htCenter",
