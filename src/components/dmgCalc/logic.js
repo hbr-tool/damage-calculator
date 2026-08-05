@@ -1483,7 +1483,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     }
     // スコアタボーナス
     let scoreBonus = 0;
-    if (enemyInfo.enemy_class === ENEMY_CLASS.SCORE_ATTACK) {
+    if (enemyInfo.enemy_class === ENEMY_CLASS.SCORE_ATTACK || enemyInfo.enemy_class === ENEMY_CLASS.SCORE_ATTACK_EX) {
         const selectHalf = state.score.half
         let physical = common.getCharaData(memberInfo.styleInfo.chara_id).physical;
         const targetConditions = [`element_${memberInfo.styleInfo.element}`, `element_${memberInfo.styleInfo.element2}`, `physical_${physical}`];
