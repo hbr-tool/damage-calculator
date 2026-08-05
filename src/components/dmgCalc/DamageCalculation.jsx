@@ -332,9 +332,10 @@ const DamageCalculation = () => {
                     <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
                         state={state} dispatch={dispatch} />
-                    <OtherSetting attackInfo={attackInfo} otherSetting={otherSetting} setOtherSetting={setOtherSetting} bulkSetting={bulkSetting} />
-                    {enemyClass === ENEMY_CLASS.SCORE_ATTACK && damageResult ?
-                        <PredictionScore damageResult={damageResult} state={state} />
+                    <OtherSetting attackInfo={attackInfo} enemyClass={enemyClass}
+                        otherSetting={otherSetting} setOtherSetting={setOtherSetting} bulkSetting={bulkSetting} />
+                    {(enemyClass === ENEMY_CLASS.SCORE_ATTACK || enemyClass === ENEMY_CLASS.SCORE_ATTACK_EX) && damageResult ?
+                        <PredictionScore damageResult={damageResult} state={state} enemyClass={enemyClass}/>
                         : null
                     }
                 </div>

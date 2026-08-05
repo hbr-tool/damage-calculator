@@ -643,7 +643,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     }
     let criticalStatDown = Math.max(enemyStatDown, 50);
 
-    let skillPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, enemyInfo, enemyStatDown);
+    let skillPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, state, enemyInfo, enemyStatDown);
 
     // 引数のfuntionをまとめる
     const memberInfo = attackMemberInfo;
@@ -671,7 +671,13 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
 
     let token = getSumTokenEffectSize(attackInfo, attackMemberInfo);
     let enemyDefenceRate = getEnemyDefenceRate(state);
-    let overdrive = 1 + Number(otherSetting.overdrive) / 10;
+    let overdrive = 1;
+    if (enemyInfo.enemy_class !== constants.ENEMY_CLASS.SCORE_ATTACK_EX) {
+        overdrive = 1 + Number(otherSetting.overdrive) / 10;
+    } else {
+        const overDroveRate = [0, 50, 150, 200, 250, 300];
+        overdrive = 1 + Number(overDroveRate[otherSetting.overdrive]) / 100;
+    }
 
     // 表示用
     let funnel = 1 + funnelList.reduce((accumulator, currentValue) => accumulator + currentValue, 0) / 100;
@@ -699,7 +705,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
         skillUniqueRate = (sp > 30 ? 30 : sp) / 30;
     }
 
-    let criticalPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, enemyInfo, criticalStatDown);
+    let criticalPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, state, enemyInfo, criticalStatDown);
     let criticalRate = getCriticalRate(handlers);
     let criticalBuff = getCriticalBuff(handlers);
 
@@ -837,12 +843,12 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
 }
 
 // 基礎攻撃力取得
-export function getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, enemyInfo, enemyStatDown) {
+export function getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, state, enemyInfo, enemyStatDown) {
     let jewelLv = 0;
     if (memberInfo.styleInfo.jewel_type === JEWEL_TYPE.ATTACK_UP) {
         jewelLv = memberInfo.jewelLv;
     }
-    let enemyStat = Math.max(enemyInfo.enemy_stat - enemyStatDown, 0);
+    let enemyStat = Math.max(Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0) - enemyStatDown, 0);
     let status = getStatus(attackInfo, memberInfo, statUp);
     return calcAttackEffectSize(attackInfo, status, enemyStat, selectSkillLv, jewelLv)
 }
@@ -1177,7 +1183,10 @@ export function isElementInclude(styleInfo, targetElement) {
     if (!styleInfo) {
         return false;
     }
-    if (targetElement === 0) {
+    if (targetElement === constants.ELEMENT.NORMAL) {
+        return true;
+    }
+    if (styleInfo.element === constants.ELEMENT.VOID) {
         return true;
     }
     if (targetElement < 10) {
@@ -1363,7 +1372,7 @@ function getDebuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state
     // ステータス
     let statUp = getStatUp(styleList, state, memberInfo, buffSetting.collect, abilitySettingMap, passiveSettingMap);
     let enemyInfo = state.enemyInfo;
-    let enemyStat = Number(enemyInfo.enemy_stat);
+    let enemyStat = Number(Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0));
     let enemyStatDown = 0;
     if (buffSetting.collect?.statDown) {
         enemyStatDown = Number(buffSetting.collect.statDown);

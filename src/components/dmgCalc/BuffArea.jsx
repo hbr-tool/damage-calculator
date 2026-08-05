@@ -552,6 +552,7 @@ const BuffArea = ({ argument: {
                 <ul>
                     <li>・バフ強化/デバフ強化/桜花の矢によるデバフ強化は、「詳細」ボタンで設定してください。</li>
                     <li>・一括設定は現在表示されているスキルのみに適用されます。</li>
+                    <li>・スコアタEX選択時のみ専用のオーバードライブゲージ補正が適用されます。</li>
                     <li className="text-base font-bold text-red-500 underline">
                         <a href="https://hbr-tool.github.io/old-damage-calculator/">旧ダメージ計算ツール</a>
                     </li>

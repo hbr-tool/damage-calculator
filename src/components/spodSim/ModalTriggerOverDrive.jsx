@@ -1,7 +1,7 @@
 import React from "react";
 import overdriveIcons from 'assets/overdrive';
 
-const ModalTriggerOverDrive = ({ closeModal, triggerOverDrive, overDriveLevel }) => {
+const ModalTriggerOverDrive = ({ closeModal, triggerOverDrive, overDriveLevel, maxOverDriveGauge }) => {
 
     const selectOverDrive = (overDriveLevel) => {
         triggerOverDrive(true, overDriveLevel);
@@ -13,10 +13,17 @@ const ModalTriggerOverDrive = ({ closeModal, triggerOverDrive, overDriveLevel })
                 <label className="modal_label">レベル選択</label>
             </div>
             <div className="flex justify-center">
-                {Array.from({ length: overDriveLevel }, (_, i) => i + 1).map((gauge) => {
-                    return <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}Default`]} alt={`Overdrive${gauge}`}
-                        onClick={() => selectOverDrive(gauge)} />
-                })}
+                {Array.from({ length: overDriveLevel }, (_, i) => i + 1).map((gauge) =>
+                    <>
+                        {maxOverDriveGauge <= 300 ?
+                            <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}Default`]} alt={`Overdrive${gauge}`}
+                                onClick={() => selectOverDrive(gauge)} />
+                            :
+                            <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}PentagonDefault`]} alt={`Overdrive${gauge}`}
+                                onClick={() => selectOverDrive(gauge)} />
+                        }
+                    </>
+                )}
             </div>
         </div>
     )

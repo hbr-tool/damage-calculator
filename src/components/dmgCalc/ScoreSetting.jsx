@@ -1,10 +1,11 @@
 import React from "react";
+import { ENEMY_CLASS } from "utils/const";
 import scoreGrade from "data/scoreGrade";
 import bonusList from "data/scoreBonus";
 import attribute from 'assets/attribute';
 import { getScoreAttack, getScoreHpDp, SCORE_STATUS } from "data/scoreData";
 
-const ScoreSetting = ({ state, dispatch }) => {
+const ScoreSetting = ({ state, dispatch, enemyClass }) => {
     const selectHalf = state.score.half
     const [checkedGrades, setCheckedGrades] = React.useState(0);
 
@@ -13,7 +14,9 @@ const ScoreSetting = ({ state, dispatch }) => {
     /* eslint-disable react-hooks/exhaustive-deps */
     React.useEffect(() => {
         setCheckedGrades(0);
-        handleScoreChange(40);
+        if (enemyClass === ENEMY_CLASS.SCORE_ATTACK) {
+            handleScoreChange(40);
+        }
     }, [enemyInfo.sub_no]);
     /* eslint-enable react-hooks/exhaustive-deps */
 
@@ -121,16 +124,18 @@ const ScoreSetting = ({ state, dispatch }) => {
                         ))}
                     </select>
                 </span>
-                <span id="score_turn">
-                    Lv
-                    <select className="text-right w-12" value={state.score.lv} onChange={(e) => handleScoreChange(e.target.value)}>
-                        {Array.from({ length: 20 }, (_, i) => (
-                            <option value={40 - i} key={`score_lv_${i}`}>{40 - i}</option>
-                        ))}
-                    </select>
-                </span>
+                {enemyClass === ENEMY_CLASS.SCORE_ATTACK ??
+                    <span id="score_turn">
+                        Lv
+                        <select className="text-right w-12" value={state.score.lv} onChange={(e) => handleScoreChange(e.target.value)}>
+                            {Array.from({ length: 20 }, (_, i) => (
+                                <option value={40 - i} key={`score_lv_${i}`}>{40 - i}</option>
+                            ))}
+                        </select>
+                    </span>
+                }
                 <div>
-                    <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" value="0" checked={checkedGrades === 0} onChange={() => handleGradeChange({grade_no: 0})} id={`halfGrade0`} />
+                    <input className={`half_check half_tab_${selectHalf}`} type="radio" name="half_grade" value="0" checked={checkedGrades === 0} onChange={() => handleGradeChange({ grade_no: 0 })} id={`halfGrade0`} />
                     <label className="ml-1" htmlFor={`halfGrade0`}>設定無し</label>
                     {halfGrade.map((grade, index) => (
                         <div key={`grade_${selectHalf}_${index}`}>

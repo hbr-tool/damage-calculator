@@ -8,7 +8,8 @@ const OverDriveGauge = ({ turn }) => {
     turn.addOverDriveGauge = addOverDriveGauge;
     overDriveGauge += addOverDriveGauge;
     let gauge = Math.floor(turn.overDriveGauge / 100);
-    gauge = gauge > 3 ? 3 : gauge;
+    const maxGauge = Math.floor(turn.maxOverDriveGauge / 100);
+    gauge = gauge > maxGauge ? maxGauge : gauge;
 
     return (
         <div className="flex">
@@ -18,7 +19,13 @@ const OverDriveGauge = ({ turn }) => {
             </label>
             <div className="inc_od_icon">
                 {gauge > 0 ?
-                    <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}Default`]} alt={`Overdrive${gauge}`} />
+                    <>
+                        { turn.maxOverDriveGauge <= 300 ?
+                            <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}Default`]} alt={`Overdrive${gauge}`} />
+                            :
+                            <img className="od_number" src={overdriveIcons[`ButtonOverdrive${gauge}PentagonDefault`]} alt={`Overdrive${gauge}`} />
+                        }
+                    </>
                     :
                     <img className="od_icon" src={overdriveIcons["FrameOverdriveGaugeR"]} alt={`OverdriveNone`} />
                 }

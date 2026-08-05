@@ -1,7 +1,8 @@
 import React from 'react';
+import { ENEMY_CLASS } from "utils/const";
 import { getScoreAttack, NO_BREAK_BONUS, DAMAGE_LIMIT, LEVEL_BONUS, TURN_BONUS } from "data/scoreData";
 
-const PredictionScore = ({ damageResult, state }) => {
+const PredictionScore = ({ damageResult, state, enemyClass }) => {
     let enemyInfo = state.enemyInfo
     let scoreLv = state.score.lv;
     let turnCount = state.score.turnCount;
@@ -10,17 +11,44 @@ const PredictionScore = ({ damageResult, state }) => {
     const [socreEnemyUnit, setSocreEnemyUnit] = React.useState(enemyInfo.enemy_count);
 
     // スコア設定
-    let scoreAttack = getScoreAttack(enemyInfo.sub_no);
-    let num = scoreLv - 20;
-    let noBreakValue = checkNobreak ? NO_BREAK_BONUS[num] : 0;
-    let damageBonusAvg = getDamageBonus(damageResult.criticalResult.avg.damage, num, scoreAttack, socreEnemyUnit);
-    let damageBonusMax = getDamageBonus(damageResult.criticalResult.max.damage, num, scoreAttack, socreEnemyUnit);
-    let damageBonusMin = getDamageBonus(damageResult.criticalResult.min.damage, num, scoreAttack, socreEnemyUnit);
-    let summaryScoreAvg = Math.floor((LEVEL_BONUS[num] + noBreakValue + damageBonusAvg) * TURN_BONUS[turnCount] * (1 + totalGradeRate / 100));
-    let summaryScoreMax = Math.floor((LEVEL_BONUS[num] + noBreakValue + damageBonusMax) * TURN_BONUS[turnCount] * (1 + totalGradeRate / 100));
-    let summaryScoreMin = Math.floor((LEVEL_BONUS[num] + noBreakValue + damageBonusMin) * TURN_BONUS[turnCount] * (1 + totalGradeRate / 100));
+    let noBreakValue = 0;
+    let damageBonusAvg = 0;
+    let damageBonusMax = 0;
+    let damageBonusMin = 0;
+    let damageLimitValue = 0;
+    let maxDamageRate = 0;
+    let levelBonus = 0;
+    let turnBonus = 0;
 
-    const turnBonus = "×" + TURN_BONUS[turnCount];
+    if (enemyClass === ENEMY_CLASS.SCORE_ATTACK) {
+        let scoreAttack = getScoreAttack(enemyInfo.sub_no);
+        let num = scoreLv - 20;
+        levelBonus = LEVEL_BONUS[num];
+        noBreakValue = checkNobreak ? NO_BREAK_BONUS[num] : 0;
+        damageLimitValue = DAMAGE_LIMIT[scoreAttack["max_damage_rate"]][num]
+        maxDamageRate = scoreAttack["max_damage_rate"];
+        turnBonus = TURN_BONUS[turnCount];
+    } else {
+        levelBonus = 100_000;
+        damageLimitValue = 2_000_000_000;
+        maxDamageRate = 0.0001;
+        const bonus = [0.00, 2.00, 2.00, 2.00, 2.00, 2.00, 
+                            1.99, 1.98, 1.97, 1.96, 1.95, 
+                            1.92, 1.89, 1.86, 1.83, 1.80, 
+                            1.77, 1.74, 1.71, 1.68, 1.65, 
+                            1.62, 1.59, 1.56, 1.53, 1.50, 
+                            1.47, 1.44, 1.41, 1.38, 1.35];
+        turnBonus = bonus[turnCount];
+    }
+
+    damageBonusAvg = getDamageBonus(damageResult.criticalResult.avg.damage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+    damageBonusMax = getDamageBonus(damageResult.criticalResult.max.damage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+    damageBonusMin = getDamageBonus(damageResult.criticalResult.min.damage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+
+    let summaryScoreAvg = Math.floor((levelBonus + noBreakValue + damageBonusAvg) * turnBonus * (1 + totalGradeRate / 100));
+    let summaryScoreMax = Math.floor((levelBonus + noBreakValue + damageBonusMax) * turnBonus * (1 + totalGradeRate / 100));
+    let summaryScoreMin = Math.floor((levelBonus + noBreakValue + damageBonusMin) * turnBonus * (1 + totalGradeRate / 100));
+
     const gradeBonus = "×" + (1 + totalGradeRate / 100);
     return (
         <div className="surround_area mx-auto my-2 adjust_width">
@@ -28,7 +56,7 @@ const PredictionScore = ({ damageResult, state }) => {
             <div className="mx-auto w-[350px] mt-2">
                 <div>
                     <div className="prediction">難易度スコア</div>
-                    <input type="text" className="text-center prediction_value" readOnly value={LEVEL_BONUS[num].toLocaleString(0)}
+                    <input type="text" className="text-center prediction_value" readOnly value={levelBonus.toLocaleString(0)}
                     />
                 </div>
                 <div>
@@ -60,7 +88,7 @@ const PredictionScore = ({ damageResult, state }) => {
                 </div>
                 <div>
                     <div className="prediction">ターン数</div>
-                    <input type="text" className="text-center prediction_value" readOnly value={turnBonus} />
+                    <input type="text" className="text-center prediction_value" readOnly value={"×" + turnBonus} />
                 </div>
                 <div>
                     <div className="prediction">グレードボーナス</div>
@@ -84,18 +112,17 @@ const PredictionScore = ({ damageResult, state }) => {
 };
 
 // ダメージボーナス算出
-function getDamageBonus(damage, num, scoreAttack, socreEnemyUnit) {
+function getDamageBonus(damage, damageLimitValue, maxDamageRate, socreEnemyUnit) {
     damage *= Number(socreEnemyUnit);
     // ダメージ上限
     damage = damage > 2_000_000_000 ? 2_000_000_000 : damage;
     let damageBonus;
-    let damageLimitValue = DAMAGE_LIMIT[scoreAttack["max_damage_rate"]][num];
     if (damage <= damageLimitValue) {
         damageBonus = damage;
     } else {
         damageBonus = damageLimitValue * (1 + Math.log(damage / damageLimitValue));
     }
-    return Math.floor(damageBonus * scoreAttack.max_damage_rate);
+    return Math.floor(damageBonus * maxDamageRate);
 }
 
 export default PredictionScore

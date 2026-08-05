@@ -23,8 +23,8 @@ const ContentsArea = ({ attackInfo, enemyClass, enemySelect, setEnemyClass, setE
                 {enemyClass === ENEMY_CLASS.HARD_LAYER &&
                     <HardLayer state={state} dispatch={dispatch} />
                 }
-                {enemyClass === ENEMY_CLASS.SCORE_ATTACK &&
-                    <ScoreSetting state={state} dispatch={dispatch} />
+                {(enemyClass === ENEMY_CLASS.SCORE_ATTACK || enemyClass === ENEMY_CLASS.SCORE_ATTACK_EX) &&
+                    <ScoreSetting state={state} dispatch={dispatch} enemyClass={enemyClass}/>
                 }
                 {enemyClass === ENEMY_CLASS.HARD_LAYER_EX &&
                     <HardLayerEx state={state} dispatch={dispatch} />

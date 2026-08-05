@@ -76,6 +76,7 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         unitList: [],
         startOverDriveGauge: 0,
         stepOverDriveGauge: 0,
+        maxOverDriveGauge: 300,
         overDriveGauge: 0,
         addOverDriveGauge: 0,
         overDriveGaugeMultiplier: 100,
@@ -270,6 +271,10 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
         newEnemyInfo[`element_${i}`] += Number(detailSetting[`changeElement${i}`]);
     }
     turnInit.enemyInfo = newEnemyInfo;
+    // ODゲージの最大値を計算
+    if (newEnemyInfo.enemy_class === constants.ENEMY_CLASS.SCORE_ATTACK_EX) {
+        turnInit.maxOverDriveGauge = 500;
+    }
     // 戦闘開始アビリティ
     turnInit.setLog("■戦闘開始");
     abilityAction(ABILIRY_TIMING.BATTLE_START, turnInit);

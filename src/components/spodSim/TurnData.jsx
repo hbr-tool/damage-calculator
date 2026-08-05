@@ -297,7 +297,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
 
     const updateUnitData = (placeNo, newData) => {
         let userOperation = { ...turn.userOperation };
-        let unit = turn.unitList.filter(unit => unit.placeNo === placeNo)[0];  
+        let unit = turn.unitList.filter(unit => unit.placeNo === placeNo)[0];
         Object.assign(unit, newData);
         reRender(userOperation, true);
     }
@@ -360,6 +360,12 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_3 ||
                                 (turn.overDriveGauge + turn.addOverDriveGauge >= 300 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_3}>行動開始+OD3</option> : null}
+                            {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_4 ||
+                                (turn.overDriveGauge + turn.addOverDriveGauge >= 400 && turn.maxOverDriveGauge >= 400 && turn.overDriveMaxTurn === 0) ?
+                                <option value={KB_NEXT.ACTION_OD_4}>行動開始+OD4</option> : null}
+                            {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_5 ||
+                                (turn.overDriveGauge + turn.addOverDriveGauge >= 500 && turn.maxOverDriveGauge >= 500 && turn.overDriveMaxTurn === 0) ?
+                                <option value={KB_NEXT.ACTION_OD_5}>行動開始+OD5</option> : null}
                         </select>
                         <div
                             className="flex"
@@ -396,7 +402,8 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                                 : modalSetting.modalType === "buff" ?
                                     <BuffDetailListComponent buffList={modalSetting.effect_type} />
                                     : modalSetting.modalType === "overdrive" ?
-                                        <ModalTriggerOverDrive triggerOverDrive={triggerOverDrive} closeModal={closeModal} overDriveLevel={Math.floor(turn.startOverDriveGauge / 100)} />
+                                        <ModalTriggerOverDrive triggerOverDrive={triggerOverDrive} closeModal={closeModal} 
+                                        overDriveLevel={Math.floor(turn.startOverDriveGauge / 100)} maxOverDriveGauge={turn.maxOverDriveGauge} />
                                         : modalSetting.modalType === "unitConfig" &&
                                         <ModalUnitConfing turn={turn} placeNo={modalSetting.modalIndex} closeModal={closeModal} updateUnitData={updateUnitData} />
                     }

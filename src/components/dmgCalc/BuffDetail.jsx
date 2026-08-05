@@ -51,7 +51,7 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
     let enemyStatDown = 0;
     let enemyStat = 0;
     if (isDebuff) {
-        enemyStat = enemyInfo.enemy_stat;
+        enemyStat = Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0);
         if (buffSetting.collect?.statDown) {
             enemyStatDown = Number(buffSetting.collect.statDown);
         }
