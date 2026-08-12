@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.2559c081.css",
-    "main.js": "/static/js/main.4447a9d4.js",
+    "main.js": "/static/js/main.6669671f.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -206,6 +206,7 @@
     "static/media/YoOhshimaSwim2026_R3_Select.webp": "/static/media/YoOhshimaSwim2026_R3_Select.1aac93182b7db6e83e0e.webp",
     "static/media/KMaruyamaCommander_R3_Select.webp": "/static/media/KMaruyamaCommander_R3_Select.e38ff9e7b5df1cf20a6c.webp",
     "static/media/NNanaseRider_R3_Select.webp": "/static/media/NNanaseRider_R3_Select.0d6c9033059f04cc8ecc.webp",
+    "static/media/IMinaseValkyrie_R3_Select.webp": "/static/media/IMinaseValkyrie_R3_Select.316537586b3a9bafb74f.webp",
     "static/media/AKanzakiAgent_R3_Select.webp": "/static/media/AKanzakiAgent_R3_Select.81d03d3863c4e6eed818.webp",
     "static/media/MNikaidoWhiteSuit_R3_Select.webp": "/static/media/MNikaidoWhiteSuit_R3_Select.f60ea9f6f83c89232a82.webp",
     "static/media/MAikawaSwim2024_R3_Select.webp": "/static/media/MAikawaSwim2024_R3_Select.5ff57ca34624581df48d.webp",
@@ -434,6 +435,7 @@
     "static/media/MAikawaPrecious_R3_Select.webp": "/static/media/MAikawaPrecious_R3_Select.29bfce431fd129a7aec9.webp",
     "static/media/YBungoDango_R3_Select.webp": "/static/media/YBungoDango_R3_Select.19f0deaeafa20ab50648.webp",
     "static/media/EmaDDefault_R3_Thumbnail.webp": "/static/media/EmaDDefault_R3_Thumbnail.ae98b7b74ac0ea3d42c4.webp",
+    "static/media/IMinaseValkyrie_R3_Thumbnail.webp": "/static/media/IMinaseValkyrie_R3_Thumbnail.716d1c28862df3395d06.webp",
     "static/media/MKurosawaCasual_R3_Select.webp": "/static/media/MKurosawaCasual_R3_Select.137b14ae603d639279af.webp",
     "static/media/VBalakrishnanTradition_R3_Thumbnail.webp": "/static/media/VBalakrishnanTradition_R3_Thumbnail.0aa5423e540e35e53b9e.webp",
     "static/media/MKurosawaDefault_R3_Thumbnail.webp": "/static/media/MKurosawaDefault_R3_Thumbnail.507b2c446d7774456073.webp",
@@ -506,6 +508,7 @@
     "static/media/SHiguchiSwim2025_R3_Thumbnail.webp": "/static/media/SHiguchiSwim2025_R3_Thumbnail.2c0ca26bc0e97e6c3142.webp",
     "static/media/BIYamawakiDefault_R2a_Thumbnail.webp": "/static/media/BIYamawakiDefault_R2a_Thumbnail.6890347bd801becdf6eb.webp",
     "static/media/RKayamoriAnniv2023_R3_Thumbnail.webp": "/static/media/RKayamoriAnniv2023_R3_Thumbnail.7a7c34a70b00f7fd0b7b.webp",
+    "static/media/SMinaseDefault_R2b_Thumbnail.webp": "/static/media/SMinaseDefault_R2b_Thumbnail.777545b47f1645c39ea1.webp",
     "static/media/IcOhshimaBride_R3_Select.webp": "/static/media/IcOhshimaBride_R3_Select.654b76141a40354f7d7a.webp",
     "static/media/IMinaseHR_R3_Thumbnail.webp": "/static/media/IMinaseHR_R3_Thumbnail.a0ebbc887414bf7f9c56.webp",
     "static/media/CMatsuokaDefault_R2a_Thumbnail.webp": "/static/media/CMatsuokaDefault_R2a_Thumbnail.a4e4b705f14e47b14195.webp",
@@ -788,6 +791,7 @@
     "static/media/IconResistElementOverwrite3.webp": "/static/media/IconResistElementOverwrite3.6988099a00e59727009e.webp",
     "static/media/IconCharge.webp": "/static/media/IconCharge.2d759b1b835a11266935.webp",
     "static/media/IconResistElementOverwrite5.webp": "/static/media/IconResistElementOverwrite5.cdf14ee80cbb3fe68082.webp",
+    "static/media/IconRevenge.webp": "/static/media/IconRevenge.71d1b82d9fbae77524e9.webp",
     "static/media/IconResistElementOverwrite1.webp": "/static/media/IconResistElementOverwrite1.7afa4646331565e73ace.webp",
     "static/media/IconBreakGuard.webp": "/static/media/IconBreakGuard.deab6ca1b0b5986a5459.webp",
     "static/media/IconResistElementOverwrite2.webp": "/static/media/IconResistElementOverwrite2.d3878e33f8aced41c4a9.webp",
@@ -861,6 +865,6 @@
   },
   "entrypoints": [
     "static/css/main.2559c081.css",
-    "static/js/main.4447a9d4.js"
+    "static/js/main.6669671f.js"
   ]
 }
