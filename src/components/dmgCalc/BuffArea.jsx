@@ -924,10 +924,16 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
     );
     const isMiya = attackInfo?.chara_id === CHARA_ID.MIYA;
-    const isServant = STYLE_ID.SERVANT.includes(attackInfo?.style_id) || selectStyleList.some(
+    const isServant = selectStyleList.some(
         (memberInfo) => {
             if (!memberInfo) return false;
             if (STYLE_ID.SERVANT_DANCE.includes(memberInfo.styleInfo.style_id)) {
+                return true;
+            }
+            if (attackInfo?.chara_id !== memberInfo.styleInfo.chara_id) {
+                return false;
+            }
+            if (STYLE_ID.SERVANT.includes(memberInfo.styleInfo.style_id)) {
                 return true;
             }
             if (memberInfo.styleInfo.resonance === 1 && memberInfo.supportStyleId) {
