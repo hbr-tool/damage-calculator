@@ -98,7 +98,7 @@ const abilityEffect = [
     {"ability_id":207,"range_area":6,"activation_timing":1,"effect_type":1,"effect_size":10,"effect_count":1,"conditions":""},
     {"ability_id":208,"range_area":7,"activation_timing":1,"effect_type":4,"effect_size":30,"effect_count":1,"conditions":""},
     {"ability_id":209,"range_area":7,"activation_timing":1,"effect_type":4,"effect_size":30,"effect_count":1,"conditions":""},
-    {"ability_id":210,"range_area":7,"activation_timing":1,"effect_type":31,"effect_size":5,"effect_count":1,"conditions":""},
+    {"ability_id":210,"range_area":7,"activation_timing":1,"effect_type":1,"effect_no":1,"effect_unit":5,"conditions":""},
     {"ability_id":211,"range_area":7,"activation_timing":1,"effect_type":1,"effect_size":30,"effect_count":1,"conditions":"確率30%"},
     {"ability_id":212,"range_area":7,"activation_timing":1,"effect_type":1,"effect_size":30,"effect_count":1,"conditions":"DP100%以上"},
     {"ability_id":213,"range_area":4,"activation_timing":1,"effect_type":1,"effect_size":30,"effect_count":1,"conditions":"DP30%以下"},

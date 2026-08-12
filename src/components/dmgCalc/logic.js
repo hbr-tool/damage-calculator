@@ -920,6 +920,7 @@ function getSumBuffEffectSize(handlers) {
     // スキルバフ合計
     let sumBuff = getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap,
         [BUFF.ATTACKUP, BUFF.ELEMENT_ATTACKUP, BUFF.CHARGE, BUFF.ARROWCHERRYBLOSSOMS,
+        BUFF.CAMP_DEPLOYMENT, // 陣展開を暫定
         BUFF.ETERNAL_OARH, BUFF.BABIED, BUFF.SHADOW_CLONE, BUFF.CURRY, BUFF.SHCHI, BUFF.STEAK, BUFF.GELATO, BUFF.DIM_SUM]);
     // 攻撃力アップアビリティ
     sumBuff += getSumAbilityEffectSize(handlers, EFFECT.ATTACKUP);
