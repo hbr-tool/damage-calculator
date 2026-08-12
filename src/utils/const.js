@@ -6,6 +6,7 @@ export const CHARA_ID = {
     RUKA_SHARO: [1, 42],
     SHADOW_CLONE: [17, 18],
     RISA: 22,
+    MINORI: 27,
     MIYA: 45,
     STRENGTH_BUFF: 4,
     STRENGTH_DEBUFF: 11,
@@ -28,9 +29,7 @@ export const STYLE_ID = {
 }
 
 export const SKILL_ID = {
-    DANCING_COOL_BREEZE: 390, // 爽籟に舞う仁慈
-    PIRATES_CANON: 478, // 豪快！パイレーツキャノン
-    WAKING_NIGHT: 495, // 夜醒
+    TRICK_CANNON: 50, // トリック・カノン
     MEDITATION: 501, // メディテーション
     GOOD_PAIN: 524, // 痛気持ちいぃ～！
     RICE_FIELD: 525, // いつの日かここで
@@ -38,10 +37,8 @@ export const SKILL_ID = {
     DAWN: 606, // 曙
     MEGA_DESTROYER: 623, // メガデストロイヤー
     CAT_JET_SHOOTING: 633, // ネコジェットシャテキ
-    RUBY_PERFUME: 635, // ルビー・パヒューム
     BOUQUET_SHOOT: 640, // ファーマメントブーケショット
     SUMMER_FINE_WEATHER: 658, // 夏のひより
-    CONSPIRACY: 669, // 謀略
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
     // MOTHERS_LIGHT: 764, // 母の灯を継いで
@@ -73,7 +70,6 @@ export const ABILITY_ID = {
     ADMIRAL_COMMON: 299, // 指揮行動
     DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530, // 自動追撃,
-    SPECIAL_TAG: 277, // スペシャルタッグ
     HEAVEN_AND_EARTH: 603, // 天長地久
     FORTUNES_OF_WAR: 606, // 武運長久
     OVER_GEAR: 1405, // オーバーギア
@@ -179,6 +175,7 @@ export const BUFF = {
     DIM_SUM: 57, // 点心
     SPRIGHTLY: 58, // 軽快
     CAMP_DEPLOYMENT: 59, // 陣展開
+    ADDITIONALTURN_NOT: 60, // 追加ターン(追加ターンを除く)
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
@@ -209,14 +206,20 @@ export const EFFECT = {
     GRANT_DEBUFF: 22, // デバフ付与
     DISASTER: 23, // 禍
     SHADOW_CLONE: 24, // 影分身
-    STATUSUP_VALUE: 25, // 能力上昇(固定)
+    STATUSUP_ALL_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
     FIELD_STRENGTHEN: 27, // フィールド強化
     ADDITIONALTURN: 29, // 追加ターン
     TOKEN_UP: 30, // トークンアップ
-    TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
-    TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
-    TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
+    // TOKEN_ATTACKUP: 31, // トークン1つにつき攻撃力アップ
+    // TOKEN_DEFFENCEUP: 32, // トークン1つにつき防御力アップ
+    // TOKEN_DAMAGERATEUP: 33, // トークン1つにつき破壊率アップ
+    STATUSUP_VALUE_STR: 31, // 能力上昇(STR)
+    STATUSUP_VALUE_DEX: 32, // 能力上昇(DEX)
+    STATUSUP_VALUE_CON: 33, // 能力上昇(CON)
+    STATUSUP_VALUE_MND: 34, // 能力上昇(MND)
+    STATUSUP_VALUE_INT: 35, // 能力上昇(INT)
+    STATUSUP_VALUE_LUK: 36, // 能力上昇(LUK)
     CAMP_DEPLOYMENT: 40, // 陣展開
     TALISMAN: 44, // 霊符
     EX_DOUBLE: 45, // EXスキル連続発動
@@ -225,6 +228,13 @@ export const EFFECT = {
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
+}
+
+export const EFFECT_VALUE = {
+    CONSTANT: 0, // 固定値
+    TOKEN_POWER_UP: 1, // トークン1つにつき
+    MOTIVATION_GOOD: 10, // 好調以上
+    MEMBER_31C: 33, // 31Cメンバー 
 }
 
 /** フィールド */
@@ -333,6 +343,8 @@ export const CONDITIONS = {
     OD_UNDER: 55, // OD指定値未満
     OD_OVER: 56, // OD指定値以上
     HAS_DEBUFF: 57, // デバフ発動中
+    INVINCIBLE: 58, // インビジブル発動中
+    RANDOM_MEAL: 59, // ランダム料理
     IS_WEAK: 60, // 弱点を突いている
 }
 

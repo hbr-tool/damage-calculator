@@ -171,9 +171,9 @@ function getInitBattleData(selectStyleList, enemyInfo, saveStyle, detailSetting,
             Object.values(ABILIRY_TIMING).forEach(timing => {
                 unit[`ability_${timing}`] = [];
             });
-            let abilitylimitList = ["_orgn", "0", "00", "1", "3", "4", "5", "10"];
+            let abilitylimitList = ["_orgn", "0", "00", "000", "1", "3", "4", "5", "10"];
             if (member.limitCount === 2) {
-                abilitylimitList = ["_orgn", "0", "00", "1", "2"];
+                abilitylimitList = ["_orgn", "0", "00", "000", "1", "2"];
             }
             abilitylimitList.forEach(numStr => {
                 let num = parseInt(numStr, 10);

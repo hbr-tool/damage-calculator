@@ -16,6 +16,7 @@ import {
     startAction, setInitSkill, getSpCost, changeStyleInfo
 } from "./logic";
 // import * as logic from "./logic";
+import * as constants from "utils/const";
 import enemyIcon from 'assets/img/BtnEventBattleActive.webp';
 
 const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, isCapturing, handlers }) => {
@@ -112,9 +113,15 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
         if (conditionsList.includes(CONDITIONS.MOTIVATION) || skillInfo.conditions === CONDITIONS.MOTIVATION) {
             effectType = 10;
         }
+        if (conditionsList.includes(CONDITIONS.INVINCIBLE) || skillInfo.conditions === CONDITIONS.INVINCIBLE) {
+            effectType = 11;
+        }
+        if (conditionsList.includes(CONDITIONS.RANDOM_MEAL) || skillInfo.conditions === CONDITIONS.RANDOM_MEAL) {
+            effectType = 12;
+        }
 
         switch (skillId) {
-            case 50: // トリック・カノン
+            case constants.SKILL_ID.TRICK_CANNON: // トリック・カノン
                 effectType = 1;
                 break;
             default:
@@ -265,7 +272,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
         let skillInfo = getSkillData(unit.selectSkillId);
 
         const selectionConditions = [CONDITIONS.DESTRUCTION_OVER_200, CONDITIONS.HAS_SHADOW,
-        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN, CONDITIONS.MOTIVATION, CONDITIONS.TOKEN_OVER];
+        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN, CONDITIONS.MOTIVATION, CONDITIONS.TOKEN_OVER, CONDITIONS.INVINCIBLE];
         if (selectionConditions.includes(skillInfo.conditions)) {
             if (unit.buffEffectSelectType >= 1) {
                 let spCost = getSpCost(turn, skillInfo, unit)
@@ -402,8 +409,8 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                                 : modalSetting.modalType === "buff" ?
                                     <BuffDetailListComponent buffList={modalSetting.effect_type} />
                                     : modalSetting.modalType === "overdrive" ?
-                                        <ModalTriggerOverDrive triggerOverDrive={triggerOverDrive} closeModal={closeModal} 
-                                        overDriveLevel={Math.floor(turn.startOverDriveGauge / 100)} maxOverDriveGauge={turn.maxOverDriveGauge} />
+                                        <ModalTriggerOverDrive triggerOverDrive={triggerOverDrive} closeModal={closeModal}
+                                            overDriveLevel={Math.floor(turn.startOverDriveGauge / 100)} maxOverDriveGauge={turn.maxOverDriveGauge} />
                                         : modalSetting.modalType === "unitConfig" &&
                                         <ModalUnitConfing turn={turn} placeNo={modalSetting.modalIndex} closeModal={closeModal} updateUnitData={updateUnitData} />
                     }

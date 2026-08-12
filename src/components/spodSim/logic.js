@@ -818,6 +818,7 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skillId
         case CONDITIONS.BUFF_DISPEL: // バフ解除
         case CONDITIONS.DP_OVER_100: // DP100%以上
         case CONDITIONS.SUPER_DOWN: // 超ダウン
+        case CONDITIONS.INVINCIBLE: // インビジブル
             return unitData.buffEffectSelectType === 1;
         case CONDITIONS.OVER_DRIVE: // オーバードライブ中
             return turnData.overDriveMaxTurn > 0;
@@ -890,6 +891,8 @@ function judgmentCondition(conditions, conditionsId, turnData, unitData, skillId
             return unitData.token >= conditionsId;
         case CONDITIONS.MOTIVATION: // やる気
             return unitData.buffEffectSelectType >= conditionsId;
+        case CONDITIONS.RANDOM_MEAL: // ランダム料理
+            return unitData.buffEffectSelectType === conditionsId;
         case CONDITIONS.HAS_PASSIVE: // パッシブ所持
             if (conditionsId === SKILL_ID.FAST_SHOT && turnData.turnNumber > 2) {
                 return false
@@ -1089,6 +1092,16 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
             });
             break;
         case BUFF.ADDITIONALTURN: // 追加ターン
+            targetList.forEach(function (target_no) {
+                let unitData = getUnitData(turnData, target_no);
+                unitData.additionalTurn = true;
+            });
+            turnData.additionalTurn = true;
+            break;
+        case BUFF.ADDITIONALTURN_NOT: // 追加ターン(追加ターンを除く)
+            if (turnData.additionalCount > 0) {
+                return;
+            }
             targetList.forEach(function (target_no) {
                 let unitData = getUnitData(turnData, target_no);
                 unitData.additionalTurn = true;

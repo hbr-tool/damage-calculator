@@ -1,6 +1,6 @@
 import React from "react";
 import { getCharaData, getSkillData } from "utils/common";
-import { SKILL_ID, ABILITY_ID, BUFF, ROLE, ATTRIBUTE, SKILL, COST_TYPE } from "utils/const";
+import { ABILITY_ID, BUFF, ROLE, ATTRIBUTE, SKILL, COST_TYPE } from "utils/const";
 import { PHYSICAL_NAME, ELEMENT_NAME, ABILIRY_TIMING } from "./const";
 import BuffIconComponent from "./BuffIconComponent";
 import { getSkillIdToAttackInfo, getSpCost, checkAbilityExist } from "./logic";
@@ -51,11 +51,6 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     let skillList = unit.skillList
     if (placeNo < 3) {
         skillList = skillList.filter(skill => {
-            // 夜醒,謀略
-            const ADDTIONAL_SKILL_ID = [SKILL_ID.WAKING_NIGHT, SKILL_ID.CONSPIRACY];
-            if (ADDTIONAL_SKILL_ID.includes(skill.skill_id)) {
-                return !turn.additionalTurn;
-            }
             if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
                 // 通常攻撃
                 return unit.style.styleInfo.role !== ROLE.ADMIRAL;
@@ -144,7 +139,8 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     return prevProps.turn === nextProps.turn
         && prevProps.field === nextProps.field
         && prevProps.unit === nextProps.unit
-        && prevProps.placeNo === nextProps.placeNo && prevProps.selectSkillId === nextProps.selectSkillId
+        && prevProps.placeNo === nextProps.placeNo 
+        && prevProps.selectSkillId === nextProps.selectSkillId
         && prevProps.triggerOverDrive === nextProps.triggerOverDrive
         && prevProps.isCapturing === nextProps.isCapturing;
 });

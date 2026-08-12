@@ -47,6 +47,10 @@ const passiveEffect = [
     {"skill_id":764,"range_area":0,"activation_timing":16,"effect_type":46,"effect_size":5},
     {"skill_id":765,"range_area":7,"activation_timing":0,"effect_type":3,"effect_size":100},
     {"skill_id":765,"range_area":7,"activation_timing":0,"effect_type":4,"effect_size":50},
+    {"skill_id":788,"range_area":7,"activation_timing":0,"effect_type":31,"effect_no":33,"effect_size":-5,"effect_unit":5,"effect_limit":25},
+    {"skill_id":788,"range_area":7,"activation_timing":0,"effect_type":33,"effect_no":33,"effect_size":-5,"effect_unit":5,"effect_limit":25},
+    {"skill_id":790,"range_area":7,"activation_timing":0,"effect_type":8,"effect_no":32,"effect_size":-1},
+    {"skill_id":791,"range_area":7,"activation_timing":1,"effect_type":1,"effect_no":1,"effect_unit":5},
 ];
 
 export default passiveEffect;

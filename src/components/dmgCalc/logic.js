@@ -111,6 +111,13 @@ export function checkPawapuroExist(selectStyleList) {
     return checkStyleExist(selectStyleList, STYLE_ID.PAWAPURO);
 }
 
+// キャラ存在チェック
+export function countCharaExist(selectStyleList, searchCharaIds) {
+    return selectStyleList.filter(member =>
+        searchCharaIds.includes(member?.styleInfo?.chara_id)
+    ).length;
+}
+
 // スタイル存在チェック
 export function checkStyleExist(selectStyleList, searchStyleIds) {
     return selectStyleList.some(member =>
@@ -191,8 +198,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
     const handlers = {
         collect: buffSetting.collect,
         skillInfo: common.getSkillData(buff.skill_id),
-        memberInfo,
-        styleList,
+        memberInfo, state, styleList,
         abilitySettingMap, passiveSettingMap
     };
     // バフ強化
@@ -203,7 +209,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
         switch (buff.buff_kind) {
             case BUFF.ATTACKUP: // 攻撃力アップ
             case BUFF.ELEMENT_ATTACKUP: // 属性攻撃力アップ
-                effectSize = getBuffEffectSize(styleList, buff, buffSetting, memberInfo, state, JEWEL_TYPE.SKILL_ATTACKUP, abilitySettingMap, passiveSettingMap);
+                effectSize = getBuffEffectSize(handlers, buff, buffSetting, JEWEL_TYPE.SKILL_ATTACKUP);
                 break;
             case BUFF.MINDEYE: // 心眼
             case BUFF.CRITICALDAMAGEUP:	// クリティカルダメージアップ
@@ -211,11 +217,11 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.CHARGE: // チャージ
             case BUFF.DAMAGERATEUP: // 破壊率アップ
             case BUFF.YAMAWAKI_SERVANT: // 山脇様のしもべ
-                effectSize = getBuffEffectSize(styleList, buff, buffSetting, memberInfo, state, 0, abilitySettingMap, passiveSettingMap);
+                effectSize = getBuffEffectSize(handlers, buff, buffSetting, 0);
                 break;
             case BUFF.CRITICALRATEUP:	// クリティカル率アップ
             case BUFF.ELEMENT_CRITICALRATEUP:	// 属性クリティカル率アップ
-                effectSize = getBuffEffectSize(styleList, buff, buffSetting, memberInfo, state, JEWEL_TYPE.CRITICALRATE_UP, abilitySettingMap, passiveSettingMap);
+                effectSize = getBuffEffectSize(handlers, buff, buffSetting, JEWEL_TYPE.CRITICALRATE_UP);
                 break;
             case BUFF.DEFENSEDOWN: // 防御力ダウン
             case BUFF.ELEMENT_DEFENSEDOWN: // 属性防御力ダウン
@@ -225,7 +231,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.ETERNAL_DEFENSEDOWN: // 永続防御ダウン
             case BUFF.ELEMENT_ETERNAL_DEFENSEDOWN: // 永続属性防御ダウン
             case BUFF.ETERNAL_FRAGILE: // 永続脆弱
-                effectSize = getDebuffEffectSize(styleList, buff, buffSetting, memberInfo, state, abilitySettingMap, passiveSettingMap);
+                effectSize = getDebuffEffectSize(handlers, buff, buffSetting);
                 break;
             case BUFF.FUNNEL: // 連撃
                 effectSize = getFunnelEffectSize(buff, memberInfo);
@@ -628,31 +634,30 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     if (!attackInfo) {
         return null;
     }
-    let attackMemberInfo = getCharaIdToMember(styleList, attackInfo.chara_id);
-    if (!attackMemberInfo) {
+    const memberInfo = getCharaIdToMember(styleList, attackInfo.chara_id);
+    if (!memberInfo) {
         return null;
     }
     let enemyInfo = state.enemyInfo;
 
-    // ステータスアップ
-    let statUp = getStatUp(styleList, state, attackMemberInfo, attackInfo.collect, abilitySettingMap, passiveSettingMap);
-    // ステータスダウン
-    let enemyStatDown = 0;
-    if (attackInfo.collect?.statDown) {
-        enemyStatDown = Number(attackInfo.collect.statDown);
-    }
-    let criticalStatDown = Math.max(enemyStatDown, 50);
-
-    let skillPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, state, enemyInfo, enemyStatDown);
-
     // 引数のfuntionをまとめる
-    const memberInfo = attackMemberInfo;
     const handlers = {
         collect: attackInfo.collect,
         skillInfo: common.getSkillData(attackInfo.skill_id),
         attackInfo, memberInfo, styleList,
         selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting, state
     };
+
+    // ステータスアップ
+    let statUp = getStatAllUp(handlers);
+    // ステータスダウン
+    let enemyStatDown = 0;
+    if (attackInfo.collect?.statDown) {
+        enemyStatDown = Number(attackInfo.collect.statDown);
+    }
+    let criticalStatDown = Math.max(enemyStatDown, 50);
+    let skillPower = getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, enemyStatDown);
+
     let [physical, element] = getEnemyResist(attackInfo, state);
     let isWeak = physical * element > 10000;
 
@@ -669,7 +674,7 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     let damageRateUp = getDamagerateEffectSize(handlers, attackInfo.hit_count);
     let funnelList = getSumFunnelEffectList(handlers);
 
-    let token = getSumTokenEffectSize(attackInfo, attackMemberInfo);
+    let token = getSumTokenEffectSize(attackInfo, memberInfo);
     let enemyDefenceRate = getEnemyDefenceRate(state);
     let overdrive = 1;
     if (enemyInfo.enemy_class !== constants.ENEMY_CLASS.SCORE_ATTACK_EX) {
@@ -700,12 +705,12 @@ export function getDamageResult(attackInfo, styleList, state, selectSkillLv,
     }
 
     if (attackInfo.rest_sp === 1 && attackInfo.cost_sp) {
-        // 消費DPが低いほど威力アップ
+        // 消費SPが多いほど威力アップ
         let sp = attackInfo.cost_sp;
         skillUniqueRate = (sp > 30 ? 30 : sp) / 30;
     }
 
-    let criticalPower = getSkillPower(attackInfo, selectSkillLv, attackMemberInfo, statUp, state, enemyInfo, criticalStatDown);
+    let criticalPower = getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, criticalStatDown);
     let criticalRate = getCriticalRate(handlers);
     let criticalBuff = getCriticalBuff(handlers);
 
@@ -843,13 +848,14 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
 }
 
 // 基礎攻撃力取得
-export function getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, state, enemyInfo, enemyStatDown) {
+export function getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, enemyStatDown) {
+    const memberInfo = handlers.memberInfo;
     let jewelLv = 0;
     if (memberInfo.styleInfo.jewel_type === JEWEL_TYPE.ATTACK_UP) {
         jewelLv = memberInfo.jewelLv;
     }
     let enemyStat = Math.max(Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0) - enemyStatDown, 0);
-    let status = getStatus(attackInfo, memberInfo, statUp);
+    let status = getStatus(handlers, attackInfo, statUp);
     return calcAttackEffectSize(attackInfo, status, enemyStat, selectSkillLv, jewelLv)
 }
 
@@ -921,7 +927,7 @@ function getSumBuffEffectSize(handlers) {
     sumBuff += Number(otherSetting.ring);
     sumBuff += getChainEffectSize(otherSetting, "skill");
     // トークン
-    sumBuff += getSumTokenAbilirySize(handlers, EFFECT.TOKEN_ATTACKUP);
+    // sumBuff += getSumTokenAbilitySize(handlers, EFFECT.TOKEN_ATTACKUP);
     // 士気
     sumBuff += memberInfo.morale ? memberInfo.morale * 5 : 0;
     // スコアタグレード
@@ -1019,7 +1025,7 @@ function getDamagerateEffectSize(handlers, hitCount) {
     let destructionEffectSize = 100;
     destructionEffectSize += getSumEffectSize(handlers.selectBuffKeyMap, handlers.buffSettingMap, [BUFF.DAMAGERATEUP]);
     destructionEffectSize += getSumAbilityEffectSize(handlers, EFFECT.DAMAGERATEUP);
-    destructionEffectSize += getSumTokenAbilirySize(handlers, EFFECT.TOKEN_DAMAGERATEUP)
+    // destructionEffectSize += getSumTokenAbilitySize(handlers, EFFECT.TOKEN_DAMAGERATEUP)
     destructionEffectSize += getEarringEffectSize(otherSetting, "blast", 11 - hitCount);
     destructionEffectSize += getChainEffectSize(otherSetting, "skill");
 
@@ -1075,17 +1081,54 @@ function getSumTokenEffectSize(attackInfo, attackMemberInfo) {
 }
 
 // トークンアビリティ取得
-function getSumTokenAbilirySize(handlers, effectType) {
-    const styleList = handlers.styleList;
-    const abilitySettingMap = handlers.abilitySettingMap;
-    let sum = 0;
-    abilityLoop((abilityEffect, setting) => {
-        let memberInfo = getCharaIdToMember(styleList, setting.chara_id);
-        if (abilityEffect.effect_type === effectType && memberInfo) {
-            sum = abilityEffect.effect_size * (memberInfo.token ? memberInfo.token : 0);
+// function getSumTokenAbilitySize(handlers, effectType) {
+//     const styleList = handlers.styleList;
+//     const abilitySettingMap = handlers.abilitySettingMap;
+//     let sum = 0;
+//     abilityLoop((abilityEffect, setting) => {
+//         let memberInfo = getCharaIdToMember(styleList, setting.chara_id);
+//         if (abilityEffect.effect_type === effectType && memberInfo) {
+//             sum = abilityEffect.effect_size * (memberInfo.token ? memberInfo.token : 0);
+//         }
+//     }, abilitySettingMap, effectType, handlers);
+
+//     passiveLoop((passiveEffect, setting) => {
+//         let memberInfo = getCharaIdToMember(styleList, setting.chara_id);
+//         if (passiveEffect.effect_type === effectType && memberInfo) {
+//             sum = passiveEffect.effect_size * (memberInfo.token ? memberInfo.token : 0);
+//         }
+//     }, handlers.passiveSettingMap, effectType, handlers);
+//     return sum;
+// }
+
+function getAbilityEffectValue(effect, styleList, charaId) {
+    let effectSize = effect.effect_size ?? 0;
+    let multiplier = 1;
+    let memberInfo = getCharaIdToMember(styleList, charaId);
+
+    if (effect.effect_unit) {
+        const effectUnit = effect.effect_unit;
+        const effectLimit = effect.effect_limit ?? 0;
+        switch (effect.effect_no) {
+            case constants.EFFECT_VALUE.TOKEN_POWER_UP:
+                multiplier = (memberInfo.token ? memberInfo.token : 0);
+                break;
+            case constants.EFFECT_VALUE.MOTIVATION_GOOD:
+                multiplier = targetCountMotivation(styleList, 1);
+                break;
+            case constants.EFFECT_VALUE.MEMBER_31C:
+                multiplier = countCharaExist(styleList.selectStyleList, CHARA_ID.MEMBER_31C);
+                break;
+            default:
+                break;
         }
-    }, abilitySettingMap, effectType, handlers);
-    return sum;
+        if (effectLimit) {
+            effectSize = Math.min(effectSize + effectUnit * multiplier, effectLimit);
+        } else {
+            effectSize = effectSize + effectUnit * multiplier;
+        }
+    }
+    return effectSize;
 }
 
 // アビリティ効果量合計取得
@@ -1103,14 +1146,10 @@ function getSumAbilityEffectSize(handlers, effectType) {
     let activationPhysicalEffectSize = 0;
     let activationElementEffectSize = 0;
 
-    abilityLoop((abilityEffect) => {
+    abilityLoop((abilityEffect, setting) => {
         let abilityId = abilityEffect.ability_id;
-        let effectSize = abilityEffect.effect_size;
-        // スペシャルタッグ
-        if (abilityId === ABILITY_ID.SPECIAL_TAG) {
-            let goodCondition = targetCountMotivation(styleList, 1);
-            effectSize = Math.min(goodCondition * 10, 30);
-        }
+        let effectSize = getAbilityEffectValue(abilityEffect, styleList, setting.chara_id);
+
         if (ALONE_ACTIVATION_ABILITY_LIST.includes(abilityId)) {
             if (abilityEffect.element !== 0) {
                 activationElementEffectSize = Math.max(activationElementEffectSize, effectSize);
@@ -1134,15 +1173,17 @@ function getSumAbilityEffectSize(handlers, effectType) {
         + activationPhysicalEffectSize + sumPhysicalEffectSize
         + activationElementEffectSize + sumElementEffectSize;
 
-    passiveLoop((passiveEffect) => {
-        abilityEffectSize += passiveEffect.effect_size;
+    passiveLoop((passiveEffect, setting) => {
+        abilityEffectSize += getAbilityEffectValue(passiveEffect, styleList, setting.chara_id);
     }, passiveSettingMap, effectType, handlers);
 
-    resonaceLoop((resonanceEffect, resonance) => {
-        const limitCount = resonance.limitCount;
-        const effectSize = resonanceEffect[`effect_limit_${limitCount}`];
-        abilityEffectSize += effectSize;
-    }, resonanceList, effectType, handlers);
+    if (resonanceList) {
+        resonaceLoop((resonanceEffect, resonance) => {
+            const limitCount = resonance.limitCount;
+            const effectSize = resonanceEffect[`effect_limit_${limitCount}`];
+            abilityEffectSize += effectSize;
+        }, resonanceList, effectType, handlers);
+    }
     return abilityEffectSize;
 }
 
@@ -1296,26 +1337,65 @@ export function updateEnemyStatus(enemyClassNo, enemyInfo) {
 //     // setEnemyStatus(new_enemyInfo)
 // }
 
-export const getStatus = (info, memberInfo, statUp) => {
+export const getStatus = (handlers, info, statUp) => {
     let molecule = 0;
     let denominator = 0;
+    let status = 0;
     if (info.ref_status_1 !== 0) {
-        molecule += (memberInfo[STATUS_KBN[info.ref_status_1]] + statUp) * 2;
+        status = getStatusUnit(handlers, STATUS_KBN[info.ref_status_1])
+        molecule += (status + statUp) * 2;
         denominator += 2;
     }
     if (info.ref_status_2 && info.ref_status_2 !== 0) {
-        molecule += memberInfo[STATUS_KBN[info.ref_status_2]] + statUp;
+        status = getStatusUnit(handlers, STATUS_KBN[info.ref_status_2])
+        molecule += status + statUp;
         denominator += 1;
     }
     if (info.ref_status_3 && info.ref_status_3 !== 0) {
-        molecule += memberInfo[STATUS_KBN[info.ref_status_3]] + statUp;
+        status = getStatusUnit(handlers, STATUS_KBN[info.ref_status_3])
+        molecule += status + statUp;
         denominator += 1;
     }
     return molecule / denominator;
 }
 
+const getStatusUnit = (handlers, strStatus) => {
+    const memberInfo = handlers.memberInfo;
+    let status = memberInfo[strStatus];
+    switch (strStatus) {
+        case "str":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_STR);
+            break;
+        case "dex":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_DEX);
+            break;
+        case "con":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_CON);
+            break;
+        case "mnd":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_MND);
+            break;
+        case "int":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_INT);
+            break;
+        case "luk":
+            status += getSumAbilityEffectSize(handlers, constants.EFFECT.STATUSUP_VALUE_LUK);
+            break;
+        default:
+            break;
+    }
+    const attackInfo = handlers.attackInfo;
+    // 暫定対応
+    const statUpList = [265, 267]; // ラグナロク・ノヴァ(リベンジ10)
+    if (statUpList.includes(attackInfo?.attack_id)) {
+        status += 20;
+    }
+    return status;
+}
+
 // バフ効果量取得
-function getBuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state, targetJewelType, abilitySettingMap, passiveSettingMap) {
+function getBuffEffectSize(handlers, buffInfo, buffSetting, targetJewelType) {
+    let memberInfo = handlers.memberInfo;
     let jewelLv = 0;
     if (memberInfo.styleInfo && memberInfo.styleInfo.jewel_type === targetJewelType) {
         jewelLv = memberInfo.jewelLv;
@@ -1326,8 +1406,8 @@ function getBuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state, 
         return buffInfo.min_power;
     }
     // ステータス
-    let statUp = getStatUp(styleList, state, memberInfo, buffSetting.collect, abilitySettingMap, passiveSettingMap);
-    let status = getStatus(buffInfo, memberInfo, statUp);
+    let statUp = getStatAllUp(handlers);
+    let status = getStatus(handlers, buffInfo, statUp);
     return calcBuffEffectSize(buffInfo, status, skillLv, jewelLv);
 }
 
@@ -1361,7 +1441,9 @@ export function calcBuffEffectSize(buffInfo, status, skillLv, jewelLv) {
 }
 
 // デバフ効果量
-function getDebuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state, abilitySettingMap, passiveSettingMap) {
+function getDebuffEffectSize(handlers, buffInfo, buffSetting) {
+    const memberInfo = handlers.memberInfo;
+    const state = handlers.state;
     if (!state) {
         return 0;
     }
@@ -1370,7 +1452,7 @@ function getDebuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state
         jewelLv = memberInfo.jewelLv;
     }
     // ステータス
-    let statUp = getStatUp(styleList, state, memberInfo, buffSetting.collect, abilitySettingMap, passiveSettingMap);
+    let statUp = getStatAllUp(handlers);
     let enemyInfo = state.enemyInfo;
     let enemyStat = Number(Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0));
     let enemyStatDown = 0;
@@ -1380,7 +1462,7 @@ function getDebuffEffectSize(styleList, buffInfo, buffSetting, memberInfo, state
     enemyStat = Math.max(enemyStat - enemyStatDown, 0);
 
     let skillLv = buffSetting.skill_lv;
-    let status = getStatus(buffInfo, memberInfo, statUp);
+    let status = getStatus(handlers, buffInfo, statUp);
     return calcDebuffEffectSize(buffInfo, status, enemyStat, skillLv, jewelLv);
 }
 
@@ -1460,9 +1542,15 @@ function getEnemyDefenceRate(state) {
     return enemyDefenceRate;
 }
 
-// ステータスアップ取得
-export function getStatUp(styleList, state, memberInfo, collect, abilitySettingMap, passiveSettingMap) {
-    let enemyInfo = state.enemyInfo;
+// 全ステータスアップ取得
+export function getStatAllUp(handler) {
+    const styleList = handler.styleList;
+    const state = handler.state;
+    const memberInfo = handler.memberInfo;
+    const collect = handler.collect;
+    const abilitySettingMap = handler.abilitySettingMap;
+    const passiveSettingMap = handler.passiveSettingMap;
+    const enemyInfo = state.enemyInfo;
 
     let tearsOfDreams = 0;
     // 夢の泪
@@ -1515,7 +1603,7 @@ export function getStatUp(styleList, state, memberInfo, collect, abilitySettingM
     const handlers = {
         memberInfo, styleList, abilitySettingMap, passiveSettingMap, state, resonanceList: []
     };
-    let passiveStatusUp = getSumAbilityEffectSize(handlers, EFFECT.STATUSUP_VALUE);
+    const passiveStatusUp = getSumAbilityEffectSize(handlers, EFFECT.STATUSUP_ALL_VALUE);
     return tearsOfDreams + scoreBonus + elemetalBonus + statUp + passiveStatusUp;
 }
 

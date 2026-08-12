@@ -25,17 +25,23 @@ const TARGET_KIND = [
     EFFECT.CRITICAL_DAMAGE_UP, // クリティカルダメージアップ
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開
     EFFECT.GRANT_BUFF, // バフ付与
-    EFFECT.STATUSUP_VALUE, // 能力固定上昇
+    EFFECT.STATUSUP_ALL_VALUE, // 能力固定上昇
     EFFECT.STATUSUP_RATE, // 能力%上昇
     EFFECT.FIELD_STRENGTHEN, // フィールド強化
     EFFECT.GIVEATTACKBUFFUP, // 攻撃力バフ強化
     EFFECT.GIVEDEFFENCEDEBUFFUP, // 防御力デバフ強化
+    EFFECT.STATUSUP_VALUE_STR, // 能力上昇(STR)
+    EFFECT.STATUSUP_VALUE_DEX, // 能力上昇(DEX)
+    EFFECT.STATUSUP_VALUE_CON, // 能力上昇(CON)
+    EFFECT.STATUSUP_VALUE_MND, // 能力上昇(MND)
+    EFFECT.STATUSUP_VALUE_INT, // 能力上昇(INT)
+    EFFECT.STATUSUP_VALUE_LUK, // 能力上昇(LUK)
     EFFECT.FUNNEL, // 連撃
     EFFECT.FUNNEL_ALWAYS, // 連撃(永続)
 ]
 const SUB_TARGET_KIND = [
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開
-    EFFECT.STATUSUP_VALUE, // 能力固定上昇
+    EFFECT.STATUSUP_ALL_VALUE, // 能力固定上昇
     EFFECT.STATUSUP_RATE, // 能力%上昇
     EFFECT.FIELD_STRENGTHEN, // フィールド強化
     EFFECT.GIVEDEFFENCEDEBUFFUP, // 防御力デバフ強化
@@ -720,6 +726,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                 "orgn": memberInfo.styleInfo.ability_orgn,
                 "0": memberInfo.styleInfo.ability0,
                 "00": memberInfo.styleInfo.ability00,
+                "000": memberInfo.styleInfo.ability000,
                 "1": memberInfo.styleInfo.ability1,
                 "3": memberInfo.styleInfo.ability3,
                 "5": memberInfo.styleInfo.ability5,
@@ -730,6 +737,7 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     "orgn": memberInfo.styleInfo.ability_orgn,
                     "0": memberInfo.styleInfo.ability0,
                     "00": memberInfo.styleInfo.ability00,
+                    "000": memberInfo.styleInfo.ability000,
                     "1": memberInfo.styleInfo.ability1,
                     "2": memberInfo.styleInfo.ability2,
                     "5": memberInfo.styleInfo.ability5,
@@ -789,6 +797,10 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                         addBuffAbility("ability", abilityId, charaId, abilityInfo.ability_name, buffType, abilityEffect.element, abilityEffect.range_area, abilityEffect.effect_size);
                         continue;
                     }
+                    if (abilityEffect.effect_type === EFFECT.GRANT_BUFF && abilityEffect.effect_no === BUFF.EX_DOUBLE) {
+                        // EXスキル連続発動無効化
+                        continue;
+                    }
                     isAddAbility = true;
                 }
                 if (isAddAbility) {
@@ -832,6 +844,10 @@ function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInfo, buff
                     }
                     if (passiveEffect.effect_type === EFFECT.FIELD_DEPLOYMENT) {
                         addBuffAbility("passive", skill.skill_id, charaId, passiveInfo.passive_name, BUFF.FIELD, 0, passiveEffect.range_area, passiveEffect.effect_size);
+                        continue;
+                    }
+                    if (passiveEffect.effect_type === EFFECT.GRANT_BUFF && passiveEffect.effect_no === BUFF.EX_DOUBLE) {
+                        // EXスキル連続発動無効化
                         continue;
                     }
                     isAddPassive = true;
@@ -883,18 +899,23 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
     );
     const isKitchenVritika = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_VRITIKA
+            || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
     const isKitchenSharo = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_SHARO
+            || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
     const isKitchenCarole = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_CAROLE
+            || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
     const isKitchenMaria = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_MARIA
+            || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
     const isShanhuaMaria = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.SHANHUA_MARIA
+            || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
     const isYukataShiki = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.YUKATA_SHIKI

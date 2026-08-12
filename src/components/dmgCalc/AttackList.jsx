@@ -2,25 +2,27 @@ import React, { useState, useEffect, useMemo } from "react";
 import ReactModal from "react-modal";
 import { useStyleList } from "components/StyleListProvider";
 import skillAttack from "data/skillAttack";
-import { getCharaData, getSkillData } from "utils/common";
+import * as common from "utils/common";
 import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN, COST_TYPE, KIND } from 'utils/const';
-import { getCharaIdToMember, getSkillPower, getStatUp, getApplyGradient, getCostVariable, getStatus } from "./logic";
+import { getCharaIdToMember, getApplyGradient, getCostVariable } from "./logic";
+import * as logic from "./logic";
 import attribute from 'assets/attribute';
 import { AttackLineChart } from "./SimpleLineChart";
 
 const TYPE_PHYSICAL = ["none", "slash", "stab", "strike"];
 const TYPE_ELEMENT = ["none", "fire", "ice", "thunder", "light", "dark"];
 
-const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv,
-    abilitySettingMap, passiveSettingMap, state, dispatch,
-}) => {
+const AttackList = ({ argument, selectSkillLv, setSelectSkillLv }) => {
     const { styleList } = useStyleList();
     const [modal, setModal] = useState(false);
+
+    const attackInfo = argument.attackInfo;
+    const setAttackInfo = argument.setAttackInfo;
 
     const handleChangeAttackId = (value) => {
         let selectAttackInfo = getAttackInfo(value);
         if (selectAttackInfo) {
-            const physical = getCharaData(selectAttackInfo.chara_id).physical;
+            const physical = common.getCharaData(selectAttackInfo.chara_id).physical;
             selectAttackInfo.attack_physical = physical;
             setSelectSkillLv(selectAttackInfo.max_lv);
             setAttackInfo(selectAttackInfo);
@@ -45,7 +47,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
                 (skill.style_id === styleId || skill.style_id === 0)
             ).filter(skill => !(memberInfo.exclusionSkillList.includes(skill.skill_id))
             ).filter(skill => {
-                const skillInfo = getSkillData(skill.skill_id);
+                const skillInfo = common.getSkillData(skill.skill_id);
                 return !checkSpecial || [KIND.EX_GENERATE, KIND.EX_EXCLUSIVE].includes(skillInfo.skill_kind);
             }
             ).sort((x, y) => y.style_id - x.style_id || y.skill_id - x.skill_id);
@@ -63,7 +65,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
                 const firstAttack = memberAttackList[0];
                 const newInfo = {
                     ...firstAttack,
-                    attack_physical: getCharaData(firstAttack.chara_id).physical,
+                    attack_physical: common.getCharaData(firstAttack.chara_id).physical,
                 };
                 setAttackInfo(newInfo);
                 setSelectSkillLv(newInfo.max_lv);
@@ -81,7 +83,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
             <div className="flex">
                 <select className="ml-6 align_left" id="attack_list" value={attackInfo?.attack_id} onChange={e => handleChangeAttackId(Number(e.target.value))}>
                     {styleList.selectStyleList.filter(memberInfo => memberInfo).map((memberInfo, index) => {
-                        let charaData = getCharaData(memberInfo.styleInfo.chara_id)
+                        let charaData = common.getCharaData(memberInfo.styleInfo.chara_id)
                         return (
                             <optgroup key={`chara${memberInfo.styleInfo.chara_id}`} label={charaData.chara_name}>
                                 {memberAttackList.filter(obj =>
@@ -99,7 +101,7 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
                 </select>
                 {attackInfo && (() => {
                     const { attack_element, range_area } = attackInfo;
-                    const attack_physical = getCharaData(attackInfo.chara_id).physical;
+                    const attack_physical = common.getCharaData(attackInfo.chara_id).physical;
                     return (
                         <>
                             <div className="lv">
@@ -140,9 +142,8 @@ const AttackList = ({ attackInfo, setAttackInfo, selectSkillLv, setSelectSkillLv
                 className={"modal-content " + (modal ? "modal-content-open" : "")}
                 overlayClassName={"modal-overlay " + (modal ? "modal-overlay-open" : "")}
             >
-                <AttackDetail attackInfo={attackInfo} setAttackInfo={setAttackInfo}
-                    selectSkillLv={selectSkillLv} styleList={styleList} state={state}
-                    abilitySettingMap={abilitySettingMap} passiveSettingMap={passiveSettingMap} closeModal={() => setModal(false)} />
+                <AttackDetail argument={argument} attackInfo={attackInfo} setAttackInfo={setAttackInfo} 
+                    selectSkillLv={selectSkillLv} closeModal={() => setModal(false)} />
             </ReactModal>
         </div >
     )
@@ -226,25 +227,39 @@ const YamawakiServant = ({ attackInfo, setAttackInfo }) => {
 }
 
 
-const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, state, abilitySettingMap, passiveSettingMap, closeModal }) => {
+const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, closeModal }) => {
+    const styleList = argument.styleList;
+    const state = argument.state;
+    const abilitySettingMap = argument.abilitySettingMap;
+    const passiveSettingMap = argument.passiveSettingMap;
+    const resonanceList = argument.resonanceList;
+
     const minPower = attackInfo.min_power * (1 + 0.05 * (selectSkillLv - 1));
     const maxPower = attackInfo.max_power * (1 + 0.02 * (selectSkillLv - 1));
 
     const memberInfo = getCharaIdToMember(styleList, attackInfo.chara_id);
     const enemyInfo = state.enemyInfo;
-    const skillInfo = getSkillData(attackInfo.skill_id);
+    const skillInfo = common.getSkillData(attackInfo.skill_id);
 
-    let statUp = getStatUp(styleList, state, memberInfo, attackInfo.collect, abilitySettingMap, passiveSettingMap);
+    const handlers = {
+        collect: attackInfo.collect,
+        state: argument.state,
+        attackInfo, skillInfo, styleList,
+        memberInfo,
+        abilitySettingMap, passiveSettingMap, resonanceList
+    };
+    let statUp = logic.getStatAllUp(handlers);
     let enemyStatDown = 0;
     if (attackInfo.collect?.statDown) {
         enemyStatDown = Number(attackInfo.collect.statDown);
     }
+
     let criticalStatDown = Math.max(enemyStatDown, 50);
-    let skillPower = getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, state, enemyInfo, enemyStatDown);
-    let criticalPower = getSkillPower(attackInfo, selectSkillLv, memberInfo, statUp, state, enemyInfo, criticalStatDown);
+    let skillPower = logic.getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, enemyStatDown);
+    let criticalPower = logic.getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, criticalStatDown);
 
     let enemyStat = Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0);
-    let status = getStatus(attackInfo, memberInfo, statUp);
+    let status = logic.getStatus(handlers, attackInfo, statUp);
 
     const jpnName = ["", "力", "器用さ", "体力", "精神", "知性", "運"];
     // 宝珠レベル
@@ -256,12 +271,6 @@ const AttackDetail = ({ attackInfo, setAttackInfo, selectSkillLv, styleList, sta
     // 消費SP
     let spCost = 0;
     if (skillInfo.cost_type === COST_TYPE.SP) {
-        const handlers = {
-            collect: attackInfo.collect,
-            skillInfo, styleList,
-            memberInfo,
-            abilitySettingMap, passiveSettingMap
-        };
         spCost = getCostVariable(handlers);
     }
     return (

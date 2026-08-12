@@ -314,7 +314,7 @@ const DamageCalculation = () => {
     }
 
     const argument = {
-        attackInfo, state, dispatch, otherSetting,
+        attackInfo, setAttackInfo, styleList, state, dispatch, otherSetting,
         selectBuffKeyMap, setSelectBuffKeyMap,
         buffSettingMap, setBuffSettingMap,
         abilitySettingMap, setAbilitySettingMap,
@@ -326,16 +326,14 @@ const DamageCalculation = () => {
             <div className="display_area mx-auto">
                 <div className="status_area mx-auto">
                     <CharaStatus argument={argument} />
-                    <AttackList attackInfo={attackInfo} setAttackInfo={setAttackInfo}
-                        selectSkillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv}
-                        abilitySettingMap={abilitySettingMap} passiveSettingMap={passiveSettingMap} state={state} dispatch={dispatch} />
+                    <AttackList argument={argument} selectSkillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv} />
                     <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
                         state={state} dispatch={dispatch} />
                     <OtherSetting attackInfo={attackInfo} enemyClass={enemyClass}
                         otherSetting={otherSetting} setOtherSetting={setOtherSetting} bulkSetting={bulkSetting} />
                     {(enemyClass === ENEMY_CLASS.SCORE_ATTACK || enemyClass === ENEMY_CLASS.SCORE_ATTACK_EX) && damageResult ?
-                        <PredictionScore damageResult={damageResult} state={state} enemyClass={enemyClass}/>
+                        <PredictionScore damageResult={damageResult} state={state} enemyClass={enemyClass} />
                         : null
                     }
                 </div>

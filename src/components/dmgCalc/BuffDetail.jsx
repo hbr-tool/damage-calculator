@@ -4,7 +4,7 @@ import {
 } from "utils/const";
 import {
     DEBUFF_LIST, KIND_ATTACKUP, KIND_DEFENSEDOWN,
-    getCharaIdToMember, getEffectSize, getStatUp, getStatus, getCostVariable
+    getCharaIdToMember, getEffectSize, getCostVariable
 } from "./logic";
 import * as logic from "./logic";
 import { getSkillData, getPassiveInfo, getPassiveEffectList, getAbilityInfo, getAbilityEffectList } from "utils/common";
@@ -46,8 +46,13 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
 
         setBuffSettingMap(updateSettingMap);
     };
-
-    let statUp = getStatUp(styleList, state, memberInfo, buffSetting.collect, abilitySettingMap, passiveSettingMap);
+    const handlers = {
+        collect: buffSetting.collect,
+        state, skillInfo, styleList,
+        memberInfo,
+        abilitySettingMap, passiveSettingMap, resonanceList
+    };
+    let statUp = logic.getStatAllUp(handlers);
     let enemyStatDown = 0;
     let enemyStat = 0;
     if (isDebuff) {
@@ -56,7 +61,7 @@ const BuffDetail = ({ buffInfo, styleList, state, index, buffSettingMap, setBuff
             enemyStatDown = Number(buffSetting.collect.statDown);
         }
     }
-    let status = getStatus(buffInfo, memberInfo, statUp)
+    let status = logic.getStatus(handlers, buffInfo, statUp)
 
     const effectSize = getEffectSize(styleList, buffInfo, buffSetting, memberInfo, state,
         abilitySettingMap, passiveSettingMap, resonanceList);

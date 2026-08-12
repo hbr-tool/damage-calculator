@@ -59,6 +59,7 @@ const OtherSetting = ({ attackInfo, enemyClass, otherSetting, setOtherSetting, b
                         <option value="2">銀氷</option>
                         <option value="3">雷霆</option>
                         <option value="4">光輝</option>
+                        <option value="5">常闇</option>
                     </select>
                 </div>
                 <div className="flex">
