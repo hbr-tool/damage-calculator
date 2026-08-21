@@ -1387,9 +1387,13 @@ const getStatusUnit = (handlers, strStatus) => {
     }
     const attackInfo = handlers.attackInfo;
     // 暫定対応
-    const statUpList = [265, 267]; // ラグナロク・ノヴァ(リベンジ10)
-    if (statUpList.includes(attackInfo?.attack_id)) {
+    // ラグナロク・ノヴァ(リベンジ10)
+    if ([265, 267].includes(attackInfo?.attack_id)) {
         status += 20;
+    }
+    // ファイブサンダー・ジョーズ
+    if ([269].includes(attackInfo?.attack_id)) {
+        status += 40;
     }
     return status;
 }
