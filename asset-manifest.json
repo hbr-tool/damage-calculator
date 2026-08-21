@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.2559c081.css",
-    "main.js": "/static/js/main.568ba5b2.js",
+    "main.js": "/static/js/main.11934ee2.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -163,6 +163,7 @@
     "static/media/ByakkoMilitary_R3_Select.webp": "/static/media/ByakkoMilitary_R3_Select.803de3f86513dd2cb643.webp",
     "static/media/IrOhshimaShowTime_R3_Select.webp": "/static/media/IrOhshimaShowTime_R3_Select.23a200f99f69dff75761.webp",
     "static/media/IIshiiCasual_R3_Select.webp": "/static/media/IIshiiCasual_R3_Select.0f8ca09fdb0a18624580.webp",
+    "static/media/YBungoSwim2026_R3_Select.webp": "/static/media/YBungoSwim2026_R3_Select.9e15a3cf6e28f7d6965d.webp",
     "static/media/YIzumiDefault_R3_Select.webp": "/static/media/YIzumiDefault_R3_Select.9f3686faad8e7a42acee.webp",
     "static/media/CSkopovskayaKitchen_R3_Select.webp": "/static/media/CSkopovskayaKitchen_R3_Select.87a7215079c6e7a44750.webp",
     "static/media/SSakurabaNewYear2023_R3_Select.webp": "/static/media/SSakurabaNewYear2023_R3_Select.1ff2445ae2f7a53cd015.webp",
@@ -176,6 +177,7 @@
     "static/media/HOgasawaraDefault_R3_Select.webp": "/static/media/HOgasawaraDefault_R3_Select.7d5e6ba47d7d193c52c3.webp",
     "static/media/AMizuharaJellyfish_R3_Select.webp": "/static/media/AMizuharaJellyfish_R3_Select.c14b218b92e6c3e9cf9e.webp",
     "static/media/KHiiragiBloody_R3_Select.webp": "/static/media/KHiiragiBloody_R3_Select.93f8c26339055c17d1e9.webp",
+    "static/media/CSugaharaSwim2026_R3_Select.webp": "/static/media/CSugaharaSwim2026_R3_Select.600a0605ce220c84708d.webp",
     "static/media/RKayamoriTarot_R3_Select.webp": "/static/media/RKayamoriTarot_R3_Select.94001b7e68eefa7ec9cc.webp",
     "static/media/TTojoSwim2022_R3_Select.webp": "/static/media/TTojoSwim2022_R3_Select.c1597f63cf072f3a15d5.webp",
     "static/media/ADateFurisode2025_R3_Select.webp": "/static/media/ADateFurisode2025_R3_Select.3c87dbcc79b4417662eb.webp",
@@ -865,6 +867,6 @@
   },
   "entrypoints": [
     "static/css/main.2559c081.css",
-    "static/js/main.568ba5b2.js"
+    "static/js/main.11934ee2.js"
   ]
 }
