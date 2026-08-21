@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.2559c081.css",
-    "main.js": "/static/js/main.11934ee2.js",
+    "main.js": "/static/js/main.aa3eccba.js",
     "static/media/frend.png": "/static/media/frend.f0523ea361a754427de2.png",
     "static/media/KarenSwim2024_R3.webp": "/static/media/KarenSwim2024_R3.87c2441162f783eecc84.webp",
     "static/media/IrOhshimaDefault_R3.webp": "/static/media/IrOhshimaDefault_R3.a2e7d02501e315dcd414.webp",
@@ -266,6 +266,7 @@
     "static/media/BIYamawakiEvil_R3a_Select.webp": "/static/media/BIYamawakiEvil_R3a_Select.a42895651ac44a4e2fe3.webp",
     "static/media/YIzumiSnowWhite_R3_Select.webp": "/static/media/YIzumiSnowWhite_R3_Select.2e2088764402b90d25a4.webp",
     "static/media/TKunimiAutumn2025_R3_Select.webp": "/static/media/TKunimiAutumn2025_R3_Select.174190664fc5b00203c7.webp",
+    "static/media/YBungoSwim2026_R3_Thumbnail.webp": "/static/media/YBungoSwim2026_R3_Thumbnail.73b62171ced770c1eaf2.webp",
     "static/media/TKunimiDefault_R3_Select.webp": "/static/media/TKunimiDefault_R3_Select.f59a14b3212cdeee704d.webp",
     "static/media/MuOhshimaDefault_R3_Select.webp": "/static/media/MuOhshimaDefault_R3_Select.aa6eb1ed44e479cff61b.webp",
     "static/media/MAikawaMaiden_R3_Select.webp": "/static/media/MAikawaMaiden_R3_Select.36d1f22dc8a82c9b1fcf.webp",
@@ -342,6 +343,7 @@
     "static/media/KarenSuite_R3_Select.webp": "/static/media/KarenSuite_R3_Select.7c6ddf1dceb039ceeee0.webp",
     "static/media/MiOhshimaDefault_R3_Select.webp": "/static/media/MiOhshimaDefault_R3_Select.1cf7757042fe12ce59c3.webp",
     "static/media/CMatsuokaCasual_R3_Select.webp": "/static/media/CMatsuokaCasual_R3_Select.ade036f2f1e1a27dcd64.webp",
+    "static/media/CSugaharaSwim2026_R3_Thumbnail.webp": "/static/media/CSugaharaSwim2026_R3_Thumbnail.bb0b0041ed1f2733f228.webp",
     "static/media/AliceADefault_R3_Select.webp": "/static/media/AliceADefault_R3_Select.75f35cad1ca1b2bef0f1.webp",
     "static/media/CReaperDefault_R3_Select.webp": "/static/media/CReaperDefault_R3_Select.6e77c6c30d43656de016.webp",
     "static/media/CSkopovskayaKitchen_R3_Thumbnail.webp": "/static/media/CSkopovskayaKitchen_R3_Thumbnail.a18d0389bc4f0840cd07.webp",
@@ -867,6 +869,6 @@
   },
   "entrypoints": [
     "static/css/main.2559c081.css",
-    "static/js/main.11934ee2.js"
+    "static/js/main.aa3eccba.js"
   ]
 }
