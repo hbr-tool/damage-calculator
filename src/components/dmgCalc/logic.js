@@ -780,7 +780,7 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
             dpNo = i;
         }
     }
-    let restHp = enemyInfo.max_hp * state.hpRate / 100;
+    let restHp = enemyInfo.max_hp * (1 + state.correction.hp_rate / 100);
     let hitCount = attackInfo.hit_count;
     let destruction_size = destruction * attackInfo.destruction * damageRateUp;
     let damage = 0;
@@ -1312,31 +1312,6 @@ export function updateEnemyStatus(enemyClassNo, enemyInfo) {
     let index = enemyList.findIndex((obj) => obj === filteredEnemy[0]);
     Object.assign(enemyList[index], enemyInfo);
 }
-
-// セラフ遭遇戦敵ステータス設定
-// function updateSeraphEncounter(enemyInfo, selectedList) {
-//     let new_enemyInfo = JSON.parse(JSON.stringify(enemyInfo));
-//     selectedList.forEach((item) => {
-//         switch (item.effect_kind) {
-//             case "STAT_UP":
-//                 new_enemyInfo.enemy_stat += item.effect_size;
-//                 break;
-//             case "ICE_DOWN":
-//                 new_enemyInfo.element_2 += item.effect_size;
-//                 break;
-//             case "LIGHT_DOWN":
-//                 new_enemyInfo.element_4 += item.effect_size;
-//                 break;
-//             case "HP_UP":
-//                 new_enemyInfo.max_hp = Math.floor(new_enemyInfo.max_hp * (1 + (item.effect_size / 100)));
-//                 break;
-//             case "DP_UP":
-//                 new_enemyInfo.max_dp = String(Math.floor(Number(new_enemyInfo.max_dp) * (1 + (item.effect_size / 100))));
-//                 break;
-//         }
-//     })
-//     // setEnemyStatus(new_enemyInfo)
-// }
 
 export const getStatus = (handlers, info, statUp) => {
     let molecule = 0;

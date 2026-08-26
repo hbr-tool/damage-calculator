@@ -2,9 +2,10 @@ import ReactModal from "react-modal";
 import React, { useState } from "react";
 import { generateGradientFromRange } from "./logic";
 
-const DamageDetail = ({ mode, enemyInfo, detail, result, dispatch, closeModal }) => {
-
-    let dispRestHp = calculatePercentage(result.max.restHp, result.min.restHp, enemyInfo.max_hp, "hp");
+const DamageDetail = ({ mode, state, detail, result, dispatch, closeModal }) => {
+    const enemyInfo = state.enemyInfo;
+    const maxHp = Math.floor(enemyInfo.max_hp * (1 + state.correction.hp_rate / 100));
+    let dispRestHp = calculatePercentage(result.max.restHp, result.min.restHp, maxHp, "hp");
     let gradientStyleHp = generateGradientFromRange(dispRestHp, "#BE71BE")
 
     // 破壊率
@@ -14,7 +15,7 @@ const DamageDetail = ({ mode, enemyInfo, detail, result, dispatch, closeModal })
     const handleChilckRefrection = () => {
         if (result.avg.restDp[0] <= 0) {
             dispatch({ type: "RESET_DP" });
-            dispatch({ type: "SET_HP", value: Math.floor(result.min.restHp / enemyInfo.max_hp * 100) });
+            dispatch({ type: "SET_HP", value: Math.floor(result.min.restHp / maxHp * 100) });
             dispatch({ type: "SET_DAMAGE_RATE", value: Math.floor(result.avg.damageRate) });
             closeModal();
         } else {
@@ -160,7 +161,7 @@ function calculatePercentage(min, max, total, dphp) {
     }
 }
 
-const DamageResult = ({ damageResult, enemyInfo, dispatch }) => {
+const DamageResult = ({ damageResult, state, dispatch }) => {
     const [modal, setModal] = useState({
         isOpen: false,
         mode: ""
@@ -231,7 +232,7 @@ const DamageResult = ({ damageResult, enemyInfo, dispatch }) => {
                 className={"modal-content " + (modal.isOpen ? "modal-content-open" : "")}
                 overlayClassName={"modal-overlay " + (modal.isOpen ? "modal-overlay-open" : "")}
             >
-                <DamageDetail mode={modal.mode} enemyInfo={enemyInfo} detail={damageResult} dispatch={dispatch}
+                <DamageDetail mode={modal.mode} state={state} detail={damageResult} dispatch={dispatch}
                     result={modal.mode === "critical" ? damageResult.criticalResult : damageResult.normalResult}
                     closeModal={closeModal} />
             </ReactModal>

@@ -50,9 +50,8 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
     };
 
     // HP補正
-    let maxHp = Number(enemyInfo.max_hp);
+    const maxHp = Math.floor(Number(enemyInfo.max_hp) * (1 + state.correction.hp_rate / 100));
     let enemyStat = Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0);
-    maxHp = Math.floor(maxHp * (1 + state.correction.hp_rate / 100));
     let backgroundHp = getApplyGradient("#7C4378", state.hpRate)
 
     // 破壊率補正

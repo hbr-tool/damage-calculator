@@ -339,7 +339,7 @@ const DamageCalculation = () => {
                 </div>
                 <BuffArea argument={argument} />
             </div>
-            <DamageResult damageResult={damageResult} enemyInfo={state.enemyInfo} dispatch={dispatch} />
+            <DamageResult damageResult={damageResult} state={state} dispatch={dispatch} />
         </div>
     );
 }
