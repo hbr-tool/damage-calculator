@@ -136,7 +136,7 @@ const BattleArea = React.memo(({ hideMode, setHideMode, turnList, dispatch, load
                 <div className={display_class}>
                     <div className="flex justify-between mt-1">
                         <div className="flex mode_button">
-                            <input type="checkbox" className="switch" id="mode_switch" onChange={(e) => changeHideMode(e)} /><label htmlFor="mode_switch">設定画面を隠す</label>
+                            <input type="checkbox" className="switch" id="hide_setting" onChange={(e) => changeHideMode(e)} /><label htmlFor="hide_setting">設定画面を隠す</label>
                         </div>
                         <div>
                             <input type="button" id="btnSave" value="ログ" onClick={() => openModal("log")} />

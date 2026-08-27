@@ -66,6 +66,12 @@ const score_attack_list = [
         "dp_rate": { 21: 218337, 26: 378794, 31: 619480, 36: 980509, 39: 1352478, 40: 1440000 },
         "hp_rate": { 21: 14210711, 26: 25485125, 31: 42396746, 36: 67764178, 39: 93900320, 40: 100050000 },
     },
+    {
+        "score_attack_no": 900, "enemy_count": 1, "level_bonus": 100_000, "max_limit_value": 2_000_000_000,
+    },
+    {
+        "score_attack_no": 901, "enemy_count": 2, "level_bonus": 120_000, "max_limit_value": 1_833_033_033,
+    },
 ];
 
 // スコアタ情報取得
