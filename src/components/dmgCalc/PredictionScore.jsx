@@ -44,9 +44,9 @@ const PredictionScore = ({ damageResult, state, enemyClass }) => {
     }
 
     let numTurnDamage = Number(turnDamage) || 0;
-    damageBonusAvg = getDamageBonus(damageResult.criticalResult.avg.damage + numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
-    damageBonusMax = getDamageBonus(damageResult.criticalResult.max.damage + numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
-    damageBonusMin = getDamageBonus(damageResult.criticalResult.min.damage + numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+    damageBonusAvg = getDamageBonus(damageResult.criticalResult.avg.damage, numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+    damageBonusMax = getDamageBonus(damageResult.criticalResult.max.damage, numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
+    damageBonusMin = getDamageBonus(damageResult.criticalResult.min.damage, numTurnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit);
 
     let summaryScoreAvg = Math.floor((levelBonus + noBreakValue + damageBonusAvg) * turnBonus * (1 + totalGradeRate / 100));
     let summaryScoreMax = Math.floor((levelBonus + noBreakValue + damageBonusMax) * turnBonus * (1 + totalGradeRate / 100));
@@ -123,8 +123,9 @@ const PredictionScore = ({ damageResult, state, enemyClass }) => {
 };
 
 // ダメージボーナス算出
-function getDamageBonus(damage, damageLimitValue, maxDamageRate, socreEnemyUnit) {
+function getDamageBonus(damage, turnDamage, damageLimitValue, maxDamageRate, socreEnemyUnit) {
     damage *= Number(socreEnemyUnit);
+    damage += turnDamage;
     // ダメージ上限
     // damage = damage > 2_000_000_000 ? 2_000_000_000 : damage;
     let damageBonus;
