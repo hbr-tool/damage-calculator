@@ -419,6 +419,9 @@ const skillActivation = (skillInfo, unitData, turnData, placeNo, autoPursuitUnit
         }
     }
 
+    // SP消費してから行動
+    payCost(unitData, skillInfo);
+
     let attackInfo;
     if (skillInfo.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
         attackInfo = { "attack_id": 0, "attack_element": unitData.normalAttackElement };
@@ -456,9 +459,6 @@ const skillActivation = (skillInfo, unitData, turnData, placeNo, autoPursuitUnit
             addBuffUnit(turnData, buffInfo, placeNo, unitData);
         }
     }
-
-    // SP消費
-    payCost(unitData, skillInfo);
 
     let unitOdPlus = getODPlus(skillInfo, placeNo, turnData);
     if (unitOdPlus > 0) {
