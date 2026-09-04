@@ -253,6 +253,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
             case BUFF.STEAK: // ステーキ
             case BUFF.GELATO: // ジェラート
             case BUFF.DIM_SUM: // 点心
+            case BUFF.TEA: // ティー
                 return 50;
             default:
                 break;
@@ -780,7 +781,7 @@ function calculateDamage(state, basePower, attackInfo, buff, debuff, debuffDp, f
             dpNo = i;
         }
     }
-    let restHp = enemyInfo.max_hp * (1 + state.correction.hp_rate / 100);
+    let restHp = enemyInfo.max_hp * state.hpRate / 100 * (1 + state.correction.hp_rate / 100);
     let hitCount = attackInfo.hit_count;
     let destruction_size = destruction * attackInfo.destruction * damageRateUp;
     let damage = 0;
@@ -1397,9 +1398,9 @@ export function calcBuffEffectSize(buffInfo, status, skillLv, jewelLv) {
     let maxPower = buffInfo.max_power * (1 + 0.02 * (skillLv - 1));
     let skillStat = buffInfo.param_limit;
     let effectSize = 0;
-    // 固定量のバフ
-    if (buffInfo.min_power === buffInfo.max_power) {
-        return buffInfo.min_power;
+
+    if (!skillStat) {
+        return minPower;
     }
 
     // 宝珠分以外

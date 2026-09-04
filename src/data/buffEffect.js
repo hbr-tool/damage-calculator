@@ -78,6 +78,7 @@ const buffEffect = [
     {"buff_id":58,"effect_type":0,"ref_status_1":0,"ref_status_2":0},
     {"buff_id":59,"effect_type":0,"ref_status_1":0,"ref_status_2":0},
     {"buff_id":60,"effect_type":0,"ref_status_1":0,"ref_status_2":0},
+    {"buff_id":61,"effect_type":0,"effect_size":50,"ref_status_1":5,"ref_status_2":0},
     {"buff_id":90,"effect_type":0,"ref_status_1":0,"ref_status_2":0},
     {"buff_id":116,"effect_type":0,"ref_status_1":5,"ref_status_2":0},
 ];

@@ -23,8 +23,10 @@ export const STYLE_ID = {
     KITCHEN_SHARO: 182,  // キッチンシャロ
     KITCHEN_CAROLE: 200,  // キッチンキャロル
     KITCHEN_MARIA: 201,  // キッチンマリア
-    SHANHUA_MARIA: 213,  // キッチン映夏
+    KITCHEN_SHANHUA: 213,  // キッチン映夏
+    KITCHEN_IRENE: 223,  // キッチンアイリーン
     YUKATA_SHIKI: 215,  // 浴衣シッキー
+    SWIM_MUA: 222,  // 水着六宇亜
     PAWAPURO: [183, 184, 5092],  // パワプロ月歌、いちご、緋雨
 }
 
@@ -50,6 +52,7 @@ export const BUFF_ID = {
     MEGA_DESTROYER5: 235,   // メガデストロイヤー5人
     MEGA_DESTROYER6: 236,   // メガデストロイヤー5人
     PERFECT_COLOR: 557,   // 極彩色
+    FULL_MEDITATION: 490,   // 追い込み！全力メドレー
     BRIGHT_RED: 1037,   // 茜色
 }
 
@@ -176,6 +179,8 @@ export const BUFF = {
     SPRIGHTLY: 58, // 軽快
     CAMP_DEPLOYMENT: 59, // 陣展開
     ADDITIONALTURN_NOT: 60, // 追加ターン(追加ターンを除く)
+    REVENGE: 60, // リベンジ(重複してる・・・)
+    TEA: 61, // ティー
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

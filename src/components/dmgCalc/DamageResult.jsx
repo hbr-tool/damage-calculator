@@ -131,7 +131,7 @@ const DamageDetail = ({ mode, state, detail, result, dispatch, closeModal }) => 
                 </div>
                 {mode === "critical" && (
                     <div>
-                        <div className="magnification">×クリティカル倍率</div>
+                        <div className="magnification">×CRTダメージ倍率</div>
                         <input type="text" className="text-center magnification_value" value={detail.criticalBuff} readOnly />
                     </div>
                 )}

@@ -980,6 +980,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
         case BUFF.STEAK: // ステーキ
         case BUFF.GELATO: // ジェラート
         case BUFF.DIM_SUM: // 点心
+        case BUFF.TEA: // ティー
         case BUFF.SPRIGHTLY: // 軽快
             // バフ追加
             if (buffInfo.buff_kind === BUFF.ATTACKUP || buffInfo.buff_kind === BUFF.ELEMENT_ATTACKUP) {
@@ -1072,6 +1073,10 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
             addDisasterDebuffUnit(turnData.enemyDebuffList, buffInfo, useUnitData);
             break;
         case BUFF.HEALSP: // SP追加
+            // いずれ効果量トークン実装に切り替え
+            if (buffInfo.buff_id === constants.BUFF_ID.FULL_MEDITATION) {
+                buffInfo.min_power = useUnitData.tokenCost;
+            }
             targetList.forEach(function (target_no) {
                 skillHealSp(turnData, target_no, buffInfo.min_power, buffInfo.max_power, placeNo, false, buffInfo.buff_id);
             });

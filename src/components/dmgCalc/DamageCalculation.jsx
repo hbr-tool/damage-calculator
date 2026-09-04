@@ -301,6 +301,7 @@ const DamageCalculation = () => {
                 let buffSelect = selectBuffKeyMap[buffKey][index];
                 if (buffSelect) {
                     const buffSetting = buffList[buffSelect];
+                    if (!buffSetting) return;
                     let buffInfo = buffSetting.buffInfo;
                     const charaId = buffInfo.use_chara_id;
                     const memberInfo = getCharaIdToMember(styleList, charaId);

@@ -46,6 +46,7 @@ export const CONSTRAINTS_ABILITY = [
     1702, // 護りの真髄
     1109, // 吉報
     1217, // 神楽舞
+    1620, // 芳醇ダージリン
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [

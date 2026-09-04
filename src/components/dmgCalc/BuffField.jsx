@@ -25,7 +25,7 @@ const BuffField = ({ buffKey, index, rowSpan, buffDef, attackInfo,
             <tr>
                 {index === 0 && (
                     <td className="kind pc_only" rowSpan={rowSpan}>
-                        {buffKind === BUFF.ATTACKUP ? "バフ" : buffKind === BUFF.DEFENSEDOWN ? "デバフ" : "クリティカル"}
+                        {buffKind === BUFF.ATTACKUP ? "バフ" : buffKind === BUFF.DEFENSEDOWN ? "デバフ" : "CRT"}
                     </td>
                 )}
                 <td rowSpan={buffDef.overlap ? 2 : 1}>{buffName}</td>

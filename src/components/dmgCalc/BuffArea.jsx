@@ -221,6 +221,7 @@ const BuffArea = ({ argument: {
             updateMap[buffKind].forEach((buffInnerList, index) => {
                 Object.keys(buffInnerList).forEach(buffKey => {
                     let buffSetting = buffInnerList[buffKey];
+                    if (!buffSetting) return;
                     let buff = buffSetting.buffInfo;
                     const memberInfo = logic.getCharaIdToMember(styleList, buff.use_chara_id);
                     buffSetting.effect_size = logic.getEffectSize(styleList, buff, buffSetting, memberInfo, state,
@@ -470,7 +471,7 @@ const BuffArea = ({ argument: {
                         })}
                         <tr className="sp_only">
                             <td className="kind" colSpan="4">
-                                クリティカル
+                                CRT
                             </td>
                         </tr>
                         {criticalBuffs.map((buffDef, index) => {
@@ -914,12 +915,18 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_MARIA
             || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
     );
-    const isShanhuaMaria = selectStyleList.some(
-        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.SHANHUA_MARIA
+    const isKitchenShanhua = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_SHANHUA
             || memberInfo?.styleInfo.chara_id === CHARA_ID.MINORI
+    );
+    const isKitchenIrene = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.KITCHEN_IRENE
     );
     const isYukataShiki = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.YUKATA_SHIKI
+    );
+    const isSwimMua = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.style_id === STYLE_ID.SWIM_MUA
     );
     const isRisa = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
@@ -964,7 +971,8 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
         ...(isKitchenSharo ? [{ name: "シチー", kind: BUFF.SHCHI, overlap: false },] : []),
         ...(isKitchenCarole ? [{ name: "ステーキ", kind: BUFF.STEAK, overlap: false },] : []),
         ...(isKitchenMaria ? [{ name: "ジェラート", kind: BUFF.GELATO, overlap: false },] : []),
-        ...(isShanhuaMaria ? [{ name: "点心", kind: BUFF.DIM_SUM, overlap: false },] : []),
+        ...(isKitchenShanhua ? [{ name: "点心", kind: BUFF.DIM_SUM, overlap: false },] : []),
+        ...(isKitchenIrene ? [{ name: "ティー", kind: BUFF.TEA, overlap: false },] : []),
         ...(isYukataShiki ? [{ name: "晩夏の陣", kind: BUFF.CAMP_DEPLOYMENT, overlap: false },] : []),
         ...(isWeak ? [{ name: "心眼", kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
@@ -987,11 +995,11 @@ const getDefenseDownBuffs = function (isElement, isWeak, isDp) {
 }
 const getCriticalBuffs = function (isElement) {
     return [
-        { name: "クリティカル率UP", kind: BUFF.CRITICALRATEUP, overlap: true },
-        { name: "クリダメUP", kind: BUFF.CRITICALDAMAGEUP, overlap: true },
+        { name: "CRT率UP", kind: BUFF.CRITICALRATEUP, overlap: true },
+        { name: "CRTダメUP", kind: BUFF.CRITICALDAMAGEUP, overlap: true },
         ...(isElement ? [
-            { name: "属性クリ率UP", kind: BUFF.ELEMENT_CRITICALRATEUP, overlap: true },
-            { name: "属性クリダメUP", kind: BUFF.ELEMENT_CRITICALDAMAGEUP, overlap: true },
+            { name: "属性CRT率UP", kind: BUFF.ELEMENT_CRITICALRATEUP, overlap: true },
+            { name: "属性CRTダメUP", kind: BUFF.ELEMENT_CRITICALDAMAGEUP, overlap: true },
         ] : []),
     ]
 }

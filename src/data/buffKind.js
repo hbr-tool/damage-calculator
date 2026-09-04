@@ -60,6 +60,7 @@ const buffKind = [
     {"buff_kbn":58,"replace_name":"SPRIGHTLY","buff_name":"軽快","buff_icon":"IconSprightly"},
     {"buff_kbn":59,"replace_name":"CAMP_DEPLOYMENT","buff_name":"陣展開","buff_icon":""},
     {"buff_kbn":60,"replace_name":"REVENGE","buff_name":"リベンジ","buff_icon":"IconRevenge"},
+    {"buff_kbn":61,"replace_name":"TEA","buff_name":"ティー","buff_icon":"IconTea"},
     {"buff_kbn":90,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":""},
     {"buff_kbn":116,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
 ];
