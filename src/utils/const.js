@@ -181,6 +181,7 @@ export const BUFF = {
     ADDITIONALTURN_NOT: 60, // 追加ターン(追加ターンを除く)
     REVENGE: 60, // リベンジ(重複してる・・・)
     TEA: 61, // ティー
+    ETERNAL_ATTACKUP: 62, // 永続攻撃力アップ
     DISPEL: 90, // ディスペル
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }

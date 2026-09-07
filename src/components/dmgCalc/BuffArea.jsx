@@ -960,6 +960,7 @@ const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attackInfo, 
     );
     return [
         { name: "攻撃力UP", kind: BUFF.ATTACKUP, overlap: true },
+        ...(isSwimMua ? [{ name: "攻撃UP(永続)", kind: BUFF.ETERNAL_ATTACKUP, overlap: false },] : []),
         ...(isElement ? [{ name: "属性攻撃力UP", kind: BUFF.ELEMENT_ATTACKUP, overlap: true },] : []),
         { name: "フィールド", kind: BUFF.FIELD, overlap: false },
         { name: "チャージ", kind: BUFF.CHARGE, overlap: false },

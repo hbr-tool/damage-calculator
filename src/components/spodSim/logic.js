@@ -956,6 +956,7 @@ function addBuffUnit(turnData, buffInfo, placeNo, useUnitData, isLogOutput = tru
     // 対象策定
     switch (buffInfo.buff_kind) {
         case BUFF.ATTACKUP: // 攻撃力アップ
+        case BUFF.ETERNAL_ATTACKUP: // 永続攻撃力アップ
         case BUFF.ELEMENT_ATTACKUP: // 属性攻撃力アップ
         case BUFF.MINDEYE: // 心眼
         case BUFF.CRITICALRATEUP:	// クリティカル率アップ

@@ -43,6 +43,7 @@ export const BUFF_KBN = {
     54: "gelato",
     57: "dim_sum",
     59: "camp",
+    62: "eternal_attack_up",
 };
 
 export const ATTACK_BUFF_LIST = [
@@ -209,6 +210,7 @@ export function getEffectSize(styleList, buff, buffSetting, memberInfo, state, a
         switch (buff.buff_kind) {
             case BUFF.ATTACKUP: // 攻撃力アップ
             case BUFF.ELEMENT_ATTACKUP: // 属性攻撃力アップ
+            case BUFF.ETERNAL_ATTACKUP: // 永続攻撃力アップ
                 effectSize = getBuffEffectSize(handlers, buff, buffSetting, JEWEL_TYPE.SKILL_ATTACKUP);
                 break;
             case BUFF.MINDEYE: // 心眼

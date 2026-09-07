@@ -61,6 +61,7 @@ const buffList = [
     {"buff_id":59,"replace_name":"CAMP_DEPLOYMENT","buff_name":"陣展開","buff_icon":""},
     {"buff_id":60,"replace_name":"REVENGE","buff_name":"リベンジ","buff_icon":"IconRevenge"},
     {"buff_id":61,"replace_name":"TEA","buff_name":"ティー","buff_icon":"IconTea"},
+    {"buff_id":62,"replace_name":"ETERNAL_ATTACKUP","buff_name":"永続攻撃アップ","buff_icon":"IconBuffAttack"},
     {"buff_id":90,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":""},
     {"buff_id":116,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
 ];
