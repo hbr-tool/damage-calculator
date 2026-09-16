@@ -234,6 +234,7 @@ export const EFFECT = {
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
+    GRANT_DEBUFF: 58, // デバフ付与
 }
 
 export const EFFECT_VALUE = {
