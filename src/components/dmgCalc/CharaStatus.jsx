@@ -358,6 +358,10 @@ const CharaStatus = ({ argument }) => {
                                         .slice()
                                         .sort((a, b) => getSortKey(a) - getSortKey(b))
                                         .slice(0, 2)) {
+                                        if (collect?.costSp) {
+                                            spCost += Math.floor(collect.costSp);
+                                            continue;
+                                        }
                                         if (skill.cost_type === COST_TYPE.SP) {
                                             const handlers = {
                                                 collect,

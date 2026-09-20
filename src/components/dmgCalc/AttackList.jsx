@@ -185,13 +185,13 @@ const SkillUnique = ({ attackInfo, setAttackInfo }) => {
     }
 
     if (attackInfo.rest_sp) {
-        let costSp = attackInfo.cost_sp ? attackInfo.cost_sp : 30;
+        let costSp = attackInfo.collect?.costSp ?? 30;
         return (
             <div className="skill_unique">
                 <div className="flex">
                     残りSP
                     <input type="number" className="ml-2 w-12" max="30" min="0" id="skill_unique_sp" value={costSp}
-                        onChange={e => setAttackInfo({ ...attackInfo, cost_sp: e.target.value })} />
+                    onChange={(e) => setAttackInfo({ ...attackInfo, collect: { ...attackInfo.collect, costSp: e.target.value } })} />
                 </div>
             </div>
         );

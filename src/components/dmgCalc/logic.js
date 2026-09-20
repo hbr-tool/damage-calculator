@@ -652,9 +652,9 @@ export function getDamageResult(argument, selectSkillLv) {
         }
     }
 
-    if (attackInfo.rest_sp === 1 && attackInfo.cost_sp) {
+    if (attackInfo.rest_sp === 1 && attackInfo.collect?.costSp) {
         // 消費SPが多いほど威力アップ
-        let sp = attackInfo.cost_sp;
+        let sp = attackInfo.collect?.costSp;
         skillUniqueRate = (sp > 30 ? 30 : sp) / 30;
     }
 
