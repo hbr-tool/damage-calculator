@@ -4,7 +4,7 @@ import { useStyleList } from "components/StyleListProvider";
 import skillAttack from "data/skillAttack";
 import * as common from "utils/common";
 import { SKILL_ID, ATTRIBUTE, STATUS_KBN, JEWEL_TYPE, JEWEL_EXPLAIN, COST_TYPE, KIND } from 'utils/const';
-import { getCharaIdToMember, getApplyGradient, getCostVariable } from "./logic";
+import { getCharaIdToMember, getApplyGradient } from "./logic";
 import * as logic from "./logic";
 import attribute from 'assets/attribute';
 import { AttackLineChart } from "./SimpleLineChart";
@@ -12,19 +12,26 @@ import { AttackLineChart } from "./SimpleLineChart";
 const TYPE_PHYSICAL = ["none", "slash", "stab", "strike"];
 const TYPE_ELEMENT = ["none", "fire", "ice", "thunder", "light", "dark"];
 
-const AttackList = ({ argument, selectSkillLv, setSelectSkillLv }) => {
+const AttackList = ({ argument }) => {
     const { styleList } = useStyleList();
     const [modal, setModal] = useState(false);
 
-    const attackInfo = argument.attackInfo;
-    const setAttackInfo = argument.setAttackInfo;
+    const {
+        attackInfo, setAttackInfo,
+        selectAttackSkillLv, setSelectAttackSkillLv
+    } = argument;
 
     const handleChangeAttackId = (value) => {
         let selectAttackInfo = getAttackInfo(value);
         if (selectAttackInfo) {
             const physical = common.getCharaData(selectAttackInfo.chara_id).physical;
             selectAttackInfo.attack_physical = physical;
-            setSelectSkillLv(selectAttackInfo.max_lv);
+            setSelectAttackSkillLv(selectAttackInfo.max_lv);
+            if (attackInfo.collect?.statDown) {
+                selectAttackInfo.collect = {
+                    statDown: attackInfo.collect.statDown,
+                };
+            }
             setAttackInfo(selectAttackInfo);
         }
     }
@@ -68,10 +75,10 @@ const AttackList = ({ argument, selectSkillLv, setSelectSkillLv }) => {
                     attack_physical: common.getCharaData(firstAttack.chara_id).physical,
                 };
                 setAttackInfo(newInfo);
-                setSelectSkillLv(newInfo.max_lv);
+                setSelectAttackSkillLv(newInfo.max_lv);
             } else {
                 setAttackInfo(undefined);
-                setSelectSkillLv(undefined);
+                setSelectAttackSkillLv(undefined);
             }
         }
     }, [memberAttackList, attackInfo]);
@@ -105,7 +112,7 @@ const AttackList = ({ argument, selectSkillLv, setSelectSkillLv }) => {
                     return (
                         <>
                             <div className="lv">
-                                <select id="skill_lv" value={selectSkillLv} onChange={e => setSelectSkillLv(e.target.value)} >
+                                <select id="skill_lv" value={selectAttackSkillLv} onChange={e => setSelectAttackSkillLv(e.target.value)} >
                                     {attackInfo && (() =>
                                         Array.from({ length: attackInfo.max_lv }, (_, i) => i + 1).map(value => (
                                             <option key={`skill${value}`} value={value}>
@@ -142,8 +149,8 @@ const AttackList = ({ argument, selectSkillLv, setSelectSkillLv }) => {
                 className={"modal-content " + (modal ? "modal-content-open" : "")}
                 overlayClassName={"modal-overlay " + (modal ? "modal-overlay-open" : "")}
             >
-                <AttackDetail argument={argument} attackInfo={attackInfo} setAttackInfo={setAttackInfo} 
-                    selectSkillLv={selectSkillLv} closeModal={() => setModal(false)} />
+                <AttackDetail argument={argument} attackInfo={attackInfo} setAttackInfo={setAttackInfo}
+                    selectAttackSkillLv={selectAttackSkillLv} closeModal={() => setModal(false)} />
             </ReactModal>
         </div >
     )
@@ -227,15 +234,11 @@ const YamawakiServant = ({ attackInfo, setAttackInfo }) => {
 }
 
 
-const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, closeModal }) => {
+const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectAttackSkillLv, closeModal }) => {
     const styleList = argument.styleList;
     const state = argument.state;
-    const abilitySettingMap = argument.abilitySettingMap;
-    const passiveSettingMap = argument.passiveSettingMap;
-    const resonanceList = argument.resonanceList;
-
-    const minPower = attackInfo.min_power * (1 + 0.05 * (selectSkillLv - 1));
-    const maxPower = attackInfo.max_power * (1 + 0.02 * (selectSkillLv - 1));
+    const minPower = attackInfo.min_power * (1 + 0.05 * (selectAttackSkillLv - 1));
+    const maxPower = attackInfo.max_power * (1 + 0.02 * (selectAttackSkillLv - 1));
 
     const memberInfo = getCharaIdToMember(styleList, attackInfo.chara_id);
     const enemyInfo = state.enemyInfo;
@@ -243,23 +246,20 @@ const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, clos
 
     const handlers = {
         collect: attackInfo.collect,
-        state: argument.state,
-        attackInfo, skillInfo, styleList,
-        memberInfo,
-        abilitySettingMap, passiveSettingMap, resonanceList
+        attackInfo, skillInfo, memberInfo,
     };
-    let statUp = logic.getStatAllUp(handlers);
+    let statUp = logic.getStatAllUp(argument, handlers);
     let enemyStatDown = 0;
     if (attackInfo.collect?.statDown) {
         enemyStatDown = Number(attackInfo.collect.statDown);
     }
 
     let criticalStatDown = Math.max(enemyStatDown, 50);
-    let skillPower = logic.getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, enemyStatDown);
-    let criticalPower = logic.getSkillPower(handlers, attackInfo, selectSkillLv, statUp, state, enemyInfo, criticalStatDown);
+    let skillPower = logic.getSkillPower(argument, handlers, attackInfo, selectAttackSkillLv, statUp, state, enemyInfo, enemyStatDown);
+    let criticalPower = logic.getSkillPower(argument, handlers, attackInfo, selectAttackSkillLv, statUp, state, enemyInfo, criticalStatDown);
 
     let enemyStat = Number(enemyInfo.enemy_stat) + (state.correction.stat_up || 0);
-    let status = logic.getStatus(handlers, attackInfo, statUp);
+    let status = logic.getStatus(argument, handlers, attackInfo, statUp);
 
     const jpnName = ["", "力", "器用さ", "体力", "精神", "知性", "運"];
     // 宝珠レベル
@@ -271,7 +271,7 @@ const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, clos
     // 消費SP
     let spCost = 0;
     if (skillInfo.cost_type === COST_TYPE.SP) {
-        spCost = getCostVariable(handlers);
+        spCost = logic.getCostVariable(argument, handlers);
     }
     return (
         <div className="modal text-left mx-auto p-6">
@@ -295,7 +295,7 @@ const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, clos
                 <span>攻撃力</span>
                 <span>{`${minPower.toLocaleString()}～${maxPower.toLocaleString()}`}</span>
                 <div></div>
-                <span>(スキルLv{selectSkillLv})</span>
+                <span>(スキルLv{selectAttackSkillLv})</span>
                 <span>破壊係数</span>
                 <span>{attackInfo.destruction}%</span>
                 <span>HIT数</span>
@@ -352,7 +352,7 @@ const AttackDetail = ({ argument, attackInfo, setAttackInfo, selectSkillLv, clos
                     </>
                 )}
             </div>
-            <AttackLineChart status={Math.floor(status)} attackInfo={attackInfo} enemyStat={enemyStat} enemyStatDown={enemyStatDown} jewelLv={jewelLv} skillLv={selectSkillLv} />
+            <AttackLineChart status={Math.floor(status)} attackInfo={attackInfo} enemyStat={enemyStat} enemyStatDown={enemyStatDown} jewelLv={jewelLv} skillLv={selectAttackSkillLv} />
             <div className="mt-2">
                 <span className="damage_label">使用者情報</span>
             </div>

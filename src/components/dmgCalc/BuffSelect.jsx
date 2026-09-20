@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { isOnlyBuff, isOnlyUse, isAloneActivation, isSelectBuff } from "./logic";
-import { getBuffIdToBuff, getSkillData } from "utils/common";
+import { getBuffIdToEffect, getSkillData } from "utils/common";
 import ConfirmModal from 'components/ConfirmModal';
 
 const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChangeSkillLv, selectedKey, index, handleSelectChange, openModal }) => {
     const [modalData, setModalData] = useState(null);
     if (Object.keys(buffSettingMap).length > 0) {
-        buffList.sort((a, b) => buffSettingMap[b.key]?.effect_size - buffSettingMap[a.key]?.effect_size);
+        buffList.sort((a, b) => buffSettingMap[b.key]?.calcEffectSize - buffSettingMap[a.key]?.calcEffectSize);
     }
 
     const confirmSet = (message, onConfirm) => {
@@ -29,7 +29,7 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
             const type = value.split('_')[0];
             if (type === "buff") {
                 const buffId = Number(value.split('_')[1]);
-                let buffInfo = getBuffIdToBuff(buffId);
+                let buffInfo = getBuffIdToEffect(buffId);
                 if (isOnlyBuff(attackInfo, buffInfo) && newSelected[index ^ 1] === value) {
                     confirmSet(`${buffInfo.buff_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
                         handleSelectChange(buffKey, newSelected);
@@ -39,7 +39,7 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
                 if (isSelectBuff(buffInfo)) {
                     const partnerBuffId = Number(newSelected[index ^ 1]?.split('_')[1]);
                     if (partnerBuffId) {
-                        let partnerBuffInfo = getBuffIdToBuff(partnerBuffId);
+                        let partnerBuffInfo = getBuffIdToEffect(partnerBuffId);
                         if (buffInfo.skill_id === partnerBuffInfo.skill_id) {
                             let skillInfo = getSkillData(buffInfo.skill_id);
                             confirmSet(`${skillInfo.skill_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
@@ -73,7 +73,7 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
                 <select className="buff" value={value} onChange={(e) => onChangeBuff(e.target.value)}>
                     <option value="">無し</option>
                     {buffList.map((buff, index) => {
-                        let effect_text = `${buff.chara_name}: ${buff.buff_name} ${Math.floor(buffSettingMap[buff.key]?.effect_size * 100) / 100}%`;
+                        let effect_text = `${buff.chara_name}: ${buff.buff_name} ${Math.floor(buffSettingMap[buff.key]?.calcEffectSize * 100) / 100}%`;
                         return <option key={buff.key}
                             value={buff.key}
                         >{effect_text}</option>

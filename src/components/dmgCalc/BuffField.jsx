@@ -2,7 +2,7 @@ import React from 'react';
 import { isAloneActivation } from "./logic";
 import { BUFF } from "utils/const";
 import BuffSelect from "./BuffSelect";
-import { getBuffIdToBuff } from "utils/common";
+import { getBuffIdToEffect } from "utils/common";
 
 const BuffField = ({ buffKey, index, rowSpan, buffDef, attackInfo,
     buffInnerList, buffSettingMap, handleChangeSkillLv, selectedKey, handleSelectChange, openModal }) => {
@@ -13,7 +13,7 @@ const BuffField = ({ buffKey, index, rowSpan, buffDef, attackInfo,
             isAlone = true;
         } else {
             let buffId = Number(selectedKey[0].split('_')[1]);
-            let buffInfo = getBuffIdToBuff(buffId);
+            let buffInfo = getBuffIdToEffect(buffId);
             isAlone = isAloneActivation(buffInfo);
         }
     }

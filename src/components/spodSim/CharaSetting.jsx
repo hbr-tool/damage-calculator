@@ -113,9 +113,9 @@ const CharaSetting = ({ setSettingUpdate }) => {
         role: null,
         rarity: [true, true, false, false],
         target: "none",
-        buff_1: -1,
-        buff_2: -1,
-        buff_3: -1,
+        buff_1: "-1",
+        buff_2: "-1",
+        buff_3: "-1",
     });
 
     const clickSetMember = (index, style_id) => {

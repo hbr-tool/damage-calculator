@@ -1,6 +1,6 @@
-import React, { useState, useReducer } from "react";
+import React, { useState, useMemo, useReducer } from "react";
 import { useStyleList } from "components/StyleListProvider";
-import { getDamageResult, getEffectSize, getCharaIdToMember } from "./logic";
+import { getDamageResult, getCharaIdToMember } from "./logic";
 import { getEnemyInfo, } from "utils/common";
 import AttackList from "./AttackList";
 import CharaStatus from "./CharaStatus";
@@ -11,6 +11,7 @@ import DamageResult from "./DamageResult";
 import BuffArea from "./BuffArea";
 import { ENEMY_CLASS } from "utils/const";
 import * as logic from "./logic";
+import * as buffLogic from "./buffLogic.js";
 
 const setEnemy = (state, action) => {
     const enemy = action.enemyInfo;
@@ -198,7 +199,9 @@ const reducer = (state, action) => {
 const DamageCalculation = () => {
     const { styleList } = useStyleList();
     const [attackInfo, setAttackInfo] = useState(undefined);
-    const [selectSkillLv, setSelectSkillLv] = useState(undefined);
+    const [selectAttackSkillLv, setSelectAttackSkillLv] = useState(undefined);
+    // バフ設定マップの状態管理
+    // 攻撃力アップ/1個目/エンハンス=効果量 の形
     const [buffSettingMap, setBuffSettingMap] = useState({});
 
     // 初期値を決める関数
@@ -269,7 +272,6 @@ const DamageCalculation = () => {
     const [selectBuffKeyMap, setSelectBuffKeyMap] = useState({});
     const [abilitySettingMap, setAbilitySettingMap] = useState([]);
     const [passiveSettingMap, setPassiveSettingMap] = useState([]);
-    const [resonanceList, setResonanceList] = useState([]);
 
     const [otherSetting, setOtherSetting] = useState({
         ring: "0",
@@ -282,9 +284,6 @@ const DamageCalculation = () => {
         },
     });
 
-    let damageResult = getDamageResult(attackInfo, styleList, state, selectSkillLv,
-        selectBuffKeyMap, buffSettingMap, abilitySettingMap, passiveSettingMap, resonanceList, otherSetting);
-
     const bulkSetting = (collect) => {
         setAttackInfo(prev => ({
             ...prev,
@@ -294,40 +293,81 @@ const DamageCalculation = () => {
             },
         }));
         const newBuffSettingMap = { ...buffSettingMap };
-        Object.keys(newBuffSettingMap).forEach(key =>
-            newBuffSettingMap[key].forEach((buffList, index) => {
-                let buffKey = logic.getBuffKey(key);
+        Object.keys(newBuffSettingMap).forEach(buffKey =>
+            newBuffSettingMap[buffKey].forEach((buffList, index) => {
                 if (!selectBuffKeyMap[buffKey] || selectBuffKeyMap[buffKey].length <= index) return;
-                let buffSelect = selectBuffKeyMap[buffKey][index];
-                if (buffSelect) {
-                    const buffSetting = buffList[buffSelect];
-                    if (!buffSetting) return;
-                    let buffInfo = buffSetting.buffInfo;
+
+                Object.keys(buffList).forEach((buffkey) => {
+                    const buffSetting = buffList[buffkey];
+                    const buffInfo = buffSetting.buffInfo;
                     const charaId = buffInfo.use_chara_id;
                     const memberInfo = getCharaIdToMember(styleList, charaId);
                     buffSetting["collect"] = collect;
-                    buffSetting.effect_size = getEffectSize(styleList, buffInfo, buffSetting, memberInfo, state,
-                        abilitySettingMap, passiveSettingMap, resonanceList);
-                }
+                    buffSetting.calcEffectSize = logic.getEffectSize(argument, buffInfo, buffSetting, memberInfo);
+                })
             })
         );
         setBuffSettingMap(newBuffSettingMap);
     }
 
+    // 元々BUFFAREAの計算
+    let isElement = false;
+    let isWeak = false;
+    let isDamageRate = Number(state.maxDamageRate) !== Number(state.damageRate);
+    if (attackInfo) {
+        isElement = attackInfo.attack_element;
+        const [physicalResist, elementResist] = logic.getEnemyResist(attackInfo, state);
+        isWeak = physicalResist * elementResist > 10000;
+    }
+    let isDp = Number(state.dpRate[0]) !== 0;
+
+    const attackUpBuffs = buffLogic.getAttackUpBuffs(isElement, isWeak, isDamageRate, attackInfo, styleList.selectStyleList);
+    const defDownBuffs = buffLogic.getDefenseDownBuffs(isElement, isWeak, isDp, styleList.selectStyleList);
+    const criticalBuffs = buffLogic.getCriticalBuffs(isElement);
+
+    let attackCharaId = attackInfo?.chara_id;
+    let selectList = styleList.selectStyleList.concat(styleList.subStyleList).map(style => {
+        return style?.styleInfo.style_id + style?.exclusionSkillList.map(skill => skill).join(',');
+    }).join(',');
+
+    let limitList = styleList.selectStyleList.map(style => {
+        const limitCount = style?.limitCount ?? "";
+        return `${limitCount}`;
+    }).join(',');
+
+    let supportList = styleList.selectStyleList.map(style => {
+        const styleId = style?.support?.styleInfo?.style_id ?? "";
+        const limitCount = style?.support?.limitCount ?? "";
+        return `${styleId},${limitCount}`;
+    }).join(',');
+
+    const { buffGroup, abilityList, passiveList } = useMemo(() => {
+        return buffLogic.generateBuffAbilityPassiveLists(styleList, attackInfo, attackUpBuffs, defDownBuffs, criticalBuffs);
+    }, [attackInfo?.attack_id, attackInfo?.servantCount, limitList, selectList, isWeak, JSON.stringify(defDownBuffs)]);
+
+    const resonanceList = useMemo(() => {
+        return buffLogic.generateResonanceList(styleList);
+    }, [attackInfo?.attack_id, selectList, supportList]);
+
     const argument = {
-        attackInfo, setAttackInfo, styleList, state, dispatch, otherSetting,
+        styleList, state, dispatch, otherSetting,
+        attackInfo, setAttackInfo,
+        selectAttackSkillLv, setSelectAttackSkillLv,
         selectBuffKeyMap, setSelectBuffKeyMap,
         buffSettingMap, setBuffSettingMap,
         abilitySettingMap, setAbilitySettingMap,
         passiveSettingMap, setPassiveSettingMap,
-        resonanceList, setResonanceList
+        resonanceList, attackUpBuffs, defDownBuffs, criticalBuffs,
     };
+
+    let damageResult = getDamageResult(argument, selectAttackSkillLv);
+
     return (
         <div className="damage_frame pt-3">
             <div className="display_area mx-auto">
                 <div className="status_area mx-auto">
                     <CharaStatus argument={argument} />
-                    <AttackList argument={argument} selectSkillLv={selectSkillLv} setSelectSkillLv={setSelectSkillLv} />
+                    <AttackList argument={argument} />
                     <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
                         state={state} dispatch={dispatch} />
@@ -338,7 +378,9 @@ const DamageCalculation = () => {
                         : null
                     }
                 </div>
-                <BuffArea argument={argument} />
+                <BuffArea argument={argument} attackCharaId={attackCharaId}
+                    buffGroup={buffGroup} abilityList={abilityList} passiveList={passiveList} resonanceList={resonanceList}
+                    isWeak={isWeak} selectList={selectList} />
             </div>
             <DamageResult damageResult={damageResult} state={state} dispatch={dispatch} />
         </div>

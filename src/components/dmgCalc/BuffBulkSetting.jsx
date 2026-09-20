@@ -3,7 +3,7 @@ import { useStyleList } from "components/StyleListProvider";
 import { filteredOrb } from "./logic";
 import { getCharaData, getAbilityInfo, getSkillData } from "utils/common";
 
-const BuffBulkSetting = ({ buffGroup, attackInfo, setMultiBuff }) => {
+const BuffBulkSetting = ({ buffGroup, setMultiBuff }) => {
     const { styleList } = useStyleList();
     const [settingBuffList, setSettingBuffList] = React.useState({});
     const [orb, setOrb] = React.useState(false);

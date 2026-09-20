@@ -12,7 +12,9 @@ import passiveEffect from "data/passiveEffect";
 import resonanceList from "data/resonanceList";
 import resonanceEffect from "data/resonanceEffect";
 import buffKind from 'data/buffKind';
+import buffEffect from 'data/buffEffect';
 import * as constants from "utils/const";
+import skillEffect from "data/skillEffect";
 
 // キャラ名取得
 export function getCharaData(charaId) {
@@ -60,8 +62,8 @@ export function getBuffList(skillId) {
 }
 
 // バフ情報取得
-export function getBuffIdToBuff(buffId) {
-  const filteredBuff = skillBuff.filter((obj) => obj.buff_id === Number(buffId));
+export function getBuffIdToEffect(effectId) {
+  const filteredBuff = skillEffect.filter((obj) => obj.effect_id === Number(effectId));
   return filteredBuff.length > 0 ? filteredBuff[0] : undefined;
 }
 
@@ -69,6 +71,16 @@ export function getBuffIdToBuff(buffId) {
 export function getBuffKind(buffKbn) {
   const filteredBuffKind = buffKind.filter((obj) => obj.buff_kbn === Number(buffKbn));
   return filteredBuffKind.length > 0 ? filteredBuffKind[0] : undefined;
+}
+
+// バフ効果取得
+export function getBuffEffect(buffKbn) { 
+  return buffEffect.filter((obj) => obj.buff_kbn === Number(buffKbn));
+}
+
+export function getBuffEffectType(buffKbn, effectType) {
+    const filteredBuffEffect = getBuffEffect(buffKbn).filter((obj) => obj.effect_type === effectType);
+    return filteredBuffEffect.length> 0 ? filteredBuffEffect[0] : undefined;
 }
 
 // アビリティ情報取得

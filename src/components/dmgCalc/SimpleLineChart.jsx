@@ -1,11 +1,11 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ReferenceLine, Label, Tooltip } from 'recharts';
-import { calcAttackEffectSize, calcBuffEffectSize, calcDebuffEffectSize } from './logic'
-
+import { calcAttackEffectSize, calcBuffEffectSize, calcDebuffEffectSize } from './logic';
+import * as common from "utils/common";
 
 export function AttackLineChart({ attackInfo, status, enemyStat, enemyStatDown, jewelLv, skillLv }) {
     const data1 = [];
     const data2 = [];
-    const skillStat = attackInfo.param_limit;
+    const skillStat = attackInfo.param_limit ?? 0;
     const minPower = attackInfo.min_power * (1 + 0.05 * (skillLv - 1));
     const maxPower = attackInfo.max_power * (1 + 0.02 * (skillLv - 1));
     const tickMinPower = Math.floor(minPower + attackInfo.min_power * (jewelLv * 0.02));
@@ -40,35 +40,21 @@ export function AttackLineChart({ attackInfo, status, enemyStat, enemyStatDown, 
     );
 }
 
-const CustomTooltip2 = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-        const point = payload[0].payload; // データ全体
-        return (
-            <div style={{ backgroundColor: '#fff', padding: 10, border: '1px solid #ccc' }}>
-                <p><strong>{point.x}:</strong></p>
-                {payload.map((item, index) => (
-                    <p key={index} style={{ color: item.stroke }}>
-                        {item.name}: {item.value.toLocaleString()}
-                    </p>
-                ))}
-            </div>
-        );
-    }
-    return null;
-};
-
-export function BuffLineChart({ buffInfo, status, jewelLv, skillLv }) {
+export function BuffLineChart({ buffInfo: effect, status, jewelLv, skillLv, effectType }) {
     const data = [];
-    const skillStat = buffInfo.param_limit;
-    const minPower = buffInfo.min_power * (1 + 0.03 * (skillLv - 1));
-    const maxPower = buffInfo.max_power * (1 + 0.02 * (skillLv - 1));
-    const tickMinPower = Math.floor(minPower + buffInfo.min_power * (jewelLv * 0.04));
-    const tickMaxPower = Math.floor(maxPower + buffInfo.max_power * (jewelLv * 0.04));
+    const skillStat = effect.param_limit ?? 0;
+    const buffEffect = common.getBuffEffectType(effect.effect_no, effectType);
+    const skillMin = buffEffect.effect_size ?? effect.effect_size ?? effect.min_power;
+    const skillMax = buffEffect.effect_size ?? effect.effect_size ?? effect.max_power;
+    const minPower = skillMin * (1 + 0.03 * (skillLv - 1));
+    const maxPower = skillMax * (1 + 0.02 * (skillLv - 1));
+    const tickMinPower = Math.floor(minPower + skillMin * (jewelLv * 0.04));
+    const tickMaxPower = Math.floor(maxPower + skillMax * (jewelLv * 0.04));
 
     let min = 0;
     let max = Math.max(status, skillStat + 300) + 30;
     for (let x = min; x <= max; x++) {
-        data.push({ x: x, y: calcBuffEffectSize(buffInfo, x, skillLv, jewelLv) });
+        data.push({ x: x, y: calcBuffEffectSize(minPower, maxPower, skillStat, x, skillLv, jewelLv) });
     }
 
     return (
@@ -91,18 +77,21 @@ export function BuffLineChart({ buffInfo, status, jewelLv, skillLv }) {
     );
 }
 
-export function DebuffLineChart({ buffInfo, status, enemyStat, jewelLv, skillLv }) {
+export function DebuffLineChart({ buffInfo: effect, status, enemyStat, jewelLv, skillLv, effectType }) {
     const data = [];
-    const skillStat = buffInfo.param_limit;
-    const minPower = buffInfo.min_power * (1 + 0.05 * (skillLv - 1));
-    const maxPower = buffInfo.max_power * (1 + 0.02 * (skillLv - 1));
-    const tickMinPower = Math.floor(minPower + buffInfo.min_power * (jewelLv * 0.02));
-    const tickMaxPower = Math.floor(maxPower + buffInfo.max_power * (jewelLv * 0.02));
+    const skillStat = effect.param_limit ?? 0;
+    const buffEffect = common.getBuffEffectType(effect.effect_no, effectType);
+    const skillMin = buffEffect.effect_size ?? effect.effect_size ?? effect.min_power;
+    const skillMax = buffEffect.effect_size ?? effect.effect_size ?? effect.max_power;
+    const minPower = skillMin * (1 + 0.05 * (skillLv - 1));
+    const maxPower = skillMax * (1 + 0.02 * (skillLv - 1));
+    const tickMinPower = Math.floor(minPower + skillMin * (jewelLv * 0.02));
+    const tickMaxPower = Math.floor(maxPower + skillMax * (jewelLv * 0.02));
 
     let min = Math.min(status, enemyStat) - 30;
     let max = Math.max(status, enemyStat + skillStat + 100) + 30;
     for (let x = min; x <= max; x++) {
-        data.push({ x: x, y: calcDebuffEffectSize(buffInfo, x, enemyStat, skillLv, jewelLv) });
+        data.push({ x: x, y: calcDebuffEffectSize(effect, x, enemyStat, skillLv, jewelLv) });
     }
 
     return (
@@ -137,4 +126,21 @@ const CustomTooltip = ({ active, payload, label }) => {
     }
 
     return null;
-};
+}
+
+const CustomTooltip2 = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+        const point = payload[0].payload; // データ全体
+        return (
+            <div style={{ backgroundColor: '#fff', padding: 10, border: '1px solid #ccc' }}>
+                <p><strong>{point.x}:</strong></p>
+                {payload.map((item, index) => (
+                    <p key={index} style={{ color: item.stroke }}>
+                        {item.name}: {item.value.toLocaleString()}
+                    </p>
+                ))}
+            </div>
+        );
+    }
+    return null;
+}
