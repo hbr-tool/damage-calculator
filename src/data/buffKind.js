@@ -64,6 +64,7 @@ const buffKind = [
     {"buff_kbn":62,"replace_name":"ETERNAL_ATTACKUP","buff_name":"永続攻撃アップ","buff_icon":"IconBuffAttack"},
     {"buff_kbn":63,"replace_name":"LNFANTILIZED","buff_name":"幼児退行","buff_icon":"IconLnfantilized"},
     {"buff_kbn":90,"replace_name":"DISPEL","buff_name":"ディスペル","buff_icon":""},
+    {"buff_kbn":101,"replace_name":"CAMP_ATTACKUP","buff_name":"攻撃アップ","buff_icon":"IconBuffAttack","duplication":0},
     {"buff_kbn":116,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
 ];
 

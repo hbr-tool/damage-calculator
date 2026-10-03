@@ -194,6 +194,7 @@ export const BUFF = {
     ETERNAL_ATTACKUP: 62, // 永続攻撃力アップ
     LNFANTILIZED: 63, // 幼児退行
     DISPEL: 90, // ディスペル
+    CAMP_ATTACKUP: 101, // 晩夏の陣
     ABILITY_FUNNEL: 116, // アビリティ連撃
 }
 

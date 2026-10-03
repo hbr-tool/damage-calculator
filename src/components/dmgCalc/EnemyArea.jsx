@@ -59,10 +59,9 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
     destruction *= (1 - state.correction.destruction_resist / 100);
 
     // 自由入力時の対応
-    let isFreeInput = false;
-    if (enemyInfo.enemy_class === ENEMY_CLASS.FREE_INPUT) {
-        isFreeInput = true;
-    }
+    let isFreeInput = enemyInfo.enemy_class === ENEMY_CLASS.FREE_INPUT;
+    let isStellar = enemyInfo.enemy_class === ENEMY_CLASS.STELLAR_SWEEP_FRONT;
+
     const [focus, setFocus] = React.useState(undefined);
     const handleElementFocus = (id, target) => {
         target.value = enemyInfo[id];
@@ -78,7 +77,7 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
             <div className="flex">
                 <div className="flex flex-wrap gap-1 w-40">
                     <div className="text-right enemy_label">防御値</div>
-                    <input type="number" className="w-12 text-center" value={enemyStat} id="enemy_stat" readOnly={!isFreeInput}
+                    <input type="number" className="w-12 text-center" value={enemyStat} id="enemy_stat" readOnly={!(isFreeInput || isStellar)}
                         onChange={(e) => handleEnemyChange("enemy_stat", e.target.value)} />
                     <div className="text-right enemy_label">破壊率上限</div>
                     <input type="number" className="w-12 text-center" value={state.maxDamageRate} id="enemy_destruction_limit" readOnly={!isFreeInput}
@@ -112,13 +111,15 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
                                 let background = getApplyGradient("#4F7C8B", dp_rate)
                                 return (
                                     <div className="dp_gauge" key={enemy_id}>
-                                        <input type="text" className="w-20 text-right comma"
+                                        <input type="text" className="w-20 text-right comma text-xs"
                                             value={focus === enemy_id ? maxDp : Number(maxDp).toLocaleString()}
-                                            id={enemy_id} pattern="\d*" readOnly={!isFreeInput}
+                                            id={enemy_id} pattern="\d*" readOnly={!(isFreeInput || isStellar)}
                                             onChange={(e) => handleMaxDpEnemyChange(no, e.target.value)}
                                             onFocus={() => setFocus(enemy_id)}
                                             onBlur={() => handleBlur()} />
-                                        <input type="range" className="enemy_dp_range dp_range" value={dp_rate} id={range_id} max="100" min="0" step="1" onChange={(e) => handleDpChange(no, e.target.value)}
+                                        <input type="range" className="enemy_dp_range dp_range"
+                                            value={dp_rate} id={range_id} max="100" min="0" step="1"
+                                            onChange={(e) => handleDpChange(no, e.target.value)}
                                             style={{ background: background }}
                                         />
                                         <output className="gauge_rate">{dp_rate}%</output>
@@ -131,12 +132,14 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
                         <div className="w-5">HP</div>
                         <div>
                             <div className="flex">
-                                <input type="text" id="enemy_hp" className="w-20 text-right comma"
-                                    value={focus === "enemy_hp" ? maxHp : maxHp.toLocaleString()} readOnly={!isFreeInput}
+                                <input type="text" id="enemy_hp" className="w-20 text-right comma text-xs"
+                                    value={focus === "enemy_hp" ? maxHp : maxHp.toLocaleString()} readOnly={!(isFreeInput || isStellar)}
                                     onChange={(e) => handleEnemyChange("max_hp", e.target.value)}
                                     onFocus={() => setFocus("enemy_hp")}
                                     onBlur={() => handleBlur()} />
-                                <input type="range" className="hp_range" value={state.hpRate} id="hp_range" max="100" min="0" step="1" onChange={(e) => handleHpChange(e.target.value)}
+                                <input type="range" className="hp_range"
+                                    value={state.hpRate} id="hp_range" max="100" min="0" step="1"
+                                    onChange={(e) => handleHpChange(e.target.value)}
                                     style={{ background: backgroundHp }}
                                 />
                                 <output className="gauge_rate">{state.hpRate}%</output>

@@ -119,7 +119,7 @@ export const getAttackUpBuffs = function (isElement, isWeak, isDamageRate, attac
         ...(isKitchenMaria ? [{ name: "ジェラート", effect: EFFECT.GRANT_BUFF, kind: BUFF.GELATO, overlap: false },] : []),
         ...(isKitchenShanhua ? [{ name: "点心", effect: EFFECT.GRANT_BUFF, kind: BUFF.DIM_SUM, overlap: false },] : []),
         ...(isKitchenIrene ? [{ name: "ティー", effect: EFFECT.GRANT_BUFF, kind: BUFF.TEA, overlap: false },] : []),
-        ...(isYukataShiki ? [{ name: "晩夏の陣", effect: EFFECT.GRANT_BUFF, kind: BUFF.CAMP_DEPLOYMENT, overlap: false },] : []),
+        ...(isYukataShiki ? [{ name: "晩夏の陣", effect: EFFECT.GRANT_BUFF, kind: BUFF.CAMP_ATTACKUP, overlap: false },] : []),
         ...(isWeak ? [{ name: "心眼", effect: EFFECT.GRANT_BUFF, kind: BUFF.MINDEYE, overlap: true },] : []),
         ...(isWeak && isServant ? [{ name: "山脇様のしもべ ", effect: EFFECT.GRANT_BUFF, kind: BUFF.YAMAWAKI_SERVANT, overlap: false },] : []),
         { name: "連撃", effect: EFFECT.GRANT_BUFF, kind: BUFF.FUNNEL, overlap: true },
