@@ -17,7 +17,7 @@ const buffKind = [
     {"buff_kbn":15,"replace_name":"MISFORTUNE","buff_name":"厄","buff_icon":"IconMisfortune"},
     {"buff_kbn":16,"replace_name":"FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel"},
     {"buff_kbn":17,"replace_name":"TOKEN_UP","buff_name":"トークンアップ","buff_icon":""},
-    {"buff_kbn":18,"replace_name":"STRONG_BREAK","buff_name":"強ブレイク","buff_icon":""},
+    {"buff_kbn":18,"replace_name":"DEFENSEDP","buff_name":"DP防御ダウン","buff_icon":"IconBuffDefenseDP","duplication":1},
     {"buff_kbn":19,"replace_name":"DEFENSEDP","buff_name":"DP防御ダウン","buff_icon":"IconBuffDefenseDP"},
     {"buff_kbn":20,"replace_name":"RESISTDOWN","buff_name":"耐性ダウン","buff_icon":"IconResistElement"},
     {"buff_kbn":21,"replace_name":"ETERNAL_DEFENSEDOWN","buff_name":"永続防御力ダウン","buff_icon":"IconBuffDefenseE"},

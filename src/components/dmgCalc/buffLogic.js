@@ -131,9 +131,13 @@ export const getDefenseDownBuffs = function (isElement, isWeak, isDp, selectStyl
     const isRisa = selectStyleList.some(
         (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.RISA
     );
+    const isHikari = selectStyleList.some(
+        (memberInfo) => memberInfo?.styleInfo.chara_id === CHARA_ID.HIKARI
+    );
     return [
         { name: "防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.DEFENSEDOWN, overlap: true },
         ...(isDp ? [{ name: "DP防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.DEFENSEDP, overlap: true },] : []),
+        ...(isDp && isHikari ? [{ name: "永続DP防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_DEFENSEDP, overlap: true },] : []),
         ...(isElement ? [{ name: "属性防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ELEMENT_DEFENSEDOWN, overlap: true },] : []),
         { name: "防御力DOWN(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_DEFENSEDOWN, overlap: true },
         ...(isElement ? [{ name: "属性防御力DOWN(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ELEMENT_ETERNAL_DEFENSEDOWN, overlap: true },] : []),

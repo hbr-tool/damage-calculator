@@ -146,8 +146,8 @@ export const BUFF = {
     MISFORTUNE: 15, // 厄
     FUNNEL: 16, // 連撃
     TOKEN_UP: 17, // トークンアップ
-    STRONG_BREAK: 18, // 強ブレイク
-    DEFENSEDP: 19, // DP防御ダウン
+    DEFENSEDP: 18, // DP防御ダウン
+    ETERNAL_DEFENSEDP: 19, // 永続DP防御ダウン
     RESISTDOWN: 20, // 耐性ダウン
     ETERNAL_DEFENSEDOWN: 21, // 永続防御力ダウン
     ELEMENT_ETERNAL_DEFENSEDOWN: 22, // 永続属性防御ダウン
