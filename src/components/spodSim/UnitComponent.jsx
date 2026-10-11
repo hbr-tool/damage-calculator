@@ -1,6 +1,6 @@
 import React from "react";
 import { getCharaData, getSkillData } from "utils/common";
-import { ABILITY_ID, BUFF, ROLE, ATTRIBUTE, SKILL, COST_TYPE } from "utils/const";
+import { ABILITY_ID, SKILL_ID, BUFF, ROLE, ATTRIBUTE, COST_TYPE } from "utils/const";
 import { PHYSICAL_NAME, ELEMENT_NAME, ABILIRY_TIMING } from "./const";
 import BuffIconComponent from "./BuffIconComponent";
 import { getSkillIdToAttackInfo, getSpCost, checkAbilityExist } from "./logic";
@@ -51,19 +51,24 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     let skillList = unit.skillList
     if (placeNo < 3) {
         skillList = skillList.filter(skill => {
-            if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
-                // 通常攻撃
-                return unit.style.styleInfo.role !== ROLE.ADMIRAL;
+            switch (skill.skill_attribute) {
+                case ATTRIBUTE.NORMAL_ATTACK:
+                    // 通常攻撃
+                    return unit.style.styleInfo.role !== ROLE.ADMIRAL;
+                case ATTRIBUTE.COMMAND_ACTION:
+                    // 指揮行動
+                    return unit.style.styleInfo.role === ROLE.ADMIRAL;
+                case ATTRIBUTE.IMMERSION:
+                    // 没入
+                    return unit.immersion === 0;
+                case ATTRIBUTE.PURSUIT_ONLY:
+                    // 追撃のみ発動可能
+                    return false;
+                default:
+                    break;
             }
-            if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
-                // 指揮行動
-                return unit.style.styleInfo.role === ROLE.ADMIRAL;
-            }
-            if (skill.skill_attribute === ATTRIBUTE.PURSUIT_ONLY) {
-                // 追撃のみ発動可能
-                return false;
-            }
-            const HIDDEN_SKILL_ID = [SKILL.NONE, SKILL.PURSUIT, SKILL.AUTO_PURSUIT]
+
+            const HIDDEN_SKILL_ID = [SKILL_ID.NONE, SKILL_ID.PURSUIT, SKILL_ID.AUTO_PURSUIT]
             if (HIDDEN_SKILL_ID.includes(skill.skill_id)) {
                 // 非表示スキルリスト
                 return false;
@@ -72,25 +77,27 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
         })
     } else {
         skillList = unit.skillList.filter(skill => {
-            if (skill.skill_id === SKILL.AUTO_PURSUIT) {
-                if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.AUTO_PURSUIT)) {
-                    // 自動追撃
+            switch (skill.skill_id) {
+                case SKILL_ID.AUTO_PURSUIT:
+                    if (checkAbilityExist(unit[`ability_${ABILIRY_TIMING.OTHER}`], ABILITY_ID.AUTO_PURSUIT)) {
+                        // 自動追撃
+                        return true;
+                    }
+                    break;
+                case SKILL_ID.NONE:
+                    // なし
                     return true;
-                }
-            }
-            if (skill.skill_id === SKILL.NONE) {
-                // なし
-                return true;
-            }
-            if (skill.skill_id === SKILL.PURSUIT) {
-                // 追撃
-                return true;
+                case SKILL_ID.PURSUIT:
+                    // 追撃
+                    return true;
+                default:
+                    break;
             }
             return false;
         })
     }
 
-    const recoil = unit.buffList.filter((obj) => obj.buff_kind === BUFF.RECOIL);
+    const recoil = unit.buffList.filter((obj) => obj.buff_no === BUFF.RECOIL);
     let not_action = (recoil.length > 0 || !unit.style || (turn.additionalTurn && !unit.additionalTurn && placeNo <= 2))
     let className = "unit_skill align_left " + (not_action ? "invisible" : "");
     let physical = getCharaData(unit.style.styleInfo.chara_id).physical;
@@ -101,35 +108,82 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
         {skillList.filter((obj) => obj.skill_id === unit.selectSkillId || !isCapturing).map(skill => {
             let text = skill.skill_name;
             let spCost = 0;
-            if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
-                text += `(${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[unit.normalAttackElement]})`;
-            } else if (skill.skill_id === 0 || skill.skill_id === 2) {
-            } else if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
-            } else if (skill.skill_attribute === ATTRIBUTE.PURSUIT) {
-                text += `(${PHYSICAL_NAME[physical]})`;
-            } else {
-                let attack = "";
-                const attackInfo = getSkillIdToAttackInfo(turn, skill.skill_id);
-                if (attackInfo) {
-                    attack = `${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[attackInfo.attack_element]}/`;
-                }
-                if (skill.cost_type === COST_TYPE.EP) {
-                    text += `(${attack}EP${skill.use_cost})`;
-                } else if (skill.cost_type === COST_TYPE.CT) {
-                    text += `(${attack}CT${skill.use_cost})`;
-                } else if (skill.cost_type === COST_TYPE.OVERDRIVE) {
-                    text += `(${attack}OD${skill.use_cost}%)`;
-                } else if (skill.cost_type === COST_TYPE.TOKEN) {
-                    let tokenCost = skill.use_cost;
-                    if (skill.use_cost === 99) {
-                        tokenCost = unit.token;
+            switch (skill.skill_attribute) {
+                case ATTRIBUTE.NORMAL_ATTACK:
+                    // 通常攻撃
+                    text += `(${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[unit.normalAttackElement]})`;
+                    break;
+                case ATTRIBUTE.COMMAND_ACTION:
+                case ATTRIBUTE.IMMERSION:
+                    // 指揮行動・没入
+                    break;
+                case ATTRIBUTE.PURSUIT:
+                    // 追撃
+                    text += `(${PHYSICAL_NAME[physical]})`;
+                    break;
+                default:
+                    if (skill.skill_id === SKILL_ID.NORMAL_ATTACK || skill.skill_id === SKILL_ID.NONE) {
+                        break;
                     }
-                    text += `(${attack}token${tokenCost})`;
-                } else {
-                    spCost = getSpCost(turn, skill, unit);
-                    text += `(${attack}${spCost})`;
-                }
+                    let attack = "";
+                    const attackInfo = getSkillIdToAttackInfo(turn, unit, skill.skill_id);
+                    if (attackInfo) {
+                        attack = `${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[attackInfo.attack_element]}/`;
+                    }
+                    switch (skill.cost_type) {
+                        case COST_TYPE.EP:
+                            text += `(${attack}EP${skill.use_cost})`;
+                            break;
+                        case COST_TYPE.CT:
+                            text += `(${attack}CT${skill.use_cost})`;
+                            break;
+                        case COST_TYPE.OVERDRIVE:
+                            text += `(${attack}OD${skill.use_cost}%)`;
+                            break;
+                        case COST_TYPE.TOKEN:
+                            let tokenCost = skill.use_cost;
+                            if (skill.use_cost === 99) {
+                                tokenCost = unit.token;
+                            }
+                            text += `(${attack}token${tokenCost})`;
+                            break;
+                        default:
+                            spCost = getSpCost(turn, skill, unit);
+                            text += `(${attack}${spCost})`;
+                            break;
+                    }
+                    break;
             }
+
+            // if (skill.skill_attribute === ATTRIBUTE.NORMAL_ATTACK) {
+            //     text += `(${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[unit.normalAttackElement]})`;
+            // } else if (skill.skill_id === 0 || skill.skill_id === 2) {
+            // } else if (skill.skill_attribute === ATTRIBUTE.COMMAND_ACTION) {
+            // } else if (skill.skill_attribute === ATTRIBUTE.PURSUIT) {
+            //     text += `(${PHYSICAL_NAME[physical]})`;
+            // } else {
+            //     let attack = "";
+            //     const attackInfo = getSkillIdToAttackInfo(turn, skill.skill_id);
+            //     if (attackInfo) {
+            //         attack = `${PHYSICAL_NAME[physical]}・${ELEMENT_NAME[attackInfo.attack_element]}/`;
+            //     }
+            //     if (skill.cost_type === COST_TYPE.EP) {
+            //         text += `(${attack}EP${skill.use_cost})`;
+            //     } else if (skill.cost_type === COST_TYPE.CT) {
+            //         text += `(${attack}CT${skill.use_cost})`;
+            //     } else if (skill.cost_type === COST_TYPE.OVERDRIVE) {
+            //         text += `(${attack}OD${skill.use_cost}%)`;
+            //     } else if (skill.cost_type === COST_TYPE.TOKEN) {
+            //         let tokenCost = skill.use_cost;
+            //         if (skill.use_cost === 99) {
+            //             tokenCost = unit.token;
+            //         }
+            //         text += `(${attack}token${tokenCost})`;
+            //     } else {
+            //         spCost = getSpCost(turn, skill, unit);
+            //         text += `(${attack}${spCost})`;
+            //     }
+            // }
             return (<option value={skill.skill_id} key={`skill${skill.skill_id}${skill.attack_id}`}>{text}</option>)
         }
         )}
@@ -139,7 +193,7 @@ const UnitSkillSelect = React.memo(({ turn, field, unit, placeNo, selectSkillId,
     return prevProps.turn === nextProps.turn
         && prevProps.field === nextProps.field
         && prevProps.unit === nextProps.unit
-        && prevProps.placeNo === nextProps.placeNo 
+        && prevProps.placeNo === nextProps.placeNo
         && prevProps.selectSkillId === nextProps.selectSkillId
         && prevProps.triggerOverDrive === nextProps.triggerOverDrive
         && prevProps.isCapturing === nextProps.isCapturing;

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ReactModal from "react-modal";
 import { RANGE, CONDITIONS } from "utils/const";
 import { KB_NEXT, FIELD_LIST } from "./const";
-import { getBuffList, getSkillData, deepClone } from "utils/common";
+import { getEffectList, getSkillData, deepClone } from "utils/common";
 import UnitComponent from "./UnitComponent";
 import ModalTargetSelection from "./ModalTargetSelection";
 import ModalEffectSelection from "./ModalEffectSelection";
@@ -11,6 +11,7 @@ import BuffDetailListComponent from "./ModalBuffDetailLlist";
 import ModalUnitConfing from "./ModalUnitConfing";
 import BuffIconComponent from "./BuffIconComponent";
 import OverDriveGauge from "./OverDriveGauge";
+import TranscendGauge from "./TranscendGauge";
 import {
     getOverDrive, startOverDrive, removeOverDrive, skillUpdate, getUnitData, getTurnNumber,
     startAction, setInitSkill, getSpCost, changeStyleInfo
@@ -26,16 +27,16 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
     const reRender = (userOperation, render) => {
         isNextInfluence.current = render;
         // OD再計算
-        turn.addOverDriveGauge = getOverDrive(turn);
+        turn.calcOverDriveGauge = getOverDrive(turn);
         turn.userOperation = userOperation;
         if ([KB_NEXT.ACTION_OD_1, KB_NEXT.ACTION_OD_2, KB_NEXT.ACTION_OD_3].includes(userOperation.kbAction)) {
-            if (turn.overDriveGauge + turn.addOverDriveGauge < 100) {
+            if (turn.calcOverDriveGauge < 100) {
                 userOperation.kbAction = KB_NEXT.ACTION;
-            } else if (turn.overDriveGauge + turn.addOverDriveGauge < 200) {
+            } else if (turn.calcOverDriveGauge < 200) {
                 if ([KB_NEXT.ACTION_OD_2, KB_NEXT.ACTION_OD_3].includes(userOperation.kbAction)) {
                     userOperation.kbAction = KB_NEXT.ACTION_OD_1;
                 }
-            } else if (turn.overDriveGauge + turn.addOverDriveGauge < 300) {
+            } else if (turn.calcOverDriveGauge < 300) {
                 if ([KB_NEXT.ACTION_OD_3].includes(userOperation.kbAction)) {
                     userOperation.kbAction = KB_NEXT.ACTION_OD_2;
                 }
@@ -75,7 +76,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
         skillUpdate(turn, skillId, placeNo);
         const unit = turn.unitList.filter(unit => unit.placeNo === placeNo)[0];
 
-        const buffList = getBuffList(skillId);
+        const buffList = getEffectList(skillId);
         const SELECT_RANGE = [RANGE.ALLY_UNIT, RANGE.SELF_AND_UNIT, RANGE.OTHER_UNIT];
         if (buffList.some(buff => SELECT_RANGE.includes(buff.range_area))) {
             openModal("target", placeNo);
@@ -120,13 +121,13 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
             effectType = 12;
         }
 
-        switch (skillId) {
-            case constants.SKILL_ID.TRICK_CANNON: // トリック・カノン
-                effectType = 1;
-                break;
-            default:
-                break;
-        }
+        // switch (skillId) {
+        //     case constants.SKILL_ID.TRICK_CANNON: // トリック・カノン
+        //         effectType = 1;
+        //         break;
+        //     default:
+        //         break;
+        // }
 
         if (effectType !== 0) {
             openModal("effect", placeNo, effectType)
@@ -272,7 +273,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
         let skillInfo = getSkillData(unit.selectSkillId);
 
         const selectionConditions = [CONDITIONS.DESTRUCTION_OVER_200, CONDITIONS.HAS_SHADOW,
-        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN, CONDITIONS.MOTIVATION, CONDITIONS.TOKEN_OVER, CONDITIONS.INVINCIBLE];
+        CONDITIONS.DOWN_TURN, CONDITIONS.DP_OVER_100, CONDITIONS.SUPER_DOWN, CONDITIONS.MOTIVATION, CONDITIONS.INVINCIBLE];
         if (selectionConditions.includes(skillInfo.conditions)) {
             if (unit.buffEffectSelectType >= 1) {
                 let spCost = getSpCost(turn, skillInfo, unit)
@@ -322,7 +323,7 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                         <div className="turn_number">{getTurnNumber(turn)}</div>
                         <div className="left flex">
                             <img className="enemy_icon" src={enemyIcon} alt="ENEMY" />
-                            <div>
+                            <div className="text-xs">
                                 <select className="enemy_count" value={turn.enemyCount} onChange={(e) => chengeEnemyCount(e)}>
                                     {[1, 2, 3].filter(value => value === turn.enemyCount || !isCapturing)
                                         .map(enemyCount => <option value={enemyCount} key={`enemy_count${enemyCount}`}>{`${enemyCount}体`}</option>)}
@@ -333,12 +334,16 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                                         .filter(value => Number(value) === turn.field || !isCapturing)
                                         .map(field => <option value={field} key={`field${field}`}>{FIELD_LIST[field]}</option>)}
                                 </select>
+                                {turn.camp !== 0 ? <span className="ml-1">{constants.CAMP[turn.camp]}</span> : null}
                             </div>
                         </div>
                     </div>
                     <OverDriveGauge turn={turn} />
                 </div>
-                <BuffIconComponent buffList={turn.enemyDebuffList} loopLimit={12} loopStep={1} placeNo={7} turnNumber={turn.turnNumber} clickBuffIcon={clickBuffIcon} />
+                <div className="turn_header_top">
+                    <BuffIconComponent buffList={turn.enemyDebuffList} loopLimit={7} loopStep={2} placeNo={7} turnNumber={turn.turnNumber} clickBuffIcon={clickBuffIcon} />
+                    <TranscendGauge turn={turn} />
+                </div>
             </div>
             <div className="party_member">
                 <div className="flex front_area">
@@ -359,19 +364,19 @@ const TurnData = React.memo(({ turn, index, isLastTurn, isActiveTurn, hideMode, 
                             {turn.userOperation.kbAction === KB_NEXT.ACTION || !isCapturing ?
                                 <option value={KB_NEXT.ACTION}>行動開始</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_1 ||
-                                (turn.overDriveGauge + turn.addOverDriveGauge >= 100 && turn.overDriveMaxTurn === 0) ?
+                                (turn.calcOverDriveGauge >= 100 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_1}>行動開始+OD1</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_2 ||
-                                (turn.overDriveGauge + turn.addOverDriveGauge >= 200 && turn.overDriveMaxTurn === 0) ?
+                                (turn.calcOverDriveGauge >= 200 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_2}>行動開始+OD2</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_3 ||
-                                (turn.overDriveGauge + turn.addOverDriveGauge >= 300 && turn.overDriveMaxTurn === 0) ?
+                                (turn.calcOverDriveGauge >= 300 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_3}>行動開始+OD3</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_4 ||
-                                (turn.overDriveGauge + turn.addOverDriveGauge >= 400 && turn.maxOverDriveGauge >= 400 && turn.overDriveMaxTurn === 0) ?
+                                (turn.calcOverDriveGauge >= 400 && turn.maxOverDriveGauge >= 400 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_4}>行動開始+OD4</option> : null}
                             {turn.userOperation.kbAction === KB_NEXT.ACTION_OD_5 ||
-                                (turn.overDriveGauge + turn.addOverDriveGauge >= 500 && turn.maxOverDriveGauge >= 500 && turn.overDriveMaxTurn === 0) ?
+                                (turn.calcOverDriveGauge >= 500 && turn.maxOverDriveGauge >= 500 && turn.overDriveMaxTurn === 0) ?
                                 <option value={KB_NEXT.ACTION_OD_5}>行動開始+OD5</option> : null}
                         </select>
                         <div

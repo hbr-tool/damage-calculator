@@ -1,15 +1,16 @@
 import React from "react";
-import { getBuffIconImg, getBuffKindName } from "./logic";
 import { BUFF } from "utils/const";
 import buffIcons from 'assets/buffIcons';
+import * as logicBuff from "./logicBuff";
 
 const BuffDetailLabelComponent = ({ buff }) => {
-    let img = buffIcons[getBuffIconImg(buff)];
-    let buffKindName = getBuffKindName(buff);
+    let img = buffIcons[logicBuff.getBuffIconImg(buff)];
+    let buffKindName = logicBuff.getBuffKindName(buff);
     let buffText = buff.buff_name;
-    switch (buff.buff_kind) {
+    switch (buff.buff_no) {
         case BUFF.MORALE: // 士気
         case BUFF.DISASTER: // 禍
+        case BUFF.LNFANTILIZED: // 幼児退行
             buffText += `(Lv${buff.lv})`;
             break;
         default:

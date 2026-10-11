@@ -11,6 +11,7 @@ import { CHARA_ID, JEWEL_TYPE } from "utils/const";
 import * as constant from "utils/const";
 import * as common from "utils/common";
 import * as logic from "./logic";
+import * as logicBuff from "./logicBuff.js";
 
 const BUFF_LIST = [EFFECT.ATTACKUP, EFFECT.CRITICALRATEUP];
 const DEBUFF_LIST = [EFFECT.DEFFENCEDOWN, EFFECT.RESISTDOWN];
@@ -24,7 +25,7 @@ const BuffDetail = ({ argument, buffInfo, index, closeModal }) => {
     const charaId = buffInfo.use_chara_id;
     const memberInfo = getCharaIdToMember(styleList, charaId);
     const enemyInfo = state.enemyInfo;
-    const buffKey = logic.getBuffKey(buffInfo.effect_type, buffInfo.effect_no);
+    const buffKey = logicBuff.getBuffKey(buffInfo.effect_type, buffInfo.effect_no);
     const buffSetting = buffSettingMap[buffKey][index][buffInfo.key];
     let skillInfo = {};
     if (buffInfo.kbn === "buff") {
@@ -76,6 +77,7 @@ const BuffDetail = ({ argument, buffInfo, index, closeModal }) => {
                     effect = EFFECT.DEFFENCEDOWN;
                     break;
                 case BUFF.RESISTDOWN: // 耐性ダウン
+                case BUFF.ETERNAL_RESISTDOWN: // 永続耐性ダウン
                     effect = EFFECT.RESISTDOWN;
                     break;
                 default:
@@ -211,7 +213,7 @@ const BuffDetail = ({ argument, buffInfo, index, closeModal }) => {
         if (buffInfo.troopKbn === troopsDebuff) {
             strengthen = true;
         }
-        troopsDebuff = logic.getStyleIdToTroopKbn(styleList, constant.CHARA_ID.STRENGTH_STYLE_DEBUFF);
+        troopsDebuff = logic.getStyleIdToTroopKbn(styleList, constant.STYLE_ID.STRENGTH_STYLE_DEBUFF);
         if (buffInfo.troopKbn === troopsDebuff) {
             strengthen = true;
         }

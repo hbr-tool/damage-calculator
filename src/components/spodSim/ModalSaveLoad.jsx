@@ -148,7 +148,7 @@ const ModalSaveLoad = ({ mode, handleClose, turnList, loadData, update, setUpdat
                 <label className="modal_label">データ選択</label>
             </div>
             <div>
-                <div class="text-base font-bold text-red-500">新システム対応前のセーブデータは正しく読み込めない可能性があります。</div>
+                <div className="text-base font-bold text-red-500">新システム対応前のセーブデータは正しく読み込めない可能性があります。</div>
                 <p>■保存されるもの</p>
                 <p>・スタイル/スタイルごとの設定(限界突破数/装備/スキル/初期SP)</p>
                 <p>・各ターンのキャラクターの配置、行動</p>

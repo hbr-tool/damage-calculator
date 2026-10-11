@@ -343,12 +343,13 @@ input.troops_btn.selected_troops {
 }
 
 .enemy_icon {
-    width: 23px;
-    height: 23px;
+    width: 22px;
+    height: 22px;
 }
 
 .enemy_count {
-    width: 50px;
+    line-height: 21px;
+    width: 44px;
 }
 
 .inc_od_icon {
@@ -358,17 +359,17 @@ input.troops_btn.selected_troops {
 
 .od_icon {
     width: 61px;
-    height: 48px;
+    height: 46px;
 }
 
 .od_number {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
     margin-left: 11px;
 }
 
 .od_text {
-    padding-top: 5px;
+    padding-top: 3px;
     font-size: 13px;
 }
 
@@ -486,13 +487,8 @@ img.unit_buff {
     height: 24px;
 }
 
-.enemy_count {
-    line-height: 21px;
-    font-size: 14px;
-}
-
 .enemy_icon_list {
-    width: 290px;
+    width: 200px;
     margin-left: 5px;
     margin-top: -1px;
 }

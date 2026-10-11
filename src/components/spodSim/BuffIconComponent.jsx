@@ -1,6 +1,6 @@
 import React from "react";
-import { getBuffIconImg } from "./logic";
 import buffIcons from 'assets/buffIcons';
+import * as logicBuff from "./logicBuff";
 
 const BuffIconComponent = ({ buffList, loopLimit, loopStep, placeNo, turnNumber, clickBuffIcon }) => {
     const scrollContentRef = React.useRef(null);
@@ -53,31 +53,33 @@ const BuffIconComponent = ({ buffList, loopLimit, loopStep, placeNo, turnNumber,
         }
     }, [buffList, loopLimit, loopStep, turnNumber, placeNo]);
 
-    let className = "scroll-container " + (placeNo === 7 ? "enemy_icon_list" : "icon_list");
-    return (buffList.length > 0 ?
-        <div className={className} onClick={() => clickBuffIcon(buffList)}>
-            <div className="scroll-content" ref={scrollContentRef}>
-                {buffList.map((buffInfo, index) => (
-                    <img
-                        key={index}
-                        src={buffIcons[getBuffIconImg(buffInfo)]}
-                        alt={buffInfo.buff_name}
-                        className="unit_buff"
-                    />
-                ))}
-                {(buffList.length > loopLimit * loopStep) ?
-                    buffList.map((buffInfo, index) => (
-                        <img
-                            key={index}
-                            src={buffIcons[getBuffIconImg(buffInfo)]}
-                            alt={buffInfo.buff_name}
-                            className="unit_buff"
-                        />
-                    )) : null
-                }
-            </div>
+    return (
+        <div className={(placeNo === 7 ? "enemy_icon_list" : "icon_list")}>
+            {buffList.length > 0 ?
+                <div className="scroll-container" onClick={() => clickBuffIcon(buffList)}>
+                    <div className="scroll-content" ref={scrollContentRef}>
+                        {buffList.map((buffInfo, index) => (
+                            <img
+                                key={index}
+                                src={buffIcons[logicBuff.getBuffIconImg(buffInfo)]}
+                                alt={buffInfo.buff_name}
+                                className="unit_buff"
+                            />
+                        ))}
+                        {(buffList.length > loopLimit * loopStep) ?
+                            buffList.map((buffInfo, index) => (
+                                <img
+                                    key={index}
+                                    src={buffIcons[logicBuff.getBuffIconImg(buffInfo)]}
+                                    alt={buffInfo.buff_name}
+                                    className="unit_buff"
+                                />
+                            )) : null
+                        }
+                    </div>
+                </div>
+                : null}
         </div>
-        : null
     );
 }
 

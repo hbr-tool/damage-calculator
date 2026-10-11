@@ -7,6 +7,7 @@ import {
 import * as common from "utils/common";
 import * as logic from "./logic";
 import * as buffLogic from "./buffLogic.js";
+import * as logicBuff from "./logicBuff.js";
 import BuffField from "./BuffField";
 import AbilityCheckbox from "./AbilityCheckbox";
 import PassiveCheckbox from "./PassiveCheckbox";
@@ -14,7 +15,7 @@ import Resonance from "./Resonance";
 import BuffBulkSetting from "./BuffBulkSetting";
 import BuffDetail from "./BuffDetail";
 
-const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList, resonanceList, isWeak, selectList }) => {
+const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList, resonanceList, isWeak, isDp, selectList }) => {
     const {
         attackInfo, state, dispatch,
         selectBuffKeyMap, setSelectBuffKeyMap,
@@ -29,13 +30,13 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
 
     let buffKeyList = {};
     attackUpBuffs.forEach(buff => {
-        buffKeyList[logic.getBuffKey(buff.effect, buff.kind)] = [];
+        buffKeyList[logicBuff.getBuffKey(buff.effect, buff.kind)] = [];
     });
     defDownBuffs.forEach(buff => {
-        buffKeyList[logic.getBuffKey(buff.effect, buff.kind)] = [];
+        buffKeyList[logicBuff.getBuffKey(buff.effect, buff.kind)] = [];
     });
     criticalBuffs.forEach(buff => {
-        buffKeyList[logic.getBuffKey(buff.effect, buff.kind)] = [];
+        buffKeyList[logicBuff.getBuffKey(buff.effect, buff.kind)] = [];
     });
 
     const refBuffSettingMap = useRef(buffSettingMap);
@@ -201,14 +202,14 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
 
             const buffItemList = [
                 ...kindBuffList.filter(buffInfo =>
-                    !logic.isOnlyUse(attackInfo, buffInfo)
+                    !logicBuff.isOnlyUse(attackInfo, buffInfo)
                 ),
                 ...kindBuffList.filter(buffInfo =>
-                    !(logic.isAloneActivation(buffInfo) || logic.isOnlyBuff(attackInfo, buffInfo) || logic.isOnlyUse(attackInfo, buffInfo))
+                    !(logicBuff.isAloneActivation(buffInfo) || logicBuff.isOnlyBuff(attackInfo, buffInfo) || logicBuff.isOnlyUse(attackInfo, buffInfo))
                 ),
             ];
             const overlap = buffLogic.isOverlap(attackUpBuffs, defDownBuffs, criticalBuffs, buffKey);
-            handleSelectChange(buffKey, logic.getBestBuffKeys(buffKey, buffItemList, refBuffSettingMap.current, overlap));
+            handleSelectChange(buffKey, logicBuff.getBestBuffKeys(buffKey, buffItemList, refBuffSettingMap.current, overlap));
         })
     }
 
@@ -229,7 +230,7 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
     // 選択内から最良を設定
     const setBestBuff = (buffKey, buffItemList) => {
         const overlap = buffLogic.isOverlap(attackUpBuffs, defDownBuffs, criticalBuffs, buffKey);
-        const bestKeys = logic.getBestBuffKeys(buffKey, buffItemList, buffSettingMap, overlap);
+        const bestKeys = logicBuff.getBestBuffKeys(buffKey, buffItemList, refBuffSettingMap.current, overlap);
         handleSelectChange(buffKey, bestKeys);
     }
 
@@ -269,9 +270,9 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
 
     useEffect(() => {
         const BUFF_KEY_LIST = [
-            logic.getBuffKey(EFFECT.GRANT_BUFF, BUFF.MINDEYE),
-            logic.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.FRAGILE),
-            logic.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.ETERNAL_FRAGILE),
+            logicBuff.getBuffKey(EFFECT.GRANT_BUFF, BUFF.MINDEYE),
+            logicBuff.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.FRAGILE),
+            logicBuff.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.ETERNAL_FRAGILE),
         ]
 
         if (attackInfo) {
@@ -292,6 +293,31 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
         }
     }, [isWeak]);
 
+    
+    useEffect(() => {
+        const BUFF_KEY_LIST = [
+            logicBuff.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.DEFENSEDP),
+            logicBuff.getBuffKey(EFFECT.GRANT_DEBUFF, BUFF.ETERNAL_DEFENSEDP),
+        ]
+
+        if (attackInfo) {
+            if (isDp) {
+                if (checkUpdate) {
+                    let resistKey = {};
+                    BUFF_KEY_LIST.forEach(buffKey => {
+                        resistKey[buffKey] = [];
+                    })
+                    selectBestBuff(resistKey);
+                } else {
+                    BUFF_KEY_LIST.forEach(buffKey => {
+                        handleSelectChange(buffKey, []);
+                    })
+
+                }
+            }
+        }
+    }, [isDp]);
+
     useEffect(() => {
         if (checkUpdate) {
             setSelectBuffKeyMap(buffKeyList);
@@ -305,7 +331,7 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
 
     useEffect(() => {
         // 山脇様のしもべ変更
-        const funnelBuffKey = logic.getBuffKey(EFFECT.GRANT_BUFF, BUFF.FUNNEL);
+        const funnelBuffKey = logicBuff.getBuffKey(EFFECT.GRANT_BUFF, BUFF.FUNNEL);
         const funnel = buffGroup[funnelBuffKey];
         if (checkUpdate && funnel) {
             setBestBuff(funnelBuffKey, funnel[0]);
@@ -362,7 +388,7 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
                             </td>
                         </tr>
                         {attackUpBuffs.map((buffDef, index) => {
-                            const buffKey = `${logic.getBuffKey(buffDef.effect, buffDef.kind)}`
+                            const buffKey = `${logicBuff.getBuffKey(buffDef.effect, buffDef.kind)}`
                             const totalRowCount = attackUpBuffs.reduce((sum, buff) => {
                                 return sum + (buff.overlap ? 2 : 1);
                             }, 0);
@@ -388,7 +414,7 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
                             </td>
                         </tr>
                         {defDownBuffs.map((buffDef, index) => {
-                            const buffKey = `${logic.getBuffKey(buffDef.effect, buffDef.kind)}`
+                            const buffKey = `${logicBuff.getBuffKey(buffDef.effect, buffDef.kind)}`
                             const totalRowCount = defDownBuffs.reduce((sum, buff) => {
                                 return sum + (buff.overlap ? 2 : 1);
                             }, 0);
@@ -414,7 +440,7 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
                             </td>
                         </tr>
                         {criticalBuffs.map((buffDef, index) => {
-                            const buffKey = `${logic.getBuffKey(buffDef.effect, buffDef.kind)}`
+                            const buffKey = `${logicBuff.getBuffKey(buffDef.effect, buffDef.kind)}`
                             return (
                                 <BuffField key={buffKey}
                                     index={index}

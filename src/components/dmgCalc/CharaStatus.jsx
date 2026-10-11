@@ -7,6 +7,7 @@ import StyleIcon from "components/StyleIcon";
 import { getSkillData } from "utils/common";
 import * as common from "utils/common";
 import * as logic from "./logic";
+import * as logicBuff from "./logicBuff.js";
 import { SKILL_ID, STATUS_KBN, COST_TYPE, EFFECT } from "utils/const";
 import { checkPawapuroExist } from "./logic";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -310,7 +311,7 @@ const CharaStatus = ({ argument }) => {
                                     if (kind === "ability") continue;
                                     const skillEffect = common.getBuffIdToEffect(Number(buffId));
                                     if (!skillEffect) continue;
-                                    const buffKindKey = logic.getBuffKey(skillEffect.effect_type, skillEffect.effect_no);
+                                    const buffKindKey = logicBuff.getBuffKey(skillEffect.effect_type, skillEffect.effect_no);
 
                                     if (buffSettingMap[buffKindKey] && buffSettingMap[buffKindKey][key][buffKey]) {
                                         let buffSetting = buffSettingMap[buffKindKey][key][buffKey];

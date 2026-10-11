@@ -1,5 +1,5 @@
 import React from 'react';
-import { isAloneActivation } from "./logic";
+import { isAloneActivation } from "./logicBuff";
 import { BUFF } from "utils/const";
 import BuffSelect from "./BuffSelect";
 import { getBuffIdToEffect } from "utils/common";

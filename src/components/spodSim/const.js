@@ -1,4 +1,4 @@
-import { BUFF, FIELD } from "utils/const";
+import { FIELD } from "utils/const";
 
 export const ABILIRY_TIMING = {
     BATTLE_START: 0,
@@ -13,21 +13,22 @@ export const ABILIRY_TIMING = {
     PURSUIT: 9,
     FIELD_DEPLOY: 10,
     SKILL_USE: 11,
-    HEAL_SP: 12,
+    OTHER_HEAL_SP: 12,
     EVERY_TURN: 13,
     STEP_TURN: 14,
     DEAL_DAMAGE: 15,
     PASSIVE: 16,
+    ACTIVE_SKILL_USE: 17,
     OTHER: 99,
 }
 
 // 使用不可スタイル
-export const NOT_USE_STYLE = [197, 213, 215, 218, 224, 225];
+export const NOT_USE_STYLE = [
+    197, // 手塚
+];
+
 // 制限アビリティ
 export const CONSTRAINTS_ABILITY = [
-    25, // 超越ゲージ
-    26, // 超越ゲージ
-    27, // 超越ゲージ
     250, // 演舞
     1138, // ラストリゾート
     1210, // アルゴリズム
@@ -45,8 +46,9 @@ export const CONSTRAINTS_ABILITY = [
     1701, // ドMの真髄
     1702, // 護りの真髄
     1109, // 吉報
-    1217, // 神楽舞
     1620, // 芳醇ダージリン
+    1534, // 破竹の勢い
+    1535, // 破竹の勢い(小)
 ];
 // 制限パッシブ
 export const CONSTRAINTS_PASSIVE = [
@@ -71,20 +73,16 @@ export const KB_NEXT = {
     ACTION_OD_5: 8,
 };
 
-export const BUFF_FUNNEL_LIST = [
-    BUFF.FUNNEL,
-    BUFF.ABILITY_FUNNEL
-];
-export const SINGLE_BUFF_LIST = [
-    BUFF.CHARGE,
-    BUFF.RECOIL,
-    BUFF.ARROWCHERRYBLOSSOMS,
-    BUFF.ETERNAL_OARH,
-    BUFF.EX_DOUBLE,
-    BUFF.BABIED,
-    BUFF.DIVA_BLESS,
-    BUFF.YAMAWAKI_SERVANT
-];
+// export const SINGLE_BUFF_LIST = [
+//     BUFF.CHARGE,
+//     BUFF.RECOIL,
+//     BUFF.ARROWCHERRYBLOSSOMS,
+//     BUFF.ETERNAL_OARH,
+//     BUFF.EX_DOUBLE,
+//     BUFF.BABIED,
+//     BUFF.DIVA_BLESS,
+//     BUFF.YAMAWAKI_SERVANT
+// ];
 export const FIELD_LIST = {
     [FIELD.NORMAL]: "無し",
     [FIELD.FIRE]: "火",

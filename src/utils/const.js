@@ -8,9 +8,9 @@ export const CHARA_ID = {
     RISA: 22,
     MINORI: 27,
     MIYA: 45,
+    HIKARI: 50,
     STRENGTH_BUFF: 4,
     STRENGTH_DEBUFF: 11,
-    STRENGTH_STYLE_DEBUFF: 211, // ペルソナ月歌,
 }
 
 export const STYLE_ID = {
@@ -28,10 +28,16 @@ export const STYLE_ID = {
     YUKATA_SHIKI: 215,  // 浴衣シッキー
     SWIM_MUA: 222,  // 水着六宇亜
     PAWAPURO: [183, 184, 5092],  // パワプロ月歌、いちご、緋雨
+    STRENGTH_STYLE_DEBUFF: 211, // ペルソナ月歌,
 }
 
 export const SKILL_ID = {
-    TRICK_CANNON: 50, // トリック・カノン
+    NORMAL_ATTACK: 1, // 通常攻撃
+    NONE: 2, // 無し
+    PURSUIT: 3, // 追撃
+    COMMAND_ACTION: 4, // 指揮行動
+    AUTO_PURSUIT: 5, // 自動追撃
+    // TRICK_CANNON: 50, // トリック・カノン
     MEDITATION: 501, // メディテーション
     GOOD_PAIN: 524, // 痛気持ちいぃ～！
     RICE_FIELD: 525, // いつの日かここで
@@ -39,31 +45,25 @@ export const SKILL_ID = {
     DAWN: 606, // 曙
     MEGA_DESTROYER: 623, // メガデストロイヤー
     CAT_JET_SHOOTING: 633, // ネコジェットシャテキ
-    BOUQUET_SHOOT: 640, // ファーマメントブーケショット
+    // BOUQUET_SHOOT: 640, // ファーマメントブーケショット
     SUMMER_FINE_WEATHER: 658, // 夏のひより
     DOMINATION_GRAVITY: 670, //	ドミネーション・グラビティ
     FAST_SHOT: 685, //	速攻◯
-    // MOTHERS_LIGHT: 764, // 母の灯を継いで
+    CAFE_TIME: 767, // 熱々！飲茶タイム
+    FREDDAMENTE: 772, // フレッダメンテ
 }
 
-export const BUFF_ID = {
-    TRICK_CANNON: 2,   // トリック・カノン
+// export const ATTACK_ID = {
+//     ELEGANT_AND_SOLEMN: 83, // 唯雅粛正
+//     ELEGANT_AND_SOLEMN_CHARGE: 84, // 唯雅粛正(チャージ)
+// }
+
+export const SKILL_EFFECT_ID = {
+    // TRICK_CANNON: 2,   // トリック・カノン
     MOON_LIGHT: 2607,   // 月光
     MEGA_DESTROYER5: 235,   // メガデストロイヤー5人
     MEGA_DESTROYER6: 236,   // メガデストロイヤー5人
     PERFECT_COLOR: 557,   // 極彩色
-    FULL_MEDITATION: 490,   // 追い込み！全力メドレー
-    BRIGHT_RED: 1037,   // 茜色
-}
-
-export const EFFECT_ID = {
-    TRICK_CANNON: 2,   // トリック・カノン
-    MOON_LIGHT: 2607,   // 月光
-    MEGA_DESTROYER5: 235,   // メガデストロイヤー5人
-    MEGA_DESTROYER6: 236,   // メガデストロイヤー5人
-    PERFECT_COLOR: 557,   // 極彩色
-    FULL_MEDITATION: 490,   // 追い込み！全力メドレー
-    BRIGHT_RED: 1037,   // 茜色
 }
 
 // 追加SPアビリティ
@@ -77,16 +77,16 @@ export const ABILITY_ID = {
     TRANSCEND_FIRE: 25, // 超越(火)
     TRANSCEND_ICE: 26, // 超越(氷)
     TRANSCEND_THUNDER: 27, // 超越(雷)
-    KISHIN: 28, // 鬼神
     TRANSCEND_LIGHT: 29, // 超越(光)
     TRANSCEND_DARK: 30, // 超越(闇)
+    KISHIN: 28, // 鬼神
     ADMIRAL_COMMON: 299, // 指揮行動
     DOUBLE_LIFT: 1516, // ダブルリフト
     AUTO_PURSUIT: 1530, // 自動追撃,
-    HEAVEN_AND_EARTH: 603, // 天長地久
-    FORTUNES_OF_WAR: 606, // 武運長久
     OVER_GEAR: 1405, // オーバーギア
     WAR_HONOR: 1503, // 戦勲.
+    WINGS_TO_TIGER: 612, // 獅子に鰭
+    LEAP_FORWARD: 613, // 飛躍
 }
 
 export const COST_TYPE = {
@@ -119,11 +119,17 @@ export const ELEMENT = {
     LIGHT: 4, // 光
     DARK: 5, // 闇
     VOID: 6, // 虚
+    NOT_NORMAL: 10, // 無以外
     NOT_FIRE: 11, // 火以外
     NOT_ICE: 12, // 氷以外
     NOT_THUNDER: 13, // 雷以外
     NOT_LIGHT: 14, // 光以外
     NOT_DARK: 15, // 闇以外
+    OTHER_FIRE: 21, // 火以外の属性
+    OTHER_ICE: 22, // 氷以外の属性
+    OTHER_THUNDER: 23, // 雷以外の属性
+    OTHER_LIGHT: 24, // 光以外の属性
+    OTHER_DARK: 25, // 闇以外の属性
 }
 
 /** バフ種別 */
@@ -139,22 +145,18 @@ export const BUFF = {
     ELEMENT_CRITICALRATEUP: 8, // 属性クリ率
     ELEMENT_CRITICALDAMAGEUP: 9, // 属性クリダメ
     CHARGE: 10,// チャージ
-    FIELD: 11, // フィールド
     DAMAGERATEUP: 12, // 破壊率アップ
-    OVERDRIVEPOINTUP: 13, // OD増加
     FIGHTINGSPIRIT: 14, // 闘志
     MISFORTUNE: 15, // 厄
     FUNNEL: 16, // 連撃
-    TOKEN_UP: 17, // トークンアップ
     DEFENSEDP: 18, // DP防御ダウン
     ETERNAL_DEFENSEDP: 19, // 永続DP防御ダウン
-    RESISTDOWN: 20, // 耐性ダウン
+    ETERNAL_RESISTDOWN: 20, // 耐性ダウン
     ETERNAL_DEFENSEDOWN: 21, // 永続防御力ダウン
     ELEMENT_ETERNAL_DEFENSEDOWN: 22, // 永続属性防御ダウン
-    HEALSP: 23, // SP増加
+    RESISTDOWN: 23, // 耐性ダウン
     RECOIL: 24, // 行動不能
     PROVOKE: 25, // 挑発
-    ADDITIONALTURN: 26, // 追加ターン
     COVER: 27, // 注目
     GIVEATTACKBUFFUP: 28, // バフ強化
     GIVEDEBUFFUP: 29, // デバフ強化
@@ -180,19 +182,17 @@ export const BUFF = {
     LIGHT_MARK: 49, // 光の印
     DARK_MARK: 50, // 闇の印
     DISASTER: 51, // 禍
-    HEALEP: 52, // EP回復
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
     UNDERMINE: 55, // 蝕
     RUSH: 56, // ラッシュ
     DIM_SUM: 57, // 点心
-    SPRIGHTLY: 58, // 軽快
-    CAMP_DEPLOYMENT: 59, // 陣展開
-    ADDITIONALTURN_NOT: 60, // 追加ターン(追加ターンを除く)
-    REVENGE: 60, // リベンジ(重複してる・・・)
+    REVENGE: 60, // リベンジ
     TEA: 61, // ティー
     ETERNAL_ATTACKUP: 62, // 永続攻撃力アップ
     LNFANTILIZED: 63, // 幼児退行
+    SPRIGHTLY: 64, // 軽快
+    SPRIGHTLY_LIGHT: 65, // 軽快(小)
     DISPEL: 90, // ディスペル
     CAMP_ATTACKUP: 101, // 晩夏の陣
     ABILITY_FUNNEL: 116, // アビリティ連撃
@@ -205,11 +205,9 @@ export const EFFECT = {
     CRITICALRATEUP: 3, // クリティカル率アップ
     CRITICAL_DAMAGE_UP: 4, // クリティカルダメージアップ
     DAMAGERATEUP: 5, // 破壊率上昇量アップ
-    FUNNEL: 6, // 連撃数アップ
     FIELD_DEPLOYMENT: 7, // フィールド展開
     GRANT_BUFF: 8, // バフ付与
     OVERDRIVE_SP: 9, // ODSPアップ
-    FUNNEL_ALWAYS: 10, // 連撃数(永続)アップ
     DEFFENCEUP: 11, // 防御力アップ
     HEALSP: 12, // SP回復
     HEALDP: 13, // DP回復
@@ -223,10 +221,11 @@ export const EFFECT = {
     STUN: 21, // スタン
     GRANT_DEBUFF: 22, // デバフ付与
     DISASTER: 23, // 禍
-    SHADOW_CLONE: 24, // 影分身
+    LNFANTILIZED: 24, // 幼児退行
     STATUSUP_ALL_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
     FIELD_STRENGTHEN: 27, // フィールド強化
+    ADDITIONALTURN_NOT: 28, // 追加ターン(追加ターン除く)
     ADDITIONALTURN: 29, // 追加ターン
     TOKEN_UP: 30, // トークンアップ
     STATUSUP_VALUE_STR: 31, // 能力上昇(STR)
@@ -238,13 +237,13 @@ export const EFFECT = {
     CAMP_DEPLOYMENT: 40, // 陣展開
     RESISTDOWN: 41, // 耐性ダウン
     DP_DEFFENCEDOWN: 42, // DP防御力ダウン
-    TALISMAN: 44, // 霊符
-    EX_DOUBLE: 45, // EXスキル連続発動
     OVERDRIVE_RATE_UP: 46, // OD増加量アップ
+    OVERDRIVE_COST_DOWN: 47, // OD消費量ダウン
     HEALEP: 52, // EP回復
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
+    DISPEL: 90, // ディスペル
 }
 
 export const EFFECT_VALUE = {
@@ -300,9 +299,13 @@ export const ATTRIBUTE = {
     PURSUIT: 2, // 追撃
     COMMAND_ACTION: 3, // 指揮行動
     PURSUIT_ONLY: 5, // 追撃のみ発動可能
+    IMMERSION: 6, // 没入
     SP_HALF: 11, // SP消費半減
     SP_ZERO: 12, // SP消費0
     SP_MITIGATION_3: 13, // SP消費軽減3
+    SP_MITIGATION_4: 14, // SP消費軽減4
+    SP_MITIGATION_5: 15, // SP消費軽減5
+    SP_MITIGATION_7: 17, // SP消費軽減7
     NOT_ACTION: 99, // 行動無し
 }
 
@@ -328,6 +331,7 @@ export const CONDITIONS = {
     LIGHT_STYLE: 18, // 光属性スタイルN人以上
     DARK_STYLE: 19, // 闇属性スタイルN人以上
     HAS_ABILITY: 20, // アビリティ発動中
+    TOKEN_COST_OVER: 21, // トークンコスト指定値以上
     HAS_SHADOW: 22, // 影分身中
     HAS_DODGE: 23, // 回避状態
     TOKEN_OVER: 24, // トークン指定値以上
@@ -344,9 +348,11 @@ export const CONDITIONS = {
     SELECT_31A: 37, // 31A選択
     SELECT_CHARA: 38, // 特定キャラを選択
     CAMP_DEPLOYMENT: 40, // 陣展開中
-    FIELD_NOT_FIRE: 41, // 火属性以外フィールド
-    NOT_DIVA_BLESS: 43, // 歌姫の加護以外
-    NOT_NEGATIVE: 44, // ネガティブ以外
+    // FIELD_NOT_FIRE: 41, // 火属性以外フィールド
+    USE_SKILL: 41, // スキル使用
+    NOT_HAS_BUFF: 42, // バフ発動中以外
+    NOT_DIVA_BLESS: 43, // 歌姫の加護以外 TODO
+    NOT_NEGATIVE: 44, // ネガティブ以外 TODO
     HAS_PASSIVE: 45, // パッシブ発動中
     MOTIVATION: 46, // やる気状態
     COST_SP_UNDER: 47, // 消費SP指定値以下
@@ -364,6 +370,8 @@ export const CONDITIONS = {
     RANDOM_MEAL: 59, // ランダム料理
     IS_WEAK: 60, // 弱点を突いている
     DP_UNDER_50: 61, // DP50％以下
+    LNFANTILIZED_OVER_LV: 62, // 幼児退行レベル以上
+    IMMERSION_STATE: 63, // 没入状態
 }
 
 /** 敵リスト*/
@@ -397,16 +405,16 @@ export const KIND = {
 }
 
 /** 汎用スキル */
-export const SKILL = {
-    NORMAL_ATTACK: 1, // 通常攻撃
-    NONE: 2, // 無し
-    PURSUIT: 3, // 追撃
-    COMMAND_ACTION: 4, // 指揮行動
-    AUTO_PURSUIT: 5, // 自動追撃
-}
+// export const SKILL = {
+//     NORMAL_ATTACK: 1, // 通常攻撃
+//     NONE: 2, // 無し
+//     PURSUIT: 3, // 追撃
+//     COMMAND_ACTION: 4, // 指揮行動
+//     AUTO_PURSUIT: 5, // 自動追撃
+// }
 
 // 単独発動バフ
-export const ALONE_ACTIVATION_BUFF_KIND = [
+export const ALONE_ACTIVATION_BUFF_NO = [
     BUFF.ATTACKUP,
     BUFF.ELEMENT_ATTACKUP,
     BUFF.MINDEYE,
@@ -433,6 +441,8 @@ export const JEWEL_TYPE = {
     DAMAGE_DOWN: 7,
 }
 export const RANGE_ALL_ABILITY = [
+    EFFECT.STATUSUP_ALL_VALUE,
+    EFFECT.STATUSUP_RATE,
     EFFECT.COST_SP_DOWN,
     EFFECT.COST_SP_UP,
     EFFECT.GIVEATTACKBUFFUP,

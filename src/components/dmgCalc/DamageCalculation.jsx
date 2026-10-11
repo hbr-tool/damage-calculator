@@ -380,7 +380,7 @@ const DamageCalculation = () => {
                 </div>
                 <BuffArea argument={argument} attackCharaId={attackCharaId}
                     buffGroup={buffGroup} abilityList={abilityList} passiveList={passiveList} resonanceList={resonanceList}
-                    isWeak={isWeak} selectList={selectList} />
+                    isWeak={isWeak} isDp={isDp} selectList={selectList} />
             </div>
             <DamageResult damageResult={damageResult} state={state} dispatch={dispatch} />
         </div>

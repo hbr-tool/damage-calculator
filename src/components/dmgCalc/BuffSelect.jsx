@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { isOnlyBuff, isOnlyUse, isAloneActivation, isSelectBuff } from "./logic";
+import * as logicBuff from "./logicBuff.js";
 import { getBuffIdToEffect, getSkillData } from "utils/common";
 import ConfirmModal from 'components/ConfirmModal';
 
@@ -30,13 +30,13 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
             if (type === "buff") {
                 const buffId = Number(value.split('_')[1]);
                 let buffInfo = getBuffIdToEffect(buffId);
-                if (isOnlyBuff(attackInfo, buffInfo) && newSelected[index ^ 1] === value) {
+                if (logicBuff.isOnlyBuff(attackInfo, buffInfo) && newSelected[index ^ 1] === value) {
                     confirmSet(`${buffInfo.buff_name}は\r\n通常、複数付与出来ません。\r\n設定してよろしいですか？`, () => {
                         handleSelectChange(buffKey, newSelected);
                     });
                     return;
                 }
-                if (isSelectBuff(buffInfo)) {
+                if (logicBuff.isSelectBuff(buffInfo)) {
                     const partnerBuffId = Number(newSelected[index ^ 1]?.split('_')[1]);
                     if (partnerBuffId) {
                         let partnerBuffInfo = getBuffIdToEffect(partnerBuffId);
@@ -49,11 +49,11 @@ const BuffSelect = ({ attackInfo, buffList, buffKey, buffSettingMap, handleChang
                         }
                     }
                 }
-                if (isAloneActivation(buffInfo)) {
+                if (logicBuff.isAloneActivation(buffInfo)) {
                     handleSelectChange(buffKey, [value, ""]);
                     return;
                 }
-                if (isOnlyUse(attackInfo, buffInfo)) {
+                if (logicBuff.isOnlyUse(attackInfo, buffInfo)) {
                     confirmSet(`${buffInfo.buff_name}は\r\n通常、他スキルに設定出来ません。\r\n設定してよろしいですか？`, () => {
                         handleSelectChange(buffKey, newSelected);
                     });

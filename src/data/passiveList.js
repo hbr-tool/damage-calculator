@@ -33,9 +33,11 @@ const passiveList = [
     {"skill_id":762,"passive_name":"想念シンクロニシティ","passive_explan":"初戦開始時 味方全体の士気レベルを2上昇","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
     {"skill_id":764,"passive_name":"母の灯を継いで","passive_explan":"自身のODゲージ上昇量＋5％","passive_short_explan":"","element":0,"target_element":0,"activation_place":0},
     {"skill_id":765,"passive_name":"無敵KAWAII宣言♡","passive_explan":"常時 自身のクリティカル率+100% クリティカルダメージ+50% 防御力-50%","passive_short_explan":"自身のクリティカル率+100% クリティカルダメージ+50% 防御力-50%","element":0,"target_element":0,"activation_place":3},
+    {"skill_id":779,"passive_name":"サバイブストラテジー","passive_explan":"ターン開始時 自身のSPが20以上のとき自身のSP-3 自身を除く味方全体のSP+1(SP99まで上限突破可)","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
     {"skill_id":788,"passive_name":"さあ、行くよ！","passive_explan":"自身を除く31Cの隊員数に応じて常時 自身の力と体力が上がる(最大+25)","passive_short_explan":"自身を除く31Cの隊員数に応じて常時 自身の力と体力が上がる(最大+25)","element":0,"target_element":0,"activation_place":0},
     {"skill_id":790,"passive_name":"特攻暴走連鎖","passive_explan":"バトル開始時自身にEXスキル連続発動(1回)を付与する","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
     {"skill_id":791,"passive_name":"背負い進む覚悟","passive_explan":"行動開始時前衛にいるとトークン1つにつき攻撃力+5%","passive_short_explan":"トークン1つにつき 攻撃力+5%","element":0,"target_element":0,"activation_place":1},
+    {"skill_id":805,"passive_name":"溢れ出る母性","passive_explan":"バトル開始時 敵を幼児退行状態(ターン永続/解除不可/デバフ無効不可)にし\n幼児退行レベルを2上昇させる","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
 ];
 
 export default passiveList;

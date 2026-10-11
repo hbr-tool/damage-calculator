@@ -1,10 +1,11 @@
 import {
     BUFF, EFFECT, RANGE, ROLE
-    , CHARA_ID, STYLE_ID, EFFECT_ID, ABILITY_ID
+    , CHARA_ID, STYLE_ID, SKILL_EFFECT_ID, ABILITY_ID
 } from "utils/const";
 import * as constants from "utils/const";
 import * as common from "utils/common";
 import * as logic from "./logic";
+import * as logicBuff from "./logicBuff.js";
 import skillList from "data/skillList";
 import skillEffect from "data/skillEffect";
 
@@ -27,8 +28,6 @@ const TARGET_KIND = [
     EFFECT.STATUSUP_VALUE_MND, // 能力上昇(MND)
     EFFECT.STATUSUP_VALUE_INT, // 能力上昇(INT)
     EFFECT.STATUSUP_VALUE_LUK, // 能力上昇(LUK)
-    EFFECT.FUNNEL, // 連撃
-    EFFECT.FUNNEL_ALWAYS, // 連撃(永続)
 ];
 const SUB_TARGET_KIND = [
     EFFECT.FIELD_DEPLOYMENT, // フィールド展開
@@ -137,7 +136,7 @@ export const getDefenseDownBuffs = function (isElement, isWeak, isDp, selectStyl
     return [
         { name: "防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.DEFENSEDOWN, overlap: true },
         ...(isDp ? [{ name: "DP防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.DEFENSEDP, overlap: true },] : []),
-        ...(isDp && isHikari ? [{ name: "永続DP防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_DEFENSEDP, overlap: true },] : []),
+        ...(isDp && isHikari ? [{ name: "DP防御力DOWN(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_DEFENSEDP, overlap: true },] : []),
         ...(isElement ? [{ name: "属性防御力DOWN", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ELEMENT_DEFENSEDOWN, overlap: true },] : []),
         { name: "防御力DOWN(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_DEFENSEDOWN, overlap: true },
         ...(isElement ? [{ name: "属性防御力DOWN(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ELEMENT_ETERNAL_DEFENSEDOWN, overlap: true },] : []),
@@ -145,6 +144,7 @@ export const getDefenseDownBuffs = function (isElement, isWeak, isDp, selectStyl
         ...(isWeak ? [{ name: "脆弱", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.FRAGILE, overlap: true },] : []),
         ...(isWeak ? [{ name: "永続脆弱", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_FRAGILE, overlap: true },] : []),
         ...(isElement ? [{ name: "耐性ダウン", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.RESISTDOWN, overlap: true },] : []),
+        ...(isElement ? [{ name: "耐性ダウン(永)", effect: EFFECT.GRANT_DEBUFF, kind: BUFF.ETERNAL_RESISTDOWN, overlap: true },] : []),
     ];
 
 }
@@ -177,7 +177,7 @@ export function generateBuffAbilityPassiveLists(styleList, attackInfo, attackUpB
 
     // グループ化
     const buffGroup = filteredBuff.reduce((acc, buff) => {
-        const key = logic.getBuffKey(buff.effect_type, buff.effect_no);
+        const key = logicBuff.getBuffKey(buff.effect_type, buff.effect_no);
         if (!acc[key]) {
             acc[key] = [[], []];
         }
@@ -228,18 +228,22 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
             const styleId = memberInfo.styleInfo.style_id;
             const charaName = common.getCharaData(charaId).chara_short_name;
 
-            const filterBuff = [constants.EFFECT.FIELD_DEPLOYMENT, constants.EFFECT.GRANT_BUFF, constants.EFFECT.GRANT_DEBUFF]
+            const filterBuff = [EFFECT.FIELD_DEPLOYMENT,
+            EFFECT.GRANT_BUFF, EFFECT.GRANT_DEBUFF]
             const styleBuffList = skillEffect.filter(buff =>
                 (buff.chara_id === charaId || buff.chara_id === 0) &&
                 (buff.style_id === styleId || buff.style_id === 0) &&
                 filterBuff.includes(buff.effect_type)
             ).filter(buff => {
+                // 除外スキル
+                if (memberInfo.exclusionSkillList.includes(buff.skill_id)) return false;
+
                 switch (buff.effect_id) {
-                    case EFFECT_ID.MOON_LIGHT: // 月光(歌姫の加護)
+                    case SKILL_EFFECT_ID.MOON_LIGHT: // 月光(歌姫の加護)
                         return styleId === STYLE_ID.ONLY_MOON_LIGHT;
-                    case EFFECT_ID.MEGA_DESTROYER5: // メガデストロイヤー(5人以上)
+                    case SKILL_EFFECT_ID.MEGA_DESTROYER5: // メガデストロイヤー(5人以上)
                         return attackInfo?.servantCount >= 5;
-                    case EFFECT_ID.MEGA_DESTROYER6: // メガデストロイヤー(6人以上)
+                    case SKILL_EFFECT_ID.MEGA_DESTROYER6: // メガデストロイヤー(6人以上)
                         return attackInfo?.servantCount === 6;
                     default:
                         break;
@@ -251,8 +255,6 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
                 if (attackMemberInfo) {
                     if (!logic.isElementInclude(attackMemberInfo.styleInfo, buff.target_element)) return false;
                 }
-                // 除外スキル
-                if (memberInfo.exclusionSkillList.includes(buff.skill_id)) return false;
                 return true;
             });
 
@@ -280,6 +282,58 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
                     max_lv: 1,
                 });
             };
+
+            const abilityPassiveCommon = (info, id, name, funcEffectList, attackInfo) => {
+                if (info.element && info.element !== attackInfo.attack_element) return false;
+                if (info.physical && info.physical !== attackInfo.attack_physical) return false;
+                if (attackMemberInfo && !logic.isElementInclude(attackMemberInfo.styleInfo, info.target_element)) return false;
+
+                let ret = false;
+                const effectList = funcEffectList(id);
+                for (const effect of effectList) {
+                    if (!TARGET_KIND.includes(effect.effect_type)) continue;
+
+                    if (troopKbn === logic.TROOP_KBN.SUB) {
+                        // 他部隊のアビリティは一部のみ許可
+                        if (!SUB_TARGET_KIND.includes(effect.effect_type)) {
+                            continue;
+                        }
+                    }
+
+                    if (!constants.RANGE_ALL_ABILITY.includes(effect.effect_type)) {
+                        if (effect.range_area === RANGE.SELF && charaId !== attackCharaId) continue;
+                    }
+
+                    switch (effect.effect_type) {
+                        case EFFECT.FIELD_DEPLOYMENT: // フィールド展開
+                            addBuffAbility("ability", id, name, EFFECT.FIELD_DEPLOYMENT, "", effect);
+                            continue;
+                        case EFFECT.GRANT_BUFF:
+                            switch (effect.effect_no) {
+                                case BUFF.EX_DOUBLE: // EXスキル連続発動
+                                    // 対象外
+                                    continue;
+                                case BUFF.ABILITY_FUNNEL: // アビリティ連撃
+                                case BUFF.HIGH_BOOST: // ハイブースト
+                                case BUFF.FIRE_MARK: // 火の印
+                                case BUFF.ICE_MARK: // 氷の印
+                                case BUFF.THUNDER_MARK: // 雷の印
+                                case BUFF.LIGHT_MARK: // 光の印
+                                case BUFF.DARK_MARK: // 闇の印
+                                    // アビリティに表示
+                                    break;
+                                default:
+                                    addBuffAbility("ability", id, name, EFFECT.GRANT_BUFF, effect.effect_no, effect);
+                                    continue;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    ret = true;
+                }
+                return ret;
+            }
 
             let styleAbility = {
                 "orgn": memberInfo.styleInfo.ability_orgn,
@@ -313,45 +367,7 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
                 const abilityInfo = common.getAbilityInfo(abilityId);
                 if (!abilityInfo) return;
 
-                if (abilityInfo.element !== 0 && abilityInfo.element !== attackInfo.attack_element) return;
-                if (abilityInfo.physical !== 0 && abilityInfo.physical !== attackInfo.attack_physical) return;
-                if (attackMemberInfo && !logic.isElementInclude(attackMemberInfo.styleInfo, abilityInfo.target_element)) return;
-
-                let isAddAbility = false;
-                const abilityEffectList = common.getAbilityEffectList(abilityId);
-                for (const abilityEffect of abilityEffectList) {
-                    if (!TARGET_KIND.includes(abilityEffect.effect_type)) continue;
-
-                    if (troopKbn === logic.TROOP_KBN.SUB) {
-                        // 他部隊のアビリティは一部のみ許可
-                        if (!SUB_TARGET_KIND.includes(abilityEffect.effect_type)) {
-                            continue;
-                        }
-                    }
-
-                    if (!constants.RANGE_ALL_ABILITY.includes(abilityEffect.effect_type)) {
-                        if (abilityEffect.range_area === RANGE.SELF && charaId !== attackCharaId) continue;
-                    }
-
-                    switch (abilityEffect.effect_type) {
-                        case EFFECT.FIELD_DEPLOYMENT: // フィールド展開
-                            addBuffAbility("ability", abilityId, abilityInfo.ability_name, EFFECT.FIELD_DEPLOYMENT, "", abilityEffect);
-                            continue;
-                        case EFFECT.GRANT_BUFF:
-                            switch (abilityEffect.effect_no) {
-                                case BUFF.EX_DOUBLE: // EXスキル連続発動
-                                    // 対象外
-                                    continue;
-                                default:
-                                    addBuffAbility("ability", abilityId, abilityInfo.ability_name, EFFECT.GRANT_BUFF, abilityEffect.effect_no, abilityEffect);
-                                    break;
-                            }
-                            continue;
-                        default:
-                            break;
-                    }
-                    isAddAbility = true;
-                }
+                const isAddAbility = abilityPassiveCommon(abilityInfo, abilityId, abilityInfo.ability_name, common.getAbilityEffectList, attackInfo)
                 if (isAddAbility) {
                     const newAbility = JSON.parse(JSON.stringify(abilityInfo));
                     newAbility.key = `${abilityId}_${charaId}`;
@@ -373,44 +389,7 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
                 const passiveInfo = common.getPassiveInfo(skill.skill_id);
                 if (!passiveInfo) return;
 
-                if (passiveInfo.element !== 0 && passiveInfo.element !== attackInfo.attack_element) return;
-                if (attackMemberInfo) {
-                    if (!logic.isElementInclude(attackMemberInfo.styleInfo, passiveInfo.target_element)) return;
-                }
-
-                const passiveEffectList = common.getPassiveEffectList(skill.skill_id);
-                let isAddPassive = false;
-                for (const passiveEffect of passiveEffectList) {
-                    if (!passiveInfo || !TARGET_KIND.includes(passiveEffect.effect_type)) continue;
-                    if (!constants.RANGE_ALL_ABILITY.includes(passiveEffect.effect_type)) {
-                        if (passiveInfo.passiveEffect === RANGE.SELF && charaId !== attackCharaId) continue;
-                    }
-                    if (troopKbn === logic.TROOP_KBN.SUB) {
-                        // 他部隊のアビリティは一部のみ許可
-                        if (!SUB_TARGET_KIND.includes(passiveEffect.effect_type)) {
-                            continue;
-                        }
-                    }
-
-                    switch (passiveEffect.effect_type) {
-                        case EFFECT.FIELD_DEPLOYMENT:// フィールド展開
-                            addBuffAbility("passive", skill.skill_id, passiveInfo.passive_name, EFFECT.FIELD_DEPLOYMENT, '', passiveEffect);
-                            continue;
-                        case EFFECT.GRANT_BUFF: // バフ付与
-                            switch (passiveEffect.effect_no) {
-                                case BUFF.EX_DOUBLE: // EXスキル連続発動
-                                    // 対象外
-                                    continue;
-                                default:
-                                    addBuffAbility("passive", skill.skill_id, passiveInfo.passive_name, EFFECT.GRANT_BUFF, passiveEffect.effect_no, passiveEffect);
-                                    break;
-                            }
-                            continue;
-                        default:
-                            break;
-                    }
-                    isAddPassive = true;
-                }
+                const isAddPassive = abilityPassiveCommon(passiveInfo, skill.skill_id, passiveInfo.passive_name, common.getPassiveEffectList, attackInfo)
                 if (isAddPassive) {
                     const passive = JSON.parse(JSON.stringify(passiveInfo));
                     passive.key = `${skill.skill_id}_${charaId}`;
@@ -442,16 +421,16 @@ export function addBuffAbilityPassiveLists(styleList, targetStyleList, attackInf
 }
 
 export const isOverlap = (attackUpBuffs, defDownBuffs, criticalBuffs, key) => {
-    const match1 = attackUpBuffs.find(item => logic.getBuffKey(item.effect, item.kind) === key);
-    const match2 = defDownBuffs.find(item => logic.getBuffKey(item.effect, item.kind) === key);
-    const match3 = criticalBuffs.find(item => logic.getBuffKey(item.effect, item.kind) === key);
+    const match1 = attackUpBuffs.find(item => logicBuff.getBuffKey(item.effect, item.kind) === key);
+    const match2 = defDownBuffs.find(item => logicBuff.getBuffKey(item.effect, item.kind) === key);
+    const match3 = criticalBuffs.find(item => logicBuff.getBuffKey(item.effect, item.kind) === key);
     return match1?.overlap || match2?.overlap || match3?.overlap;
 }
 
 export const isExistBuff = (attackUpBuffs, defDownBuffs, criticalBuffs, key) => {
     return (
-        attackUpBuffs.some(item => logic.getBuffKey(item.effect, item.kind) === key) ||
-        defDownBuffs.some(item => logic.getBuffKey(item.effect, item.kind) === key) ||
-        criticalBuffs.some(item => logic.getBuffKey(item.effect, item.kind) === key)
+        attackUpBuffs.some(item => logicBuff.getBuffKey(item.effect, item.kind) === key) ||
+        defDownBuffs.some(item => logicBuff.getBuffKey(item.effect, item.kind) === key) ||
+        criticalBuffs.some(item => logicBuff.getBuffKey(item.effect, item.kind) === key)
     );
 };
