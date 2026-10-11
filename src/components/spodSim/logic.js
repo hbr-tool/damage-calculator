@@ -822,7 +822,7 @@ export const judgmentCondition = (info, turnData, unitData, skillId) => {
         case CONDITIONS.FIELD_NONE: // フィールド無し
             return [FIELD.NORMAL, FIELD.RICE, FIELD.SANDSTORM].includes(turnData.field);
         case CONDITIONS.FIELD_ELEMENT: // 属性フィールド
-            return common.checkElement(turnData.field, conditionsId);
+            return common.checkElement(turnData.field, null, conditionsId);
         case CONDITIONS.HAS_ABILITY: // アビリティ
             return checkAbilityExist(unitData[`ability_${ABILIRY_TIMING.OTHER}`], conditionsId);
         case CONDITIONS.USE_SKILL: // スキル使用
@@ -905,7 +905,7 @@ export const judgmentCondition = (info, turnData, unitData, skillId) => {
         case CONDITIONS.CAMP_DEPLOYMENT: // 陣展開
             return turnData.camp === conditionsId;
         case CONDITIONS.IMMERSION_STATE: // 没入状態
-            return common.checkElement(unitData.immersion, conditionsId);
+            return common.checkElement(unitData.immersion, null, conditionsId);
         default:
             break;
     }
@@ -992,8 +992,7 @@ export const getTargetList = (turnData, rangeArea, targetElement, unitData) => {
         // 属性条件
         if (targetElement && targetElement !== ELEMENT.NORMAL) {
             if (
-                !common.checkElement(unit.style.styleInfo.element, targetElement) &&
-                !common.checkElement(unit.style.styleInfo.element2, targetElement)
+                !common.checkElement(unit.style.styleInfo.element, unit.style.styleInfo.element2, targetElement)
             ) {
                 targetList.splice(i, 1);
             }

@@ -162,8 +162,8 @@ export const getRangeName = (rangeArea) => {
 }
 
 // 属性判定
-export const checkElement = (element, targetElement) => {
-    if (element === undefined || element === null) {
+export const checkElement = (element1, element2, targetElement) => {
+    if (element1 === undefined || element1 === null) {
         return false;
     }
 
@@ -174,10 +174,10 @@ export const checkElement = (element, targetElement) => {
         case ELEMENT.THUNDER:
         case ELEMENT.LIGHT:
         case ELEMENT.DARK:
-            if (element === ELEMENT.VOID) {
+            if (element1 === ELEMENT.VOID) {
                 return true;
             }
-            return element === targetElement;
+            return element1 === targetElement || element2 === targetElement;
 
         case ELEMENT.NOT_NORMAL:
         case ELEMENT.NOT_FIRE:
@@ -185,23 +185,24 @@ export const checkElement = (element, targetElement) => {
         case ELEMENT.NOT_THUNDER:
         case ELEMENT.NOT_LIGHT:
         case ELEMENT.NOT_DARK:
-            if (element === ELEMENT.VOID) {
+            if (element1 === ELEMENT.VOID) {
                 return false;
             }
-            return element !== targetElement - 10;
+            const notElement = targetElement - 10;
+            return element1 !== notElement && element2 !== notElement;
 
         case ELEMENT.OTHER_FIRE:
         case ELEMENT.OTHER_ICE:
         case ELEMENT.OTHER_THUNDER:
         case ELEMENT.OTHER_LIGHT:
         case ELEMENT.OTHER_DARK:
-            if (element === 0) {
+            if (element1 === 0) {
                 return false;
             }
-            return element !== targetElement - 20;
+            return element1 !== targetElement - 20;
 
         case undefined:
-            return element > 0 && element <= 5;
+            return element1 > 0 && element1 <= 5;
 
         default:
             return false;
