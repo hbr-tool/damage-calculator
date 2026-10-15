@@ -1,6 +1,7 @@
 import React from 'react';
 import frend from 'assets/img/frend.png';
 import AmazonButton from './AmazonButton';
+import Calendar from './Calendar.js';
 
 const Index = () => {
 
@@ -8,12 +9,15 @@ const Index = () => {
     <>
       <div className="frame static w-screen index-page overflow-y-scroll">
         <div className="flex">
-          <div className="p-6 max-w-[900px] mx-auto">
+          <div className="p-6 max-w-[1000px] mx-auto">
             <h1 className="text-4xl font-bold">このサイトについて</h1>
             <p>
               このサイトは、 ヘブバン(ヘブンバーンズレッド)をプレイしていく上で、
             </p>
             <p>役立つツールを提供しています。</p>
+            <div className="pb-12">
+              <Calendar />
+            </div>
             <h2 className="text-2xl font-bold mt-2">ダメージ計算ツール</h2>
             <p>与ダメージの自動計算ツールです。</p>
             <p>以下のサイトの情報に基づき、計算しています。</p>
@@ -52,7 +56,7 @@ const Index = () => {
             <div>
               <p>また、招待コードを置いておきますので、良ければ使用してください。</p>
               <p className="font-bold ml-2">2a7adc6ps3n0ib1s</p>
-              <img src={frend} alt='招待コード'/>
+              <img src={frend} alt='招待コード' />
             </div>
           </div>
         </div>
