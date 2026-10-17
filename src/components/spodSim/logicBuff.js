@@ -72,6 +72,12 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
             }
             effectDesc = `禍+${effectInfo.effect_size}`;
             break;
+        case EFFECT.VENOM: // 猛毒
+            executeEffect = () => {
+                addVenomDebuffUnit(turnData.enemyDebuffList, effectInfo, useUnitData);
+            }
+            effectDesc = `猛毒+${effectInfo.effect_size}`;
+            break;
         case EFFECT.LNFANTILIZED: // 幼児退行
             executeEffect = () => {
                 addLnfantilizedDebuffUnit(turnData.enemyDebuffList, effectInfo, useUnitData);
@@ -196,7 +202,7 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
     }
 
     let rangeName = common.getRangeName(effectInfo.range_area);
-    let conditionName = common.getConditionName(effectInfo.target_element, effectInfo.conditions, Number(effectInfo.conditions_id));
+    let conditionName = logic.getConditionName(effectInfo.target_element, effectInfo.conditions, Number(effectInfo.conditions_id));
     let log = `　${conditionName}${effectDesc}`;
     if (rangeName) {
         log = `　${conditionName}${rangeName}に${effectDesc}`;
@@ -299,6 +305,23 @@ export const addDisasterDebuffUnit = (debuffList, skillEffectInfo, useUnitData) 
     } else {
         debuff = createBuffData(skillEffectInfo, useUnitData);
         debuff.buff_no = BUFF.DISASTER;
+        debuff.lv = 0;
+        debuffList.push(debuff);
+    }
+    debuff.lv = Math.min(debuff.lv + skillEffectInfo.effect_size, 10);
+}
+
+// 猛毒デバフ追加
+export const addVenomDebuffUnit = (debuffList, skillEffectInfo, useUnitData) => {
+    let existList = debuffList.filter(function (buffInfo) {
+        return buffInfo.buff_no === BUFF.VENOM;
+    });
+    let debuff;
+    if (existList.length > 0) {
+        debuff = existList[0];
+    } else {
+        debuff = createBuffData(skillEffectInfo, useUnitData);
+        debuff.buff_no = BUFF.VENOM;
         debuff.lv = 0;
         debuffList.push(debuff);
     }

@@ -182,6 +182,7 @@ export const BUFF = {
     LIGHT_MARK: 49, // 光の印
     DARK_MARK: 50, // 闇の印
     DISASTER: 51, // 禍
+    VENOM: 52, // 猛毒
     STEAK: 53, // ステーキ
     GELATO: 54, // ジェラート
     UNDERMINE: 55, // 蝕
@@ -213,14 +214,14 @@ export const EFFECT = {
     HEALDP: 13, // DP回復
     OVERDRIVEPOINTUP: 14, // ODアップ
     COST_SP_DOWN: 15, // 消費SPダウン
-    MORALE: 16, // 士気
+    MORALE: 16, // 士気 TODOバフに統合
     GIVEATTACKBUFFUP: 17, // 攻撃力バフ強化
     GIVEDEFFENCEDEBUFFUP: 18, // 防御力デバフ強化
     GIVEDEBUFFUP: 19, // デバフ強化
     BREAK_GUARD: 20, // ブレイクガード
     STUN: 21, // スタン
     GRANT_DEBUFF: 22, // デバフ付与
-    DISASTER: 23, // 禍
+    DISASTER: 23, // 禍 TODOデバフに統合
     LNFANTILIZED: 24, // 幼児退行
     STATUSUP_ALL_VALUE: 25, // 能力上昇(固定)
     STATUSUP_RATE: 26, // 能力上昇(%)
@@ -243,6 +244,7 @@ export const EFFECT = {
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
     COST_SP_UP: 56, // 消費SPアップ
+    VENOM: 57, // 猛毒 TODOデバフに統合
     DISPEL: 90, // ディスペル
 }
 
@@ -348,7 +350,6 @@ export const CONDITIONS = {
     SELECT_31A: 37, // 31A選択
     SELECT_CHARA: 38, // 特定キャラを選択
     CAMP_DEPLOYMENT: 40, // 陣展開中
-    // FIELD_NOT_FIRE: 41, // 火属性以外フィールド
     USE_SKILL: 41, // スキル使用
     NOT_HAS_BUFF: 42, // バフ発動中以外
     NOT_DIVA_BLESS: 43, // 歌姫の加護以外 TODO
@@ -372,6 +373,9 @@ export const CONDITIONS = {
     DP_UNDER_50: 61, // DP50％以下
     LNFANTILIZED_OVER_LV: 62, // 幼児退行レベル以上
     IMMERSION_STATE: 63, // 没入状態
+    IS_WEAK_ELEMENT: 64, // 耐性が弱点
+    HAS_DEFFENCE_DEBUFF: 65, // 防御デバフ含む
+    HAS_VENOM_DEBUFF: 66, // 猛毒デバフ含む
 }
 
 /** 敵リスト*/

@@ -20,9 +20,12 @@ const ScoreSetting = ({ state, dispatch, enemyClass }) => {
     }, [enemyInfo.sub_no]);
     /* eslint-enable react-hooks/exhaustive-deps */
 
-    let filteredGrade = scoreGrade.filter((obj) => obj.score_attack_no === enemyInfo.sub_no);
+    // スコアタNoが900以上の場合は900にする(EX)
+    const scoreAttackNo = Number(enemyInfo.sub_no) > 900 ? 900 : Number(enemyInfo.sub_no);
+
+    let filteredGrade = scoreGrade.filter((obj) => obj.score_attack_no === scoreAttackNo);
     const uniqueHalf = [...new Set(filteredGrade.map(item => item.half))];
-    let filteredBonus = bonusList.filter((obj) => obj.score_attack_no === enemyInfo.sub_no && (obj.half === 0 || obj.half === selectHalf));
+    let filteredBonus = bonusList.filter((obj) => obj.score_attack_no === scoreAttackNo && (obj.half === 0 || obj.half === selectHalf));
 
     let halfGrade = filteredGrade.filter((obj) => obj.half === selectHalf);
 

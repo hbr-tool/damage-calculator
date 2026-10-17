@@ -230,7 +230,7 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
         if (effectDesc) {
             let rangeName = common.getRangeName(ability.range_area);
             let charaName = common.getCharaData(unitData.style.styleInfo.chara_id).chara_short_name;
-            let conditionName = common.getConditionName(ability.target_element, ability.conditions, Number(ability.conditions_id));
+            let conditionName = logic.getConditionName(ability.target_element, ability.conditions, Number(ability.conditions_id));
             let log = `${charaName}：${abilityName}(${conditionName}${effectDesc})が発動`;
             if (rangeName) {
                 log = `${charaName}：${abilityName}(${conditionName}${rangeName}に${effectDesc})が発動`;

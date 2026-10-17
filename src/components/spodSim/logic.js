@@ -1,9 +1,9 @@
 import {
-    ABILIRY_TIMING, KB_NEXT
+    ABILIRY_TIMING, KB_NEXT, ELEMENT_NAME
 } from "./const";
 import {
     CHARA_ID, SKILL_ID, ABILITY_ID, ELEMENT, BUFF, EFFECT, RANGE, FIELD, CONDITIONS, ATTRIBUTE, KIND,
-    ALONE_ACTIVATION_BUFF_NO, COST_TYPE, changeStyle
+    ALONE_ACTIVATION_BUFF_NO, COST_TYPE, changeStyle, CAMP
 } from "utils/const";
 import * as constants from "utils/const";
 import * as common from "utils/common";
@@ -413,20 +413,23 @@ const skillActivation = (skillInfo, unitData, turnData, autoPursuitUnit, spCost)
     const effectList = getSkillEffectList(skillId, turnData, unitData);
 
     let isSkill = false;
+    let isActive = false;
     let attackInfo;
 
     switch (skillInfo.skill_attribute) {
-        case ATTRIBUTE.NORMAL_ATTACK:
+        case ATTRIBUTE.NORMAL_ATTACK:   // 通常攻撃
             attackInfo = { "attack_id": 0, "attack_element": unitData.normalAttackElement };
             break;
-        case ATTRIBUTE.IMMERSION:
+        case ATTRIBUTE.IMMERSION:   // 没入
             unitData.immersion = skillInfo.skill_element;
             break;
-        case ATTRIBUTE.COMMAND_ACTION:
-        case ATTRIBUTE.NOT_ACTION:
+        case ATTRIBUTE.COMMAND_ACTION:  // 指揮行動
+        case ATTRIBUTE.NOT_ACTION:  // 行動無し
             break;
         default:
+            // アクティブスキル
             attackInfo = getSkillIdToAttackInfo(turnData, unitData, skillInfo.skill_id);
+            isActive = true;
             break;
     }
 
@@ -458,15 +461,10 @@ const skillActivation = (skillInfo, unitData, turnData, autoPursuitUnit, spCost)
         // バフ消費
         logicBuff.consumeBuffUnit(turnData, unitData, attackInfo, skillInfo);
 
-        // アビリティ(スキル使用)
+        // アビリティ(攻撃スキル使用)
         logicAbility.abilityActionUnit(turnData, ABILIRY_TIMING.SKILL_USE, unitData);
 
         if (attackInfo.attack_id !== 0) {
-            // フレッダメンテ特殊処理
-            if (skillId !== SKILL_ID.FREDDAMENTE || turnData.camp === 2) {
-                // アビリティ(アクティブスキル使用)
-                logicAbility.abilityActionUnit(turnData, ABILIRY_TIMING.ACTIVE_SKILL_USE, unitData);
-            }
             isSkill = true;
         }
         if (skillInfo.skill_kind === KIND.EX_GENERATE || skillInfo.skill_kind === KIND.EX_EXCLUSIVE) {
@@ -474,6 +472,14 @@ const skillActivation = (skillInfo, unitData, turnData, autoPursuitUnit, spCost)
             logicAbility.abilityActionUnit(turnData, ABILIRY_TIMING.EX_SKILL_USE, unitData);
             // EXスキル使用時は、没入状態解除
             unitData.immersion = 0;
+        }
+    }
+
+    if (isActive) {
+        // フレッダメンテ特殊処理
+        if (skillId !== SKILL_ID.FREDDAMENTE || turnData.camp === 2) {
+            // アビリティ(アクティブスキル使用)
+            logicAbility.abilityActionUnit(turnData, ABILIRY_TIMING.ACTIVE_SKILL_USE, unitData);
         }
     }
 
@@ -902,15 +908,29 @@ export const judgmentCondition = (info, turnData, unitData, skillId) => {
             let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
             let attackInfo = getSkillIdToAttackInfo(turnData, unitData, unitData.selectSkillId);
             return isWeak(turnData.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)
+        case CONDITIONS.IS_WEAK_ELEMENT: // 耐性が弱点
+            return turnData.enemyInfo[`element_${conditionsId}`] > 100;
         case CONDITIONS.CAMP_DEPLOYMENT: // 陣展開
             return turnData.camp === conditionsId;
         case CONDITIONS.IMMERSION_STATE: // 没入状態
             return common.checkElement(unitData.immersion, null, conditionsId);
+        case CONDITIONS.HAS_DEFFENCE_DEBUFF: // 防御デバフ含む
+            return isEffectHas(skillId, turnData, unitData,
+                [`${EFFECT.GRANT_DEBUFF}-${BUFF.DEFENSEDOWN}`, `${EFFECT.GRANT_DEBUFF}-${BUFF.ETERNAL_DEFENSEDOWN}`]);
+        case CONDITIONS.HAS_VENOM_DEBUFF: // 猛毒デバフ含む
+            return isEffectHas(skillId, turnData, unitData, [`${EFFECT.VENOM}-${0}`]);
         default:
             break;
     }
     return true;
 }
+
+const isEffectHas = (skillId, turnData, unitData, targetList) => {
+    return getSkillEffectList(skillId, turnData, unitData).some(
+        effectInfo =>
+            targetList.includes(`${effectInfo.effect_type}-${effectInfo.effect_no || "0"}`)
+    );
+};
 
 export const getFieldElement = (turnData) => {
     let field_element = Number(turnData.field);
@@ -1599,4 +1619,120 @@ export const getFunnelList = (unit) => {
         return !item.useFunnel || isAloneActivation(item) || (item.activation_place && item.first_only !== 1);
     })
     return resultList;
+}
+
+// 条件の名称を取得
+export const getConditionName = (targetElement, conditions, conditionsId) => {
+    switch (targetElement) {
+        case ELEMENT.FIRE:
+            return "火属性スタイルの";
+        case ELEMENT.ICE:
+            return "氷属性スタイルの";
+        case ELEMENT.THUNDER:
+            return "雷属性スタイルの";
+        case ELEMENT.LIGHT:
+            return "光属性スタイルの";
+        case ELEMENT.DARK:
+            return "闇属性スタイルの";
+        default:
+            break;
+    }
+
+    if (!conditions) return "";
+    switch (Number(conditions)) {
+        case CONDITIONS.FIRST_TURN:
+            return `1ターン目のみ`;
+        case CONDITIONS.SKILL_INIT:
+            return `初回のみ`;
+        case CONDITIONS.ADDITIONAL_TURN:
+            return `追加ターン中`;
+        case CONDITIONS.OVER_DRIVE:
+            return `オーバードライブ中`;
+        case CONDITIONS.DESTRUCTION_OVER_200:
+            return `破壊率200%以上の時`;
+        case CONDITIONS.BREAK:
+            return `ブレイク時`;
+        case CONDITIONS.PERCENTAGE_30:
+            return `確率30%で`;
+        case CONDITIONS.BUFF_DISPEL:
+            return `バフ解除時`;
+        case CONDITIONS.FIELD_NONE:
+            return `フィールド無しの時`;
+        case CONDITIONS.FIELD_ELEMENT:
+            return `属性フィールド展開中の時`;
+        case CONDITIONS.HAS_ABILITY:
+            const ability = common.getAbilityInfo(conditionsId);
+            return `${ability.ability_name}が発動している時`;
+        case CONDITIONS.HAS_SHADOW:
+            return `影分身の時`;
+        case CONDITIONS.HAS_DODGE:
+            return `回避状態の時`;
+        case CONDITIONS.TOKEN_OVER:
+            return `トークンが${conditionsId}個以上の時`;
+        case CONDITIONS.TOKEN_COST_OVER:
+            return `トークンが${conditionsId}個以上の時`;
+        case CONDITIONS.SARVANT_OVER:
+            return `山脇様のしもべ${conditionsId}人以上の時`;
+        case CONDITIONS.NOT_ADDITIONAL_TURN:
+            return `追加ターン中でない時`;
+        case CONDITIONS.MORALE_OVER_LV:
+            return `士気Lv${conditionsId}以上の時`;
+        case CONDITIONS.LNFANTILIZED_OVER_LV:
+            return `幼児退行Lv${conditionsId}以上の時`;
+        case CONDITIONS.OVER_31C_3:
+            return `31Cが3人以上の時`;
+        case CONDITIONS.SELECT_31A:
+            return `31Aを選択した時`;
+        case CONDITIONS.SELECT_CHARA:
+            const chara = getCharaData(conditionsId);
+            return `${chara.chara_short_name}を選択した時`;
+        case CONDITIONS.NOT_DIVA_BLESS:
+            return `歌姫の加護でない時`;
+        case CONDITIONS.MOTIVATION:
+            const motivation = ["絶不調", "不調", "普通", "好調", "絶好調"][conditionsId];
+            return `やる気が${motivation}以上の時`;
+        case CONDITIONS.ICE_STYLE:
+            return `氷属性スタイルの味方${conditionsId}人以上の時`;
+        case CONDITIONS.THUNDER_STYLE:
+            return `雷属性スタイルの味方${conditionsId}人以上の時`;
+        case CONDITIONS.FIRE_STYLE:
+            return `火属性スタイルの味方${conditionsId}人以上の時`;
+        case CONDITIONS.LIGHT_STYLE:
+            return `光属性スタイルの味方${conditionsId}人以上の時`;
+        case CONDITIONS.DARK_STYLE:
+            return `闇属性スタイルの味方${conditionsId}人以上の時`;
+        case CONDITIONS.HAS_BUFF_TARGET:
+            return `${common.getBuffKind(conditionsId).buff_name}発動中の`;
+        case CONDITIONS.HAS_BUFF:
+            return `${common.getBuffKind(conditionsId).buff_name}状態の時`;
+        case CONDITIONS.SP_UNDER:
+            return `SPが${conditionsId}以下の時`;
+        case CONDITIONS.SP_OVER:
+            return `SPが${conditionsId}以上の時`;
+        case CONDITIONS.ENEMY_COUNT:
+            return `敵の数が${conditionsId}の時`;
+        case CONDITIONS.USE_COUNT:
+            return `使用回数が${conditionsId}回以上の時`;
+        case CONDITIONS.IS_WEAK:
+            return `弱点をついた時`;
+        case CONDITIONS.IS_WEAK_ELEMENT:
+            const elementName = ELEMENT_NAME[conditionsId];
+            return `${elementName}耐性が弱点の時`;
+        case CONDITIONS.OD_UNDER:
+            return `OverDriveゲージが${conditionsId}%以下の時`;
+        case CONDITIONS.OD_OVER:
+            return `OverDriveゲージが${conditionsId}%以上の時`;
+        case CONDITIONS.CAMP_DEPLOYMENT:
+            if (conditionsId === 0) {
+                return `陣が展開されていない時`;
+            } else {
+                return `${CAMP[conditionsId]}展開中のとき`;
+            }
+        case CONDITIONS.HAS_DEFFENCE_DEBUFF:
+            return `防御力ダウンを含むアクティブスキルを使用した時`;
+        case CONDITIONS.HAS_VENOM_DEBUFF:
+            return `猛毒を含むアクティブスキルを使用した時`;
+        default:
+            return conditions;
+    }
 }

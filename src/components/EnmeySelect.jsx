@@ -3,19 +3,9 @@ import { ENEMY_CLASS } from "utils/const";
 import enemyList from "data/enemyList";
 
 const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => {
-    const handleClassChange = (newClass) => {
-        localStorage.setItem("enemy_class", newClass);
-        localStorage.setItem("enemy_select", "1");
-        handleChange(Number(newClass), 1);
-    };
-
-    const handleSelectChange = (newSelect) => {
-        localStorage.setItem("enemy_select", newSelect);
-        handleChange(Number(enemyClass), Number(newSelect));
-    };
+    const reverseClass = [ENEMY_CLASS.SCORE_ATTACK, ENEMY_CLASS.SCORE_ATTACK_EX, ENEMY_CLASS.EVENT_PRISMATIC];
 
     let classList = enemyList.filter((obj) => obj.enemy_class === enemyClass);
-    const reverseClass = [ENEMY_CLASS.SCORE_ATTACK, ENEMY_CLASS.EVENT_PRISMATIC];
     if (reverseClass.includes(Number(enemyClass))) {
         classList.reverse();
     }
@@ -23,6 +13,23 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
     if (!enemyInfo) {
         enemyInfo = enemyList[0];
     }
+
+    const handleClassChange = (newClass) => {
+        localStorage.setItem("enemy_class", newClass);
+        const newClassList = enemyList.filter((obj) => obj.enemy_class === Number(newClass));
+        if (reverseClass.includes(Number(newClass))) {
+            newClassList.reverse();
+        }
+        let selectNum = newClassList[0].enemy_class_no;
+        localStorage.setItem("enemy_select", selectNum);
+        handleChange(Number(newClass), Number(selectNum));
+    };
+
+    const handleSelectChange = (newSelect) => {
+        localStorage.setItem("enemy_select", newSelect);
+        handleChange(Number(enemyClass), Number(newSelect));
+    };
+
 
     // 敵保存ボタンクリック
     const clickEnemySave = () => {

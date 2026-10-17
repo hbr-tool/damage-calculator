@@ -10,7 +10,7 @@ export const DAMAGE_LIMIT = {
     0.003: [0, 16_954_207, 19_239_424, 21_524_637, 23_809_853, 26_095_066, 29_142_019, 32_188_972, 35_235_925, 38_282_878, 42_091_571, 45_900_260, 49_708_953, 53_517_646, 58_088_075, 62_658_505, 67_228_934, 72_561_100, 77_893_269, 83_987_175, 90_081_081],
 }
 export const TURN_BONUS = [0.00, 1.30, 1.29, 1.28, 1.27, 1.26, 1.24, 1.23, 1.22, 1.21, 1.20, 1.19, 1.18, 1.17, 1.16, 1.15, 1.14, 1.13, 1.12, 1.11, 1.10, 1.09, 1.08, 1.07, 1.06, 1.05, 1.04, 1.03, 1.02, 1.01, 1.00];
-const score_attack_list = [
+const scoreAttackList = [
     {
         "score_attack_no": 91, "enemy_count": 1, "max_damage_rate": 0.0180,
         "dp_rate": { 21: 235827, 26: 409748, 31: 670630, 36: 1061953, 39: 1465134, 40: 1560000 },
@@ -77,6 +77,11 @@ const score_attack_list = [
         "hp_rate": { 21: 17033597, 26: 30557543, 31: 50843461, 36: 81272338, 39: 112623302, 40: 120000000 },
     },
     {
+        "score_attack_no": 104, "enemy_count": 1, "max_damage_rate": 0.0130,
+        "dp_rate": { 21: 260605, 26: 453600, 31: 743093, 36: 1177332, 39: 1624730, 40: 1730000 },
+        "hp_rate": { 21: 21986030, 26: 39456522, 31: 65662259, 36: 104970865, 39: 145470641, 40: 155000000 },
+    },
+    {
         "score_attack_no": 900, "enemy_count": 1, "level_bonus": 100_000, "max_limit_value": 2_000_000_000,
     },
     {
@@ -88,12 +93,15 @@ const score_attack_list = [
     {
         "score_attack_no": 903, "enemy_count": 1, "level_bonus": 100_000, "max_limit_value": 2_000_000_000,
     },
+    {
+        "score_attack_no": 904, "enemy_count": 1, "level_bonus": 100_000, "max_limit_value": 1_485_485_485,
+    },
 ];
 
 // スコアタ情報取得
 export function getScoreAttack(score_attack_no) {
-    const filtered_score_attack = score_attack_list.filter((obj) => obj.score_attack_no === score_attack_no);
-    return filtered_score_attack.length > 0 ? filtered_score_attack[0] : undefined;
+    const filteredScoreAttack = scoreAttackList.filter((obj) => obj.score_attack_no === score_attack_no);
+    return filteredScoreAttack.length > 0 ? filteredScoreAttack[0] : undefined;
 }
 
 // スコアタHP取得

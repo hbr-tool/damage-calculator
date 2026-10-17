@@ -96,6 +96,7 @@ const OtherSetting = ({ attackInfo, enemyClass, otherSetting, setOtherSetting, b
                         <option value="20">-20</option>
                         <option value="70">-70</option>
                         <option value="100">-100</option>
+                        <option value="130">-130</option>
                     </select>
                 </div>
             </div>
