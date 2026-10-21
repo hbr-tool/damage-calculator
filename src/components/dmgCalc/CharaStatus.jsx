@@ -18,6 +18,8 @@ const CharaStatus = ({ argument }) => {
         attackInfo,
         selectBuffKeyMap,
         buffSettingMap,
+        otherSetting,
+        setOtherSetting,
     } = argument;
     const { styleList, setStyleList, saveStyle, loadStyle,
         setMember, loadTroops, removeMember, setLastUpdatedIndex } = useStyleList();
@@ -56,6 +58,7 @@ const CharaStatus = ({ argument }) => {
         let selectTroops = e.target.value;
         localStorage.setItem('select_troops', selectTroops);
         loadTroops(selectTroops);
+        setOtherSetting({ ...otherSetting, collect: { ...otherSetting.collect, statDown: 0, fightingspirit: true } });
     }
 
     // 部隊名変更

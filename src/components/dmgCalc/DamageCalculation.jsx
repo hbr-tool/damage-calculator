@@ -350,7 +350,7 @@ const DamageCalculation = () => {
     }, [attackInfo?.attack_id, selectList, supportList]);
 
     const argument = {
-        styleList, state, dispatch, otherSetting,
+        styleList, state, dispatch, otherSetting, setOtherSetting,
         attackInfo, setAttackInfo,
         selectAttackSkillLv, setSelectAttackSkillLv,
         selectBuffKeyMap, setSelectBuffKeyMap,
