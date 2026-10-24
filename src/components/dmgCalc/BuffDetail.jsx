@@ -388,40 +388,35 @@ const BuffDetail = ({ argument, buffInfo, index, closeModal }) => {
 }
 
 const getBuffEffectDisplay = (effect, skillLv, effectType) => {
-    let minPower;
-    let maxPower;
     const buffEffect = common.getBuffEffectType(effect.effect_no, effectType);
-    const skillMin = buffEffect.effect_size ?? effect.effect_size ?? effect.min_power;
-    const skillMax = buffEffect.effect_size ?? effect.effect_size ?? effect.max_power;
+
     switch (effect.effect_type) {
         case EFFECT.FIELD_DEPLOYMENT:
             return `${effect.effect_size.toLocaleString()}%`;
         case EFFECT.GRANT_BUFF:
-            switch (effect.effect_no) {
-                case BUFF.FUNNEL:
-                    const unit = effect.effect_size;
-                    const effectCount = effect.effect_count;
-                    return `${unit}%×${effectCount}Hit`
-                default:
-                    minPower = skillMin * (1 + 0.03 * (skillLv - 1));
-                    maxPower = skillMax * (1 + 0.02 * (skillLv - 1));
-                    if (minPower === maxPower) {
-                        return `${minPower.toLocaleString()}%`
-                    } else {
-                        return `${minPower.toLocaleString()}%～${maxPower.toLocaleString()}%`
-                    }
+            if (effect.effect_no === BUFF.FUNNEL) {
+                return `${effect.effect_size}%×${effect.effect_count}Hit`;
             }
+            return getPowerDisplay(effect, buffEffect, skillLv, 0.03, 0.02,);
         case EFFECT.GRANT_DEBUFF:
-            minPower = skillMin * (1 + 0.05 * (skillLv - 1));
-            maxPower = skillMax * (1 + 0.02 * (skillLv - 1));
-            if (minPower === maxPower) {
-                return `${minPower.toLocaleString()}%`
-            } else {
-                return `${minPower.toLocaleString()}%～${maxPower.toLocaleString()}%`
-            }
+            return getPowerDisplay(effect, buffEffect, skillLv, 0.05, 0.02,);
         default:
-            break;
+            return;
     }
-}
+};
+
+const getPowerDisplay = (effect, buffEffect, skillLv, minRate, maxRate) => {
+    const baseMin = buffEffect.effect_size ?? effect.effect_size ?? effect.min_power;
+    const baseMax = buffEffect.effect_size ?? effect.effect_size ?? effect.max_power;
+
+    const minPower = baseMin * (1 + minRate * (skillLv - 1));
+    const maxPower = baseMax * (1 + maxRate * (skillLv - 1));
+
+    if (minPower === maxPower) {
+        return `${minPower.toLocaleString()}%`;
+    }
+
+    return `${minPower.toLocaleString()}%～${maxPower.toLocaleString()}%`;
+};
 
 export default BuffDetail;
