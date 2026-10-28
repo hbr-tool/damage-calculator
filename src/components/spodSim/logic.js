@@ -316,6 +316,9 @@ export function startAction(turnData) {
 // 行動処理
 const actionProc = (turnData) => {
     turnData.setLog(`＝＝＝＝＝＝＝＝＝＝行動開始＝＝＝＝＝＝＝＝＝＝`);
+    // 追加ターン判定含めた処理順
+    const seq = sortActionSeq(turnData);
+
     // 追加ターンフラグ削除
     if (turnData.additionalTurn) {
         turnData.additionalTurn = false;
@@ -327,7 +330,6 @@ const actionProc = (turnData) => {
             }
         }, turnData.unitList);
     }
-    const seq = sortActionSeq(turnData);
 
     // 自動追撃を事前検知
     const autoPursuitUnit = getAutoPursuitUnit(turnData);
@@ -1052,15 +1054,15 @@ const sortActionSeq = (turnData) => {
         let placeNo = unit.placeNo;
         // 前衛以外
         if (skill_id === 0 || 3 <= placeNo) {
-            return true;
+            return;
         }
         // 追加ターン以外
         if (turnData.additionalTurn && !unit.additionalTurn) {
-            return true;
+            return;
         }
         // 行動不能
         if (checkBuffExist(unit.buffList, BUFF.RECOIL)) {
-            return true;
+            return;
         }
         let skillInfo = getSkillData(skill_id);
         let skillData = {
