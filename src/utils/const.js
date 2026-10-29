@@ -302,6 +302,7 @@ export const ATTRIBUTE = {
     COMMAND_ACTION: 3, // 指揮行動
     PURSUIT_ONLY: 5, // 追撃のみ発動可能
     IMMERSION: 6, // 没入
+    INCLUDE_HIT: 7, // HITありスキル
     SP_HALF: 11, // SP消費半減
     SP_ZERO: 12, // SP消費0
     SP_MITIGATION_3: 13, // SP消費軽減3

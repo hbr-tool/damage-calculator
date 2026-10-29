@@ -59,6 +59,7 @@ const buffKind = [
     {"buff_kbn":63,"replace_name":"LNFANTILIZED","buff_name":"幼児退行","buff_icon":"IconLnfantilized","duplication":0},
     {"buff_kbn":64,"replace_name":"SPRIGHTLY","buff_name":"軽快","buff_icon":"IconSprightly","duplication":1},
     {"buff_kbn":65,"replace_name":"SPRIGHTLY","buff_name":"軽快(小)","buff_icon":"IconSprightly","duplication":1},
+    {"buff_kbn":66,"replace_name":"","buff_name":"刻印","buff_icon":"IconInscription","duplication":0},
     {"buff_kbn":101,"replace_name":"CAMP_ATTACKUP","buff_name":"攻撃アップ","buff_icon":"IconBuffAttack","duplication":0},
     {"buff_kbn":116,"replace_name":"ABILITY_FUNNEL","buff_name":"連撃","buff_icon":"IconFunnel","duplication":1},
 ];

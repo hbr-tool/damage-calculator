@@ -83,6 +83,7 @@ const buffEffect = [
     {"buff_kbn":63,"effect_type":2,"effect_size":90,"activation_place":3},
     {"buff_kbn":64,"effect_type":0,"activation_place":3,"ref_status_1":0,"ref_status_2":0},
     {"buff_kbn":65,"effect_type":0,"activation_place":3,"ref_status_1":0,"ref_status_2":0},
+    {"buff_kbn":66,"effect_type":0},
     {"buff_kbn":101,"effect_type":1,"effect_size":250,"activation_place":3,"ref_status_1":0,"ref_status_2":0},
     {"buff_kbn":116,"effect_type":0,"activation_place":3,"ref_status_1":5,"ref_status_2":0},
 ];

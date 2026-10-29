@@ -475,6 +475,11 @@ const skillActivation = (skillInfo, unitData, turnData, autoPursuitUnit, spCost)
             // EXスキル使用時は、没入状態解除
             unitData.immersion = 0;
         }
+    } else if (skillInfo.skill_attribute === ATTRIBUTE.INCLUDE_HIT) {
+        // 幽界ゴーストマーチ
+        const unitOdPlus = getUnitOverDrive(turnData, unitData, skillInfo, attackInfo, overDriveRateUp)
+        turnData.setLog(`　${unitOdPlus.before} OverDriveゲージ+${unitOdPlus.unitOdPlus.toFixed(2)}%`);
+        turnData.overDriveGauge += unitOdPlus.unitOdPlus;
     }
 
     if (isActive) {
@@ -595,6 +600,10 @@ const getUnitOverDrive = (turnData, unitData, skillInfo, attackInfo, overDriveRa
             unitOdPlus += calcODGain(3, 1, overDriveGaugeMultiplier, odRateUp);
         }
         before = "通常攻撃";
+    } else if (skillInfo.skill_attribute === ATTRIBUTE.INCLUDE_HIT) {
+        // 幽界ゴーストマーチ
+        unitOdPlus += calcODGain(15, 1, overDriveGaugeMultiplier, odRateUp, earring);
+        before = `スキル${15}HIT`;
     } else if (attackInfo) {
         // 攻撃IDの変換(暫定)
         let attackId = attackInfo.attack_id

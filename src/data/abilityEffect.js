@@ -181,6 +181,8 @@ const abilityEffect = [
     {"ability_id":416,"range_area":6,"activation_timing":0,"effect_type":4,"effect_size":30,"effect_count":0,"element":0,"conditions":""},
     {"ability_id":417,"range_area":6,"activation_timing":0,"effect_type":4,"effect_size":15,"effect_count":0,"element":0,"conditions":""},
     {"ability_id":418,"range_area":6,"activation_timing":0,"effect_type":4,"effect_size":30,"effect_count":0,"element":0,"conditions":""},
+    {"ability_id":419,"range_area":6,"activation_timing":0,"effect_type":4,"effect_size":10,"effect_count":0,"element":0,"conditions":""},
+    {"ability_id":420,"range_area":6,"activation_timing":0,"effect_type":4,"effect_size":25,"effect_count":0,"element":0,"conditions":""},
     {"ability_id":501,"range_area":7,"activation_timing":1,"effect_type":17,"effect_size":25,"element":0,"conditions":""},
     {"ability_id":502,"range_area":7,"activation_timing":1,"effect_type":18,"effect_size":25,"element":0,"conditions":""},
     {"ability_id":503,"range_area":7,"activation_timing":1,"effect_type":17,"effect_size":10,"element":0,"conditions":""},
@@ -312,6 +314,7 @@ const abilityEffect = [
     {"ability_id":1160,"range_area":6,"activation_timing":1,"effect_type":12,"effect_size":5,"element":0,"conditions":"62","conditions_id":10,"first_only":1},
     {"ability_id":1161,"range_area":6,"activation_timing":1,"effect_type":12,"effect_size":1,"element":0,"conditions":"15"},
     {"ability_id":1161,"range_area":7,"activation_timing":1,"effect_type":14,"effect_size":5,"element":0,"conditions":"15"},
+    {"ability_id":1162,"range_area":7,"activation_timing":0,"effect_type":22,"effect_no":66,"effect_size":-1,"element":0,"conditions":""},
     {"ability_id":1203,"range_area":7,"activation_timing":2,"effect_type":11,"effect_size":50,"effect_count":1,"element":0,"conditions":"DP100%以上"},
     {"ability_id":1204,"range_area":6,"activation_timing":1,"effect_type":12,"effect_size":1,"element":0,"conditions":"50","conditions_id":31},
     {"ability_id":1205,"range_area":99,"activation_timing":1,"effect_type":13,"effect_size":15,"element":0,"conditions":"50","conditions_id":31},
@@ -441,6 +444,7 @@ const abilityEffect = [
     {"ability_id":17001,"range_area":7,"activation_timing":17,"effect_type":28,"element":0,"conditions":"60"},
     {"ability_id":17002,"range_area":7,"activation_timing":17,"effect_type":28,"element":0,"conditions":"41","conditions_id":772,"first_only":1},
     {"ability_id":17003,"range_area":7,"activation_timing":17,"effect_type":28,"element":0,"conditions":"41","conditions_id":772},
+    {"ability_id":17003,"range_area":7,"activation_timing":17,"effect_type":28,"element":0,"conditions":"41","conditions_id":816},
 ];
 
 export default abilityEffect;
