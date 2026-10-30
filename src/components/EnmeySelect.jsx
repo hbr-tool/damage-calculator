@@ -52,6 +52,7 @@ const EnmeySelect = ({ enemyClass, enemySelect, handleChange, isFreeInput }) => 
                     <option value="3">時計塔(N)</option>
                     <option value="4">時計塔(H)</option>
                     <option value="5">宝珠の迷宮</option>
+                    {/* <option value="17">夢幻の螺旋</option> */}
                     <option value="6">スコアアタック</option>
                     <option value="16">スコアタEX</option>
                     {/* <option value="14">セラフ遭遇戦</option> */}
