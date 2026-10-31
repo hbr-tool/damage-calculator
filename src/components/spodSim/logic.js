@@ -916,9 +916,12 @@ export const judgmentCondition = (info, turnData, unitData, skillId) => {
             return checkPassiveExist(unitData.passiveSkillList, conditionsId);
         case CONDITIONS.IS_WEAK: // 弱点を突いている
             // 弱点のみ消費
-            let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
             let attackInfo = getSkillIdToAttackInfo(turnData, unitData, unitData.selectSkillId);
+            if (attackInfo) {
+                let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
             return isWeak(turnData.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)
+            }
+            return false;
         case CONDITIONS.IS_WEAK_ELEMENT: // 耐性が弱点
             return turnData.enemyInfo[`element_${conditionsId}`] > 100;
         case CONDITIONS.CAMP_DEPLOYMENT: // 陣展開
