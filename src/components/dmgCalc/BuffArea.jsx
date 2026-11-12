@@ -22,7 +22,8 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
         buffSettingMap, setBuffSettingMap,
         abilitySettingMap, setAbilitySettingMap,
         passiveSettingMap, setPassiveSettingMap,
-        attackUpBuffs, defDownBuffs, criticalBuffs
+        attackUpBuffs, defDownBuffs, criticalBuffs,
+        damageOption,
     } = argument;
 
     const { styleList } = useStyleList();
@@ -154,7 +155,8 @@ const BuffArea = ({ argument, attackCharaId, buffGroup, abilityList, passiveList
 
         setBuffSettingMap(updateMap);
         refBuffSettingMap.current = updateMap;
-    }, [styleList, state.enemyInfo, state.hard.tearsOfDreams, abilitySettingMap, passiveSettingMap, passiveList, resonanceList]);
+    }, [styleList, state.enemyInfo, state.hard.tearsOfDreams, abilitySettingMap, passiveSettingMap, passiveList, resonanceList, 
+        damageOption.attackUpEffectUp, damageOption.defenseDownEffectUp]);
 
     // スキルレベル変更
     const handleChangeSkillLv = (buffKindKey, buffKey, lv, index) => {

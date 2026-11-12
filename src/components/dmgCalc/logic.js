@@ -99,17 +99,17 @@ export function checkDuplicationChara(selectStyleList, searchCharaId) {
 }
 
 // 耐性判定
-export function getEnemyResist(attackInfo, state) {
+export const getEnemyResist = (attackInfo, state) => {
     const enemyInfo = state.enemyInfo;
     const correction = state.correction;
-    let physical_resist = enemyInfo[`physical_${attackInfo.attack_physical}`];
-    let element_resist = enemyInfo[`element_${attackInfo.attack_element}`]
+    let physicalResist = enemyInfo[`physical_${attackInfo.attack_physical}`] + state.physicalDown[attackInfo.attack_physical];
+    let elementResist = enemyInfo[`element_${attackInfo.attack_element}`]
         - correction[`element_${attackInfo.attack_element}`] + state.resistDown[attackInfo.attack_element];
     if (attackInfo.penetration) {
-        physical_resist = 100 + attackInfo.penetration;
-        element_resist = 100;
+        physicalResist = 100 + attackInfo.penetration;
+        elementResist = 100;
     }
-    return [physical_resist, element_resist];
+    return [physicalResist, elementResist];
 }
 
 // バフの絞り込み
@@ -411,6 +411,8 @@ function getStrengthen(argument, handlers, effect) {
                     const effectSize = resonanceEffect[`effect_limit_${limitCount}`];
                     strengthen += effectSize;
                 }, resonanceList, EFFECT.GIVEATTACKBUFFUP, argument, handlers);
+
+                strengthen += getDamageOption(argument, EFFECT.GIVEATTACKBUFFUP);
             }
             break;
         case EFFECT.GRANT_DEBUFF:
@@ -438,6 +440,7 @@ function getStrengthen(argument, handlers, effect) {
                     strengthen += effectSize;
                 }, resonanceList, EFFECT.GIVEDEFFENCEDEBUFFUP, argument, handlers);
 
+                strengthen += getDamageOption(argument, EFFECT.GIVEDEFFENCEDEBUFFUP);
             }
             // 防御ダウン以外のデバフスキル
             if ([BUFF.FRAGILE, BUFF.ETERNAL_FRAGILE, BUFF.ETERNAL_RESISTDOWN, BUFF.RESISTDOWN].includes(effect.effect_no)) {
@@ -514,7 +517,7 @@ export function getDamageResult(argument, selectSkillLv) {
     let funnelList = getSumFunnelEffectList(argument, handlers);
 
     let token = getSumTokenEffectSize(attackInfo, memberInfo);
-    let enemyDefenceRate = getEnemyDefenceRate(state);
+    let enemyDefenceRate = getEnemyDefenceRate(argument);
     let overdrive = 1;
     if (enemyInfo.enemy_class !== constants.ENEMY_CLASS.SCORE_ATTACK_EX) {
         overdrive = 1 + Number(otherSetting.overdrive) / 10;
@@ -735,7 +738,11 @@ export function calcAttackEffectSize(attackInfo, status, enemyStat, skillLv, jew
 // 効果量合計
 export function getSumEffectSize(argument, grant, effectType) {
     const {
-        selectBuffKeyMap, buffSettingMap, attackUpBuffs, defDownBuffs, criticalBuffs,
+        selectBuffKeyMap,
+        buffSettingMap,
+        attackUpBuffs,
+        defDownBuffs,
+        criticalBuffs
     } = argument;
     let effectSize = 0;
     let buffKindList = [];
@@ -759,8 +766,47 @@ export function getSumEffectSize(argument, grant, effectType) {
                 }
             })
         }
-    });
+    })
+
+    // 自由入力はバフ扱い
+    effectSize += getDamageOption(argument, effectType);
     return effectSize;
+}
+
+const getDamageOption = (argument, effectType) => {
+    const {
+        attackInfo,
+        damageOption,
+        state
+    } = argument;
+    const enemyInfo = state.enemyInfo;
+    const enemyClass = enemyInfo.enemy_class;
+    if (enemyClass === ENEMY_CLASS.VISIONARY_SPIRAL || enemyClass === ENEMY_CLASS.FREE_INPUT) {
+        switch (effectType) {
+            case EFFECT.ATTACKUP:
+                return damageOption.attackUp;
+            case EFFECT.CRITICALRATEUP:
+                return damageOption.criticalRateUp;
+            case EFFECT.CRITICAL_DAMAGE_UP:
+                return damageOption.criticalDamageUp;
+            case EFFECT.DAMAGERATEUP:
+                return damageOption.damageRateUp;
+            case EFFECT.GIVEATTACKBUFFUP:
+                return damageOption.attackUpEffectUp;
+            case EFFECT.GIVEDEFFENCEDEBUFFUP:
+                return damageOption.defenseDownEffectUp;
+            case EFFECT.PHYSICAL_DOWN:
+                return damageOption.physicalDown;
+            case EFFECT.RESISTDOWN:
+                if (attackInfo?.attack_element === ELEMENT.NORMAL) {
+                    return 0;
+                }
+                return damageOption.elementDown;
+            default:
+                break;
+        }
+    }
+    return 0;
 }
 
 // 合計バフ効果量取得
@@ -803,8 +849,65 @@ function getSumDebuffEffectSize(argument, handlers) {
 
 // 合計連撃効果量取得
 function getSumFunnelEffectList(argument, handlers) {
-    let funnelList = [];
-    const { selectBuffKeyMap, abilitySettingMap, passiveSettingMap } = argument;
+    // スキル連撃は最大2個分
+    const skillFunnelList = [];
+    // アビリティ連撃は単独発動
+    const abilityFunnelList = [];
+    const {
+        selectBuffKeyMap,
+        abilitySettingMap,
+        passiveSettingMap,
+        state,
+        damageOption
+    } = argument;
+    const {
+        enemyInfo
+    } = state;
+
+
+    // 連撃効果の追加
+    const addAbilityFunnel = (size, count) => {
+        const currentTotal = abilityFunnelList.reduce((sum, value) => sum + value, 0);
+        const newTotal = size * count;
+
+        // 今回の合計値が大きい場合は差し替え
+        if (newTotal > currentTotal) {
+            abilityFunnelList.length = 0;
+
+            for (let i = 0; i < count; i++) {
+                abilityFunnelList.push(size);
+            }
+        }
+    };
+
+    // 自由入力分
+    switch (enemyInfo?.enemy_class) {
+        case ENEMY_CLASS.VISIONARY_SPIRAL:
+        case ENEMY_CLASS.FREE_INPUT:
+            switch (damageOption.funnelUp) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                    addAbilityFunnel(25, damageOption.funnelUp);
+                    break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:
+                case 16:
+                    addAbilityFunnel(50, damageOption.funnelUp - 10);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
 
     // スキルデバフ合計
     const funnelKey = logicBuff.getBuffKey(EFFECT.GRANT_BUFF, BUFF.FUNNEL);
@@ -816,21 +919,15 @@ function getSumFunnelEffectList(argument, handlers) {
                 let buffId = Number(key[1]);
                 let buffInfo = common.getBuffIdToEffect(buffId);
                 if (buffInfo) {
-                    let loop = buffInfo.effect_count;
-                    let size = buffInfo.effect_size;
-                    for (let i = 0; i < loop; i++) {
-                        funnelList.push(size);
+                    for (let i = 0; i < buffInfo.effect_count; i++) {
+                        skillFunnelList.push(buffInfo.effect_size);
                     }
                 }
             } else {
                 let abilityId = Number(key[1]);
                 switch (abilityId) {
                     case ABILITY_ID.KISHIN:
-                        let loop = 3;
-                        let size = 25;
-                        for (let i = 0; i < loop; i++) {
-                            funnelList.push(size);
-                        }
+                        addAbilityFunnel(25, 3);
                         break;
                     default:
                         break;
@@ -842,24 +939,17 @@ function getSumFunnelEffectList(argument, handlers) {
 
     passiveLoop((passiveEffect) => {
         if (BUFF.ABILITY_FUNNEL === Number(passiveEffect.effect_no)) {
-            let size = passiveEffect.effect_size;
-            let loop = passiveEffect.effect_count;
-            for (let i = 0; i < loop; i++) {
-                funnelList.push(size);
-            }
+            addAbilityFunnel(passiveEffect.effect_size, passiveEffect.effect_count);
         }
     }, passiveSettingMap, [EFFECT.GRANT_BUFF], argument, handlers);
 
     abilityLoop((abilityEffect) => {
         if (BUFF.ABILITY_FUNNEL === Number(abilityEffect.effect_no)) {
-            let size = abilityEffect.effect_size;
-            let loop = abilityEffect.effect_count;
-            for (let i = 0; i < loop; i++) {
-                funnelList.push(size);
-            }
+            addAbilityFunnel(abilityEffect.effect_size, abilityEffect.effect_count);
         }
     }, abilitySettingMap, [EFFECT.GRANT_BUFF], argument, handlers);
 
+    const funnelList = skillFunnelList.concat(abilityFunnelList);
     // 降順でソート
     funnelList.sort(function (a, b) {
         return b - a;
@@ -1317,8 +1407,15 @@ function getFunnelEffectSize(effect) {
 }
 
 // 敵防御力取得
-function getEnemyDefenceRate(state) {
-    let enemyInfo = state.enemyInfo;
+function getEnemyDefenceRate(argument) {
+    const {
+        state,
+        damageOption
+    } = argument;
+    const {
+        enemyInfo
+    } = state;
+
     let enemyDefenceRate = 1;
     if (state.correction.defense_rate) {
         let count = 1;
@@ -1328,15 +1425,21 @@ function getEnemyDefenceRate(state) {
         }
         enemyDefenceRate = (1 - state.correction.defense_rate.size / 100) ** count;
     }
-    // スカルフェザー
-    if (enemyInfo?.enemy_class === ENEMY_CLASS.HARD_LAYER &&
-        (enemyInfo?.enemy_class_no === 12 || enemyInfo?.enemy_class_no === 13)) {
-        const defenceRate = 5 / 100;
-        enemyDefenceRate = (1 - defenceRate) ** state.hard.skullFeatherDeffense;
+    switch (enemyInfo?.enemy_class) {
+        case ENEMY_CLASS.HARD_LAYER:
+            // スカルフェザー
+            if (enemyInfo?.enemy_class_no === 12 || enemyInfo?.enemy_class_no === 13) {
+                const defenceRate = 5 / 100;
+                enemyDefenceRate = (1 - defenceRate) ** state.hard.skullFeatherDeffense;
+            }
+            break;
+        case ENEMY_CLASS.VISIONARY_SPIRAL:
+        case ENEMY_CLASS.FREE_INPUT:
+            enemyDefenceRate = damageOption.enemyDefenseRate / 100;
+            break;
+        default:
+            break;
     }
-    // if ($("#enemy_class").val() === ENEMY_CLASS.SERAPH_ENCOUNTER) {
-    //     enemy_defence_rate = getCardEffect("ATTACK_DOWN");
-    // }
     return enemyDefenceRate;
 }
 

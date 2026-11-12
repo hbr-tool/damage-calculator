@@ -158,6 +158,9 @@ const EnemyArea = ({ state, dispatch, attackInfo }) => {
                         if (attackInfo?.penetration && Number(key) === attackInfo?.attack_physical) {
                             // 貫通クリティカル
                             val = 100 + Number(attackInfo.penetration);
+                        } else {
+                            // 武器耐性ダウン
+                            val += state.physicalDown[key];
                         }
                         let addClass = val < 100 ? "enemy_resist" : val > 100 ? "enemy_weak" : "";
                         let select = attackInfo?.attack_physical === Number(key) ? " selected" : "";

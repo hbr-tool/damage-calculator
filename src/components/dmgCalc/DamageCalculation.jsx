@@ -26,6 +26,7 @@ const setEnemy = (state, action) => {
         superDown: false,
         correction: Object.fromEntries(Object.keys(state.correction).map(k => [k, 0])),
         resistDown: [0, 0, 0, 0, 0, 0],
+        physicalDown: [0, 0, 0, 0],
     };
 };
 
@@ -192,6 +193,15 @@ const reducer = (state, action) => {
             };
         }
 
+        case "SET_PHYSICAL_DOWN": {
+            const newPhysical = [0, 0, 0, 0];
+            newPhysical[action.element] = Number(action.value);
+            return {
+                ...state,
+                physicalDown: newPhysical,
+            };
+        }
+
         default: return state;
     }
 };
@@ -266,6 +276,7 @@ const DamageCalculation = () => {
             bonusElement: [false, false, false, false, false, false],
         },
         resistDown: [0, 0, 0, 0, 0, 0],
+        physicalDown: [0, 0, 0, 0],
     };
     const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -282,6 +293,18 @@ const DamageCalculation = () => {
             fightingspirit: false,
             statDown: "0",
         },
+    });
+    const [damageOption, setDamageOption] = useState({
+        attackUp: 0,
+        criticalRateUp: 0,
+        criticalDamageUp: 0,
+        attackUpEffectUp: 0,
+        defenseDownEffectUp: 0,
+        damageRateUp: 0,
+        physicalDown: 0,
+        elementDown: 0,
+        funnelUp: 0,
+        enemyDefenseRate: 100,
     });
 
     const bulkSetting = (collect) => {
@@ -357,6 +380,7 @@ const DamageCalculation = () => {
         buffSettingMap, setBuffSettingMap,
         abilitySettingMap, setAbilitySettingMap,
         passiveSettingMap, setPassiveSettingMap,
+        damageOption, setDamageOption,
         resonanceList, attackUpBuffs, defDownBuffs, criticalBuffs,
     };
 
@@ -368,7 +392,7 @@ const DamageCalculation = () => {
                 <div className="status_area mx-auto">
                     <CharaStatus argument={argument} />
                     <AttackList argument={argument} />
-                    <ContentsArea attackInfo={attackInfo} enemyClass={enemyClass}
+                    <ContentsArea argument={argument} attackInfo={attackInfo} enemyClass={enemyClass}
                         enemySelect={enemySelect} setEnemyClass={setEnemyClass} setEnemySelect={setEnemySelect}
                         state={state} dispatch={dispatch} />
                     <OtherSetting attackInfo={attackInfo} enemyClass={enemyClass}

@@ -919,7 +919,7 @@ export const judgmentCondition = (info, turnData, unitData, skillId) => {
             let attackInfo = getSkillIdToAttackInfo(turnData, unitData, unitData.selectSkillId);
             if (attackInfo) {
                 let physical = getCharaData(unitData.style.styleInfo.chara_id).physical;
-            return isWeak(turnData.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)
+                return isWeak(turnData.enemyInfo, physical, attackInfo.attack_element, attackInfo.attack_id)
             }
             return false;
         case CONDITIONS.IS_WEAK_ELEMENT: // 耐性が弱点

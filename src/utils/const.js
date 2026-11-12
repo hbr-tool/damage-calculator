@@ -240,6 +240,7 @@ export const EFFECT = {
     DP_DEFFENCEDOWN: 42, // DP防御力ダウン
     OVERDRIVE_RATE_UP: 46, // OD増加量アップ
     OVERDRIVE_COST_DOWN: 47, // OD消費量ダウン
+    PHYSICAL_DOWN: 48, // 武器耐性ダウン
     HEALEP: 52, // EP回復
     OVERDRIVE_EP: 54, // OD時EP回復
     SP_LIMIT_UP: 55, // SP上限アップ
@@ -396,6 +397,7 @@ export const ENEMY_CLASS = {
     EVENT_PRISMATIC: 13, // イベントプリズム
     HARD_LAYER_EX: 15, // 異時層EX
     SCORE_ATTACK_EX: 16, // スコアタEX
+    VISIONARY_SPIRAL: 17, // 夢幻の螺旋
     FREE_INPUT: 99, // 自由入力
 }
 

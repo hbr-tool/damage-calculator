@@ -200,6 +200,11 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                 turnData.field = ability.effect_no;
                 effectDesc = `${ELEMENT_NAME[ability.element]}属性フィールド`;
                 break;
+            case EFFECT.ADDITIONALTURN_NOT: // 追加ターン
+                unitData.additionalTurn = true;
+                turnData.additionalTurn = true;
+                effectDesc = `追加ターン`;
+                break;
             case EFFECT.ADDITIONALTURN_NOT: // 追加ターン(追加ターンを除く)
                 if (turnData.additionalCount === 0) {
                     unitData.additionalTurn = true;
