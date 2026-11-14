@@ -72,26 +72,12 @@ function getChainEffectSize(otherSetting, type) {
 }
 
 // パワプロ存在チェック
-export function checkPawapuroExist(selectStyleList) {
-    return checkStyleExist(selectStyleList, STYLE_ID.PAWAPURO);
-}
-
-// キャラ存在チェック
-export function countCharaExist(selectStyleList, searchCharaIds) {
-    return selectStyleList.filter(member =>
-        searchCharaIds.includes(member?.styleInfo?.chara_id)
-    ).length;
-}
-
-// スタイル存在チェック
-export function checkStyleExist(selectStyleList, searchStyleIds) {
-    return selectStyleList.some(member =>
-        searchStyleIds.includes(member?.styleInfo?.style_id)
-    );
+export const  checkPawapuroExist = (selectStyleList) => {
+    return common.checkStyleExist(selectStyleList, STYLE_ID.PAWAPURO);
 }
 
 // キャラ重複チェック
-export function checkDuplicationChara(selectStyleList, searchCharaId) {
+export const checkDuplicationChara = (selectStyleList, searchCharaId) => {
     if (searchCharaId) {
         return selectStyleList.some((member, i) => member?.styleInfo.chara_id === searchCharaId);
     }
@@ -1034,7 +1020,7 @@ function getAbilityEffectValue(effect, styleList, charaId) {
                 multiplier = targetCountMotivation(styleList, 1);
                 break;
             case constants.EFFECT_VALUE.MEMBER_31C:
-                multiplier = countCharaExist(styleList.selectStyleList, CHARA_ID.MEMBER_31C);
+                multiplier = common.countCharaExist(styleList.selectStyleList, CHARA_ID.MEMBER_31C);
                 break;
             default:
                 break;

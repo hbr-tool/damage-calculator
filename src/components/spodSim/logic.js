@@ -1441,7 +1441,7 @@ const unitTurnProceed = (unit, turnData) => {
 }
 
 // 対象数判定
-const targetCountInclude = (turnData, targetElement) => {
+export const targetCountInclude = (turnData, targetElement) => {
     let count = 0;
     unitLoop(function (unit) {
         if (checkTargetElement(unit, targetElement)) {
@@ -1664,6 +1664,10 @@ export const getConditionName = (targetElement, conditions, conditionsId) => {
             return `オーバードライブ中`;
         case CONDITIONS.DESTRUCTION_OVER_200:
             return `破壊率200%以上の時`;
+        case CONDITIONS.DEFFENCE_DOWN:
+            return `防御力低下時`;
+        case CONDITIONS.FRAGILE:
+            return `脆弱時`;
         case CONDITIONS.BREAK:
             return `ブレイク時`;
         case CONDITIONS.PERCENTAGE_30:

@@ -3,7 +3,7 @@ import {
     ABILIRY_TIMING, ELEMENT_NAME,
 } from "./const";
 import {
-    SKILL_ID, ABILITY_ID, BUFF, RANGE, EFFECT,
+    SKILL_ID, ABILITY_ID, BUFF, RANGE, EFFECT, ELEMENT
 } from "utils/const";
 import * as constants from "utils/const";
 import * as common from "utils/common";
@@ -22,6 +22,8 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
     let effectDesc = "";
     let executeEffect = () => { };
     const targetList = logic.getTargetList(turnData, effectInfo.range_area, effectInfo.target_element, useUnitData);
+
+    const effectSize = getEffectSize(effectInfo, turnData, useUnitData);
     // 対象策定
     switch (effectInfo.effect_type) {
         case EFFECT.GRANT_BUFF:
@@ -85,7 +87,6 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
             effectDesc = `幼児退行+${effectInfo.effect_size}`;
             break;
         case EFFECT.HEALSP: // SP追加
-            const effectSize = getEffectSize(effectInfo, useUnitData);
             executeEffect = () => {
                 targetLoop(function (targetUnitData) {
                     skillHealSp(turnData, targetUnitData, effectSize, effectInfo.effect_limit, useUnitData.placeNo);
@@ -115,7 +116,7 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
             let correction = 1;
             const odRateUp = overDriveRateUp.odRateUp;
             const earring = overDriveRateUp.earring;
-            let point = getEffectSize(effectInfo, useUnitData);
+            let point = effectSize;
             // 補正はプラスの時のみ
             if (point > 0) {
                 correction += (odRateUp + earring) / 100;
@@ -178,14 +179,14 @@ export const procEffectUnit = (turnData, effectInfo, useUnitData, overDriveRateU
                 targetLoop(function (targetUnitData) {
                     // トークンは最大10まで
                     if (targetUnitData.token < 10) {
-                        targetUnitData.token += effectInfo.effect_size;
+                        targetUnitData.token += effectSize;
                         if (targetUnitData.token > 10) {
                             targetUnitData.token = 10;
                         }
                     }
                 }, turnData, targetList)
             }
-            effectDesc = `トークン+${effectInfo.effect_size}`;
+            effectDesc = `トークン+${effectSize}`;
             break;
         case EFFECT.CAMP_DEPLOYMENT: // 陣展開
             executeEffect = () => {
@@ -531,7 +532,7 @@ export const targetLoop = (func, turnData, targetList) => {
     });
 }
 
-export const getEffectSize = (effect, useUnitData) => {
+export const getEffectSize = (effect, turnData, useUnitData) => {
     let effectSize = effect.effect_size ?? 0;
     let multiplier = 1;
 
@@ -548,6 +549,9 @@ export const getEffectSize = (effect, useUnitData) => {
             // case constants.EFFECT_VALUE.MEMBER_31C:
             //     multiplier = countCharaExist(styleList.selectStyleList, CHARA_ID.MEMBER_31C);
             //     break;
+            case constants.EFFECT_VALUE.STYLE_FIRE:
+                multiplier = logic.targetCountInclude(turnData, ELEMENT.FIRE);
+                break;
             default:
                 break;
         }

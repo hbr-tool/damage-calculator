@@ -38,6 +38,7 @@ const passiveList = [
     {"skill_id":790,"passive_name":"特攻暴走連鎖","passive_explan":"バトル開始時自身にEXスキル連続発動(1回)を付与する","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
     {"skill_id":791,"passive_name":"背負い進む覚悟","passive_explan":"行動開始時前衛にいるとトークン1つにつき攻撃力+5%","passive_short_explan":"トークン1つにつき 攻撃力+5%","element":0,"target_element":0,"activation_place":1},
     {"skill_id":805,"passive_name":"溢れ出る母性","passive_explan":"バトル開始時 敵を幼児退行状態(ターン永続/解除不可/デバフ無効不可)にし\n幼児退行レベルを2上昇させる","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
+    {"skill_id":820,"passive_name":"吉兆の舞","passive_explan":"初戦開始時 味方全体に吉兆状態を付与(ターン永続/解除不可)","passive_short_explan":"","element":0,"target_element":0,"activation_place":3},
 ];
 
 export default passiveList;

@@ -253,6 +253,7 @@ export const EFFECT_VALUE = {
     CONSTANT: 0, // 固定値
     TOKEN_POWER_UP: 1, // トークン1つにつき
     MOTIVATION_GOOD: 10, // 好調以上
+    STYLE_FIRE: 21, // 火属性スタイル
     MEMBER_31C: 33, // 31Cメンバー 
 }
 

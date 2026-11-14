@@ -43,6 +43,20 @@ export function getSkillData(skillId) {
     return filteredSkill.length > 0 ? filteredSkill[0] : undefined;
 }
 
+// キャラ存在チェック
+export const countCharaExist = (selectStyleList, searchCharaIds) => {
+    return selectStyleList.filter(member =>
+        searchCharaIds.includes(member?.styleInfo?.chara_id)
+    ).length;
+}
+
+// スタイル存在チェック
+export const checkStyleExist = (selectStyleList, searchStyleIds) => {
+    return selectStyleList.some(member =>
+        searchStyleIds.includes(member?.styleInfo?.style_id)
+    );
+}
+
 // EXスキル判定
 export function isSkillEx(skillInfo, skillId) {
     if (!skillInfo) {

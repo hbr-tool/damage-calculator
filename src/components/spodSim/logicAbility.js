@@ -83,22 +83,23 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
         let effectDesc = "";
         let abilityName = ability.ability_name || ability.passive_name;
 
+        const effectSize = logicBuff.getEffectSize(ability, turnData, unitData);
         switch (ability.effect_type) {
             case EFFECT.OVERDRIVE_SP: // ODSPアップ
                 logicBuff.targetLoop(function (targetUnitData) {
-                    targetUnitData.overDriveSp += ability.effect_size;
+                    targetUnitData.overDriveSp += effectSize;
                 }, turnData, targetList)
-                effectDesc = `OD時SPアップ${ability.effect_size}`;
+                effectDesc = `OD時SPアップ${effectSize}`;
                 break;
             case EFFECT.OVERDRIVE_EP: // ODEPアップ
                 logicBuff.targetLoop(function (targetUnitData) {
-                    if (targetUnitData.ep + ability.effect_size > 20) {
+                    if (targetUnitData.ep + effectSize > 20) {
                         targetUnitData.overDriveEp = 20 - targetUnitData.ep;
                     } else {
-                        targetUnitData.overDriveEp += ability.effect_size;
+                        targetUnitData.overDriveEp += effectSize;
                     }
                 }, turnData, targetList)
-                effectDesc = `OD時EPアップ${ability.effect_size}`;
+                effectDesc = `OD時EPアップ${effectSize}`;
                 break;
             case EFFECT.HEALSP: // SP回復
                 logicBuff.targetLoop(function (targetUnitData) {
@@ -111,27 +112,27 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                     if (limitSp === 30) {
                         minusSp = targetUnitData.spCost;
                     }
-                    if (ability.effect_size > 0) {
+                    if (effectSize > 0) {
                         if (targetUnitData.sp + targetUnitData.overDriveSp - minusSp < limitSp) {
                             if (ability.ability_id) {
                                 if (constants.ADD_SP_ABILITY.includes(ability.ability_id)) {
-                                    targetUnitData.addSp += ability.effect_size;
+                                    targetUnitData.addSp += effectSize;
                                 } else {
-                                    targetUnitData.sp += ability.effect_size;
+                                    targetUnitData.sp += effectSize;
                                 }
                             }
                             if (ability.skill_id) {
-                                targetUnitData.sp += ability.effect_size;
+                                targetUnitData.sp += effectSize;
                             }
                             if (targetUnitData.sp + targetUnitData.overDriveSp - minusSp > limitSp) {
                                 targetUnitData.sp = limitSp - targetUnitData.overDriveSp + minusSp;
                             }
                         }
                     } else {
-                        targetUnitData.sp += ability.effect_size;
+                        targetUnitData.sp += effectSize;
                     }
                 }, turnData, targetList)
-                effectDesc = `SP${common.formatStr(ability.effect_size)}`;
+                effectDesc = `SP${common.formatStr(effectSize)}`;
                 break;
             case EFFECT.HEALEP: // EP回復
                 let maxEp = Math.max(10, unitData.ep + unitData.overDriveEp);
@@ -139,33 +140,33 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                     maxEp = 20;
                 }
                 if (unitData.ep < maxEp) {
-                    unitData.ep += ability.effect_size;
+                    unitData.ep += effectSize;
                     if (unitData.ep > maxEp) {
                         unitData.ep = maxEp;
                     }
                 }
-                effectDesc = `EP+${ability.effect_size}`;
+                effectDesc = `EP+${effectSize}`;
                 break;
             case EFFECT.TOKEN_UP: // トークン回復
-                let effectSize = ability.effect_size;
+                let tokenSize = effectSize; 
                 if (ability.ability_id === ABILITY_ID.WAR_HONOR) {
                     // 戦勲
-                    effectSize = params.effectSize;
+                    tokenSize = params.effectSize;
                 }
                 logicBuff.targetLoop(function (targetUnitData) {
-                    targetUnitData.token += effectSize;
+                    targetUnitData.token += tokenSize;
                     if (targetUnitData.token > 10) {
                         targetUnitData.token = 10;
                     }
                 }, turnData, targetList)
-                effectDesc = `トークン+${effectSize}`;
+                effectDesc = `トークン+${tokenSize}`;
                 break;
             case EFFECT.OVERDRIVEPOINTUP: // ODアップ
-                turnData.overDriveGauge += ability.effect_size;
+                turnData.overDriveGauge += effectSize;
                 if (turnData.overDriveGauge > turnData.maxOverDriveGauge) {
                     turnData.overDriveGauge = turnData.maxOverDriveGauge;
                 }
-                effectDesc = `OverDriveゲージ${common.formatStr(ability.effect_size)}%`
+                effectDesc = `OverDriveゲージ${common.formatStr(effectSize)}%`
                 break;
             case EFFECT.GRANT_BUFF: // バフ付与
                 logicBuff.targetLoop(function (targetUnitData) {
@@ -184,23 +185,23 @@ export const abilityActionUnit = (turnData, actionKbn, unitData, params) => {
                     ability.buff_name = abilityName;
                     logicBuff.addMoraleBuffUnit(targetUnitData, ability, null)
                 }, turnData, targetList)
-                effectDesc = `士気+${ability.effect_size}`;
+                effectDesc = `士気+${effectSize}`;
                 break;
             case EFFECT.LNFANTILIZED: // 幼児退行
                 logicBuff.addLnfantilizedDebuffUnit(turnData.enemyDebuffList, ability, unitData);
-                effectDesc = `幼児退行+${ability.effect_size}`;
+                effectDesc = `幼児退行+${effectSize}`;
                 break;
             case EFFECT.SP_LIMIT_UP: // SP上限アップ
                 logicBuff.targetLoop(function (targetUnitData) {
                     targetUnitData.limitSp = ability.effect_size;
                 }, turnData, targetList)
-                effectDesc = `SP上限${ability.effect_size}にアップ`;
+                effectDesc = `SP上限${effectSize}にアップ`;
                 break;
             case EFFECT.FIELD_DEPLOYMENT: // フィールド
                 turnData.field = ability.effect_no;
                 effectDesc = `${ELEMENT_NAME[ability.element]}属性フィールド`;
                 break;
-            case EFFECT.ADDITIONALTURN_NOT: // 追加ターン
+            case EFFECT.ADDITIONALTURN: // 追加ターン
                 unitData.additionalTurn = true;
                 turnData.additionalTurn = true;
                 effectDesc = `追加ターン`;
